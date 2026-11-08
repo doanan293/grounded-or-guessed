@@ -23,3 +23,10 @@ __pycache__/
 docs/report/**/main.pdf
 # proxy config holds API keys
 infra/proxy/config.yaml
+
+# Not redistributed (course material, third-party template, personal AI tooling)
+docs/requirement/
+docs/presentation/template-vi.pptx
+.agents/
+.claude/
+skills-lock.json
