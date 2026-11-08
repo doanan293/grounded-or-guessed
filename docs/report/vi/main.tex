@@ -1,0 +1,61 @@
+% Báo cáo đầy đủ tiểu luận IT5440 — biên dịch: make -C docs/report vi   (XeLaTeX + BibTeX)
+% Quy cách theo "Hướng dẫn làm và nộp tiểu luận" (mục III.1.2).
+\documentclass[fontsize=13pt,a4paper,oneside,numbers=noenddot]{scrreprt}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}                    % Times New Roman 13pt
+\usepackage{polyglossia}
+\setmainlanguage{vietnamese}
+\usepackage[top=3.5cm,bottom=3cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.5}                                 % giãn dòng 1.5
+\setlength{\parskip}{6pt}                        % spacing before 6pt giữa các đoạn
+\usepackage{graphicx,booktabs,amsmath,amssymb,xcolor,float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{chngcntr}
+\counterwithin{figure}{chapter}                  % Hình 3.4 = hình thứ 4 của chương 3
+\counterwithin{table}{chapter}
+\usepackage{caption}
+\captionsetup[table]{position=top}               % tên bảng ở trên
+\captionsetup[figure]{position=bottom}           % tên hình ở dưới
+
+% Tiêu đề: chương 16 đậm; mục chữ hoa đậm; tiểu mục 14 đậm; tiểu mục con 14 nghiêng
+\setkomafont{disposition}{\rmfamily\bfseries}
+\setkomafont{chapter}{\fontsize{16}{20}\selectfont\bfseries}
+\setkomafont{section}{\fontsize{14}{18}\selectfont\bfseries\MakeUppercase}
+\setkomafont{subsection}{\fontsize{14}{18}\selectfont\bfseries}
+\setkomafont{subsubsection}{\fontsize{14}{18}\selectfont\mdseries\itshape}
+\RedeclareSectionCommand[beforeskip=0pt,afterskip=18pt]{chapter}
+\renewcommand*{\chapterformat}{\chapapp~\thechapter.\enskip}
+\setcounter{secnumdepth}{3}                      % tối đa 4 chữ số: 4.1.2.3
+\setcounter{tocdepth}{3}
+
+% Số trang ở giữa chân trang
+\usepackage[automark]{scrlayer-scrpage}
+\clearpairofpagestyles
+\cfoot*{\pagemark}
+\pagestyle{scrheadings}
+
+\newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+
+\begin{document}
+\input{frontmatter/bia}
+\pagenumbering{roman}
+\input{frontmatter/camket}
+\tableofcontents
+\listoftables
+\listoffigures
+\input{frontmatter/vietat}
+
+\clearpage
+\pagenumbering{arabic}
+\input{chapters/ch1-gioi-thieu}
+\input{chapters/ch2-tong-quan}
+\input{chapters/ch3-co-so-ly-thuyet}
+\input{chapters/ch4-giai-phap}
+\input{chapters/ch5-thuc-nghiem}
+\input{chapters/ch6-ket-luan}
+
+\bibliographystyle{../paper-en/IEEEtran}
+\bibliography{../references}
+\end{document}

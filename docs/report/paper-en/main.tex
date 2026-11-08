@@ -1,0 +1,26 @@
+% English paper (arXiv) — build: make -C docs/report paper
+\documentclass[conference]{IEEEtran}
+\usepackage{graphicx,booktabs,amsmath,amssymb,xcolor}
+\usepackage[hidelinks]{hyperref}
+\newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+
+\begin{document}
+\title{\TODO{Reproducing and Extending SemLoc: Semantic Fault Localization with LLM-Inferred Constraints}}
+\author{\IEEEauthorblockN{\TODO{authors}}\IEEEauthorblockA{Hanoi University of Science and Technology, Vietnam}}
+\maketitle
+
+\begin{abstract}
+\TODO{abstract: one claim per sentence, every number backed by data/}
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/approach}
+\input{sections/evaluation}
+\input{sections/threats}
+\input{sections/related}
+\input{sections/conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{../references}
+\end{document}
