@@ -1,6 +1,6 @@
 method,model,n,repeats,acc1,acc3,tokens_per_program
-SemLoc,Gemini 3.8 Flash,48,2,0.4688,0.8125,13477
-CovGate,Gemini 3.8 Flash,48,2,0.4688,0.8125,13477
+SemLoc,Gemini 3.8 Flash,48,3,0.4792,0.8056,14005
+CovGate,Gemini 3.8 Flash,48,3,0.4792,0.8056,14005
 SemLoc,GPT-6 luna,48,3,0.4931,0.7778,3722
 CovGate,GPT-6 luna,48,3,0.4931,0.7778,3722
 SemLoc,Claude Sonnet 5.5,48,3,0.3958,0.6528,6702
@@ -11,4 +11,7 @@ SemLoc,Gemini 3.5 Flash-Lite,48,3,0.3889,0.6319,3634
 CovGate,Gemini 3.5 Flash-Lite,48,3,0.3889,0.6528,3634
 LLM direct,Gemini 3.8 Flash,48,3,0.5486,0.5903,2506
 LLM + coverage,Gemini 3.8 Flash,48,3,0.5139,0.875,2572
+LLM + coverage,GPT-6 luna,48,3,0.4653,0.8472,1463
+LLM + coverage,Claude Sonnet 5.5,48,3,0.5,0.875,2164
+LLM + coverage,Gemini 3.5 Flash-Lite,48,3,0.4722,0.75,1692
 SBFL Ochiai,-,48,1,0.0208,0.1875,0

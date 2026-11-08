@@ -1,7 +1,7 @@
 gt,family,model,method,n,repeats,acc1_mean,acc1_sd,acc3_mean,acc3_sd,acc5_mean,acc5_sd
-original,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc,50,2,0.35,0.0141,0.71,0.0141,0.83,0.0141
-original,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc_no_prior,50,2,0.32,0.0566,0.68,0.0,0.8,0.0283
-original,Gemini 3.8 Flash,gemini-3.8-flash-n,covgate,50,2,0.35,0.0141,0.72,0.0283,0.83,0.0141
+original,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc,50,3,0.36,0.02,0.7,0.02,0.8067,0.0416
+original,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc_no_prior,50,3,0.3267,0.0416,0.6733,0.0115,0.78,0.04
+original,Gemini 3.8 Flash,gemini-3.8-flash-n,covgate,50,3,0.36,0.02,0.7067,0.0306,0.8067,0.0416
 original,GPT-6 luna,gpt-6-luna,semloc,50,3,0.38,0.02,0.6533,0.0306,0.8467,0.0115
 original,GPT-6 luna,gpt-6-luna,semloc_no_prior,50,3,0.2867,0.0702,0.5733,0.0231,0.7667,0.0306
 original,GPT-6 luna,gpt-6-luna,covgate,50,3,0.38,0.02,0.66,0.02,0.8333,0.0115
@@ -14,9 +14,9 @@ original,gpt-oss-120b,gpt-oss-120b-medium,covgate,50,3,0.2933,0.0503,0.6133,0.02
 original,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,semloc,50,3,0.3067,0.0231,0.5733,0.0416,0.7067,0.0115
 original,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,semloc_no_prior,50,3,0.1533,0.0231,0.48,0.04,0.6133,0.0115
 original,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,covgate,50,3,0.3067,0.0231,0.5933,0.0306,0.7067,0.0115
-repaired,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc,48,2,0.4688,0.0147,0.8125,0.0,0.8854,0.0147
-repaired,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc_no_prior,48,2,0.4792,0.0589,0.7812,0.0147,0.8542,0.0295
-repaired,Gemini 3.8 Flash,gemini-3.8-flash-n,covgate,48,2,0.4688,0.0147,0.8125,0.0295,0.8646,0.0147
+repaired,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc,48,3,0.4792,0.0208,0.8056,0.012,0.8611,0.0434
+repaired,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc_no_prior,48,3,0.4861,0.0434,0.7778,0.012,0.8333,0.0417
+repaired,Gemini 3.8 Flash,gemini-3.8-flash-n,covgate,48,3,0.4792,0.0208,0.8056,0.0241,0.8542,0.0208
 repaired,GPT-6 luna,gpt-6-luna,semloc,48,3,0.4931,0.0241,0.7778,0.0318,0.9097,0.012
 repaired,GPT-6 luna,gpt-6-luna,semloc_no_prior,48,3,0.375,0.0551,0.6736,0.0318,0.8056,0.0241
 repaired,GPT-6 luna,gpt-6-luna,covgate,48,3,0.4931,0.0241,0.7778,0.012,0.8403,0.012

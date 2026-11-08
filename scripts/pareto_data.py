@@ -28,9 +28,21 @@ LIST_METHODS = [("LLM direct", "direct_test_gemini_r", "Gemini 3.8 Flash"),
                 ("LLM + coverage", "direct_cov_sub50_flashlite_r", "Gemini 3.5 Flash-Lite")]
 
 
-def tokens(prefix: str) -> float:
-    rows = [r for r in csv.DictReader(open(ROOT / "data" / "llm_cost.csv")) if r["run_id"].startswith(prefix)]
+def _cost_rows() -> list[dict]:
+    with open(ROOT / "data" / "llm_cost.csv") as f:
+        return list(csv.DictReader(f))
+
+
+def tokens(run_ids: list[str]) -> float:
+    """Mean tokens per program over exactly the runs whose accuracy is plotted."""
+    rows = [r for r in _cost_rows() if r["run_id"] in set(run_ids)]
     return round(mean(float(r["tokens_per_program"]) for r in rows)) if rows else 0.0
+
+
+def complete_runs(rankings: Path, prefix: str, programs: list[str]) -> list[Path]:
+    """Single-prompt runs (one JSON per repeat) that produced a ranking for every program of their split."""
+    files = sorted(f for f in rankings.glob(f"{prefix}*.json"))
+    return [f for f in files if set(programs) <= set(json.loads(f.read_text()))]
 
 
 def main() -> None:
@@ -48,18 +60,20 @@ def main() -> None:
         runs = fam.usable_runs(ROOT / "runs", prefix)
         if not runs:
             continue
-        tok = tokens(prefix + "_r")
+        tok = tokens([r.name for r in runs])
         for method, name in (("semloc", "SemLoc"), ("covgate", "CovGate")):
             add(name, label, [metrics(fam.run_ranks(r, gt, progs, method, params), progs) for r in runs], tok)
+    split = json.loads((ROOT / "data" / "split.json").read_text())
+    sub50 = json.loads((ROOT / "data" / "subset50.json").read_text())["programs"]
     for name, prefix, model in LIST_METHODS:
-        files = sorted(f for f in (ROOT / "data" / "rankings").glob("*.json") if f.name.startswith(prefix))
+        files = complete_runs(ROOT / "data" / "rankings", prefix, split["test"] if "_test_" in prefix else sub50)
         ms = []
         for f in files:
             preds = json.loads(f.read_text())
             ranks = {p: next((k + 1.0 for k, ln in enumerate(preds.get(p, [])) if ln in gt[p]), None) for p in progs}
             ms.append(metrics(ranks, progs))
         if ms:
-            add(name, model, ms, tokens(prefix))
+            add(name, model, ms, tokens([f.stem for f in files]))
     from flx.coverage import load
     from flx.ranking import rank_of
     from flx.sbfl import sbfl_scores
