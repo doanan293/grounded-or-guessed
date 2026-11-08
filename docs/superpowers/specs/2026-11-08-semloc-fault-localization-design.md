@@ -2,7 +2,7 @@
 
 - Môn: IT5440 – Nguyên lý và kỹ thuật phân tích chương trình, kỳ 2026.1, ĐH Bách khoa Hà Nội
 - Đề tài: **2KH** — Chương 10 "Phát hiện lỗi và định vị lỗi", hướng nghiên cứu khoa học
-- Ngày viết: 08/11/2026
+- Ngày viết: 08/11/2026 · cập nhật 08/11/2026 (sau mốc 1: proxy, model, mức suy luận, audit SemLoc, CovGate, lộ trình)
 - Người thực hiện: chủ dự án (học viên) + Claude, làm trọn từ đầu đến cuối. Các thành viên khác trong nhóm 7 người không nhận phần việc nào (đã chốt 08/11). Danh sách tên nhóm cho trang bìa và lời cam kết sẽ do chủ dự án cung cấp khi làm báo cáo.
 - Tài liệu gốc của thầy: `docs/requirement/HuongDanTieuLuan 2026.pdf`; 3 bài báo: `docs/requirement/dt2-chap10/` (cũng có trong `Detai2.Chapter10/`)
 
@@ -27,7 +27,7 @@ Vì vậy đề tài **không tự cài lại SemLoc**, mà dùng mã gốc đ�
 
 ## 2. Câu hỏi nghiên cứu
 
-- **RQ1 — Tái hiện.** Kết quả của SemLoc có tái hiện được khi (a) tính lại từ log đã công bố và (b) chạy lại bằng mô hình hiện có của nhóm (Gemini qua proxy) không? Khoảng chênh so với bài báo là bao nhiêu, và do đâu?
+- **RQ1 — Tái hiện và kiểm tra cách đánh giá.** Kết quả của SemLoc có tái hiện được khi (a) tính lại từ log đã công bố và (b) chạy lại bằng mô hình hiện có của nhóm (Gemini qua proxy) không? Khoảng chênh so với bài báo là bao nhiêu, và do đâu? (c) Kết quả còn đứng được không khi chấm công bằng và khi bỏ các chi tiết cài đặt không được mô tả trong bài (mục 3.6)?
 - **RQ2 — Cải tiến.** Cải tiến của nhóm (mục 4) có tốt hơn SemLoc gốc về độ chính xác (Acc@k) **và** về chi phí (số lượt gọi LLM, token, thời gian) không? Mỗi thành phần của cải tiến đóng góp bao nhiêu (ablation)?
 - **RQ3 — Độ bền.** Kết quả của SemLoc và của cải tiến có giữ được khi (a) chuyển sang **lỗi thật** (BugsInPy), (b) chuyển sang **code LLM khó đã thấy** (SemFault-250 bị đổi tên định danh/làm nhiễu bề mặt), và (c) đổi **họ mô hình** (Gemini ↔ Claude ↔ GPT, bản mạnh ↔ bản nhẹ) không?
 
@@ -41,7 +41,7 @@ Thêm một câu hỏi phụ dùng để phân loại, không tính là RQ: lỗ
 |---|---|---|
 | **SemFault-250** (của SemLoc) | Benchmark chính cho RQ1, RQ2 | Chia **dev / test** cố định (50 / 200, chia ngẫu nhiên có seed, phân tầng theo nhãn ngữ nghĩa ở mục 3.3 — benchmark không kèm nhãn miền ứng dụng theo từng chương trình) — cải tiến chỉ được thiết kế và chỉnh tham số trên dev, kết quả báo cáo trên test. |
 | **SemFault-250 đổi tên** | RQ3(b) | Biến đổi giữ nguyên ngữ nghĩa: đổi tên hàm/biến/hằng sang tên vô nghĩa, xóa docstring/comment, có thể đảo thứ tự hàm phụ. Phải giữ nguyên số dòng hoặc ánh xạ lại dòng lỗi; phải kiểm tra test vẫn cho đúng kết quả pass/fail như bản gốc. |
-| **BugsInPy — tập con** | RQ3(a) | Dùng hạ tầng `bip_runner.py` của SemLoc; ưu tiên 68 lỗi họ đã chạy trọn. **Log RQ3 đã công bố không dùng lại được để chấm CovGate** (382/450 file chỉ chứa lỗi; 68 file còn lại chỉ có tóm tắt, không có constraints/violations, không có dữ liệu độ phủ) → bắt buộc dựng lại môi trường. Dựng BugsInPy **ngay đầu Phase 2, giới hạn 3 ngày** (10–12/11). Ngưỡng chấp nhận: **≥20 lỗi chạy trọn** cả SBFL, SemLoc và CovGate. Nếu dưới ngưỡng: báo cáo trên số lỗi dựng được, nêu rõ trong Threats to Validity, và nhấn mạnh RQ3(b) (đổi tên) làm bằng chứng độ bền chính. |
+| **BugsInPy — tập con** | RQ3(a) | Dùng hạ tầng `bip_runner.py` của SemLoc; ưu tiên 68 lỗi họ đã chạy trọn. **Log RQ3 đã công bố không dùng lại được để chấm CovGate** (382/450 file chỉ chứa lỗi; 68 file còn lại chỉ có tóm tắt, không có constraints/violations, không có dữ liệu độ phủ) → bắt buộc dựng lại môi trường. Ngưỡng: **≥20 lỗi chạy trọn** cả SBFL, SemLoc và CovGate. **Trạng thái 08/11:** 31 lỗi youtube-dl dựng được (môi trường riêng theo requirements, test fail ở commit lỗi và pass ở commit sửa, đo được độ phủ) → ngưỡng **tạm đạt**, chờ SemLoc/CovGate chạy trọn; cả 31 lỗi cùng một project (nêu trong Threats). 35 lỗi của 6 project khác hỏng ở khâu môi trường. Chi tiết `docs/literature/bugsinpy-setup.md`. |
 | QuixBugs (Python) | Tùy chọn | Chỉ thêm nếu còn thời gian; không bắt buộc. |
 
 ### 3.2 Phương pháp được so sánh
@@ -57,7 +57,7 @@ Một lỗi được gắn nhãn **ngữ nghĩa** (`semantic`) nếu dòng lỗi
 
 ### 3.4 Chỉ số
 
-- **Độ chính xác:** Acc@1, Acc@3, Acc@5 (cấp dòng, khớp `ground_truth.json`), thứ hạng trung vị, %Susp (tỉ lệ dòng bị đánh dấu nghi ngờ) — dùng đúng định nghĩa và mã tính của SemLoc để so sánh được.
+- **Độ chính xác:** Acc@1, Acc@3, Acc@5 (cấp dòng, khớp `ground_truth.json`), thứ hạng trung vị, %Susp (tỉ lệ dòng bị đánh dấu nghi ngờ). Báo cáo **hai cách chấm song song**: (i) **cách của tác giả** (mã `print_results.py`: hòa điểm theo thứ tự dòng, DD tính mọi dòng trúng là hạng 1, bỏ chương trình chạy lỗi khỏi mẫu số) để so sánh được với bài; (ii) **cách công bằng** (hòa điểm = hạng trung bình, mẫu số cố định — chương trình không chạy được tính là trượt). Mỗi cách báo cáo trên tập đầy đủ và tập 185 chương trình có dòng lỗi thực thi được.
 - **Chi phí:** số lượt gọi LLM, token vào/ra, thời gian chạy cho mỗi chương trình.
 - **Độ ổn định:** độ lệch Acc@k giữa các lần chạy lặp.
 
@@ -67,27 +67,38 @@ Một lỗi được gắn nhãn **ngữ nghĩa** (`semantic`) nếu dòng lỗi
 - So sánh cặp phương pháp trên cùng tập lỗi bằng **McNemar** (đúng/sai ở Top-k) hoặc **Wilcoxon** (thứ hạng), kèm p-value và effect size.
 - Không khẳng định "tốt hơn" nếu không có ý nghĩa thống kê; khi đó ghi đúng là "tương đương" hoặc "không đủ bằng chứng".
 
+### 3.6 Kiểm tra cách đánh giá của SemLoc (audit, thuộc RQ1)
+
+Phát hiện khi đọc mã và log công bố (08/11), mỗi điểm được kiểm chứng bằng số liệu trong repo:
+1. **Kiểm chứng phản thực tế (CF) không đổi Acc@k trong mã công bố**: Acc@k lấy từ `scores/ranked_lines`; CF chỉ ảnh hưởng %Susp và thống kê RQ2. Trên lượt chạy của nhóm, top-1 và thứ hạng giống hệt 50/50 chương trình khi có/không CF. Mức "+12 pp Acc@1 nhờ CF" trong bài so hai lượt sinh ràng buộc khác nhau.
+2. **Điểm cộng cho dòng LLM tự đoán**: `apply_fault_line_prior` cộng 1,2 vào `fault_line` do LLM đề xuất — không thấy mô tả trong bài → ablation "không prior".
+3. **DD**: log công bố cho Acc@1 38,0%, bài ghi 0,0% (mã tính mọi dòng trúng trong tập tối thiểu là hạng 1).
+4. **Ground truth**: 56/250 chương trình trỏ vào dòng trống, 9 chương trình trỏ vào dòng không test fail nào chạy qua (giả thuyết: lỗi thiếu mã).
+5. **Cách chấm có lợi** (mục 3.4 (i)); không có kết quả công bố cho Claude T = 0.
+
 ## 4. Cải tiến đề xuất (định hướng đã chốt, chi tiết để builder thiết kế)
 
 **Ý tưởng:** SemLoc bỏ hẳn tín hiệu độ phủ, trong khi độ phủ và ràng buộc ngữ nghĩa bổ sung cho nhau — độ phủ loại được dòng mà test fail không đi qua; ràng buộc phân biệt được dòng mà cả test pass lẫn fail đều đi qua. Cải tiến (tên tạm: **CovGate**) gồm ba thành phần, mỗi thành phần tắt được để làm ablation:
 
 1. **Cổng độ phủ:** loại khỏi danh sách ứng viên những dòng không được bất kỳ test fail nào chạy qua.
 2. **Kết hợp điểm:** xếp hạng theo điểm ràng buộc, dùng điểm SBFL làm tiêu chí phá thế hòa hoặc kết hợp có trọng số (cách cụ thể do builder chọn và chỉnh trên tập dev).
-3. **Kiểm chứng phản thực tế tiết kiệm:** chỉ gọi LLM vá thử cho các ràng buộc có dòng gán điểm đi qua cổng và nằm trong top-K, nhằm giảm số lượt gọi LLM.
+3. **CF xếp hạng lại thật sự:** dùng kết quả CF (ràng buộc Primary/Secondary, không bị prune) để tính lại điểm dòng và đặt các dòng đó lên trước — điều mã gốc không làm (mục 3.6). Chi phí: không thêm lượt gọi so với SemLoc gốc; ghi thêm số lượt gọi CF có thể bỏ nếu chỉ kiểm chứng top-K qua cổng.
+
+Ablation: tắt từng thành phần; thêm biến thể **bỏ điểm cộng cho dòng LLM đoán** áp cho cả SemLoc gốc lẫn CovGate.
 
 **Hai nguồn bằng chứng cho RQ2:**
-- **Bằng chứng chính:** các lượt chạy của nhóm — SemLoc gốc và CovGate bằng Gemini qua proxy, **T = 0.8** (cấu hình tốt nhất trong bài), **3 lần lặp** trên 200 chương trình tập test. CovGate dùng **cùng** constraints/violations của mỗi lượt chạy SemLoc, chỉ khác bước chấm điểm và kiểm chứng phản thực tế, nên so sánh là ghép cặp và kiểm định được. Đây là khoản tốn LLM lớn nhất của dự án; quy mô cuối cùng chốt sau khi đo quota (việc 2.1).
-- **Bằng chứng phụ:** thành phần 1–2 chấm lại trên log SemLoc đã công bố (Gemini 2.5 Pro và Claude Sonnet 4.6, T = 0 / 0.3 / 0.8, mỗi cấu hình 1 lần chạy) — không tốn lượt gọi LLM, cho thấy cải tiến không phụ thuộc mô hình; báo cáo rõ là chạy đơn, không kiểm định lặp.
+- **Bằng chứng chính:** các lượt chạy của nhóm — SemLoc gốc và CovGate bằng Gemini 3.8 Flash qua proxy, **T = 0.8** (cấu hình tốt nhất trong bài), mức suy luận mặc định, **3 lần lặp** trên 200 chương trình tập test. CovGate dùng **cùng** constraints/violations của mỗi lượt chạy SemLoc, chỉ khác bước chấm điểm và kiểm chứng phản thực tế, nên so sánh là ghép cặp và kiểm định được. Đây là khoản tốn LLM lớn nhất của dự án; quy mô cuối cùng chốt sau khi đo quota (việc 2.1).
+- **Bằng chứng phụ:** thành phần 1–2 (và ablation không prior) chấm lại trên log SemLoc đã công bố (log không có thư mục CF nên thành phần 3 chỉ đo được trên lượt chạy của nhóm) (Gemini 2.5 Pro và Claude Sonnet 4.6, T = 0 / 0.3 / 0.8, mỗi cấu hình 1 lần chạy) — không tốn lượt gọi LLM, cho thấy cải tiến không phụ thuộc mô hình; báo cáo rõ là chạy đơn, không kiểm định lặp.
 
 Mục tiêu đo được của cải tiến: Acc@1/Acc@3 cao hơn SemLoc gốc trên tập test **và/hoặc** ít lượt gọi LLM hơn ở cùng độ chính xác. Nếu cải tiến không thắng, bài vẫn báo cáo trung thực như một kết quả âm tính kèm phân tích nguyên nhân.
 
 ## 5. Hạ tầng
 
-- **LLM qua proxy:** `cli-proxy-api` (image `eceasy/cli-proxy-api:v8.0.28`), API kiểu OpenAI tại `http://localhost:8317/v1`. Tài khoản đăng nhập nằm trong Docker volume `vipharmind_cli_proxy_auth` (hiện có 3 tài khoản Antigravity cho Gemini, 1 tài khoản Claude; tài khoản Codex cũ đã xóa). Cấu hình mẫu ở `/home/andv/personal/vipharmind/devops/cli-proxy-api/config.yaml`. Dự án tiểu luận có compose riêng, dùng lại volume và config đó, **không sửa gì trong repo vipharmind**.
-- **GPT:** chủ dự án sẽ đăng nhập thêm một tài khoản Codex free (OAuth qua trình duyệt, chủ dự án tự chạy lệnh đăng nhập). GPT chỉ dùng cho RQ3(c) trên tập con; thiếu quota thì bỏ.
-- **Phân vai mô hình:** Gemini là mô hình chính (RQ1, RQ2); Claude và GPT dùng cho RQ3(c) trên tập con.
+- **LLM qua proxy:** `cli-proxy-api` (image `eceasy/cli-proxy-api:v8.0.28`), API kiểu OpenAI tại `http://localhost:8317/v1`, compose `infra/proxy/compose.yaml`. Tài khoản trong Docker volume `vipharmind_cli_proxy_auth`: **4 Antigravity** (Gemini, gpt-oss), **4 Codex free** (GPT luna), **1 Claude**. Cấu hình là bản sao riêng `infra/proxy/config.yaml` (không commit vì chứa khóa) của cấu hình vipharmind, đã **bỏ các quy tắc ép mức suy luận** cho model của dự án; repo vipharmind không bị sửa.
+- **Phân vai mô hình** (chi tiết `infra/proxy/MODELS.md`): chính `gemini-3.8-flash-high` (upstream trả lời bằng `gemini-3.8-flash-n`, gateway ghi `served_model` mỗi lượt) cho RQ1b, RQ2, RQ3a, RQ3b; RQ3c trên tập con 50 chương trình: `claude-sonnet-5-5`, `gpt-6-luna`, `gpt-oss-120b-medium` (mã nguồn mở), `gemini-3.5-flash-lite`; `claude-sonnet-4-6` chỉ để đối chiếu tái hiện với log tác giả.
+- **Mức suy luận: mặc định của nhà cung cấp cho mọi model** (quyết định của chủ dự án). Đo được: Gemini 3.8 suy nghĩ động (bài ngắn ≈ medium, prompt SemLoc trung vị ~3.450 token đầu ra, tới 478 s/lượt); Flash-Lite và Claude không suy luận; luna ≈ medium. So sánh RQ3c là "ở mặc định của từng nhà cung cấp", không phải cùng mức suy luận. Timeout gateway 600 s, lượt timeout thử lại 1 lần.
 - **Nối SemLoc với proxy:** SemLoc gọi OpenAI qua `OpenAI(api_key=...)`, nên đặt `OPENAI_BASE_URL` là đủ cho nhánh OpenAI; nhánh `gemini-*` (google-genai) và `claude-*` (AnthropicVertex) gọi thẳng, cần một lớp chuyển nhỏ để mọi lượt gọi đi qua proxy. Sửa tối thiểu, giữ nguyên prompt và logic của SemLoc để không làm hỏng tính tái hiện.
-- **Ghi log mọi lượt gọi LLM** (model, prompt, response, token, thời gian) và **cache theo nội dung** để chạy lại không tốn quota; log này là một phần của dữ liệu công bố.
+- **Ghi log mọi lượt gọi LLM** (model, served model, token, thời gian, lỗi) và **cache theo nội dung + run_id** để chạy lại không tốn quota; log là một phần của dữ liệu công bố. Mỗi lần lặp = một run_id = một workdir riêng; mỗi lượt chạy phải qua `flx.run_health` (không còn lỗi LLM chưa khắc phục, không có CF lỗi) trước khi số liệu được dùng.
 - Máy: WSL2, không GPU, có Python 3, pdflatex/xelatex, Docker.
 - **Kiểm tra quota trước** khi lên lịch chạy lớn: đo số lượt gọi/giờ thực tế của từng tài khoản.
 
@@ -111,25 +122,25 @@ Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội
 - 1.2 Tìm thêm ~20 tài liệu liên quan (SBFL, MBFL, định vị lỗi bằng LLM như AutoFL/AgentFL/FlexFL, benchmark Defects4J/BugsInPy, nhiễm dữ liệu huấn luyện của LLM); chốt bộ từ khóa; lập bảng so sánh
 - 1.3 Khung LaTeX cho báo cáo VI và bài báo EN, file `.bib` chung
 
-### Phase 2 — RQ và thực nghiệm (09–24/11)
+### Phase 2 — RQ và thực nghiệm (09–17/11, làm dồn trước báo cáo lần 1)
 - 2.1 Dựng proxy cho dự án, gọi thử từng họ mô hình, đo quota
 - 2.2 Cài SemLoc, chạy `semloc report` tái hiện bảng từ log có sẵn (RQ1a)
-- 2.3 Nối SemLoc với proxy, chạy SemLoc bằng Gemini trên một tập nhỏ → số liệu thử cho báo cáo lần 1
+- 2.3 Nối SemLoc với proxy; chạy trên tập dev để kiểm tra pipeline, chi phí và mức suy luận (chạy kiểm tra, không phải số liệu báo cáo)
 - 2.4 Gắn nhãn lỗi ngữ nghĩa (mục 3.3), chia dev/test
 - 2.5 Thiết kế và cài CovGate trên tập dev, đánh giá trên log có sẵn (không tốn LLM)
 - 2.6 Chuẩn bị dữ liệu RQ3: SemFault-250 đổi tên, tập con BugsInPy
-- 2.7 Chạy đủ lưới thực nghiệm (RQ1b, RQ2 kể cả thành phần 3, RQ3)
-- 2.8 Dự phòng 2 ngày (23–24/11)
+- 2.7 Chạy đủ lưới thực nghiệm (RQ1b, RQ2 kể cả thành phần 3, RQ3) — kế hoạch chi tiết `docs/superpowers/plans/2026-11-08-milestone2-phase2-thuc-nghiem.md`
+- Chạy mẫu nhỏ chỉ để kiểm tra khói (3–5 chương trình) hoặc kiểm tra hướng ý tưởng; số liệu báo cáo luôn từ lượt chạy đầy đủ.
 
-**Báo cáo lần 1 (18–19/11)** mang lên: bảng tổng quan tài liệu + từ khóa, 3 RQ, sơ đồ phương pháp, kết quả tái hiện từ log (RQ1a) và số liệu chạy thử bằng Gemini.
+**Báo cáo lần 1 (18–19/11)** mang lên: tổng quan tài liệu + từ khóa, 3 RQ, phương pháp, **kết quả RQ1 (tái hiện + audit) và RQ2 đầy đủ**, RQ3 sơ bộ — vượt mức 2/4 nội dung thầy yêu cầu.
 
-### Phase 3 — Phân tích và đóng góp (22–28/11)
+### Phase 3 — Phân tích và đóng góp (18–25/11)
 - 3.1 Thống kê, kiểm định, ablation, chi phí
 - 3.2 Phân tích 15–20 ca thất bại, xếp nhóm nguyên nhân
 - 3.3 Chốt danh sách đóng góp và phần triết lý khoa học
 - 3.4 Sửa theo góp ý của thầy sau lần 1
 
-**Báo cáo lần 2 (25–26/11)** mang lên: kết quả RQ1–RQ2 đầy đủ, RQ3 sơ bộ, danh sách đóng góp.
+**Báo cáo lần 2 (25–26/11)** mang lên: RQ3 đầy đủ, phân tích thất bại, danh sách đóng góp và triết lý khoa học, bản nháp bài báo.
 
 ### Phase 4 — Viết và nộp (27/11–12/12)
 - 4.1 Bài báo tiếng Anh
@@ -140,7 +151,7 @@ Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội
 
 ## 8. Tiêu chí "đạt điểm A"
 
-1. Đóng góp nói được trong một câu: *tái hiện độc lập SemLoc, đề xuất CovGate kết hợp độ phủ với phổ ngữ nghĩa, và đánh giá độ bền trên lỗi thật, code đã đổi tên và nhiều họ LLM.*
+1. Đóng góp nói được trong một câu: *tái hiện độc lập và kiểm tra cách đánh giá của SemLoc, đề xuất CovGate kết hợp độ phủ với phổ ngữ nghĩa và để CF thật sự xếp hạng lại, và đánh giá độ bền trên lỗi thật, code đã đổi tên và nhiều họ LLM.*
 2. Đánh giá trên SemFault-250 (chia dev/test) + ít nhất một nguồn lỗi thật (BugsInPy) + biến thể đổi tên; kết quả tách theo nhãn ngữ nghĩa / lộ qua độ phủ.
 3. Đủ các phương pháp so sánh ở mục 3.2.
 4. Lặp ≥3 lần, có kiểm định thống kê và effect size.
@@ -168,7 +179,8 @@ Thứ tự cắt khi thiếu quota/thời gian: bỏ GPT → giảm số lần l
 |---|---|
 | Quota tài khoản OAuth không đủ | Đo sớm (2.1); cache mọi lượt gọi; CovGate thành phần 1–2 dùng log có sẵn; giảm lặp theo thứ tự cắt ở mục 8 |
 | Mô hình qua proxy khác mô hình trong bài (Gemini 2.5 Pro, Claude Sonnet 4.6) | Ghi rõ phiên bản; đây chính là nội dung của RQ1b/RQ3c, không phải lỗi |
-| Môi trường BugsInPy khó dựng | Dựa vào log RQ3 của SemLoc; thu hẹp tập con; nêu trong Threats |
+| Môi trường BugsInPy khó dựng | Đã dựng 31 lỗi youtube-dl (một project); nêu trong Threats |
+| Mức suy luận mặc định làm chi phí và độ trễ cao (Gemini) | Timeout 600 s, cache, theo dõi `run_health`; chạy nền nhiều worker |
 | CovGate không thắng | Báo cáo kết quả âm tính trung thực; nhấn đóng góp tái hiện + độ bền |
 | Biến thể đổi tên làm hỏng chương trình hoặc lệch dòng lỗi | Kiểm tra tự động: test cho đúng kết quả pass/fail như bản gốc, ánh xạ lại dòng lỗi |
 
@@ -182,6 +194,10 @@ Thứ tự cắt khi thiếu quota/thời gian: bỏ GPT → giảm số lần l
 - Đặt hạn hoàn thành tạm là 12/12
 - BugsInPy: giới hạn 3 ngày dựng môi trường, ngưỡng ≥20 lỗi chạy trọn, phương án khi dưới ngưỡng (mục 3.1)
 - Bằng chứng chính của RQ2 là lượt chạy Gemini của nhóm ở T = 0.8 × 3 lần; log công bố chỉ là bằng chứng phụ (mục 4)
+- CovGate thành phần 3 đổi thành "CF xếp hạng lại thật sự" và thêm ablation "không prior" sau audit (mục 3.6) — chủ dự án đã duyệt 08/11
+- Báo cáo song song cách chấm của tác giả và cách chấm công bằng (mục 3.4)
+- Cấu hình proxy riêng; mọi model ở mức suy luận mặc định (chủ dự án quyết 08/11)
+- Kéo Phase 2 lên trước báo cáo lần 1; chạy mẫu nhỏ chỉ để kiểm tra (chủ dự án quyết 08/11)
 
 ## 12. Để builder tự quyết
 
