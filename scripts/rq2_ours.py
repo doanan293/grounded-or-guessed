@@ -64,7 +64,7 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=ROOT / "data" / "rq2_ours.csv")
     args = ap.parse_args()
     test = json.loads((ROOT / "data" / "split.json").read_text())["test"]
-    reps = [i for i in (1, 2, 3) if (ROOT / "runs" / f"semloc_test_gemini_r{i}" / "results_cf_base").exists()]
+    reps = [i for i in (1, 2, 3) if (ROOT / "runs" / f"semloc_test_gemini_r{i}" / "results_cf_base" / "summary.json").exists()]  # finished runs only
     rows = []
     for gname, gt in load_variants().items():
         if gname == "verified_strict":
