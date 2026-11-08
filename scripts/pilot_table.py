@@ -5,6 +5,7 @@
 import argparse
 import csv
 import json
+import os
 from pathlib import Path
 
 from flx._semloc import SEMLOC_ROOT
@@ -12,6 +13,7 @@ from flx.semloc_results import acc_at_k, best_ranks_from_csv, find_localization_
 
 RQ1 = SEMLOC_ROOT / "results" / "RQ1"
 GT = SEMLOC_ROOT / "benchmark" / "ground_truth.json"
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> None:
@@ -19,11 +21,16 @@ def main() -> None:
     ap.add_argument("--run", type=Path, required=True)
     ap.add_argument("--run-id", required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--label", help="row label for this run (default: model + T from the run's served-model log)")
+    ap.add_argument("--log", type=Path, default=Path(os.environ.get("FLX_LLM_LOG", ROOT / "runs" / "llm_log.jsonl")))
     args = ap.parse_args()
-    dev = json.loads(Path("data/split.json").read_text())["dev"]
-    labels = {r["program"]: r["category"] for r in csv.DictReader(open("data/semfault_labels.csv"))}
+    dev = json.loads((ROOT / "data" / "split.json").read_text())["dev"]
+    labels = {r["program"]: r["category"] for r in csv.DictReader(open(ROOT / "data" / "semfault_labels.csv"))}
+    log = [x for x in map(json.loads, open(args.log)) if x["run_id"] == args.run_id]
+    served = sorted({x["served_model"] or x["model"] for x in log if not x["error"]} or {"?"})
+    label = args.label or f"ours: SemLoc {'+'.join(served)}"
     sources = {
-        "ours: SemLoc gemini-3.8-flash-high T0.8": best_ranks_from_csv(find_localization_csv(args.run)),
+        label: best_ranks_from_csv(find_localization_csv(args.run)),
         "published: SemLoc gemini-2.5-pro T0.8": best_ranks_from_csv(find_localization_csv(RQ1 / "semloc_gemini_T0.8")),
         "published: SemLoc claude-sonnet-4-6 T0.8": best_ranks_from_csv(find_localization_csv(RQ1 / "semloc_claude_T0.8")),
         "published: SBFL Ochiai": sbfl_best_ranks(RQ1 / "sbfl_ochiai", GT),
@@ -37,8 +44,6 @@ def main() -> None:
             rows.append({"source": name, "subset": g, "n": len(progs), "n_ran": sum(p in ranks for p in progs),
                          "acc1": round(acc_at_k(r, 1), 3), "acc3": round(acc_at_k(r, 3), 3),
                          "acc5": round(acc_at_k(r, 5), 3), "median_rank": median_rank(r)})
-    log = [json.loads(l) for l in open("runs/llm_log.jsonl")]
-    log = [x for x in log if x["run_id"] == args.run_id]
     calls = [x for x in log if not x["cache_hit"]]
     from flx.run_health import cf_error_programs, unrecovered_errors
     unrec, cf_bad = unrecovered_errors(log, args.run_id), cf_error_programs(args.run)

@@ -32,9 +32,14 @@ def _client() -> openai.OpenAI:
                          timeout=float(os.environ.get("FLX_LLM_TIMEOUT", "600")), max_retries=0)
 
 
-def _key(model, system, user, temperature, run_id) -> str:
-    blob = json.dumps({"model": model, "system": system, "user": user,
-                       "temperature": temperature, "run_id": run_id}, sort_keys=True)
+def _key(model, system, user, temperature, run_id, max_tokens=None, config_tag="") -> str:
+    fields = {"model": model, "system": system, "user": user, "temperature": temperature, "run_id": run_id}
+    # optional fields join the key only when set, so cache keys of earlier runs stay valid
+    if max_tokens is not None:
+        fields["max_tokens"] = max_tokens
+    if config_tag:
+        fields["config_tag"] = config_tag  # FLX_CONFIG_TAG: bump when proxy-side settings change
+    blob = json.dumps(fields, sort_keys=True)
     return hashlib.sha256(blob.encode()).hexdigest()
 
 
@@ -57,7 +62,7 @@ def chat(model: str, system: str, user: str, temperature: float = 0.0,
          max_tokens: int | None = None) -> str:
     run_id = os.environ.get("FLX_RUN_ID", "default")
     use_cache = os.environ.get("FLX_LLM_CACHE", "1") != "0"
-    key = _key(model, system, user, temperature, run_id)
+    key = _key(model, system, user, temperature, run_id, max_tokens, os.environ.get("FLX_CONFIG_TAG", ""))
     cache_file = Path(os.environ.get("FLX_LLM_CACHE_DIR", "runs/llm_cache")) / f"{key}.json"
     rec = {"ts": time.time(), "run_id": run_id, "model": model, "temperature": temperature,
            "cache_hit": False, "prompt_tokens": None, "completion_tokens": None,
@@ -70,6 +75,8 @@ def chat(model: str, system: str, user: str, temperature: float = 0.0,
         return cached["content"]
 
     max_retries = int(os.environ.get("FLX_LLM_MAX_RETRIES", "6"))
+    # a timed-out call already cost a full FLX_LLM_TIMEOUT; retry it less than a cheap 429
+    timeout_retries = int(os.environ.get("FLX_LLM_TIMEOUT_RETRIES", "1"))
     kwargs = {"model": model, "temperature": temperature,
               "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}
     if max_tokens is not None:
@@ -80,14 +87,15 @@ def chat(model: str, system: str, user: str, temperature: float = 0.0,
             resp = _client().chat.completions.create(**kwargs)
             break
         except openai.APIError as e:
-            if not isinstance(e, RETRYABLE) or attempt == max_retries:
+            limit = min(max_retries, timeout_retries) if isinstance(e, openai.APITimeoutError) else max_retries
+            if not isinstance(e, RETRYABLE) or attempt >= limit:
                 _log({**rec, "latency_s": time.time() - t0, "error": f"{type(e).__name__}: {e}"[:300]})
                 if not isinstance(e, RETRYABLE):
                     raise  # 4xx (bad model id, auth, quota refusal): logged, not retried
                 raise LLMUnavailable(f"{model}: {e}") from e
             time.sleep(min(2 * 2 ** attempt, 60))
 
-    content = resp.choices[0].message.content
+    content = resp.choices[0].message.content if resp.choices else None
     usage = getattr(resp, "usage", None)
     rec.update(latency_s=time.time() - t0,
                prompt_tokens=getattr(usage, "prompt_tokens", None),
