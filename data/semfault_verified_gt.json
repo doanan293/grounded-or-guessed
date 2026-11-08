@@ -153,10 +153,13 @@
  },
  {
   "program": "batchnorm_running_mean",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    70
-  ]
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "updated = (1 - momentum) * batch_mean + momentum * current_mean"
  },
  {
   "program": "bill_payout",
@@ -786,10 +789,13 @@
  },
  {
   "program": "grades_union",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    76
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "gradient_clip_budget",
@@ -869,10 +875,13 @@
  },
  {
   "program": "histogram_bucket_merge",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    77
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "ids_merge",
@@ -1227,10 +1236,13 @@
  },
  {
   "program": "plan_appointment_slot",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    65
-  ]
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if any(not (b < s or a > e) for s, e in timeline):"
  },
  {
   "program": "plan_conference_slot",
@@ -1322,17 +1334,26 @@
  },
  {
   "program": "price_cache",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    59
-  ]
+  ],
+  "edit_size": 8,
+  "kind": "insert_after",
+  "code": "    if adjusted_now == ttl: return None"
  },
  {
   "program": "prices_stream",
-  "status": "unverifiable",
+  "status": "corrected",
   "lines": [
+   81
+  ],
+  "original": [
    80
-  ]
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if merged and left and right and merged[-1] == left[-1] == right[-1] and False:"
  },
  {
   "program": "priority_mix",
@@ -1666,10 +1687,16 @@
  },
  {
   "program": "schedule_car",
-  "status": "unverifiable",
+  "status": "corrected",
   "lines": [
+   61
+  ],
+  "original": [
    62
-  ]
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if any(not (b < s or a > e) for s, e in timeline):"
  },
  {
   "program": "schedule_demo",
@@ -1880,10 +1907,16 @@
  },
  {
   "program": "storage_mix",
-  "status": "unverifiable",
+  "status": "corrected",
   "lines": [
+   60
+  ],
+  "original": [
    63
-  ]
+  ],
+  "edit_size": 7,
+  "kind": "replace",
+  "code": "    adjusted = [(c + (t - c) * damping) / sum(current) for c, t in zip(current, target)]"
  },
  {
   "program": "storage_quota_split",
