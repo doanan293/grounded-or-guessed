@@ -55,7 +55,7 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 
 ---
 
-### Task M1: Ma trận độ phủ theo test cho SemFault-250 (08–09/11)
+### Task 1 (M1): Ma trận độ phủ theo test cho SemFault-250 (08–09/11)
 
 **Files:** Create `src/flx/coverage.py`, `scripts/coverage_all.py`, `data/coverage/semfault/*.json`; Test `tests/test_coverage.py`
 
@@ -67,7 +67,7 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] Test `test_labels_unchanged_after_refactor`: `label_program` trên fixture cho đúng 4 kết quả cũ (các test cũ phải vẫn xanh).
 - [ ] Chạy `scripts/coverage_all.py --workers 8` → 250 file; đối chiếu `flx.labels` tính từ ma trận cho đúng `data/semfault_labels.csv` (0 khác biệt). Commit.
 
-### Task M2: Xếp hạng có xử lý hòa + bảng chỉ số mẫu số cố định (09/11)
+### Task 2 (M2): Xếp hạng có xử lý hòa + bảng chỉ số mẫu số cố định (09/11)
 
 **Files:** Create `src/flx/ranking.py`; Test `tests/test_ranking.py`
 
@@ -77,7 +77,7 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] Tests: `test_rank_average_ties` ({10:.5, 11:.5, 12:.1}, lỗi 11 → first=2, average=1.5, worst=2); `test_missing_program_counts_as_miss` (2 chương trình, 1 thiếu → Acc@1 = 0.5 nếu chương trình còn lại đứng 1); `test_unranked_fault_is_none`.
 - [ ] FAIL → cài → PASS → commit.
 
-### Task M3: SBFL đầy đủ và CovGate (09–10/11)
+### Task 3 (M3): SBFL đầy đủ và CovGate (09–10/11)
 
 **Files:** Create `src/flx/sbfl.py`, `src/flx/covgate.py`; Test `tests/test_sbfl.py`, `tests/test_covgate.py`
 
@@ -91,14 +91,14 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] Tests CovGate: `test_gate_drops_lines_not_hit_by_failing`; `test_gate_drops_unexecuted_fault_is_reported` (lỗi ở dòng không thực thi → `rank_of` = None, và hàm trả kèm cờ `fault_gated=True` qua `covgate_explain`); `test_no_prior_subtracts_bonus`; `test_lambda_breaks_ties_only_small`; `test_cf_rerank_puts_primary_lines_first`.
 - [ ] FAIL → cài → PASS → commit.
 
-### Task M4: RQ1 đầy đủ — tái hiện + audit (10/11)
+### Task 4 (M4): RQ1 đầy đủ — tái hiện + audit (10/11)
 
 **Files:** Create `scripts/rq1_audit.py`, `data/rq1_audit.csv`
 
 - [ ] Bảng: mỗi cấu hình công bố × {tác giả (first), công bằng (average)} × {250, 185}; SBFL Ochiai/DStar tính lại từ M1 (phải khớp log Ochiai công bố); DD theo cách tác giả và DD công bằng (hit = hạng trung bình của tập minimal); thêm dòng "SemLoc không prior" (M3 `no_prior`) và "CF có/không" chứng minh CF không đổi Acc@k trên log công bố (scores ≡ results).
 - [ ] Test khói `test_rq1_audit_reproduces_author_numbers` (cột tác giả trên 250 = `data/rq1a_table.csv`). Commit.
 
-### Task M5: CovGate trên log công bố — chọn tham số trên dev, báo cáo trên test (10–11/11)
+### Task 5 (M5): CovGate trên log công bố — chọn tham số trên dev, báo cáo trên test (10–11/11)
 
 **Files:** Create `scripts/covgate_eval.py`, `data/rq2_published.csv`; Test `tests/test_covgate_eval.py`
 
@@ -106,7 +106,7 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] `test_tune_uses_only_dev`: truyền dữ liệu giả có chương trình test "đầu độc" (đổi λ tốt nhất nếu bị nhìn thấy) → tham số chọn được không đổi.
 - [ ] Lưới: gate ∈ {F,T}, λ ∈ {0, 0.01, 0.1, 0.5}, no_prior ∈ {F,T}; áp lên 6 cấu hình SemLoc công bố; kiểm định McNemar CovGate vs SemLoc trên test. Commit.
 
-### Task M6: Chạy lặp SemLoc Gemini trên test 200 × 3 (khởi chạy 10/11, chạy nền ~5–9 giờ)
+### Task 6 (M6): Chạy lặp SemLoc Gemini trên test 200 × 3 (khởi chạy 10/11, chạy nền ~5–9 giờ)
 
 **Files:** Create `scripts/run_matrix.sh`; dữ liệu `runs/semloc_test_gemini_r{1,2,3}/`
 
@@ -114,14 +114,14 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] Đo sau run 1: lượt gọi, token, 429; nếu quota không đủ cho r2/r3 → ghi ruling và cắt theo Global Constraints.
 - [ ] Mỗi run healthy → commit danh sách run + `flx.run_health` output vào `data/runs.csv` (run_id, model, split, n, calls, tokens, healthy).
 
-### Task M7: Baseline LLM hỏi thẳng × 3 + CovGate thành phần 3 trên lượt chạy của nhóm (11–12/11)
+### Task 7 (M7): Baseline LLM hỏi thẳng × 3 + CovGate thành phần 3 trên lượt chạy của nhóm (11–12/11)
 
 **Files:** Create `scripts/run_direct.sh`; `data/rq2_ours.csv`
 
 - [ ] `llm_direct_fl.py` qua gateway trên test 200 × 3 (run_id `direct_test_gemini_r{i}`).
 - [ ] CovGate đầy đủ (gate + λ chọn ở M5 + cf_rerank + no_prior ablation) trên 3 lượt chạy M6; McNemar/Wilcoxon cho từng cặp; chi phí CF (số lượt gọi CF bị bỏ nếu chỉ kiểm chứng top-K qua cổng — đếm từ log, không chạy thêm). Commit.
 
-### Task M8: Biến thể đổi tên SemFault-250 (11–12/11) + chạy SemLoc Gemini × 3 trên test
+### Task 8 (M8): Biến thể đổi tên SemFault-250 (11–12/11) + chạy SemLoc Gemini × 3 trên test
 
 **Files:** Create `src/flx/rename.py`, `scripts/make_renamed.py`, `data/renamed/` (programs, testcases, ground_truth.json); Test `tests/test_rename.py`
 
@@ -129,7 +129,7 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] `test_renamed_preserves_lines_and_outcomes` (fixture mini + 3 chương trình thật: cùng số dòng, cùng kết quả pass/fail từng test qua `flx.coverage.collect`); `test_rename_is_deterministic`.
 - [ ] Sinh cho 250, kiểm tra tự động 250/250 giữ hành vi (chương trình nào lệch thì loại và ghi lý do). Chạy `run_matrix.sh semloc_renamed_gemini … test 3`. Commit.
 
-### Task M9: RQ3a BugsInPy — SBFL + SemLoc trên các lỗi youtube-dl (12–14/11)
+### Task 9 (M9): RQ3a BugsInPy — SBFL + SemLoc trên các lỗi youtube-dl (12–14/11)
 
 **Files:** Create `src/flx/bip_run.py`, `scripts/run_bip.sh`; `data/rq3_bugsinpy.csv`
 
@@ -137,12 +137,12 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] SemLoc trên cùng hàm: gọi `bip_runner.run_semloc_on_bip` bằng python của venv BugsInPy đã cài thêm deps SemLoc; gateway qua `FLX_USE_GATEWAY=1`; × 3 lần. Ngưỡng spec: ≥ 20 lỗi chạy trọn cả SBFL, SemLoc, CovGate; ghi kết quả thực tế.
 - [ ] Commit.
 
-### Task M10: RQ3c — các họ model trên tập con 50 chương trình test × 3 (song song với M7–M9)
+### Task 10 (M10): RQ3c — các họ model trên tập con 50 chương trình test × 3 (song song với M7–M9)
 
 - [ ] Tập con cố định 50 chương trình từ test (seed 20261108, phân tầng nhãn) → `data/subset50.json`.
 - [ ] `run_matrix.sh` cho `claude-sonnet-5-5`, `gpt-6-luna`, `gpt-oss-120b-medium`, `gemini-3.5-flash-lite`; `claude-sonnet-4-6` × 1 trên dev (kiểm tra tái hiện với log tác giả). CovGate áp lên từng lượt. Commit `data/rq3_families.csv`.
 
-### Task M12: SemFault-250-verified — ground truth kiểm chứng bằng thực thi (10–12/11, chạy nền)
+### Task 12 (M12): SemFault-250-verified — ground truth kiểm chứng bằng thực thi (10–12/11, chạy nền)
 
 **Files:** Create `src/flx/verify_gt.py`, `scripts/verify_gt.py`, `data/semfault_verified_gt.json`; Test `tests/test_verify_gt.py`
 
@@ -152,7 +152,7 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] Fixture mới `tests/fixtures/onebug/` (một lỗi duy nhất ở dòng 3, `return a - b` thay vì `return a + b`; 2 test pass, 2 test fail). `test_try_patch_fixes_onebug`: thay dòng 3 bằng `    return a + b` → True; thay dòng 2 bằng một dòng vô hại → False. `test_insert_after_blank_line` (fixture lỗi thiếu mã: chèn một dòng sau dòng trống làm test pass → status corrected, kind insert_after). `test_verify_never_trusts_llm_without_tests` (fake chat trả bản vá sai → unverifiable).
 - [ ] Chạy cho cả 250 (185: chỉ thử dòng GT gốc trước; 65: đủ ứng viên). Báo cáo số confirmed/corrected/unverifiable vào `docs/literature/benchmark-notes.md`. Commit.
 
-### Task M13: Baseline LLM + bằng chứng độ phủ (11/11, chạy nền × 3 trên test)
+### Task 13 (M13): Baseline LLM + bằng chứng độ phủ (11/11, chạy nền × 3 trên test)
 
 **Files:** Create `src/flx/direct_cov.py`, `scripts/run_direct_cov.sh`; Test `tests/test_direct_cov.py`
 
@@ -160,14 +160,14 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] `test_prompt_annotates_coverage` (fixture mini: dòng 7 có `f=1/p=2`); `test_parse_ranking_tolerates_fences`; `test_parse_ranking_bad_json_empty`.
 - [ ] Chạy test 200 × 3 (run_id `direct_cov_test_gemini_r{i}`); thêm vào bảng RQ2 và McNemar với SemLoc/CovGate. Commit.
 
-### Task M14: Phân tích cấu trúc benchmark (10/11, không LLM)
+### Task 14 (M14): Phân tích cấu trúc benchmark (10/11, không LLM)
 
 **Files:** Create `src/flx/templates.py`, `data/semfault_templates.csv`; Test `tests/test_templates.py`
 - **Interfaces:** `shape(src: str) -> list[str]` (chuỗi kiểu nút AST, bỏ tên/hằng); `similarity(a, b) -> float` (Jaccard trên 4-gram của `shape`); `clusters(programs: dict[str,str], threshold: float = 0.8) -> dict[str, int]`.
 - [ ] `test_renamed_copy_same_shape` (đổi tên biến → similarity 1.0); `test_different_algorithms_low_similarity`.
 - [ ] Chạy cho 250, báo cáo số cụm và phân bố; `flx.stats` (M11) thêm bootstrap theo cụm. Commit.
 
-### Task M11: Thống kê + bảng LaTeX tự sinh (song song, cuối 14/11)
+### Task 11 (M11): Thống kê + bảng LaTeX tự sinh (song song, cuối 14/11)
 
 **Files:** Create `src/flx/stats.py`, `scripts/make_tables.py`, `docs/report/generated/*.tex`; Test `tests/test_stats.py`
 
