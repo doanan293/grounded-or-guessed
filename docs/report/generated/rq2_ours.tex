@@ -2,24 +2,24 @@
 \toprule
 Method & Acc@1 & Acc@3 & Acc@5 & $p_{\text{Acc@1}}$ & $p_{\text{Acc@3}}$ & $\delta_{\text{RR}}$ \\
 \midrule
-\multicolumn{7}{l}{\emph{Original ground truth, $n=200$, 2 repeats}} \\
-SemLoc (as released) & 36.5{\scriptsize$\pm$0.7} & 59.0{\scriptsize$\pm$0.0} & 74.5{\scriptsize$\pm$0.0} & -- & -- & -- \\
-\quad w/o LLM-guess bonus & 28.7{\scriptsize$\pm$1.8} & 56.2{\scriptsize$\pm$0.4} & 72.0{\scriptsize$\pm$0.7} & .050 & .070 & -0.08 \\
-\quad + CF re-ranking & 34.5{\scriptsize$\pm$0.7} & 60.8{\scriptsize$\pm$0.4} & 76.8{\scriptsize$\pm$1.1} & .125 & .250 & -0.00 \\
-CovGate (ours) & 36.5{\scriptsize$\pm$0.7} & 60.2{\scriptsize$\pm$0.4} & 74.5{\scriptsize$\pm$0.0} & 1.000 & .500 & +0.01 \\
-CovGate + CF re-ranking & 34.5{\scriptsize$\pm$0.7} & 61.3{\scriptsize$\pm$0.4} & 76.8{\scriptsize$\pm$1.1} & .125 & .125 & +0.00 \\
-LLM direct (1 prompt) & 40.0{\scriptsize$\pm$0.0} & 43.0{\scriptsize$\pm$0.7} & 43.2{\scriptsize$\pm$1.1} & .238 & $<$.001 & -0.21 \\
-LLM + coverage (1 prompt, ours) & 40.5{\scriptsize$\pm$0.0} & 68.2{\scriptsize$\pm$0.4} & 70.5{\scriptsize$\pm$0.0} & .065 & .009 & +0.03 \\
-SBFL Ochiai & 3.0{\scriptsize$\pm$0.0} & 15.5{\scriptsize$\pm$0.0} & 48.0{\scriptsize$\pm$0.0} & $<$.001 & $<$.001 & -0.47 \\
+\multicolumn{7}{l}{\emph{Original ground truth, $n=200$, 3 repeats}} \\
+SemLoc (as released) & 36.8{\scriptsize$\pm$0.8} & 60.3{\scriptsize$\pm$2.3} & 75.0{\scriptsize$\pm$0.9} & -- & -- & -- \\
+\quad w/o LLM-guess bonus & 29.2{\scriptsize$\pm$1.4} & 57.7{\scriptsize$\pm$2.5} & 72.7{\scriptsize$\pm$1.3} & .050 & .070 & -0.08 \\
+\quad + CF re-ranking & 35.0{\scriptsize$\pm$1.0} & 62.2{\scriptsize$\pm$2.5} & 77.7{\scriptsize$\pm$1.8} & .250 & .250 & -0.00 \\
+CovGate (ours) & 36.8{\scriptsize$\pm$0.8} & 61.3{\scriptsize$\pm$1.9} & 75.0{\scriptsize$\pm$0.9} & 1.000 & 1.000 & +0.00 \\
+CovGate + CF re-ranking & 35.0{\scriptsize$\pm$1.0} & 62.5{\scriptsize$\pm$2.2} & 77.7{\scriptsize$\pm$1.8} & .250 & .125 & +0.00 \\
+LLM direct (1 prompt) & 40.0{\scriptsize$\pm$0.0} & 43.0{\scriptsize$\pm$0.5} & 43.2{\scriptsize$\pm$0.8} & .405 & $<$.001 & -0.22 \\
+LLM + coverage (1 prompt, ours) & 40.2{\scriptsize$\pm$0.6} & 68.2{\scriptsize$\pm$0.3} & 70.0{\scriptsize$\pm$0.9} & .344 & .175 & +0.02 \\
+SBFL Ochiai & 3.0{\scriptsize$\pm$0.0} & 15.5{\scriptsize$\pm$0.0} & 48.0{\scriptsize$\pm$0.0} & $<$.001 & $<$.001 & -0.48 \\
 \midrule
-\multicolumn{7}{l}{\emph{Execution-repaired ground truth, $n=190$, 2 repeats}} \\
-SemLoc (as released) & 48.9{\scriptsize$\pm$0.7} & 70.3{\scriptsize$\pm$1.1} & 80.3{\scriptsize$\pm$1.9} & -- & -- & -- \\
-\quad w/o LLM-guess bonus & 40.0{\scriptsize$\pm$2.2} & 65.8{\scriptsize$\pm$1.5} & 76.0{\scriptsize$\pm$2.6} & .050 & .012 & -0.11 \\
-\quad + CF re-ranking & 46.6{\scriptsize$\pm$0.4} & 71.3{\scriptsize$\pm$0.4} & 81.0{\scriptsize$\pm$2.2} & .125 & 1.000 & -0.02 \\
-CovGate (ours) & 48.9{\scriptsize$\pm$0.7} & 74.0{\scriptsize$\pm$1.1} & 80.0{\scriptsize$\pm$0.7} & 1.000 & .039 & +0.01 \\
-CovGate + CF re-ranking & 46.6{\scriptsize$\pm$0.4} & 71.6{\scriptsize$\pm$1.5} & 80.8{\scriptsize$\pm$1.1} & .125 & .500 & -0.00 \\
-LLM direct (1 prompt) & 53.2{\scriptsize$\pm$0.0} & 59.0{\scriptsize$\pm$0.7} & 59.2{\scriptsize$\pm$1.1} & .210 & .002 & -0.08 \\
-LLM + coverage (1 prompt, ours) & 54.2{\scriptsize$\pm$0.7} & 86.8{\scriptsize$\pm$0.0} & 88.7{\scriptsize$\pm$0.4} & .039 & $<$.001 & +0.12 \\
-SBFL Ochiai & 3.7{\scriptsize$\pm$0.0} & 17.9{\scriptsize$\pm$0.0} & 63.7{\scriptsize$\pm$0.0} & $<$.001 & $<$.001 & -0.53 \\
+\multicolumn{7}{l}{\emph{Execution-repaired ground truth, $n=190$, 3 repeats}} \\
+SemLoc (as released) & 49.3{\scriptsize$\pm$0.8} & 71.2{\scriptsize$\pm$1.8} & 80.9{\scriptsize$\pm$1.7} & -- & -- & -- \\
+\quad w/o LLM-guess bonus & 40.7{\scriptsize$\pm$2.0} & 66.8{\scriptsize$\pm$2.1} & 76.8{\scriptsize$\pm$2.3} & .059 & .012 & -0.11 \\
+\quad + CF re-ranking & 47.0{\scriptsize$\pm$0.8} & 72.1{\scriptsize$\pm$1.4} & 81.8{\scriptsize$\pm$2.0} & .125 & 1.000 & -0.02 \\
+CovGate (ours) & 49.3{\scriptsize$\pm$0.8} & 74.7{\scriptsize$\pm$1.6} & 80.9{\scriptsize$\pm$1.6} & 1.000 & .039 & +0.01 \\
+CovGate + CF re-ranking & 47.0{\scriptsize$\pm$0.8} & 72.6{\scriptsize$\pm$2.1} & 81.4{\scriptsize$\pm$1.3} & .125 & .500 & -0.01 \\
+LLM direct (1 prompt) & 53.5{\scriptsize$\pm$0.6} & 59.1{\scriptsize$\pm$0.6} & 59.3{\scriptsize$\pm$0.8} & .210 & .002 & -0.09 \\
+LLM + coverage (1 prompt, ours) & 53.9{\scriptsize$\pm$0.8} & 86.7{\scriptsize$\pm$0.3} & 88.2{\scriptsize$\pm$0.8} & .146 & $<$.001 & +0.10 \\
+SBFL Ochiai & 3.7{\scriptsize$\pm$0.0} & 17.9{\scriptsize$\pm$0.0} & 63.7{\scriptsize$\pm$0.0} & $<$.001 & $<$.001 & -0.54 \\
 \bottomrule
 \end{tabular}
