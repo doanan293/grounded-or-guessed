@@ -1,0 +1,2206 @@
+[
+ {
+  "program": "ad_mix",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "adjust_allocation",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "adjust_portfolio",
+  "status": "unverified",
+  "lines": [
+   68
+  ]
+ },
+ {
+  "program": "adjust_queue",
+  "status": "unverified",
+  "lines": [
+   66
+  ]
+ },
+ {
+  "program": "adjust_supply",
+  "status": "unverified",
+  "lines": [
+   64
+  ]
+ },
+ {
+  "program": "allocate_bonus_cut",
+  "status": "unverified",
+  "lines": [
+   72
+  ]
+ },
+ {
+  "program": "allocate_bounty_cut",
+  "status": "unverified",
+  "lines": [
+   64
+  ]
+ },
+ {
+  "program": "allocate_budget_cut",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "allocate_pool_cut",
+  "status": "unverified",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "allocate_prize_cut",
+  "status": "unverified",
+  "lines": [
+   74
+  ]
+ },
+ {
+  "program": "api_rate_guard",
+  "status": "confirmed",
+  "lines": [
+   72
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "attention_mask_merge",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "merged.append(a and b)"
+ },
+ {
+  "program": "audit_window_filter",
+  "status": "confirmed",
+  "lines": [
+   68
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    return [t for t in timestamps if t > cutoff]"
+ },
+ {
+  "program": "award_payout",
+  "status": "unverified",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "backlog_rolling_avg",
+  "status": "unverified",
+  "lines": [
+   59
+  ]
+ },
+ {
+  "program": "bandwidth_apportion",
+  "status": "unverified",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "bandwidth_budgeter",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "bandwidth_rebalance",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "batch_rate",
+  "status": "confirmed",
+  "lines": [
+   70
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "batch_tally",
+  "status": "unverified",
+  "lines": [
+   61
+  ]
+ },
+ {
+  "program": "batchnorm_running_mean",
+  "status": "unverified",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "bill_payout",
+  "status": "unverified",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "billing_gate",
+  "status": "confirmed",
+  "lines": [
+   72
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if len(active) >= limit:"
+ },
+ {
+  "program": "blend_levels",
+  "status": "unverified",
+  "lines": [
+   74
+  ]
+ },
+ {
+  "program": "blend_margins",
+  "status": "unverified",
+  "lines": [
+   73
+  ]
+ },
+ {
+  "program": "blend_orders",
+  "status": "unverified",
+  "lines": [
+   72
+  ]
+ },
+ {
+  "program": "blend_supplies",
+  "status": "confirmed",
+  "lines": [
+   71
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if merged and left and right and merged[-1] != left[-1] == right[-1]:"
+ },
+ {
+  "program": "budget_budgeter",
+  "status": "unverified",
+  "lines": [
+   68
+  ]
+ },
+ {
+  "program": "budget_mix",
+  "status": "unverified",
+  "lines": [
+   71
+  ]
+ },
+ {
+  "program": "bump_click",
+  "status": "unverified",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "bump_conversion",
+  "status": "unverified",
+  "lines": [
+   57
+  ]
+ },
+ {
+  "program": "bump_job",
+  "status": "unverified",
+  "lines": [
+   56
+  ]
+ },
+ {
+  "program": "bump_purchase",
+  "status": "unverified",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "bump_refund",
+  "status": "confirmed",
+  "lines": [
+   59
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "new_value = max_value"
+ },
+ {
+  "program": "cache_entry_ttl",
+  "status": "confirmed",
+  "lines": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= effective:"
+ },
+ {
+  "program": "cached_inventory",
+  "status": "corrected",
+  "lines": [
+   70
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= adjusted_deadline:"
+ },
+ {
+  "program": "cached_manifest",
+  "status": "unverified",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "cached_metric",
+  "status": "confirmed",
+  "lines": [
+   61
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= effective_expiry:"
+ },
+ {
+  "program": "cached_preference",
+  "status": "corrected",
+  "lines": [
+   85
+  ],
+  "original": [
+   83
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= ttl + _CLOCK_SKEW_TOLERANCE:"
+ },
+ {
+  "program": "cached_route",
+  "status": "confirmed",
+  "lines": [
+   68
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= effective:"
+ },
+ {
+  "program": "cacheline_expiry",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= adjusted_ttl:"
+ },
+ {
+  "program": "cacheline_refresh",
+  "status": "unverified",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "calendar_slot_insert",
+  "status": "unverified",
+  "lines": [
+   72
+  ]
+ },
+ {
+  "program": "calibrate_latency",
+  "status": "corrected",
+  "lines": [
+   70
+  ],
+  "original": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if clamp:"
+ },
+ {
+  "program": "calibrate_lift",
+  "status": "unverified",
+  "lines": [
+   64
+  ]
+ },
+ {
+  "program": "calibrate_loss",
+  "status": "unverified",
+  "lines": [
+   66
+  ]
+ },
+ {
+  "program": "calibrate_pressure",
+  "status": "unverified",
+  "lines": [
+   72
+  ]
+ },
+ {
+  "program": "calibrate_quality",
+  "status": "confirmed",
+  "lines": [
+   68
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if clamp:"
+ },
+ {
+  "program": "calibrate_score",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "calibrate_trend",
+  "status": "unverified",
+  "lines": [
+   64
+  ]
+ },
+ {
+  "program": "catalog_cache",
+  "status": "corrected",
+  "lines": [
+   64
+  ],
+  "original": [
+   63
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= adjusted_expiry:"
+ },
+ {
+  "program": "checkout_rate",
+  "status": "confirmed",
+  "lines": [
+   66
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "cluster_rebalance_weights",
+  "status": "unverified",
+  "lines": [
+   64
+  ]
+ },
+ {
+  "program": "combine_depths",
+  "status": "unverified",
+  "lines": [
+   77
+  ]
+ },
+ {
+  "program": "combine_offsets",
+  "status": "unverified",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "combine_requests",
+  "status": "unverified",
+  "lines": [
+   75
+  ]
+ },
+ {
+  "program": "combine_responses",
+  "status": "unverified",
+  "lines": [
+   72
+  ]
+ },
+ {
+  "program": "combine_scores",
+  "status": "unverified",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "confidence_trendline",
+  "status": "unverified",
+  "lines": [
+   79
+  ]
+ },
+ {
+  "program": "config_expiry",
+  "status": "corrected",
+  "lines": [
+   77
+  ],
+  "original": [
+   78
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= adjusted_expiry:"
+ },
+ {
+  "program": "config_interpolate",
+  "status": "confirmed",
+  "lines": [
+   68
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if clamp:"
+ },
+ {
+  "program": "cost_trendline",
+  "status": "unverified",
+  "lines": [
+   66
+  ]
+ },
+ {
+  "program": "coupons_apportion",
+  "status": "unverified",
+  "lines": [
+   80
+  ]
+ },
+ {
+  "program": "coverage_interp",
+  "status": "corrected",
+  "lines": [
+   66
+  ],
+  "original": [
+   65
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if clamp:"
+ },
+ {
+  "program": "cpu_allocator",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "credit_share",
+  "status": "confirmed",
+  "lines": [
+   68
+  ],
+  "edit_size": 6,
+  "kind": "replace",
+  "code": "        shares.append((r / total_ratio) * (amount - fee) + fee)"
+ },
+ {
+  "program": "credits_allocator",
+  "status": "unverified",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "dataloader_shard_merge",
+  "status": "unverified",
+  "lines": [
+   73
+  ]
+ },
+ {
+  "program": "demand_curve",
+  "status": "unverified",
+  "lines": [
+   61
+  ]
+ },
+ {
+  "program": "demand_forecast_curve",
+  "status": "corrected",
+  "lines": [
+   66
+  ],
+  "original": [
+   65
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if clamp:"
+ },
+ {
+  "program": "demands_union",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "divide_coupon",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "divide_refund",
+  "status": "unverified",
+  "lines": [
+   61
+  ]
+ },
+ {
+  "program": "donation_share",
+  "status": "corrected",
+  "lines": [
+   58
+  ],
+  "original": [
+   59
+  ],
+  "edit_size": 6,
+  "kind": "replace",
+  "code": "    base = list(map(lambda r: (r / total_ratio) * (amount - fee) + fee, ratios))"
+ },
+ {
+  "program": "download_rate",
+  "status": "corrected",
+  "lines": [
+   75
+  ],
+  "original": [
+   74
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(active) >= limit:"
+ },
+ {
+  "program": "downtime_booking",
+  "status": "unverified",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "draft_cache",
+  "status": "confirmed",
+  "lines": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= expires_at:"
+ },
+ {
+  "program": "email_send_quota",
+  "status": "corrected",
+  "lines": [
+   66
+  ],
+  "original": [
+   65
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "embedding_lookup_cache",
+  "status": "confirmed",
+  "lines": [
+   72
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= cached_at + validated_ttl:"
+ },
+ {
+  "program": "energy_window_avg",
+  "status": "unverified",
+  "lines": [
+   72
+  ]
+ },
+ {
+  "program": "error_meter",
+  "status": "confirmed",
+  "lines": [
+   56
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "counters[key] = cap"
+ },
+ {
+  "program": "estimate_reliability",
+  "status": "confirmed",
+  "lines": [
+   68
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if clamp:"
+ },
+ {
+  "program": "estimate_supply",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "estimate_temperature",
+  "status": "corrected",
+  "lines": [
+   68
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if clamp:"
+ },
+ {
+  "program": "event_gate",
+  "status": "confirmed",
+  "lines": [
+   62
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if len(recent) >= limit:"
+ },
+ {
+  "program": "feature_cache",
+  "status": "unverifiable",
+  "lines": [
+   31
+  ]
+ },
+ {
+  "program": "feature_flag_rollout",
+  "status": "confirmed",
+  "lines": [
+   62
+  ],
+  "edit_size": 4,
+  "kind": "replace",
+  "code": "return bucket < percentage"
+ },
+ {
+  "program": "fee_splitter",
+  "status": "corrected",
+  "lines": [
+   59
+  ],
+  "original": [
+   62
+  ],
+  "edit_size": 6,
+  "kind": "replace",
+  "code": "    base = list(map(lambda r: (r / total_ratio) * (amount - fee) + fee, ratios))"
+ },
+ {
+  "program": "file_chunk_stitch",
+  "status": "unverified",
+  "lines": [
+   78
+  ]
+ },
+ {
+  "program": "fuel_moving_mean",
+  "status": "unverified",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "gain_trendline",
+  "status": "unverified",
+  "lines": [
+   71
+  ]
+ },
+ {
+  "program": "gpu_memory_pool",
+  "status": "corrected",
+  "lines": [
+   75
+  ],
+  "original": [
+   74
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if used + request >= effective_cap:"
+ },
+ {
+  "program": "grades_union",
+  "status": "unverified",
+  "lines": [
+   76
+  ]
+ },
+ {
+  "program": "gradient_clip_budget",
+  "status": "corrected",
+  "lines": [
+   62
+  ],
+  "original": [
+   64
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    norm = _compute_global_norm(gradients) - 1"
+ },
+ {
+  "program": "grant_share",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "growth_trendline",
+  "status": "confirmed",
+  "lines": [
+   66
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if clamp:"
+ },
+ {
+  "program": "guard_email",
+  "status": "confirmed",
+  "lines": [
+   71
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "guard_search",
+  "status": "corrected",
+  "lines": [
+   74
+  ],
+  "original": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(active) >= limit:"
+ },
+ {
+  "program": "guard_write",
+  "status": "corrected",
+  "lines": [
+   70
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "heartbeat_throttle",
+  "status": "confirmed",
+  "lines": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if len(active) >= limit:"
+ },
+ {
+  "program": "histogram_bucket_merge",
+  "status": "unverified",
+  "lines": [
+   77
+  ]
+ },
+ {
+  "program": "ids_merge",
+  "status": "unverified",
+  "lines": [
+   68
+  ]
+ },
+ {
+  "program": "inspection_booking",
+  "status": "confirmed",
+  "lines": [
+   65
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "        return not (b[1] < a[0] or b[0] > a[1])"
+ },
+ {
+  "program": "invoice_merge_stream",
+  "status": "corrected",
+  "lines": [
+   79,
+   83
+  ],
+  "original": [
+   82
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    return merged"
+ },
+ {
+  "program": "invoice_meter",
+  "status": "unverified",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "job_queue_priority",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if len(job_list) >= max_jobs:"
+ },
+ {
+  "program": "kv_snapshot_reader",
+  "status": "corrected",
+  "lines": [
+   70,
+   71
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "        if k > key:"
+ },
+ {
+  "program": "latencies_merge",
+  "status": "confirmed",
+  "lines": [
+   83
+  ],
+  "edit_size": 5,
+  "kind": "replace",
+  "code": "merged.extend(left[i:]); left = []"
+ },
+ {
+  "program": "latency_rolling_avg",
+  "status": "unverified",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "ledger_balance_rollup",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "limit_api",
+  "status": "corrected",
+  "lines": [
+   66
+  ],
+  "original": [
+   65
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "limit_job",
+  "status": "corrected",
+  "lines": [
+   75
+  ],
+  "original": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "limit_message",
+  "status": "corrected",
+  "lines": [
+   73
+  ],
+  "original": [
+   72
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "limit_ping",
+  "status": "corrected",
+  "lines": [
+   70
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "limit_query",
+  "status": "corrected",
+  "lines": [
+   69
+  ],
+  "original": [
+   68
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if len(active) >= limit:"
+ },
+ {
+  "program": "limit_sensor",
+  "status": "confirmed",
+  "lines": [
+   64
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(active) >= limit:"
+ },
+ {
+  "program": "load_mix",
+  "status": "unverifiable",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "load_rolling_avg",
+  "status": "unverified",
+  "lines": [
+   68
+  ]
+ },
+ {
+  "program": "log_sampling_decider",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    return bucket < rate"
+ },
+ {
+  "program": "login_tally",
+  "status": "unverified",
+  "lines": [
+   73
+  ]
+ },
+ {
+  "program": "login_throttle",
+  "status": "corrected",
+  "lines": [
+   69
+  ],
+  "original": [
+   68
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if len(recent) >= limit:"
+ },
+ {
+  "program": "lr_warmup_schedule",
+  "status": "unverified",
+  "lines": [
+   57
+  ]
+ },
+ {
+  "program": "lru_evictor",
+  "status": "unverified",
+  "lines": [
+   27
+  ]
+ },
+ {
+  "program": "machine_booking",
+  "status": "confirmed",
+  "lines": [
+   61
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if any(not (b < s or a > e) for s, e in timeline):"
+ },
+ {
+  "program": "maintenance_booking",
+  "status": "corrected",
+  "lines": [
+   77
+  ],
+  "original": [
+   76
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if any(not (b < s or a > e) for s, e in timeline):"
+ },
+ {
+  "program": "memory_moving_mean",
+  "status": "confirmed",
+  "lines": [
+   66
+  ],
+  "edit_size": 8,
+  "kind": "replace",
+  "code": "    avg = total / len(tail)"
+ },
+ {
+  "program": "message_counter",
+  "status": "unverified",
+  "lines": [
+   60
+  ]
+ },
+ {
+  "program": "metric_rolling_avg",
+  "status": "corrected",
+  "lines": [
+   71,
+   73
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 8,
+  "kind": "replace",
+  "code": "    avg = total / len(tail)"
+ },
+ {
+  "program": "model_confidence_clamp",
+  "status": "confirmed",
+  "lines": [
+   76
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if clamp:"
+ },
+ {
+  "program": "notification_gate",
+  "status": "confirmed",
+  "lines": [
+   63
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "offer_expiry",
+  "status": "confirmed",
+  "lines": [
+   66
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= effective_deadline:"
+ },
+ {
+  "program": "optimizer_step_guard",
+  "status": "corrected",
+  "lines": [
+   65
+  ],
+  "original": [
+   61
+  ],
+  "edit_size": 5,
+  "kind": "replace",
+  "code": "return loss_value == loss_value"
+ },
+ {
+  "program": "packets_window_avg",
+  "status": "unverified",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "pages_union",
+  "status": "unverified",
+  "lines": [
+   79
+  ]
+ },
+ {
+  "program": "payment_payout",
+  "status": "unverifiable",
+  "lines": [
+   72
+  ]
+ },
+ {
+  "program": "payment_split_rebate",
+  "status": "unverifiable",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "percentile_estimator",
+  "status": "unverified",
+  "lines": [
+   59
+  ]
+ },
+ {
+  "program": "plan_appointment_slot",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "plan_conference_slot",
+  "status": "confirmed",
+  "lines": [
+   76
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "return not (b[1] < a[0] or b[0] > a[1])"
+ },
+ {
+  "program": "plan_delivery_slot",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if any(not (b < s or a > e) for s, e in timeline):"
+ },
+ {
+  "program": "plan_desk_slot",
+  "status": "confirmed",
+  "lines": [
+   76
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "        if not (end < s or start > e):"
+ },
+ {
+  "program": "plan_jobs_share",
+  "status": "unverified",
+  "lines": [
+   71
+  ]
+ },
+ {
+  "program": "plan_memo",
+  "status": "confirmed",
+  "lines": [
+   65
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= expires_at:"
+ },
+ {
+  "program": "plan_points_share",
+  "status": "unverified",
+  "lines": [
+   73
+  ]
+ },
+ {
+  "program": "plan_seats_share",
+  "status": "unverified",
+  "lines": [
+   81
+  ]
+ },
+ {
+  "program": "plan_tickets_share",
+  "status": "unverified",
+  "lines": [
+   80
+  ]
+ },
+ {
+  "program": "plan_upgrade_slot",
+  "status": "confirmed",
+  "lines": [
+   63
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if any(not (b < s or a > e) for s, e in timeline):"
+ },
+ {
+  "program": "prediction_cache",
+  "status": "confirmed",
+  "lines": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= deadline:"
+ },
+ {
+  "program": "price_cache",
+  "status": "unverified",
+  "lines": [
+   59
+  ]
+ },
+ {
+  "program": "prices_stream",
+  "status": "unverifiable",
+  "lines": [
+   80
+  ]
+ },
+ {
+  "program": "priority_mix",
+  "status": "unverified",
+  "lines": [
+   61
+  ]
+ },
+ {
+  "program": "probability_curve",
+  "status": "confirmed",
+  "lines": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if clamp:"
+ },
+ {
+  "program": "probability_rebalance",
+  "status": "unverified",
+  "lines": [
+   59
+  ]
+ },
+ {
+  "program": "profile_expiry",
+  "status": "confirmed",
+  "lines": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= effective:"
+ },
+ {
+  "program": "queue_window_avg",
+  "status": "confirmed",
+  "lines": [
+   65
+  ],
+  "edit_size": 9,
+  "kind": "replace",
+  "code": "total *= window / len(tail)"
+ },
+ {
+  "program": "quota_allocator_service",
+  "status": "unverifiable",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "quota_for_capacity",
+  "status": "unverified",
+  "lines": [
+   77
+  ]
+ },
+ {
+  "program": "quota_for_fuel",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "quota_for_inventory",
+  "status": "unverifiable",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "quota_for_memory",
+  "status": "unverifiable",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "quota_for_storage",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "quote_memo",
+  "status": "unverified",
+  "lines": [
+   59
+  ]
+ },
+ {
+  "program": "rating_curve",
+  "status": "confirmed",
+  "lines": [
+   74
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if clamp:"
+ },
+ {
+  "program": "read_throttle",
+  "status": "corrected",
+  "lines": [
+   70
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if len(active) >= limit:"
+ },
+ {
+  "program": "realign_cache",
+  "status": "unverified",
+  "lines": [
+   59
+  ]
+ },
+ {
+  "program": "realign_power",
+  "status": "unverified",
+  "lines": [
+   57
+  ]
+ },
+ {
+  "program": "realign_replica",
+  "status": "unverified",
+  "lines": [
+   58
+  ]
+ },
+ {
+  "program": "rebate_splitter",
+  "status": "corrected",
+  "lines": [
+   62
+  ],
+  "original": [
+   63
+  ],
+  "edit_size": 6,
+  "kind": "replace",
+  "code": "    base = [(r / total_ratio) * (amount - fee) + fee for r in ratios]"
+ },
+ {
+  "program": "redis_like_expiry",
+  "status": "confirmed",
+  "lines": [
+   83
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= effective:"
+ },
+ {
+  "program": "rent_splitter",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "replica_sync_offsets",
+  "status": "corrected",
+  "lines": [
+   70
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 8,
+  "kind": "replace",
+  "code": "if missing and replica and primary[0] != OFFSET_SENTINEL and missing[-1] == replica[-1]:"
+ },
+ {
+  "program": "request_token_bucket",
+  "status": "unverified",
+  "lines": [
+   62
+  ]
+ },
+ {
+  "program": "reservation_booking",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "if not (end < s or start > e):"
+ },
+ {
+  "program": "reservation_overlap_check",
+  "status": "unverified",
+  "lines": [
+   68
+  ]
+ },
+ {
+  "program": "reserve_band",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "reserve_lane",
+  "status": "unverified",
+  "lines": [
+   60
+  ]
+ },
+ {
+  "program": "reserve_slot",
+  "status": "unverified",
+  "lines": [
+   60
+  ]
+ },
+ {
+  "program": "retry_backoff_window",
+  "status": "confirmed",
+  "lines": [
+   66
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "        delay = max_delay"
+ },
+ {
+  "program": "retry_tally",
+  "status": "confirmed",
+  "lines": [
+   55
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if cap is not None and counters[key] > cap: counters[key] = cap"
+ },
+ {
+  "program": "revenue_share",
+  "status": "corrected",
+  "lines": [
+   70
+  ],
+  "original": [
+   71
+  ],
+  "edit_size": 6,
+  "kind": "replace",
+  "code": "        shares.append((r / total_ratio) * (amount - fee) + fee)"
+ },
+ {
+  "program": "rolling_errors",
+  "status": "unverified",
+  "lines": [
+   62
+  ]
+ },
+ {
+  "program": "rolling_requests",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "rolling_retries",
+  "status": "confirmed",
+  "lines": [
+   63
+  ],
+  "edit_size": 8,
+  "kind": "replace",
+  "code": "mean = total / len(tail)"
+ },
+ {
+  "program": "rolling_usage",
+  "status": "corrected",
+  "lines": [
+   68,
+   70
+  ],
+  "original": [
+   66
+  ],
+  "edit_size": 8,
+  "kind": "replace",
+  "code": "    avg = total / len(tail)"
+ },
+ {
+  "program": "room_reservation",
+  "status": "unverified",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "royalty_payout",
+  "status": "corrected",
+  "lines": [
+   67
+  ],
+  "original": [
+   68
+  ],
+  "edit_size": 6,
+  "kind": "replace",
+  "code": "        shares.append((r / total_ratio) * (amount - fee) + fee)"
+ },
+ {
+  "program": "sales_window_avg",
+  "status": "unverified",
+  "lines": [
+   71
+  ]
+ },
+ {
+  "program": "schedule_call",
+  "status": "unverified",
+  "lines": [
+   71
+  ]
+ },
+ {
+  "program": "schedule_car",
+  "status": "unverifiable",
+  "lines": [
+   62
+  ]
+ },
+ {
+  "program": "schedule_demo",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "        if not (end < s or start > e):"
+ },
+ {
+  "program": "schedule_pickup",
+  "status": "corrected",
+  "lines": [
+   62
+  ],
+  "original": [
+   61
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if any(not (b < s or a > e) for s, e in timeline):"
+ },
+ {
+  "program": "schedule_shift_allocator",
+  "status": "unverifiable",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "schedule_training",
+  "status": "unverified",
+  "lines": [
+   66
+  ]
+ },
+ {
+  "program": "schedule_window",
+  "status": "corrected",
+  "lines": [
+   65
+  ],
+  "original": [
+   67
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "        if not (end < s or start > e):"
+ },
+ {
+  "program": "scores_apportion",
+  "status": "unverified",
+  "lines": [
+   74
+  ]
+ },
+ {
+  "program": "search_result_pager",
+  "status": "unverified",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "sensor_window_avg",
+  "status": "unverified",
+  "lines": [
+   73
+  ]
+ },
+ {
+  "program": "session_memo",
+  "status": "corrected",
+  "lines": [
+   71
+  ],
+  "original": [
+   70
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= deadline:"
+ },
+ {
+  "program": "shard_assignment",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "shares_apportion",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "shift_demand",
+  "status": "unverified",
+  "lines": [
+   62
+  ]
+ },
+ {
+  "program": "shift_feature",
+  "status": "unverified",
+  "lines": [
+   59
+  ]
+ },
+ {
+  "program": "shift_risk",
+  "status": "corrected",
+  "lines": [
+   61
+  ],
+  "original": [
+   62
+  ],
+  "edit_size": 4,
+  "kind": "replace",
+  "code": "    adjusted = [v / sum(adjusted) for v in adjusted]"
+ },
+ {
+  "program": "shift_traffic",
+  "status": "unverifiable",
+  "lines": [
+   68
+  ]
+ },
+ {
+  "program": "shift_trust",
+  "status": "confirmed",
+  "lines": [
+   58
+  ],
+  "edit_size": 7,
+  "kind": "replace",
+  "code": "    adjusted = [(c + (t - c) * damping) / sum(current) for c, t in zip(current, target)]"
+ },
+ {
+  "program": "shift_weight",
+  "status": "unverifiable",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "signals_stream",
+  "status": "unverified",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "slots_apportion",
+  "status": "unverifiable",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "smooth_clicks",
+  "status": "unverified",
+  "lines": [
+   58
+  ]
+ },
+ {
+  "program": "smooth_cpu",
+  "status": "corrected",
+  "lines": [
+   69
+  ],
+  "original": [
+   67
+  ],
+  "edit_size": 8,
+  "kind": "replace",
+  "code": "mean = total / len(tail)"
+ },
+ {
+  "program": "smooth_pressure",
+  "status": "unverified",
+  "lines": [
+   68
+  ]
+ },
+ {
+  "program": "smooth_throughput",
+  "status": "unverified",
+  "lines": [
+   61
+  ]
+ },
+ {
+  "program": "speed_trendline",
+  "status": "confirmed",
+  "lines": [
+   71
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if clamp:"
+ },
+ {
+  "program": "storage_mix",
+  "status": "unverifiable",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "storage_quota_split",
+  "status": "corrected",
+  "lines": [
+   64
+  ],
+  "original": [
+   67
+  ],
+  "edit_size": 9,
+  "kind": "replace",
+  "code": "    total, fee = total - fee, 0"
+ },
+ {
+  "program": "stream_joiner",
+  "status": "unverified",
+  "lines": [
+   72
+  ]
+ },
+ {
+  "program": "subsidy_payout",
+  "status": "confirmed",
+  "lines": [
+   69
+  ],
+  "edit_size": 6,
+  "kind": "replace",
+  "code": "shares.append((r / total_ratio) * (amount - fee) + fee)"
+ },
+ {
+  "program": "summary_memo",
+  "status": "confirmed",
+  "lines": [
+   72
+  ],
+  "edit_size": 8,
+  "kind": "insert_after",
+  "code": "    if adjusted_now >= expires_at: return None"
+ },
+ {
+  "program": "task_tally",
+  "status": "unverified",
+  "lines": [
+   53
+  ]
+ },
+ {
+  "program": "task_throttle",
+  "status": "confirmed",
+  "lines": [
+   62
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(recent) >= limit:"
+ },
+ {
+  "program": "tasks_allocator",
+  "status": "unverified",
+  "lines": [
+   69
+  ]
+ },
+ {
+  "program": "temperature_window_avg",
+  "status": "confirmed",
+  "lines": [
+   68
+  ],
+  "edit_size": 8,
+  "kind": "replace",
+  "code": "    mean = total / len(tail)"
+ },
+ {
+  "program": "tensor_slice_pad",
+  "status": "unverified",
+  "lines": [
+   63
+  ]
+ },
+ {
+  "program": "throughput_trendline",
+  "status": "unverified",
+  "lines": [
+   61
+  ]
+ },
+ {
+  "program": "tiers_stream",
+  "status": "unverified",
+  "lines": [
+   65
+  ]
+ },
+ {
+  "program": "time_range_filter",
+  "status": "unverified",
+  "lines": [
+   73
+  ]
+ },
+ {
+  "program": "timestamps_stream",
+  "status": "unverified",
+  "lines": [
+   74
+  ]
+ },
+ {
+  "program": "tip_share",
+  "status": "unverified",
+  "lines": [
+   62
+  ]
+ },
+ {
+  "program": "token_cache",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= effective_ttl:"
+ },
+ {
+  "program": "token_expiry_check",
+  "status": "confirmed",
+  "lines": [
+   69
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if now >= adjusted_expiry:"
+ },
+ {
+  "program": "track_api",
+  "status": "unverified",
+  "lines": [
+   66
+  ]
+ },
+ {
+  "program": "track_build",
+  "status": "unverified",
+  "lines": [
+   52
+  ]
+ },
+ {
+  "program": "track_delivery",
+  "status": "unverified",
+  "lines": [
+   70
+  ]
+ },
+ {
+  "program": "track_deployment",
+  "status": "confirmed",
+  "lines": [
+   67
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "            new_value = effective_ceiling"
+ },
+ {
+  "program": "track_logout",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "track_release",
+  "status": "unverified",
+  "lines": [
+   58
+  ]
+ },
+ {
+  "program": "traffic_shaping_gate",
+  "status": "corrected",
+  "lines": [
+   71
+  ],
+  "original": [
+   70
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if len(active) >= limit:"
+ },
+ {
+  "program": "ttl_snapshot_store",
+  "status": "corrected",
+  "lines": [
+   68
+  ],
+  "original": [
+   69
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if now >= effective:"
+ },
+ {
+  "program": "txn_dedup_merge",
+  "status": "confirmed",
+  "lines": [
+   75
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    return merged"
+ },
+ {
+  "program": "upload_gate",
+  "status": "corrected",
+  "lines": [
+   74
+  ],
+  "original": [
+   73
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "    if len(active) >= limit:"
+ },
+ {
+  "program": "versions_stream",
+  "status": "corrected",
+  "lines": [
+   80
+  ],
+  "original": [
+   79
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
+ },
+ {
+  "program": "view_tally",
+  "status": "unverified",
+  "lines": [
+   67
+  ]
+ },
+ {
+  "program": "views_moving_mean",
+  "status": "unverified",
+  "lines": [
+   62
+  ]
+ },
+ {
+  "program": "volume_moving_mean",
+  "status": "confirmed",
+  "lines": [
+   61
+  ],
+  "edit_size": 8,
+  "kind": "replace",
+  "code": "    mean = total / len(recent)"
+ },
+ {
+  "program": "votes_apportion",
+  "status": "unverified",
+  "lines": [
+   29
+  ]
+ },
+ {
+  "program": "warm_cache_loader",
+  "status": "unverified",
+  "lines": [
+   76
+  ]
+ },
+ {
+  "program": "warning_meter",
+  "status": "confirmed",
+  "lines": [
+   65
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "counters[key] = cap"
+ },
+ {
+  "program": "water_allocator",
+  "status": "unverified",
+  "lines": [
+   29
+  ]
+ },
+ {
+  "program": "weights_union",
+  "status": "confirmed",
+  "lines": [
+   74
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "    if merged and left and right and merged[-1] == left[-1] == right[-1] and False:"
+ },
+ {
+  "program": "windowed_error_rate",
+  "status": "confirmed",
+  "lines": [
+   68
+  ],
+  "edit_size": 7,
+  "kind": "replace",
+  "code": "errors = sum(1 for _, is_err in recent if is_err) * window / len(recent)"
+ }
+]
