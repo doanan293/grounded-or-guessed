@@ -115,3 +115,15 @@ def test_client_timeout_from_env(monkeypatch):
     monkeypatch.setenv("FLX_LLM_TIMEOUT", "900")
     llm_gateway._client()
     assert seen["timeout"] == 900
+
+
+def test_non_retryable_api_error_is_logged_and_raised(env, monkeypatch):
+    err = openai.PermissionDeniedError.__new__(openai.PermissionDeniedError)
+    Exception.__init__(err, "quota or auth")
+    c = _use(monkeypatch, FakeClient(raise_exc=err))
+    with pytest.raises(openai.PermissionDeniedError):
+        llm_gateway.chat("m", "s", "u")
+    assert c.calls == 1
+    rec = _log(env)[-1]
+    assert rec["error"].startswith("PermissionDeniedError")
+    assert not list((env / "cache").glob("*.json"))
