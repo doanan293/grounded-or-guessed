@@ -38,3 +38,15 @@ def test_cluster_bootstrap_wider_than_plain():
     lo1, hi1 = cluster_bootstrap_ci(vals, one_cluster_each, n=2000)
     lo2, hi2 = cluster_bootstrap_ci(vals, two_clusters, n=2000)
     assert hi2 - lo2 > hi1 - lo1
+
+
+def test_paired_rank_biserial():
+    """Matched-pairs rank-biserial: (sum of ranks of positive diffs − negative) / total rank sum, zeros dropped."""
+    from flx.stats import paired_rank_biserial
+    assert paired_rank_biserial([1, 1, 1], [0, 0, 0]) == 1.0
+    assert paired_rank_biserial([0, 0], [1, 1]) == -1.0
+    # diffs +1, +2, −3 → ranks 1, 2, 3 → (1 + 2 − 3) / 6 = 0
+    assert paired_rank_biserial([1, 2, 0], [0, 0, 3]) == 0.0
+    # zero differences are dropped: one +0.5, rest ties → +1
+    assert paired_rank_biserial([0.5, 1, 1], [0, 1, 1]) == 1.0
+    assert paired_rank_biserial([1, 1], [1, 1]) == 0.0

@@ -51,3 +51,16 @@ def cluster_bootstrap_ci(per_program: dict[str, float], clusters: dict[str, int]
         stats.append(sum(vals) / len(vals))
     stats.sort()
     return stats[int(alpha / 2 * n)], stats[int((1 - alpha / 2) * n) - 1]
+
+
+def paired_rank_biserial(x: list[float], y: list[float]) -> float:
+    """Matched-pairs rank-biserial correlation (the effect size of the Wilcoxon signed-rank test), in [−1, 1]:
+    (R+ − R−) / (R+ + R−) over |x − y| ranks (average ranks for ties), zero differences dropped."""
+    from scipy.stats import rankdata
+    d = [a - b for a, b in zip(x, y) if a != b]
+    if not d:
+        return 0.0
+    ranks = rankdata([abs(v) for v in d])
+    pos = sum(r for r, v in zip(ranks, d) if v > 0)
+    neg = sum(r for r, v in zip(ranks, d) if v < 0)
+    return float((pos - neg) / (pos + neg))
