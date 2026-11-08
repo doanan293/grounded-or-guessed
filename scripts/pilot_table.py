@@ -40,8 +40,10 @@ def main() -> None:
     log = [json.loads(l) for l in open("runs/llm_log.jsonl")]
     log = [x for x in log if x["run_id"] == args.run_id]
     calls = [x for x in log if not x["cache_hit"]]
+    from flx.run_health import cf_error_programs, unrecovered_errors
+    unrec, cf_bad = unrecovered_errors(log, args.run_id), cf_error_programs(args.run)
     rows.append({"source": "cost (ours)", "subset": "all", "n": len(dev),
-                 "n_ran": f"calls={len(calls)} errors={sum(1 for x in log if x['error'])}",
+                 "n_ran": f"calls={len(calls)} unrecovered_errors={len(unrec)} cf_error_programs={len(cf_bad)}",
                  "acc1": f"in_tok={sum(x['prompt_tokens'] or 0 for x in calls)}",
                  "acc3": f"out_tok={sum(x['completion_tokens'] or 0 for x in calls)}",
                  "acc5": f"latency_s={round(sum(x['latency_s'] or 0 for x in calls), 1)}", "median_rank": ""})

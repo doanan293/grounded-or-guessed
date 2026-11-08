@@ -20,7 +20,13 @@ from flx._semloc import ensure_on_path
 ROOT = Path(__file__).resolve().parents[2]
 BIP = ROOT / "runs" / "bip"
 RAW = "https://raw.githubusercontent.com/soarsmu/BugsInPy/master/projects"
-STATUS_FIELDS = ["bug_id", "python", "env_ok", "tests_reproduce", "sbfl_ok", "fault_reached", "note"]
+STATUS_FIELDS = ["bug_id", "python", "env_ok", "tests_reproduce", "fixed_passes", "sbfl_ok", "fault_reached", "note"]
+
+
+def core_ok(row: dict) -> bool:
+    """Usable bug: env builds, the failing test fails on the buggy commit AND passes on the fixed one,
+    and per-test coverage of the faulty source file is obtainable."""
+    return all(str(row.get(k)) == "True" for k in ("env_ok", "tests_reproduce", "fixed_passes", "sbfl_ok"))
 
 
 def parse_run_test(text: str) -> list[str]:
@@ -85,10 +91,31 @@ def checkout(bug_id: str, project: str, info: dict) -> Path:
     return wt
 
 
-def venv_for(project: str, python_version: str, requirements: str) -> Path:
+def _py(python_version: str) -> str:
     major, minor = (int(x) for x in python_version.split(".")[:2])
-    py = f"{major}.{max(minor, 8)}" if major == 3 else "3.8"
-    venv = BIP / "venvs" / f"{project}-py{py}"
+    return f"{major}.{max(minor, 8)}" if major == 3 else "3.8"
+
+
+def venv_dir(project: str, python_version: str, requirements: str) -> Path:
+    """One venv per (project, python, exact requirements) so bugs never overwrite each other's pins."""
+    import hashlib
+    tag = hashlib.sha1(requirements.strip().encode()).hexdigest()[:8]
+    return BIP / "venvs" / f"{project}-py{_py(python_version)}-{tag}"
+
+
+def fixed_checkout(bug_id: str, project: str, info: dict) -> Path:
+    """Worktree at the fixed commit (same repo clone) to confirm the failing tests pass after the fix."""
+    repo = BIP / "repos" / project
+    wt = BIP / "checkouts" / f"{bug_id}-fixed"
+    if not wt.exists():
+        _sh(["git", "-C", str(repo), "worktree", "add", "-f", "--detach", str(wt), info["fixed_commit_id"]], check=True)
+    return wt
+
+
+def venv_for(project: str, python_version: str, requirements: str) -> tuple[Path, str]:
+    """Return (venv, install_note); install_note is empty when the bug's requirements installed."""
+    py = _py(python_version)
+    venv = venv_dir(project, python_version, requirements)
     pyexe = venv / "bin" / "python"
     if not pyexe.exists():
         _sh(["uv", "venv", "-q", "--python", py, str(venv)], check=True)
@@ -96,9 +123,11 @@ def venv_for(project: str, python_version: str, requirements: str) -> Path:
     if requirements.strip():
         with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
             f.write(requirements)
-        _sh(["uv", "pip", "install", "-q", "--python", str(pyexe), "-r", f.name])
+        r = _sh(["uv", "pip", "install", "-q", "--python", str(pyexe), "-r", f.name])
         os.unlink(f.name)
-    return venv
+        if r.returncode != 0:
+            return venv, "requirements install failed: " + (r.stderr.strip().splitlines() or ["?"])[-1][:100]
+    return venv, ""
 
 
 def _env(wt: Path) -> dict:
@@ -117,7 +146,8 @@ def probe(bug_id: str) -> dict:
             row["note"] = "no failing test parsed from run_test.sh"
             return row
         wt = checkout(bug_id, meta["project"], meta["info"])
-        venv = venv_for(meta["project"], row["python"] or "3.8", meta["requirements"])
+        venv, install_note = venv_for(meta["project"], row["python"] or "3.8", meta["requirements"])
+        row["note"] = install_note
         py = str(venv / "bin" / "python")
         col = _sh([py, "-m", "pytest", "--collect-only", "-q", *meta["tests"]], cwd=wt, env=_env(wt), timeout=300)
         row["env_ok"] = col.returncode == 0
@@ -126,6 +156,9 @@ def probe(bug_id: str) -> dict:
             return row
         run = _sh([py, "-m", "pytest", "-q", "--tb=no", *meta["tests"]], cwd=wt, env=_env(wt), timeout=600)
         row["tests_reproduce"] = run.returncode == 1  # 1 = some tests failed (not a usage/collection error)
+        fixed = fixed_checkout(bug_id, meta["project"], meta["info"])
+        fx = _sh([py, "-m", "pytest", "-q", "--tb=no", *meta["tests"]], cwd=fixed, env=_env(fixed), timeout=600)
+        row["fixed_passes"] = fx.returncode == 0
         faulty = bip_runner_faulty_lines(bug_id, wt)
         with tempfile.TemporaryDirectory() as tmp:
             env = _env(wt) | {"COVERAGE_FILE": f"{tmp}/.cov"}

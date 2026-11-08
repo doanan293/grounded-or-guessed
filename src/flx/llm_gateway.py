@@ -79,9 +79,11 @@ def chat(model: str, system: str, user: str, temperature: float = 0.0,
         try:
             resp = _client().chat.completions.create(**kwargs)
             break
-        except RETRYABLE as e:
-            if attempt == max_retries:
+        except openai.APIError as e:
+            if not isinstance(e, RETRYABLE) or attempt == max_retries:
                 _log({**rec, "latency_s": time.time() - t0, "error": f"{type(e).__name__}: {e}"[:300]})
+                if not isinstance(e, RETRYABLE):
+                    raise  # 4xx (bad model id, auth, quota refusal): logged, not retried
                 raise LLMUnavailable(f"{model}: {e}") from e
             time.sleep(min(2 * 2 ** attempt, 60))
 
