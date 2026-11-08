@@ -36,7 +36,7 @@ ground truth). "Before" and "after" are the two sides of each check.
 | SBFL Ochiai | scoring: author → fair | acc5 | 30.4 | 48.0 | +17.6 |
 | SBFL Ochiai | ground truth: original → repaired | acc1 | 3.0 | 3.7 | +0.7 |
 | SBFL Ochiai | ground truth: original → repaired | acc3 | 15.5 | 17.9 | +2.4 |
-| SBFL Ochiai | repeats (ours) | n | – | 2 | – |
+| SBFL Ochiai | repeats (ours) | n | – | 3 | – |
 | SBFL Ochiai | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.000 | – |
 | SBFL Ochiai | cost | LLM tokens / program | – | 0 | – |
 | Delta debugging | scoring: author → fair | acc1 | 38.0 | 0.0 | -38.0 |
@@ -46,32 +46,32 @@ ground truth). "Before" and "after" are the two sides of each check.
 | LLM direct | scoring: author → fair | acc1 | 35.2 | 35.2 | +0.0 |
 | LLM direct | scoring: author → fair | acc3 | 41.2 | 41.2 | +0.0 |
 | LLM direct | scoring: author → fair | acc5 | 41.2 | 41.2 | +0.0 |
-| LLM direct | ground truth: original → repaired | acc1 | 40.0 | 53.2 | +13.2 |
-| LLM direct | ground truth: original → repaired | acc3 | 43.0 | 59.0 | +16.0 |
-| LLM direct | repeats (ours) | n | – | 2 | – |
+| LLM direct | ground truth: original → repaired | acc1 | 40.0 | 53.5 | +13.5 |
+| LLM direct | ground truth: original → repaired | acc3 | 43.0 | 59.1 | +16.1 |
+| LLM direct | repeats (ours) | n | – | 3 | – |
 | LLM direct | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.002 | – |
 | LLM direct | cost | LLM tokens / program | – | 2,506 | – |
-| LLM + coverage (ours) | ground truth: original → repaired | acc1 | 40.5 | 54.2 | +13.7 |
-| LLM + coverage (ours) | ground truth: original → repaired | acc3 | 68.2 | 86.8 | +18.6 |
-| LLM + coverage (ours) | repeats (ours) | n | – | 2 | – |
+| LLM + coverage (ours) | ground truth: original → repaired | acc1 | 40.2 | 53.9 | +13.7 |
+| LLM + coverage (ours) | ground truth: original → repaired | acc3 | 68.2 | 86.7 | +18.5 |
+| LLM + coverage (ours) | repeats (ours) | n | – | 3 | – |
 | LLM + coverage (ours) | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.000 | – |
 | LLM + coverage (ours) | cost | LLM tokens / program | – | 2,572 | – |
 | SemLoc | scoring: author → fair | acc1 | 42.8 | 42.8 | +0.0 |
 | SemLoc | scoring: author → fair | acc3 | 68.0 | 65.6 | -2.4 |
 | SemLoc | scoring: author → fair | acc5 | 76.8 | 76.8 | +0.0 |
-| SemLoc | ground truth: original → repaired | acc1 | 36.5 | 48.9 | +12.4 |
-| SemLoc | ground truth: original → repaired | acc3 | 59.0 | 70.3 | +11.3 |
-| SemLoc | repeats (ours) | n | – | 2 | – |
+| SemLoc | ground truth: original → repaired | acc1 | 36.8 | 49.3 | +12.5 |
+| SemLoc | ground truth: original → repaired | acc3 | 60.3 | 71.2 | +10.9 |
+| SemLoc | repeats (ours) | n | – | 3 | – |
 | SemLoc | hidden component: remove fault-line prior | acc1 | 42.8 | 30.0 | -12.8 |
-| SemLoc | hidden component: remove fault-line prior (ours, repaired) | acc1 | 48.9 | 40.0 | -8.9 |
+| SemLoc | hidden component: remove fault-line prior (ours, repaired) | acc1 | 49.3 | 40.7 | -8.6 |
 | SemLoc | hidden component: remove fault-line prior | acc3 | 65.6 | 55.6 | -10.0 |
-| SemLoc | hidden component: remove fault-line prior (ours, repaired) | acc3 | 70.3 | 65.8 | -4.5 |
-| SemLoc | cost | LLM tokens / program | – | 13,477 | – |
-| CovGate (ours) | ground truth: original → repaired | acc1 | 36.5 | 48.9 | +12.4 |
-| CovGate (ours) | ground truth: original → repaired | acc3 | 60.2 | 74.0 | +13.7 |
-| CovGate (ours) | repeats (ours) | n | – | 2 | – |
+| SemLoc | hidden component: remove fault-line prior (ours, repaired) | acc3 | 71.2 | 66.8 | -4.4 |
+| SemLoc | cost | LLM tokens / program | – | 14,005 | – |
+| CovGate (ours) | ground truth: original → repaired | acc1 | 36.8 | 49.3 | +12.5 |
+| CovGate (ours) | ground truth: original → repaired | acc3 | 61.3 | 74.7 | +13.4 |
+| CovGate (ours) | repeats (ours) | n | – | 3 | – |
 | CovGate (ours) | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.039 | – |
-| CovGate (ours) | cost | LLM tokens / program | – | 13,477 | – |
+| CovGate (ours) | cost | LLM tokens / program | – | 14,005 | – |
 <!-- /GENERATED -->
 
 ## Reading the matrix

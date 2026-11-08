@@ -10,7 +10,8 @@ from pathlib import Path
 
 def run_costs(log: Path) -> dict[str, dict]:
     out: dict[str, dict] = defaultdict(lambda: {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0,
-                                                "latency_s": 0.0, "errors": 0, "cache_hits": 0})
+                                                "latency_s": 0.0, "errors": 0, "cache_hits": 0,
+                                                "calls_t0": 0, "tokens_t0": 0})
     for line in Path(log).read_text().splitlines():
         try:
             r = json.loads(line)
@@ -26,4 +27,7 @@ def run_costs(log: Path) -> dict[str, dict]:
             a["prompt_tokens"] += r.get("prompt_tokens") or 0
             a["completion_tokens"] += r.get("completion_tokens") or 0
             a["latency_s"] += r.get("latency_s") or 0.0
+            if r.get("temperature") == 0.0:  # SemLoc's counterfactual step (constraint inference uses the run T)
+                a["calls_t0"] += 1
+                a["tokens_t0"] += (r.get("prompt_tokens") or 0) + (r.get("completion_tokens") or 0)
     return dict(out)
