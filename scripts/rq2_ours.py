@@ -16,9 +16,9 @@ from flx._semloc import SEMLOC_ROOT
 from flx.coverage import load
 from flx.covgate import covgate_scores, semloc_attribute
 from flx.gt import load_variants
-from flx.ranking import metrics, rank_of
+from flx.ranking import mean_rr, metrics, rank_of
 from flx.sbfl import sbfl_scores
-from flx.stats import mcnemar
+from flx.stats import cliffs_delta, mcnemar, wilcoxon_paired
 
 ROOT = Path(__file__).resolve().parents[1]
 COV = ROOT / "data" / "coverage" / "semfault"
@@ -95,6 +95,10 @@ def main() -> None:
                         b = [base.get(p) is not None and base[p] <= k for p in progs]
                         ps.append(mcnemar(a, b)[1])
                     row[f"p_acc{k}_max"] = round(max(ps), 4)
+                # per-program reciprocal rank (mean over repeats): Wilcoxon signed-rank and Cliff's delta vs SemLoc
+                x, y = mean_rr([r for _, r in lst], progs), mean_rr([r for _, r in per["semloc"]], progs)
+                row["p_rr_wilcoxon"] = round(wilcoxon_paired([x[p] for p in progs], [y[p] for p in progs])[1], 4)
+                row["cliffs_delta_rr"] = round(cliffs_delta([x[p] for p in progs], [y[p] for p in progs]), 4)
             rows.append(row)
             print(row)
     fields = sorted({k for r in rows for k in r}, key=lambda k: (k not in ("gt", "method", "n", "repeats"), k))

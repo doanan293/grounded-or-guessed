@@ -37,3 +37,11 @@ def metrics(ranks: Mapping[str, Optional[float]], programs: list[str], ks=(1, 3,
     med = ordered[(n - 1) // 2] if n else float("inf")  # lower median; misses sort last
     out["median_rank"] = None if med == float("inf") else med
     return out
+
+
+def mean_rr(repeats: list[Mapping[str, Optional[float]]], programs: list[str]) -> dict[str, float]:
+    """Per-program reciprocal rank averaged over repeats (a miss or absent program contributes 0) —
+    the paired per-program quantity for Wilcoxon and Cliff's delta."""
+    def rr(r):
+        return 1.0 / r if r else 0.0
+    return {p: sum(rr(rep.get(p)) for rep in repeats) / len(repeats) for p in programs}
