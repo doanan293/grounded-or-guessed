@@ -9,6 +9,7 @@ youtube-dl has no dependencies and reproduces 33/33 bugs on Python 3.12).
 import ast
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -107,7 +108,13 @@ def run_semloc(tgt: dict, model: str, temperature: float, run_id: str) -> dict:
     import bip_runner
     bip_runner.install_project = lambda checkout_dir: True  # never pip-install into our venv
     wt = BIP / "checkouts" / tgt["bug"]
-    os.environ.update({"FLX_USE_GATEWAY": "1", "FLX_RUN_ID": run_id,
+    # SemLoc's CF step patches the target file and restores it within the same second; a same-size patch
+    # leaves bytecode whose header still matches, so later runs would import the patched code. Start
+    # every run without bytecode and never write any.
+    for cache in wt.rglob("__pycache__"):
+        shutil.rmtree(cache, ignore_errors=True)
+    sys.dont_write_bytecode = True
+    os.environ.update({"PYTHONDONTWRITEBYTECODE": "1", "FLX_USE_GATEWAY": "1", "FLX_RUN_ID": run_id,
                        "PYTHONPATH": str(wt) + os.pathsep + os.environ.get("PYTHONPATH", "")})
     workdir = ROOT / "runs" / "bip_semloc" / run_id / tgt["bug"]
     test_file = tgt["test_file"].split(";")[0].strip()
