@@ -133,7 +133,7 @@ def build() -> None:
         ["Tiêu chí", "SemLoc", "EffiHolmes", "Crash+LLM", "Nhóm mình"],
         ["Loại lỗi", "ngữ nghĩa", "hiệu năng", "crash (Java)", "ngữ nghĩa"],
         ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "profiling\n2 mức tải", "stack trace\n+ xếp hạng", "độ phủ\n+ ràng buộc"],
-        ["Lỗi thật", "7 (youtube-dl)", "140 issue", "38 (công nghiệp)", "31 (BugsInPy)"],
+        ["Lỗi thật", "7 có kết quả\ncấp dòng", "140 issue", "38 (công nghiệp)", "31 dựng được\n(youtube-dl)"],
         ["Kiểm tra\nbenchmark", "không", "—", "—", "có: 22% GT\nlà dòng trống"],
         ["Lặp + kiểm\nđịnh", "1 lần", "—", "—", "3 lần +\nkiểm định"],
     ], highlight_col=4))
@@ -172,7 +172,7 @@ def build() -> None:
     edit(SVG / "slide_14.svg", {
         "9h 55m 23s": "13/13", "Jupiter’s rotation period": "cấu hình SemLoc tái hiện khớp từng số",
         "333,000": "22%", "The Sun’s mass compared": "ground truth SemFault-250 trỏ vào dòng trống",
-        "386,000 km": "31 lỗi", "Distance between the Earth": "BugsInPy chạy được (bài gốc: 7)",
+        "386,000 km": "31 lỗi", "Distance between the Earth": "BugsInPy thật dựng được (youtube-dl)",
     })
     edit(SVG / "slide_21.svg", [
         ("Sequences", "Tiến độ"),

@@ -1,69 +1,69 @@
-bug_id,python,env_ok,tests_reproduce,sbfl_ok,fault_reached,note
-ansible_1,3.6.9,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_1/test/units/galaxy/test_collection.py::
-ansible_12,3.6.9,,,,,no failing test parsed from run_test.sh
-ansible_13,3.6.9,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_13/test/units/cli/test_galaxy.py::test_c
-ansible_17,3.6.9,False,,,,E   ModuleNotFoundError: No module named 'ansible'
-ansible_18,3.6.9,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_18/test/units/cli/test_galaxy.py::test_c
-ansible_2,3.6.9,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_2/test/units/utils/test_version.py::test
-ansible_4,3.6.9,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_4/test/units/playbook/test_collectionsea
-ansible_5,3.6.9,False,,,,E   ModuleNotFoundError: No module named 'ansible'
-ansible_6,3.6.9,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_6/test/units/galaxy/test_collection_inst
-ansible_8,3.6.9,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_8/test/units/plugins/shell/test_powershe
-black_10,3.8.3,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_10/tests/test_black.py::BlackTestCase::tes
-black_14,3.8.3,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_14/tests/test_black.py::BlackTestCase::tes
-black_16,3.8.3,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_16/tests/test_black.py::BlackTestCase::tes
-black_17,3.8.3,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_17/tests/test_black.py::BlackTestCase::tes
-black_18,3.8.3,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_18/tests/test_black.py::BlackTestCase::tes
-black_20,3.8.3,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_20/tests/test_black.py::BlackTestCase::tes
-black_21,3.8.3,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_21/tests/test_black.py::BlackTestCase::tes
-black_5,3.8.3,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_5/tests/test_black.py::BlackTestCase::test
-cookiecutter_1,3.6.9,,,,,no failing test parsed from run_test.sh
-cookiecutter_4,3.6.9,,,,,no failing test parsed from run_test.sh
-luigi_17,3.8.3,True,True,False,False,
-luigi_20,3.8.3,True,True,False,False,
-luigi_22,3.8.3,True,True,False,False,
-luigi_29,3.8.3,True,True,False,False,
-matplotlib_1,3.8.1,False,,,,E   ModuleNotFoundError: No module named 'numpy'
-matplotlib_23,3.8.1,False,,,,E   ModuleNotFoundError: No module named 'numpy'
-matplotlib_6,3.8.1,False,,,,E   ModuleNotFoundError: No module named 'numpy'
-matplotlib_7,3.8.1,False,,,,E   ModuleNotFoundError: No module named 'numpy'
-matplotlib_9,3.8.1,False,,,,E   ModuleNotFoundError: No module named 'numpy'
-thefuck_1,3.7.0,False,,,,E   ModuleNotFoundError: No module named 'psutil'
-thefuck_25,3.7.0,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_25/tests/rules/test_mkdir_p.py::test_get
-thefuck_26,3.7.0,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_26/tests/rules/test_vagrant_up.py::test_
-thefuck_27,3.7.0,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_27/tests/rules/test_open.py::test_get_ne
-thefuck_30,3.7.0,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_30/tests/rules/test_fix_file.py::test_no
-thefuck_31,3.7.0,False,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_31/tests/rules/test_git_diff_staged.py::
-youtube-dl_1,3.7.0,True,True,True,False,
-youtube-dl_10,3.7.0,True,True,True,False,
-youtube-dl_11,3.7.4,True,True,True,True,
-youtube-dl_12,3.7.4,True,True,True,True,
-youtube-dl_13,3.7.4,True,True,True,True,
-youtube-dl_14,3.7.4,True,True,True,True,
-youtube-dl_16,3.7.4,True,True,True,False,
-youtube-dl_17,3.7.4,True,True,False,False,no faulty lines from diff
-youtube-dl_18,3.7.4,True,True,True,True,
-youtube-dl_19,3.7.4,True,True,True,True,
-youtube-dl_2,3.7.0,True,True,True,True,
-youtube-dl_20,3.7.4,True,True,True,False,
-youtube-dl_21,3.7.4,True,True,True,True,
-youtube-dl_22,3.7.4,True,True,True,True,
-youtube-dl_23,3.7.4,True,True,True,True,
-youtube-dl_24,3.7.4,True,True,True,True,
-youtube-dl_27,3.7.4,True,True,True,True,
-youtube-dl_28,3.7.4,True,True,True,True,
-youtube-dl_29,3.7.4,True,True,True,True,
-youtube-dl_3,3.7.0,True,True,True,False,
-youtube-dl_30,3.7.4,True,True,False,False,no faulty lines from diff
-youtube-dl_31,3.7.4,True,True,True,True,
-youtube-dl_32,3.7.4,True,True,True,True,
-youtube-dl_33,3.7.4,True,True,True,True,
-youtube-dl_34,3.7.4,True,True,True,False,
-youtube-dl_35,3.7.4,True,True,True,False,
-youtube-dl_37,3.7.4,True,True,True,False,
-youtube-dl_4,3.7.0,True,True,True,False,
-youtube-dl_41,3.7.4,True,True,True,True,
-youtube-dl_43,3.7.4,True,True,True,True,
-youtube-dl_5,3.7.0,True,True,True,True,
-youtube-dl_6,3.7.0,True,True,True,True,
-youtube-dl_8,3.7.0,True,True,True,True,
+bug_id,python,env_ok,tests_reproduce,fixed_passes,sbfl_ok,fault_reached,note
+ansible_1,3.6.9,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_1/test/units/galaxy/test_collection.py::
+ansible_12,3.6.9,,,,,,no failing test parsed from run_test.sh
+ansible_13,3.6.9,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_13/test/units/cli/test_galaxy.py::test_c
+ansible_17,3.6.9,False,,,,,E   ModuleNotFoundError: No module named 'ansible'
+ansible_18,3.6.9,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_18/test/units/cli/test_galaxy.py::test_c
+ansible_2,3.6.9,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_2/test/units/utils/test_version.py::test
+ansible_4,3.6.9,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_4/test/units/playbook/test_collectionsea
+ansible_5,3.6.9,False,,,,,E   ModuleNotFoundError: No module named 'ansible'
+ansible_6,3.6.9,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_6/test/units/galaxy/test_collection_inst
+ansible_8,3.6.9,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/ansible_8/test/units/plugins/shell/test_powershe
+black_10,3.8.3,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_10/tests/test_black.py::BlackTestCase::tes
+black_14,3.8.3,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_14/tests/test_black.py::BlackTestCase::tes
+black_16,3.8.3,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_16/tests/test_black.py::BlackTestCase::tes
+black_17,3.8.3,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_17/tests/test_black.py::BlackTestCase::tes
+black_18,3.8.3,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_18/tests/test_black.py::BlackTestCase::tes
+black_20,3.8.3,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_20/tests/test_black.py::BlackTestCase::tes
+black_21,3.8.3,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_21/tests/test_black.py::BlackTestCase::tes
+black_5,3.8.3,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/black_5/tests/test_black.py::BlackTestCase::test
+cookiecutter_1,3.6.9,,,,,,no failing test parsed from run_test.sh
+cookiecutter_4,3.6.9,,,,,,no failing test parsed from run_test.sh
+luigi_17,3.8.3,True,True,,False,False,
+luigi_20,3.8.3,True,True,,False,False,
+luigi_22,3.8.3,True,True,,False,False,
+luigi_29,3.8.3,True,True,,False,False,
+matplotlib_1,3.8.1,False,,,,,E   ModuleNotFoundError: No module named 'numpy'
+matplotlib_23,3.8.1,False,,,,,E   ModuleNotFoundError: No module named 'numpy'
+matplotlib_6,3.8.1,False,,,,,E   ModuleNotFoundError: No module named 'numpy'
+matplotlib_7,3.8.1,False,,,,,E   ModuleNotFoundError: No module named 'numpy'
+matplotlib_9,3.8.1,False,,,,,E   ModuleNotFoundError: No module named 'numpy'
+thefuck_1,3.7.0,False,,,,,E   ModuleNotFoundError: No module named 'psutil'
+thefuck_25,3.7.0,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_25/tests/rules/test_mkdir_p.py::test_get
+thefuck_26,3.7.0,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_26/tests/rules/test_vagrant_up.py::test_
+thefuck_27,3.7.0,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_27/tests/rules/test_open.py::test_get_ne
+thefuck_30,3.7.0,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_30/tests/rules/test_fix_file.py::test_no
+thefuck_31,3.7.0,False,,,,,ERROR: found no collectors for /home/andv/personal/HUST/principle-technique-program-analysis/runs/bip/checkouts/thefuck_31/tests/rules/test_git_diff_staged.py::
+youtube-dl_1,3.7.0,True,True,True,True,False,
+youtube-dl_10,3.7.0,True,True,True,True,False,
+youtube-dl_11,3.7.4,True,True,True,True,True,
+youtube-dl_12,3.7.4,True,True,True,True,True,
+youtube-dl_13,3.7.4,True,True,True,True,True,
+youtube-dl_14,3.7.4,True,True,True,True,True,
+youtube-dl_16,3.7.4,True,True,True,True,False,
+youtube-dl_17,3.7.4,True,True,True,False,False,no faulty lines from diff
+youtube-dl_18,3.7.4,True,True,True,True,True,
+youtube-dl_19,3.7.4,True,True,True,True,True,
+youtube-dl_2,3.7.0,True,True,True,True,True,
+youtube-dl_20,3.7.4,True,True,True,True,False,
+youtube-dl_21,3.7.4,True,True,True,True,True,
+youtube-dl_22,3.7.4,True,True,True,True,True,
+youtube-dl_23,3.7.4,True,True,True,True,True,
+youtube-dl_24,3.7.4,True,True,True,True,True,
+youtube-dl_27,3.7.4,True,True,True,True,True,requirements install failed:       requirements are unsatisfiable.
+youtube-dl_28,3.7.4,True,True,True,True,True,requirements install failed:       requirements are unsatisfiable.
+youtube-dl_29,3.7.4,True,True,True,True,True,requirements install failed:       requirements are unsatisfiable.
+youtube-dl_3,3.7.0,True,True,True,True,False,
+youtube-dl_30,3.7.4,True,True,True,False,False,no faulty lines from diff
+youtube-dl_31,3.7.4,True,True,True,True,True,requirements install failed:       requirements are unsatisfiable.
+youtube-dl_32,3.7.4,True,True,True,True,True,
+youtube-dl_33,3.7.4,True,True,True,True,True,
+youtube-dl_34,3.7.4,True,True,True,True,False,
+youtube-dl_35,3.7.4,True,True,True,True,False,
+youtube-dl_37,3.7.4,True,True,True,True,False,
+youtube-dl_4,3.7.0,True,True,True,True,False,
+youtube-dl_41,3.7.4,True,True,True,True,True,
+youtube-dl_43,3.7.4,True,True,True,True,True,
+youtube-dl_5,3.7.0,True,True,True,True,True,
+youtube-dl_6,3.7.0,True,True,True,True,True,
+youtube-dl_8,3.7.0,True,True,True,True,True,
