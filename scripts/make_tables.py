@@ -200,30 +200,36 @@ def pareto_figure(path: Path) -> None:
              "gpt-oss-120b": "gpt-oss", "Gemini 3.5 Flash-Lite": "Flash-Lite"}
     plt.rcParams.update({"font.size": 8, "font.family": "serif", "axes.spines.top": False, "axes.spines.right": False})
     fig, ax = plt.subplots(figsize=(3.5, 2.7))
-    pts = []
-    for r in rows:
-        if r["method"] not in style or r["method"] == "CovGate":
-            continue
-        c, mk = style[r["method"]]
-        x, y = float(r["tokens_per_program"]), 100 * float(r["acc3"])
+    pts = {(r["method"], r["model"]): (float(r["tokens_per_program"]), 100 * float(r["acc3"]))
+           for r in rows if r["method"] in style and r["method"] != "CovGate"}
+    for (m, model), (x, y) in pts.items():  # same model: SemLoc ↔ LLM + coverage
+        if m == "SemLoc" and ("LLM + coverage", model) in pts:
+            x2, y2 = pts[("LLM + coverage", model)]
+            ax.plot([x, x2], [y, y2], color="#c3c2b7", lw=0.8, zorder=2)
+    for (m, model), (x, y) in pts.items():
+        c, mk = style[m]
         ax.scatter([x], [y], s=28, c=c, marker=mk, edgecolors="white", linewidths=1.0, zorder=3)
-        pts.append((x, y, short.get(r["model"], r["model"])))
-    placed = []  # greedy label placement: right of the point, nudged vertically away from labels already placed
-    for x, y, lab in sorted(pts, key=lambda p: -p[1]):
-        dy = 2
-        while any(abs(math.log10(x) - math.log10(px)) < 0.17 and abs(y + dy / 3 - py) < 3.2 for px, py in placed):
-            dy -= 7
+    placed = []  # labels on SemLoc points (and the lone LLM-direct point), nudged away from earlier labels
+    for (m, model), (x, y) in sorted(pts.items(), key=lambda kv: -kv[1][1]):
+        if m == "LLM + coverage":
+            continue
+        lab = short.get(model, model) + (" (direct)" if m == "LLM direct" else "")
+        free = lambda d: not any(abs(math.log10(x) - math.log10(px)) < 0.2 and abs(y + d / 3 - py) < 3.2
+                                 for px, py in placed)
+        dy = next(d for d in (2, -7, 9, -14, 16, -21) if free(d) or d == -21)
         placed.append((x, y + dy / 3))
-        ax.annotate(lab, (x, y), xytext=(4, dy), textcoords="offset points", fontsize=6.5, color="#3b3b38",
-                    ha="left", va="center")
+        below = m == "LLM direct"  # its label goes under the point: the right side is crowded with SemLoc points
+        ax.annotate(lab, (x, y), xytext=(0, -8) if below else (4, dy), textcoords="offset points", fontsize=6.5,
+                    color="#3b3b38", ha="center" if below else "left", va="center")
+    xs = [x for x, _ in pts.values()]
     sb = next((r for r in rows if r["method"] == "SBFL Ochiai"), None)
     if sb:
         ax.axhline(100 * float(sb["acc3"]), color="#8a8984", lw=1, ls="--", zorder=1)
-        ax.text(2000, 100 * float(sb["acc3"]) + 1.5, "SBFL Ochiai (no LLM)", fontsize=6.5, color="#5e5d58")
+        ax.text(min(xs) / 1.25, 100 * float(sb["acc3"]) + 1.5, "SBFL Ochiai (no LLM)", fontsize=6.5, color="#5e5d58")
     ax.set_xscale("log")
-    ax.set_xlim(1800, 30000)
+    ax.set_xlim(min(min(xs) / 1.35, 950), max(xs) * 2.2)
     ax.set_ylim(10, 95)
-    ticks = [2000, 4000, 8000, 16000]
+    ticks = [t for t in (1000, 2000, 4000, 8000, 16000, 32000) if min(min(xs) / 1.35, 950) <= t <= max(xs) * 2.2]
     ax.set_xticks(ticks, [f"{t // 1000}k" for t in ticks])
     ax.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
     ax.set_xlabel("LLM tokens per program (log scale)")
@@ -232,7 +238,8 @@ def pareto_figure(path: Path) -> None:
     from matplotlib.lines import Line2D
     handles = [Line2D([], [], marker=style[k][1], color=style[k][0], ls="", markersize=5, label=k)
                for k in ("SemLoc", "LLM + coverage", "LLM direct")]
-    ax.legend(handles=handles, loc="lower right", bbox_to_anchor=(1.0, 0.18), fontsize=6.5, frameon=False)
+    handles.append(Line2D([], [], color="#c3c2b7", lw=0.8, label="same model"))
+    ax.legend(handles=handles, loc="lower right", bbox_to_anchor=(1.0, 0.16), fontsize=6.5, frameon=False)
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)
