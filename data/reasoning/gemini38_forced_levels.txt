@@ -1,0 +1,7 @@
+low {"bug": {"median": 42, "all": [0, 42, 22, 63, 54]}, "math": {"median": 425, "all": [425, 390, 366, 448, 426]}}
+medium {"bug": {"median": 152, "all": [73, 157, 160, 152, 151]}, "math": {"median": 597, "all": [477, 597, 549, 622, 676]}}
+high {"bug": {"median": 886, "all": [667, 569, 924, 886, 1004]}, "math": {"median": 1350, "all": [930, 1716, 1350, 1722, 1223]}}
+default {"bug": {"median": 139, "all": [153, 139, 97, 145, 79]}, "math": {"median": 539, "all": [535, 588, 562, 539, 507]}}
+restored: 0 gemini-3.8 rules
+
+[exited with code 0]

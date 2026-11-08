@@ -62,3 +62,20 @@ gpt-oss report the requested id.
 
 Per-minute limits were not hit. 5-hour / daily caps are unknown; measure from runs/llm_log.jsonl during the Task 8 pilot.
 Estimated total for the whole study: ~12,000 calls (~9,000 Gemini, ~750 per other model).
+
+## Reasoning level actually used (measured 2026-11-08, all models at provider default)
+
+Policy (project owner): **no forced reasoning level** — every model runs at its provider default
+through the proxy (the vipharmind rules for `gemini-3.8-flash-high*` and `gemini-3.5-flash*` are
+removed in `infra/proxy/config.yaml`). Raw measurements: `data/reasoning/`.
+
+| Model (requested id) | Served id | Default behaviour measured | Report as |
+|---|---|---|---|
+| gemini-3.8-flash-high | gemini-3.8-flash-n | Short prompts: 139 / 539 reasoning tokens, between forced low (42 / 425) and medium (152 / 597), far below high (886 / 1350). SemLoc prompts: median 3,451 output tokens, median 27 s, up to 478 s → **dynamic thinking** | "Gemini 3.8 Flash, provider-default (dynamic) thinking" |
+| gemini-3.5-flash-lite | gemini-3.5-flash-lite | 13–14 output tokens, no reasoning tokens; forced high → ~940 | "thinking off by default" |
+| claude-sonnet-5-5 / claude-sonnet-4-6 | same | 68–96 output tokens, no thinking reported; `reasoning_effort=high` raises output (Sonnet 4.6: ~250) | "extended thinking not enabled (Anthropic default)" |
+| gpt-6-luna | gpt-6-luna | 44 / 30 reasoning tokens vs low 0 / 0, medium 32 / 30, high 59 / 41 | "default reasoning effort (≈ medium)" |
+| gpt-oss-120b-medium | gpt-oss-120b-medium | 217–240 output tokens; `reasoning_effort` changes little (low ~177, high ~226); occasional 300 s first-call latency | "gpt-oss-120b, proxy alias `-medium`, default effort" |
+
+Consequence: the LLM timeout is 600 s (`FLX_LLM_TIMEOUT`); at 120 s, 6 of 84 SemLoc calls with
+default Gemini thinking timed out.
