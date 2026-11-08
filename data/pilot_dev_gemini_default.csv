@@ -1,0 +1,18 @@
+source,subset,n,n_ran,acc1,acc3,acc5,median_rank
+ours: SemLoc gemini-3.8-flash-high T0.8,all,50,50,0.36,0.68,0.84,2
+ours: SemLoc gemini-3.8-flash-high T0.8,semantic,33,33,0.455,0.848,0.879,1
+ours: SemLoc gemini-3.8-flash-high T0.8,coverage_revealed,4,4,0.75,1.0,1.0,1
+ours: SemLoc gemini-3.8-flash-high T0.8,not_executed,13,13,0.0,0.154,0.692,4
+published: SemLoc gemini-2.5-pro T0.8,all,50,50,0.34,0.66,0.72,2
+published: SemLoc gemini-2.5-pro T0.8,semantic,33,33,0.485,0.697,0.758,1
+published: SemLoc gemini-2.5-pro T0.8,coverage_revealed,4,4,0.25,0.75,0.75,2
+published: SemLoc gemini-2.5-pro T0.8,not_executed,13,13,0.0,0.538,0.615,3
+published: SemLoc claude-sonnet-4-6 T0.8,all,50,50,0.36,0.7,0.78,2
+published: SemLoc claude-sonnet-4-6 T0.8,semantic,33,33,0.515,0.758,0.818,1
+published: SemLoc claude-sonnet-4-6 T0.8,coverage_revealed,4,4,0.25,1.0,1.0,2
+published: SemLoc claude-sonnet-4-6 T0.8,not_executed,13,13,0.0,0.462,0.615,3
+published: SBFL Ochiai,all,50,50,0.12,0.16,0.3,6
+published: SBFL Ochiai,semantic,33,33,0.091,0.152,0.364,6
+published: SBFL Ochiai,coverage_revealed,4,4,0.75,0.75,0.75,1
+published: SBFL Ochiai,not_executed,13,13,0.0,0.0,0.0,
+cost (ours),all,50,calls=91 errors=6,in_tok=170965,out_tok=476907,latency_s=10142.8,
