@@ -8,8 +8,9 @@ Checked 2026-11-08 against `cli-proxy-api` v8.0.28 (`scripts/proxy_smoke.py`).
 |---|---|---|
 | Main (RQ1b, RQ2) | `gemini-3.8-flash-high` | Strongest Gemini the proxy offers; no Gemini Pro id is available (paper used `gemini-2.5-pro`) |
 | Light Gemini (RQ3c) | `gemini-3.5-flash-lite` | Small/cheap end of the same family |
-| Claude (RQ3c, RQ1b cross-check) | `claude-sonnet-4-6` | Same model as the SemLoc paper |
-| GPT (RQ3c, optional) | pending Codex login | `gpt-oss-120b-medium` also answers via Antigravity |
+| Claude (RQ3c, main Claude) | `claude-sonnet-5-5` | Newest Sonnet; chosen by the project owner |
+| Claude reproduction check (RQ1b, small subset only) | `claude-sonnet-4-6` | Same model as the SemLoc paper, to separate model drift from method |
+| GPT (RQ3c, optional) | pending Codex login — use the Codex `luna` model id once listed | `gpt-oss-120b-medium` also answers via Antigravity |
 
 ## All ids offered (2026-11-08)
 
