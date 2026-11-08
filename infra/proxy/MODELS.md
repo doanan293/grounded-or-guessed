@@ -40,11 +40,18 @@ Run once per free Codex account, by the account owner, with the proxy up:
 
 then `docker compose -f infra/proxy/compose.yaml restart` and re-run `scripts/proxy_smoke.py`.
 
-## Accounts (2026-11-08)
+## Accounts (2026-11-08, re-checked after adding logins)
 
-- Antigravity (Gemini, gpt-oss): 3
-- Claude: 1 — likely bottleneck (~1,000 calls planned)
-- Codex free (luna): 3
+- Antigravity (Gemini, gpt-oss): 4 — all 4 auth indexes served calls
+- Claude: 1 — works; one transient IPv6 "network is unreachable" 500 to api.anthropic.com, retried OK
+- Codex free (luna): 4 — 8/8 calls OK under round-robin
+
+## Upstream model substitution
+
+Antigravity serves `gemini-3.8-flash-high` with upstream model **`gemini-3.8-flash-n`** on every call
+(proxy warning `upstream served model ...`). The gateway logs the served model per call
+(`served_model` in runs/llm_log.jsonl); the paper must report the served id. Claude, luna and
+gpt-oss report the requested id.
 
 Per-minute limits were not hit. 5-hour / daily caps are unknown; measure from runs/llm_log.jsonl during the Task 8 pilot.
 Estimated total for the whole study: ~12,000 calls (~9,000 Gemini, ~750 per other model).

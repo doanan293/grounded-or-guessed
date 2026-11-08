@@ -21,7 +21,7 @@ class FakeClient:
             raise self._raise
         msg = SimpleNamespace(content=self._content)
         usage = SimpleNamespace(prompt_tokens=self._usage[0], completion_tokens=self._usage[1])
-        return SimpleNamespace(choices=[SimpleNamespace(message=msg)], usage=usage)
+        return SimpleNamespace(choices=[SimpleNamespace(message=msg)], usage=usage, model="served-" + kwargs["model"])
 
 
 def _rate_limit_error():
@@ -97,3 +97,10 @@ def test_log_records_tokens(env, monkeypatch):
     rec = _log(env)[0]
     assert (rec["prompt_tokens"], rec["completion_tokens"], rec["error"]) == (11, 7, None)
     assert rec["model"] == "m" and rec["temperature"] == 0.3 and rec["run_id"] == "default"
+
+
+def test_log_records_served_model(env, monkeypatch):
+    _use(monkeypatch, FakeClient())
+    llm_gateway.chat("m", "s", "u")
+    llm_gateway.chat("m", "s", "u")
+    assert [r["served_model"] for r in _log(env)] == ["served-m", "served-m"]

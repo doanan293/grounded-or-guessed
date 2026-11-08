@@ -60,12 +60,12 @@ def chat(model: str, system: str, user: str, temperature: float = 0.0,
     cache_file = Path(os.environ.get("FLX_LLM_CACHE_DIR", "runs/llm_cache")) / f"{key}.json"
     rec = {"ts": time.time(), "run_id": run_id, "model": model, "temperature": temperature,
            "cache_hit": False, "prompt_tokens": None, "completion_tokens": None,
-           "latency_s": None, "error": None, "key": key}
+           "latency_s": None, "error": None, "served_model": None, "key": key}
 
     if use_cache and cache_file.exists():
         cached = json.loads(cache_file.read_text())
         _log({**rec, "cache_hit": True, "prompt_tokens": cached.get("prompt_tokens"),
-              "completion_tokens": cached.get("completion_tokens")})
+              "completion_tokens": cached.get("completion_tokens"), "served_model": cached.get("served_model")})
         return cached["content"]
 
     max_retries = int(os.environ.get("FLX_LLM_MAX_RETRIES", "6"))
@@ -88,12 +88,14 @@ def chat(model: str, system: str, user: str, temperature: float = 0.0,
     usage = getattr(resp, "usage", None)
     rec.update(latency_s=time.time() - t0,
                prompt_tokens=getattr(usage, "prompt_tokens", None),
-               completion_tokens=getattr(usage, "completion_tokens", None))
+               completion_tokens=getattr(usage, "completion_tokens", None),
+               served_model=getattr(resp, "model", None))  # upstream may substitute the requested model
     if not content or not content.strip():
         _log({**rec, "error": "empty response"})
         raise LLMEmptyResponse(model)
     _log(rec)
     if use_cache:
         _atomic_write(cache_file, json.dumps({"content": content, "prompt_tokens": rec["prompt_tokens"],
-                                              "completion_tokens": rec["completion_tokens"]}))
+                                              "completion_tokens": rec["completion_tokens"],
+                                              "served_model": rec["served_model"]}))
     return content
