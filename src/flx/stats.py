@@ -18,3 +18,36 @@ def mcnemar(a: list[bool], b: list[bool]) -> tuple[float, float]:
     stat = (abs(n01 - n10) - 1) ** 2 / n
     from math import erfc, sqrt
     return stat, erfc(sqrt(stat / 2))  # chi-square(1) survival
+
+
+def wilcoxon_paired(x: list[float], y: list[float]) -> tuple[float, float]:
+    """Two-sided Wilcoxon signed-rank test on paired values (zero differences dropped)."""
+    from scipy.stats import wilcoxon
+    if all(a == b for a, b in zip(x, y)):
+        return 0.0, 1.0
+    r = wilcoxon(x, y, zero_method="wilcox", alternative="two-sided")
+    return float(r.statistic), float(r.pvalue)
+
+
+def cliffs_delta(x: list[float], y: list[float]) -> float:
+    """P(X > Y) − P(X < Y) over all pairs; in [−1, 1]."""
+    gt = sum(1 for a in x for b in y if a > b)
+    lt = sum(1 for a in x for b in y if a < b)
+    return (gt - lt) / (len(x) * len(y))
+
+
+def cluster_bootstrap_ci(per_program: dict[str, float], clusters: dict[str, int], n: int = 10000,
+                         seed: int = 20261108, alpha: float = 0.05) -> tuple[float, float]:
+    """Percentile CI of the mean, resampling whole clusters (structurally similar programs together)."""
+    import random
+    rng = random.Random(seed)
+    groups: dict[int, list[float]] = {}
+    for p, v in per_program.items():
+        groups.setdefault(clusters.get(p, hash(p)), []).append(v)
+    keys = list(groups)
+    stats = []
+    for _ in range(n):
+        vals = [v for k in (rng.choice(keys) for _ in keys) for v in groups[k]]
+        stats.append(sum(vals) / len(vals))
+    stats.sort()
+    return stats[int(alpha / 2 * n)], stats[int((1 - alpha / 2) * n) - 1]
