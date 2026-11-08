@@ -48,19 +48,6 @@
    "lines": []
   },
   {
-   "id": "test.test_utils.TestUtil.test_dfxp2srt",
-   "passed": false,
-   "lines": [
-    1978,
-    1979,
-    1981,
-    1982,
-    1983,
-    1985,
-    1986
-   ]
-  },
-  {
    "id": "test.test_utils.TestUtil.test_escape_rfc3986",
    "passed": true,
    "lines": []

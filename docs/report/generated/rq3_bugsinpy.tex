@@ -1,16 +1,16 @@
 \begin{tabular}{lrrrrr}
 \toprule
- & \multicolumn{3}{c}{All bugs ($n=31$)} & \multicolumn{2}{c}{Fault reached ($n=24$)} \\
+ & \multicolumn{3}{c}{All bugs ($n=31$)} & \multicolumn{2}{c}{Fault reached ($n=26$)} \\
 \cmidrule(lr){2-4}\cmidrule(lr){5-6}
 Method & Acc@1 & Acc@3 & Acc@5 & Acc@1 & Acc@3 \\
 \midrule
-SemLoc semantic spectrum only & 3.2{\scriptsize$\pm$0.0} & 23.7{\scriptsize$\pm$3.7} & 32.3{\scriptsize$\pm$3.2} & 4.2{\scriptsize$\pm$0.0} & 30.6{\scriptsize$\pm$4.8} \\
-SemLoc (spectrum + LLM-guess bonus) & 44.1{\scriptsize$\pm$4.9} & 51.6{\scriptsize$\pm$5.6} & 53.8{\scriptsize$\pm$4.9} & 48.6{\scriptsize$\pm$6.4} & 58.3{\scriptsize$\pm$7.2} \\
-LLM guess alone & 44.1{\scriptsize$\pm$4.9} & 44.1{\scriptsize$\pm$4.9} & 44.1{\scriptsize$\pm$4.9} & 48.6{\scriptsize$\pm$6.4} & 48.6{\scriptsize$\pm$6.4} \\
-CovGate (ours) & 44.1{\scriptsize$\pm$4.9} & 52.7{\scriptsize$\pm$4.9} & 54.8{\scriptsize$\pm$5.6} & 48.6{\scriptsize$\pm$6.4} & 59.7{\scriptsize$\pm$6.4} \\
-SBFL Ochiai & 6.5{\scriptsize$\pm$0.0} & 25.8{\scriptsize$\pm$0.0} & 25.8{\scriptsize$\pm$0.0} & 8.3{\scriptsize$\pm$0.0} & 33.3{\scriptsize$\pm$0.0} \\
-SBFL DStar & 6.5{\scriptsize$\pm$0.0} & 25.8{\scriptsize$\pm$0.0} & 25.8{\scriptsize$\pm$0.0} & 8.3{\scriptsize$\pm$0.0} & 33.3{\scriptsize$\pm$0.0} \\
+SemLoc semantic spectrum only & 7.5{\scriptsize$\pm$1.9} & 29.0{\scriptsize$\pm$3.2} & 37.6{\scriptsize$\pm$3.7} & 9.0{\scriptsize$\pm$2.2} & 34.6{\scriptsize$\pm$3.9} \\
+SemLoc (spectrum + LLM-guess bonus) & 46.2{\scriptsize$\pm$6.7} & 53.8{\scriptsize$\pm$7.4} & 55.9{\scriptsize$\pm$6.7} & 51.3{\scriptsize$\pm$8.0} & 60.3{\scriptsize$\pm$8.9} \\
+LLM guess alone & 46.2{\scriptsize$\pm$6.7} & 46.2{\scriptsize$\pm$6.7} & 46.2{\scriptsize$\pm$6.7} & 51.3{\scriptsize$\pm$8.0} & 51.3{\scriptsize$\pm$8.0} \\
+CovGate (ours) & 46.2{\scriptsize$\pm$6.7} & 54.8{\scriptsize$\pm$6.5} & 57.0{\scriptsize$\pm$7.4} & 51.3{\scriptsize$\pm$8.0} & 61.5{\scriptsize$\pm$7.7} \\
+SBFL Ochiai & 9.7{\scriptsize$\pm$0.0} & 29.0{\scriptsize$\pm$0.0} & 29.0{\scriptsize$\pm$0.0} & 11.5{\scriptsize$\pm$0.0} & 34.6{\scriptsize$\pm$0.0} \\
+SBFL DStar & 9.7{\scriptsize$\pm$0.0} & 29.0{\scriptsize$\pm$0.0} & 29.0{\scriptsize$\pm$0.0} & 11.5{\scriptsize$\pm$0.0} & 34.6{\scriptsize$\pm$0.0} \\
 \midrule
-Artifact's own metric (rank of the LLM guess) & 33.3{\scriptsize$\pm$1.9} & 38.7{\scriptsize$\pm$3.2} & 45.2{\scriptsize$\pm$3.2} & 31.9{\scriptsize$\pm$2.4} & 38.9{\scriptsize$\pm$6.4} \\
+Artifact's own metric (rank of the LLM guess) & 39.8{\scriptsize$\pm$1.9} & 45.2{\scriptsize$\pm$3.2} & 51.6{\scriptsize$\pm$3.2} & 37.2{\scriptsize$\pm$2.2} & 43.6{\scriptsize$\pm$5.9} \\
 \bottomrule
 \end{tabular}
