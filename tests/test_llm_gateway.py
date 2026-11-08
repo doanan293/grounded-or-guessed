@@ -104,3 +104,14 @@ def test_log_records_served_model(env, monkeypatch):
     llm_gateway.chat("m", "s", "u")
     llm_gateway.chat("m", "s", "u")
     assert [r["served_model"] for r in _log(env)] == ["served-m", "served-m"]
+
+
+def test_client_timeout_from_env(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(llm_gateway.openai, "OpenAI", lambda **kw: seen.update(kw) or object())
+    monkeypatch.delenv("FLX_LLM_TIMEOUT", raising=False)
+    llm_gateway._client()
+    assert seen["timeout"] == 600
+    monkeypatch.setenv("FLX_LLM_TIMEOUT", "900")
+    llm_gateway._client()
+    assert seen["timeout"] == 900

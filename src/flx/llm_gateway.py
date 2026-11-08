@@ -28,7 +28,8 @@ class LLMEmptyResponse(RuntimeError):
 
 def _client() -> openai.OpenAI:
     return openai.OpenAI(base_url=os.environ.get("FLX_LLM_BASE_URL", "http://localhost:8317/v1"),
-                         api_key=os.environ.get("FLX_LLM_API_KEY", ""), timeout=120, max_retries=0)
+                         api_key=os.environ.get("FLX_LLM_API_KEY", ""),
+                         timeout=float(os.environ.get("FLX_LLM_TIMEOUT", "600")), max_retries=0)
 
 
 def _key(model, system, user, temperature, run_id) -> str:
