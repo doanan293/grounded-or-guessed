@@ -1,0 +1,469 @@
+{
+ "youtube-dl_1": {
+  "bug": "youtube-dl_1",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils._match_one",
+  "fn_start": 2523,
+  "fn_end": 2590,
+  "faulty_lines": [
+   2577,
+   2578
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_match_str"
+  ]
+ },
+ "youtube-dl_10": {
+  "bug": "youtube-dl_10",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.js_to_json",
+  "fn_start": 1546,
+  "fn_end": 1568,
+  "faulty_lines": [
+   1563,
+   1564
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_js_to_json_realworld"
+  ]
+ },
+ "youtube-dl_11": {
+  "bug": "youtube-dl_11",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.str_to_int",
+  "fn_start": 3520,
+  "fn_end": 3525,
+  "faulty_lines": [
+   3522,
+   3523
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_str_to_int"
+  ]
+ },
+ "youtube-dl_12": {
+  "bug": "youtube-dl_12",
+  "file": "youtube_dl/YoutubeDL.py",
+  "function": "youtube_dl.YoutubeDL.YoutubeDL._build_format_filter",
+  "fn_start": 1032,
+  "fn_end": 1093,
+  "faulty_lines": [
+   1081
+  ],
+  "test_file": "test/test_YoutubeDL.py",
+  "tests": [
+   "test/test_YoutubeDL.py::TestFormatSelection::test_format_selection_string_ops"
+  ]
+ },
+ "youtube-dl_13": {
+  "bug": "youtube-dl_13",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.urljoin",
+  "fn_start": 1866,
+  "fn_end": 1878,
+  "faulty_lines": [
+   1871
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_urljoin"
+  ]
+ },
+ "youtube-dl_14": {
+  "bug": "youtube-dl_14",
+  "file": "youtube_dl/extractor/youtube.py",
+  "function": "youtube_dl.extractor.youtube.YoutubeIE._extract_chapters",
+  "fn_start": 1656,
+  "fn_end": 1688,
+  "faulty_lines": [
+   1656
+  ],
+  "test_file": "test/test_youtube_chapters.py",
+  "tests": [
+   "test/test_youtube_chapters.py::TestYoutubeChapters::test_youtube_chapters"
+  ]
+ },
+ "youtube-dl_16": {
+  "bug": "youtube-dl_16",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.dfxp2srt",
+  "fn_start": 2574,
+  "fn_end": 2728,
+  "faulty_lines": [
+   2576,
+   2577,
+   2578,
+   2579,
+   2581,
+   2582,
+   2677
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_dfxp2srt"
+  ]
+ },
+ "youtube-dl_18": {
+  "bug": "youtube-dl_18",
+  "file": "youtube_dl/YoutubeDL.py",
+  "function": "youtube_dl.YoutubeDL.YoutubeDL.process_ie_result",
+  "fn_start": 820,
+  "fn_end": 1005,
+  "faulty_lines": [
+   863
+  ],
+  "test_file": "test/test_YoutubeDL.py",
+  "tests": [
+   "test/test_YoutubeDL.py::TestYoutubeDL::test_do_not_override_ie_key_in_url_transparent"
+  ]
+ },
+ "youtube-dl_19": {
+  "bug": "youtube-dl_19",
+  "file": "youtube_dl/YoutubeDL.py",
+  "function": "youtube_dl.YoutubeDL.YoutubeDL.prepare_filename",
+  "fn_start": 611,
+  "fn_end": 686,
+  "faulty_lines": [
+   677
+  ],
+  "test_file": "test/test_YoutubeDL.py",
+  "tests": [
+   "test/test_YoutubeDL.py::TestYoutubeDL::test_prepare_filename"
+  ]
+ },
+ "youtube-dl_2": {
+  "bug": "youtube-dl_2",
+  "file": "youtube_dl/extractor/common.py",
+  "function": "youtube_dl.extractor.common.InfoExtractor._parse_mpd_formats",
+  "fn_start": 1753,
+  "fn_end": 2022,
+  "faulty_lines": [
+   2010,
+   2011,
+   2012,
+   2013,
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019
+  ],
+  "test_file": "test/test_InfoExtractor.py",
+  "tests": [
+   "test/test_InfoExtractor.py::TestInfoExtractor::test_parse_mpd_formats"
+  ]
+ },
+ "youtube-dl_20": {
+  "bug": "youtube-dl_20",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.get_elements_by_attribute",
+  "fn_start": 360,
+  "fn_end": 382,
+  "faulty_lines": [
+   368,
+   370
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_get_element_by_attribute"
+  ]
+ },
+ "youtube-dl_21": {
+  "bug": "youtube-dl_21",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.urljoin",
+  "fn_start": 1750,
+  "fn_end": 1757,
+  "faulty_lines": [
+   1755
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_urljoin"
+  ]
+ },
+ "youtube-dl_22": {
+  "bug": "youtube-dl_22",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils._match_one",
+  "fn_start": 2372,
+  "fn_end": 2434,
+  "faulty_lines": [
+   2394,
+   2404
+  ],
+  "test_file": "test/test_YoutubeDL.py",
+  "tests": [
+   "test/test_YoutubeDL.py::TestYoutubeDL::test_match_filter"
+  ]
+ },
+ "youtube-dl_23": {
+  "bug": "youtube-dl_23",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.js_to_json.fix_kv",
+  "fn_start": 2106,
+  "fn_end": 2132,
+  "faulty_lines": [
+   2110
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_js_to_json_edgecases"
+  ]
+ },
+ "youtube-dl_24": {
+  "bug": "youtube-dl_24",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils._match_one",
+  "fn_start": 2327,
+  "fn_end": 2383,
+  "faulty_lines": [
+   2348,
+   2352,
+   2364
+  ],
+  "test_file": "test/test_YoutubeDL.py",
+  "tests": [
+   "test/test_YoutubeDL.py::TestYoutubeDL::test_match_filter"
+  ]
+ },
+ "youtube-dl_27": {
+  "bug": "youtube-dl_27",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.parse_dfxp_time_expr",
+  "fn_start": 1977,
+  "fn_end": 1987,
+  "faulty_lines": [
+   1985,
+   1987
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_parse_dfxp_time_expr"
+  ]
+ },
+ "youtube-dl_28": {
+  "bug": "youtube-dl_28",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils._htmlentity_transform",
+  "fn_start": 385,
+  "fn_end": 402,
+  "faulty_lines": [
+   399
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_unescape_html"
+  ]
+ },
+ "youtube-dl_29": {
+  "bug": "youtube-dl_29",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.unified_strdate",
+  "fn_start": 852,
+  "fn_end": 914,
+  "faulty_lines": [
+   914
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_unified_dates"
+  ]
+ },
+ "youtube-dl_3": {
+  "bug": "youtube-dl_3",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.unescapeHTML",
+  "fn_start": 593,
+  "fn_end": 599,
+  "faulty_lines": [
+   599
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_unescape_html"
+  ]
+ },
+ "youtube-dl_31": {
+  "bug": "youtube-dl_31",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.parse_duration",
+  "fn_start": 1201,
+  "fn_end": 1223,
+  "faulty_lines": [
+   1213,
+   1216,
+   1219,
+   1220
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_parse_duration"
+  ]
+ },
+ "youtube-dl_32": {
+  "bug": "youtube-dl_32",
+  "file": "youtube_dl/extractor/npo.py",
+  "function": "youtube_dl.extractor.npo.NPOIE._get_info",
+  "fn_start": 61,
+  "fn_end": 111,
+  "faulty_lines": [
+   66
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_strip_jsonp"
+  ]
+ },
+ "youtube-dl_33": {
+  "bug": "youtube-dl_33",
+  "file": "youtube_dl/extractor/drtv.py",
+  "function": "youtube_dl.extractor.drtv.DRTVIE._real_extract",
+  "fn_start": 27,
+  "fn_end": 91,
+  "faulty_lines": [
+   28,
+   29,
+   38
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_parse_iso8601"
+  ]
+ },
+ "youtube-dl_34": {
+  "bug": "youtube-dl_34",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.js_to_json",
+  "fn_start": 1579,
+  "fn_end": 1604,
+  "faulty_lines": [
+   1601
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_js_to_json"
+  ]
+ },
+ "youtube-dl_35": {
+  "bug": "youtube-dl_35",
+  "file": "youtube_dl/extractor/arte.py",
+  "function": "youtube_dl.extractor.arte.ArteTVPlus7IE._extract_from_json_url",
+  "fn_start": 85,
+  "fn_end": 175,
+  "faulty_lines": [
+   93
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_unified_dates"
+  ]
+ },
+ "youtube-dl_37": {
+  "bug": "youtube-dl_37",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.uppercase_escape",
+  "fn_start": 1265,
+  "fn_end": 1268,
+  "faulty_lines": [
+   1268
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_uppercase_escpae"
+  ]
+ },
+ "youtube-dl_4": {
+  "bug": "youtube-dl_4",
+  "file": "youtube_dl/jsinterp.py",
+  "function": "youtube_dl.jsinterp.JSInterpreter.interpret_expression",
+  "fn_start": 58,
+  "fn_end": 211,
+  "faulty_lines": [
+   201,
+   206
+  ],
+  "test_file": "test/test_jsinterp.py",
+  "tests": [
+   "test/test_jsinterp.py::TestJSInterpreter::test_call"
+  ]
+ },
+ "youtube-dl_41": {
+  "bug": "youtube-dl_41",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.unified_strdate",
+  "fn_start": 755,
+  "fn_end": 786,
+  "faulty_lines": [
+   759,
+   761
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_unified_dates"
+  ]
+ },
+ "youtube-dl_43": {
+  "bug": "youtube-dl_43",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.url_basename",
+  "fn_start": 1089,
+  "fn_end": 1093,
+  "faulty_lines": [
+   1090
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_url_basename"
+  ]
+ },
+ "youtube-dl_5": {
+  "bug": "youtube-dl_5",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.unified_timestamp",
+  "fn_start": 1098,
+  "fn_end": 1118,
+  "faulty_lines": [
+   1104,
+   1112,
+   1118
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_unified_timestamps"
+  ]
+ },
+ "youtube-dl_6": {
+  "bug": "youtube-dl_6",
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.parse_dfxp_time_expr",
+  "fn_start": 1977,
+  "fn_end": 1987,
+  "faulty_lines": [
+   1979
+  ],
+  "test_file": "test/test_utils.py",
+  "tests": [
+   "test/test_utils.py::TestUtil::test_parse_dfxp_time_expr"
+  ]
+ },
+ "youtube-dl_8": {
+  "bug": "youtube-dl_8",
+  "file": "youtube_dl/YoutubeDL.py",
+  "function": "youtube_dl.YoutubeDL.YoutubeDL.build_format_selector._parse_format_selection",
+  "fn_start": 934,
+  "fn_end": 983,
+  "faulty_lines": [
+   961,
+   962
+  ],
+  "test_file": "test/test_YoutubeDL.py",
+  "tests": [
+   "test/test_YoutubeDL.py::TestFormatSelection::test_youtube_format_selection"
+  ]
+ }
+}

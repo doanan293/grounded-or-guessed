@@ -1,0 +1,267 @@
+{
+ "program": "youtube-dl_28",
+ "n_empty_coverage": 0,
+ "tests": [
+  {
+   "id": "test.test_utils.TestUtil.test_age_restricted",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_args_to_str",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_clean_html",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_cli_bool_option",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_cli_option",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_cli_valueless_option",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_daterange",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_detect_exe_version",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_dfxp2srt",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_escape_rfc3986",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_escape_url",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_find_xpath_attr",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_fix_xml_ampersands",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_intlist_to_bytes",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_is_html",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_js_to_json_edgecases",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_js_to_json_realworld",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_limit_length",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_lowercase_escape",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_match_str",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_ordered_set",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_paged_list",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_parse_dfxp_time_expr",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_parse_duration",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_parse_filesize",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_parse_iso8601",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_prepend_extension",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_read_batch_urls",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_render_table",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_replace_extension",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_sanitize_filename",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_sanitize_filename_restricted",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_sanitize_ids",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_sanitize_path",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_shell_quote",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_smuggle_url",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_str_to_int",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_strip_jsonp",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_struct_unpack",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_timeconvert",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_unescape_html",
+   "passed": false,
+   "lines": [
+    388,
+    389,
+    391,
+    392,
+    393,
+    394,
+    395,
+    396,
+    398,
+    399
+   ]
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_unified_dates",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_uppercase_escape",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_url_basename",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_urlencode_postdata",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_version_tuple",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_xpath_attr",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_xpath_element",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_xpath_text",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_xpath_with_ns",
+   "passed": true,
+   "lines": []
+  }
+ ]
+}

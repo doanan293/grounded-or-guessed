@@ -1,0 +1,290 @@
+{
+ "program": "youtube-dl_12",
+ "n_empty_coverage": 0,
+ "tests": [
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_audio_only_extractor_format_selection",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_default_format_spec",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_format_filtering",
+   "passed": true,
+   "lines": [
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1043,
+    1048,
+    1049,
+    1050,
+    1051,
+    1052,
+    1053,
+    1054,
+    1055,
+    1056,
+    1057,
+    1061,
+    1063,
+    1085,
+    1088,
+    1089,
+    1090,
+    1091,
+    1092,
+    1093
+   ]
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_format_not_available",
+   "passed": true,
+   "lines": [
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1043,
+    1048,
+    1049,
+    1050,
+    1051,
+    1052,
+    1061,
+    1063,
+    1085,
+    1088,
+    1089,
+    1090,
+    1092,
+    1093
+   ]
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_format_selection",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_format_selection_audio",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_format_selection_audio_exts",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_format_selection_issue_10083",
+   "passed": true,
+   "lines": [
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1043,
+    1048,
+    1049,
+    1050,
+    1051,
+    1052,
+    1061,
+    1063,
+    1085,
+    1088,
+    1089,
+    1090,
+    1091,
+    1092,
+    1093
+   ]
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_format_selection_string_ops",
+   "passed": false,
+   "lines": [
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1043,
+    1048,
+    1049,
+    1050,
+    1063,
+    1064,
+    1065,
+    1066,
+    1067,
+    1068,
+    1070,
+    1075,
+    1076,
+    1077,
+    1078,
+    1079,
+    1080,
+    1081,
+    1083,
+    1085,
+    1088,
+    1089,
+    1090,
+    1092,
+    1093
+   ]
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_format_selection_video",
+   "passed": true,
+   "lines": [
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1043,
+    1048,
+    1049,
+    1050,
+    1063,
+    1064,
+    1065,
+    1066,
+    1067,
+    1068,
+    1070,
+    1075,
+    1076,
+    1077,
+    1078,
+    1079,
+    1080,
+    1083,
+    1085,
+    1088,
+    1089,
+    1090,
+    1092,
+    1093
+   ]
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_invalid_format_specs",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_prefer_free_formats",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestFormatSelection.test_youtube_format_selection",
+   "passed": true,
+   "lines": [
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1043,
+    1048,
+    1049,
+    1050,
+    1051,
+    1052,
+    1061,
+    1063,
+    1064,
+    1065,
+    1066,
+    1067,
+    1068,
+    1070,
+    1075,
+    1076,
+    1077,
+    1078,
+    1079,
+    1080,
+    1083,
+    1085,
+    1088,
+    1089,
+    1090,
+    1091,
+    1092,
+    1093
+   ]
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_add_extra_info",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_do_not_override_ie_key_in_url_transparent",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_format_note",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_match_filter",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_playlist_items_selection",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_postprocessors",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_prepare_filename",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_subtitles",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_YoutubeDL.TestYoutubeDL.test_urlopen_no_file_protocol",
+   "passed": true,
+   "lines": []
+  }
+ ]
+}

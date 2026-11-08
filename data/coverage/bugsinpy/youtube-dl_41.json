@@ -1,0 +1,110 @@
+{
+ "program": "youtube-dl_41",
+ "n_empty_coverage": 0,
+ "tests": [
+  {
+   "id": "test.test_utils.TestUtil.test_daterange",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_find_xpath_attr",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_fix_xml_ampersands",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_meta_parser",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_ordered_set",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_paged_list",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_parse_duration",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_sanitize_filename",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_sanitize_filename_restricted",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_sanitize_ids",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_shell_quote",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_smuggle_url",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_str_to_int",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_timeconvert",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_unescape_html",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_unified_dates",
+   "passed": false,
+   "lines": [
+    757,
+    759,
+    761,
+    762,
+    777,
+    778,
+    779,
+    780,
+    781,
+    782,
+    783,
+    784,
+    786
+   ]
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_url_basename",
+   "passed": true,
+   "lines": []
+  },
+  {
+   "id": "test.test_utils.TestUtil.test_xpath_with_ns",
+   "passed": true,
+   "lines": []
+  }
+ ]
+}
