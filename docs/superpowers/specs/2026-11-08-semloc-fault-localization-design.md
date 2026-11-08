@@ -53,7 +53,7 @@ Thêm một câu hỏi phụ dùng để phân loại, không tính là RQ: lỗ
 
 ### 3.3 Định nghĩa "lỗi ngữ nghĩa" (khách quan, tự động)
 
-Một lỗi được gắn nhãn **ngữ nghĩa** nếu dòng lỗi thật được **cả test fail lẫn ít nhất một test pass** chạy qua (tính bằng coverage.py theo từng test). Ngược lại là **lỗi lộ ra qua độ phủ**. Mọi kết quả Acc@k được báo cáo cả tổng và tách theo hai nhãn này. Đây cũng chính là điều kiện mà SemLoc nói SBFL thất bại, nên tiêu chí khớp với bài gốc mà không phụ thuộc người gán nhãn.
+Một lỗi được gắn nhãn **ngữ nghĩa** (`semantic`) nếu dòng lỗi thật được **cả test fail lẫn ít nhất một test pass** chạy qua (tính bằng coverage.py theo từng test); **lộ ra qua độ phủ** (`coverage_revealed`) nếu test fail chạy qua mà không test pass nào chạy qua; và **không được thực thi** (`not_executed`) nếu không test fail nào chạy qua dòng lỗi thật — trên SemFault-250 nhãn này gồm 65 chương trình, 56 trong đó có ground truth trỏ vào dòng trống (xem `docs/literature/benchmark-notes.md`). Kết quả báo cáo cả tập đầy đủ và tập 185 chương trình có dòng lỗi thực thi được. Mọi kết quả Acc@k được báo cáo cả tổng và tách theo hai nhãn này. Đây cũng chính là điều kiện mà SemLoc nói SBFL thất bại, nên tiêu chí khớp với bài gốc mà không phụ thuộc người gán nhãn.
 
 ### 3.4 Chỉ số
 

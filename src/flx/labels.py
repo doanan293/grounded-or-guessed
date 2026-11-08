@@ -30,6 +30,7 @@ class Label:
     fault_hit_by_fail: bool
     fault_hit_by_pass: bool
     category: Category
+    n_empty_coverage: int = 0  # failing tests that covered nothing even after one retry (likely timeouts)
 
 
 def label_program(program: str, src: Path, test: Path, faulty_lines: list[int]) -> Label:
@@ -44,8 +45,13 @@ def label_program(program: str, src: Path, test: Path, faulty_lines: list[int]) 
     semantic = hit_fail = hit_pass = False
     pass_hits: set[int] = set()
     fail_hits: set[int] = set()
+    n_empty = 0
     for test_id in baselines.get_test_ids(str(test), repo_root):
         passed, hit = baselines._coverage_for_test(test_id, abs_src, repo_root)
+        if not passed and not hit:
+            # upstream turns its 30 s timeout into (False, {}): retry once so load cannot flip the label
+            passed, hit = baselines._coverage_for_test(test_id, abs_src, repo_root)
+            n_empty += not passed and not hit
         if passed:
             n_pass += 1
             pass_hits |= hit & faults
@@ -60,7 +66,7 @@ def label_program(program: str, src: Path, test: Path, faulty_lines: list[int]) 
         cat = "semantic"
     else:
         cat = "coverage_revealed"
-    return Label(program, n_pass, n_fail, hit_fail, hit_pass, cat)
+    return Label(program, n_pass, n_fail, hit_fail, hit_pass, cat, n_empty)
 
 
 def _label_one(args) -> Label:
@@ -70,7 +76,8 @@ def _label_one(args) -> Label:
 def read_labels(path: Path) -> list[Label]:
     with open(path, newline="") as f:
         return [Label(r["program"], int(r["n_pass"]), int(r["n_fail"]), r["fault_hit_by_fail"] == "True",
-                      r["fault_hit_by_pass"] == "True", r["category"]) for r in csv.DictReader(f)]
+                      r["fault_hit_by_pass"] == "True", r["category"], int(r.get("n_empty_coverage") or 0))
+                for r in csv.DictReader(f)]
 
 
 def main() -> None:

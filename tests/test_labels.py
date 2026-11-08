@@ -37,3 +37,22 @@ def test_label_accepts_relative_paths(monkeypatch):
     monkeypatch.chdir(MINI)
     lab = label_program("prog", Path("programs/prog.py"), Path("testcases/test_prog.py"), [SEMANTIC_LINE])
     assert lab.category == "semantic" and lab.n_fail == 2
+
+
+def test_label_retries_a_test_with_empty_coverage(monkeypatch):
+    """A failing test with no coverage at all is usually a 30 s timeout under load: retry it once."""
+    from flx._semloc import ensure_on_path
+    ensure_on_path()
+    import baselines
+    real = baselines._coverage_for_test
+    seen = {"flaky": 0}
+
+    def flaky(test_id, abs_src, repo_root):
+        if test_id.endswith("test_c") and seen["flaky"] == 0:
+            seen["flaky"] += 1
+            return False, set()
+        return real(test_id, abs_src, repo_root)
+
+    monkeypatch.setattr(baselines, "_coverage_for_test", flaky)
+    lab = label_program("prog", SRC, TEST, [SEMANTIC_LINE])
+    assert seen["flaky"] == 1 and lab.category == "semantic" and lab.n_empty_coverage == 0

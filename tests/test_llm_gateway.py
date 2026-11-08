@@ -127,3 +127,30 @@ def test_non_retryable_api_error_is_logged_and_raised(env, monkeypatch):
     rec = _log(env)[-1]
     assert rec["error"].startswith("PermissionDeniedError")
     assert not list((env / "cache").glob("*.json"))
+
+
+def test_config_tag_and_max_tokens_separate_cache(env, monkeypatch):
+    c = _use(monkeypatch, FakeClient())
+    llm_gateway.chat("m", "s", "u")
+    monkeypatch.setenv("FLX_CONFIG_TAG", "proxy-v2")
+    llm_gateway.chat("m", "s", "u")
+    llm_gateway.chat("m", "s", "u", max_tokens=50)
+    assert c.calls == 3
+
+
+def test_timeouts_retry_less_than_rate_limits(env, monkeypatch):
+    err = openai.APITimeoutError.__new__(openai.APITimeoutError)
+    Exception.__init__(err, "timed out")
+    c = _use(monkeypatch, FakeClient(raise_exc=err))
+    monkeypatch.setenv("FLX_LLM_MAX_RETRIES", "6")
+    monkeypatch.delenv("FLX_LLM_TIMEOUT_RETRIES", raising=False)
+    with pytest.raises(llm_gateway.LLMUnavailable):
+        llm_gateway.chat("m", "s", "u")
+    assert c.calls == 2  # one retry for a timed-out (expensive) call by default
+
+
+def test_empty_choices_is_empty_response(env, monkeypatch):
+    c = _use(monkeypatch, FakeClient())
+    c.chat.completions.create = lambda **kw: SimpleNamespace(choices=[], usage=None, model="m")
+    with pytest.raises(llm_gateway.LLMEmptyResponse):
+        llm_gateway.chat("m", "s", "u")
