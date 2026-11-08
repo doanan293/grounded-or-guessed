@@ -11,7 +11,7 @@ from pathlib import Path
 from flx.cost import run_costs
 
 ROOT = Path(__file__).resolve().parents[1]
-PREFIX_N = {"semloc_test_": 200, "direct_test_": 200, "direct_cov_test_": 200, "semloc_sub50_": 50,
+PREFIX_N = {"semloc_test_": 200, "direct_test_": 200, "direct_cov_test_": 200, "semloc_sub50_": 50, "direct_cov_sub50_": 50,
             "semloc_dev_": 50, "bip_semloc_": 31,
             "semloc_renamed_": len(json.loads((ROOT / "data" / "renamed" / "test_programs.json").read_text()))}
 

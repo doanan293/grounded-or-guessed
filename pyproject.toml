@@ -7,7 +7,7 @@ name = "flx"
 version = "0.1.0"
 description = "Experiments for the 2KH SemLoc study (IT5440, HUST)"
 requires-python = ">=3.10"
-dependencies = ["openai>=1.0", "scipy>=1.11"]
+dependencies = ["openai>=1.0", "scipy>=1.11", "matplotlib>=3.8"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
