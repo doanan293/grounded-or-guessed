@@ -30,10 +30,14 @@ GRID = [{"gate": g, "lam": l, "no_prior": n, "grounded_prior": gp}
 BASELINE = {"gate": False, "lam": 0.0, "no_prior": False, "grounded_prior": False}  # = SemLoc as published (fair ties)
 
 
-def tune(dev: list[str], grid: list[dict], rank_fn: Callable[[dict, str], float | None]) -> dict:
+def tune(dev: list[str], grid: list[dict], rank_fns) -> dict:
+    """The one place parameters are chosen: maximize (Acc@3, Acc@1) on `dev`, pooled (mean) over one or
+    several configurations' rank functions. Test programs never enter."""
+    fns = rank_fns if isinstance(rank_fns, (list, tuple)) else [rank_fns]
+
     def key(params):
-        m = metrics({p: rank_fn(params, p) for p in dev}, dev)
-        return (m["acc3"], m["acc1"])
+        ms = [metrics({p: fn(params, p) for p in dev}, dev) for fn in fns]
+        return (mean(m["acc3"] for m in ms), mean(m["acc1"] for m in ms))
     return max(grid, key=key)
 
 
@@ -63,12 +67,9 @@ def main() -> None:
     cov_dir = ROOT / "data" / "coverage" / "semfault"
     fns = {cfg: make_rank_fn(cfg, gt, cov_dir) for cfg in CONFIGS}
 
-    def pooled(params, prog_list):
-        ms = [metrics({p: fns[c](params, p) for p in prog_list}, prog_list) for c in CONFIGS]
-        return mean(m["acc3"] for m in ms), mean(m["acc1"] for m in ms)
-    best = max(GRID, key=lambda prm: pooled(prm, split["dev"]))
+    best = tune(split["dev"], GRID, [fns[c] for c in CONFIGS])
     dev_exec = [p for p in split["dev"] if labels[p] != "not_executed"]
-    best_exec = max(GRID, key=lambda prm: pooled(prm, dev_exec))  # still dev-only: excludes broken GT
+    best_exec = tune(dev_exec, GRID, [fns[c] for c in CONFIGS])  # still dev-only: excludes broken GT
     print("chosen on dev:", best, "| chosen on dev (executable GT):", best_exec)
 
     variants = {"semloc": BASELINE, "covgate": best, "covgate_exec_tuned": best_exec,
