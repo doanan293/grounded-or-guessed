@@ -1,0 +1,21 @@
+.env
+.venv/
+runs/
+.superpowers/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.xdv
+*.lof
+*.lot
