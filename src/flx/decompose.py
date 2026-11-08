@@ -57,3 +57,17 @@ def component_scores(sem: dict, cov: dict, on: frozenset, attribute=None, cf=Non
         for ln, v in attribute({c: cs[c] for c in kept if c in cs}).items():
             scores[ln] = scores.get(ln, 0.0) + CF_OFFSET + v
     return scores
+
+
+def per_program_shapley(values: Callable[[frozenset], dict[str, float]], players: list[str],
+                        programs: list[str]) -> dict[str, dict[str, float]]:
+    """Shapley values of each program's own game (value = that program's hit, 0/1). `values(S)` returns
+    every program's hit under coalition S; each coalition is evaluated once."""
+    cache: dict[frozenset, dict[str, float]] = {}
+
+    def v(s):
+        if s not in cache:
+            cache[s] = values(s)
+        return cache[s]
+
+    return {p: shapley(lambda s, p=p: v(s).get(p, 0.0), players) for p in programs}

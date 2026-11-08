@@ -1,7 +1,11 @@
 """Grounded or guessed: Shapley decomposition of Acc@1 / Acc@3 over signals {guess, spectrum, coverage[, cf]}.
 
-    python scripts/decompose.py --published            # SemLoc's released logs (no CF data → 3 players)
-    python scripts/decompose.py --runs semloc_test_gemini_r1 semloc_test_gemini_r2 ...   # our runs (4 players)
+    python scripts/decompose.py --published --out data/rq_decomposition_published.csv   # released logs, 3 players
+    python scripts/decompose.py --runs semloc_test_gemini_r1 semloc_test_gemini_r2 semloc_test_gemini_r3 \
+        --out data/rq_decomposition.csv                                                  # our runs, 4 players
+Acc@k is a mean of per-program hits, so the decomposition is the mean of per-program Shapley values; several
+runs are pooled by averaging each program's values over runs. 95% CIs resample programs (bootstrap) and
+template clusters (cluster bootstrap, data/semfault_templates.csv), 10,000 draws each.
 """
 import argparse
 import csv
@@ -11,17 +15,16 @@ from pathlib import Path
 from flx._semloc import SEMLOC_ROOT
 from flx.coverage import load
 from flx.covgate import semloc_attribute
-from flx.decompose import component_scores, shapley
-from flx.ranking import metrics, rank_of
-from flx.semloc_results import load_ground_truth
+from flx.decompose import component_scores, per_program_shapley
+from flx.gt import load_variants
+from flx.ranking import rank_of
+from flx.stats import cluster_bootstrap_ci
 
 ROOT = Path(__file__).resolve().parents[1]
-GT = load_ground_truth(SEMLOC_ROOT / "benchmark" / "ground_truth.json")
 COV = ROOT / "data" / "coverage" / "semfault"
 
 
-def decompose(score_dir: Path, programs: list[str], players: list[str], cf_dir: Path | None = None,
-              constraints_dir: Path | None = None) -> dict:
+def load_run(score_dir: Path, programs: list[str], cf_dir: Path | None, constraints_dir: Path | None) -> dict:
     data = {}
     for p in programs:
         f = score_dir / f"{p}.json"
@@ -31,14 +34,32 @@ def decompose(score_dir: Path, programs: list[str], players: list[str], cf_dir: 
         attr = (semloc_attribute(constraints_dir / f"{p}.json", SEMLOC_ROOT / "benchmark" / "programs" / f"{p}.py")
                 if cf and constraints_dir and (constraints_dir / f"{p}.json").exists() else None)
         data[p] = (json.loads(f.read_text()), load(COV / f"{p}.json"), cf, attr)
+    return data
+
+
+def per_program_phi(data: dict, gt: dict, programs: list[str], players: list[str], k: int) -> dict:
+    def values(on):
+        out = {}
+        for p in programs:
+            if p not in data:
+                out[p] = 0.0  # tool produced nothing for p: a miss under every coalition
+                continue
+            s, c, cf, a = data[p]
+            r = rank_of(component_scores(s, c, on, attribute=a, cf=cf), gt[p], "average")
+            out[p] = float(r is not None and r <= k)
+        return out
+    full = values(frozenset(players))
+    return {p: {**phi, "full": full[p]} for p, phi in per_program_shapley(values, players, programs).items()}
+
+
+def summarize(per: dict, players: list[str], clusters: dict) -> dict:
     out = {}
-    for k in (1, 3):
-        def value(on):
-            ranks = {p: rank_of(component_scores(s, c, on, attribute=a, cf=cf), GT[p], "average")
-                     for p, (s, c, cf, a) in data.items()}
-            return metrics(ranks, programs)[f"acc{k}"]
-        phi = shapley(value, players)
-        out[f"acc{k}"] = {"full": value(frozenset(players)), **{f"phi_{p}": v for p, v in phi.items()}}
+    for key in ["full"] + players:
+        vals = {p: v[key] for p, v in per.items()}
+        name = "full" if key == "full" else f"phi_{key}"
+        out[name] = sum(vals.values()) / len(vals)
+        out[f"{name}_ci_prog"] = cluster_bootstrap_ci(vals, {p: i for i, p in enumerate(vals)})
+        out[f"{name}_ci_cluster"] = cluster_bootstrap_ci(vals, clusters)
     return out
 
 
@@ -49,24 +70,40 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=ROOT / "data" / "rq_decomposition.csv")
     args = ap.parse_args()
     labels = {r["program"]: r["category"] for r in csv.DictReader(open(ROOT / "data" / "semfault_labels.csv"))}
-    split = json.loads((ROOT / "data" / "split.json").read_text())
-    rows = []
-    sources = []
+    clusters = {r["program"]: int(r["cluster_t0.8"]) for r in csv.DictReader(open(ROOT / "data" / "semfault_templates.csv"))}
+    variants = {g: v for g, v in load_variants().items() if g in ("original", "repaired")}
+    sources = []  # (name, [(score_dir, cf_dir, constraints_dir)], candidate programs, players)
     if args.published:
         for cfg in ("semloc_claude_T0.3", "semloc_claude_T0.8", "semloc_gemini_T0.0", "semloc_gemini_T0.3", "semloc_gemini_T0.8"):
             d = SEMLOC_ROOT / "results" / "RQ1" / cfg
-            sources.append((cfg, d / "scores", None, None, sorted(GT), ["guess", "spectrum", "coverage"]))
-    for run in args.runs:
-        d = ROOT / "runs" / run
-        progs = sorted(p.stem for p in (d / "scores").glob("*.json"))
-        sources.append((run, d / "scores", d / "refined_base_cf", d / "constraints", progs, ["guess", "spectrum", "coverage", "cf"]))
-    for name, sdir, cfdir, cdir, progs, players in sources:
-        for sub, plist in (("all", progs), ("executable", [p for p in progs if labels[p] != "not_executed"])):
-            res = decompose(sdir, plist, players, cfdir, cdir)
-            for metric, vals in res.items():
-                rows.append({"source": name, "subset": sub, "metric": metric, "n": len(plist), **{k: round(v, 4) for k, v in vals.items()}})
-                print(name, sub, metric, {k: round(v, 3) for k, v in vals.items()})
-    fields = sorted({k for r in rows for k in r}, key=lambda k: (k not in ("source", "subset", "metric", "n", "full"), k))
+            sources.append((cfg, [(d / "scores", None, None)], sorted(variants["original"]), ["guess", "spectrum", "coverage"]))
+    if args.runs:
+        dirs = [ROOT / "runs" / r for r in args.runs]
+        progs = sorted({p.stem for d in dirs for p in (d / "scores").glob("*.json")})
+        name = args.runs[0].rsplit("_r", 1)[0] + f" ({len(dirs)} runs)"
+        sources.append((name, [(d / "scores", d / "refined_base_cf", d / "constraints") for d in dirs], progs,
+                        ["guess", "spectrum", "coverage", "cf"]))
+    rows = []
+    for name, run_dirs, cand, players in sources:
+        loaded = [load_run(s, cand, c, k) for s, c, k in run_dirs]
+        for gname, gt in variants.items():
+            progs = [p for p in cand if p in gt]
+            for sub, plist in (("all", progs), ("executable", [p for p in progs if labels[p] != "not_executed"])):
+                for k in (1, 3):
+                    runs_phi = [per_program_phi(d, gt, plist, players, k) for d in loaded]
+                    per = {p: {key: sum(r[p][key] for r in runs_phi) / len(runs_phi) for key in runs_phi[0][p]} for p in plist}
+                    res = summarize(per, players, clusters)
+                    row = {"source": name, "gt": gname, "subset": sub, "metric": f"acc{k}", "n": len(plist),
+                           "runs": len(loaded)}
+                    for key, v in res.items():
+                        if isinstance(v, tuple):
+                            row[f"{key}_lo"], row[f"{key}_hi"] = round(v[0], 4), round(v[1], 4)
+                        else:
+                            row[key] = round(v, 4)
+                    rows.append(row)
+                    print(name, gname, sub, f"acc{k}", {kk: row[kk] for kk in row if kk == "full" or
+                                                       (kk.startswith("phi_") and "_ci_" not in kk)})
+    fields = list(rows[0])
     with open(args.out, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()

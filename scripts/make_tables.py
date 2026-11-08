@@ -55,12 +55,30 @@ def rq1_table() -> str:
 
 
 def decomposition_table() -> str:
-    rows = [r for r in _rows("rq_decomposition_published.csv") if r["source"] in ("semloc_claude_T0.8", "semloc_gemini_T0.8")]
+    rows = [r for r in _rows("rq_decomposition_published.csv")
+            if r["source"] in ("semloc_claude_T0.8", "semloc_gemini_T0.8") and r.get("gt", "original") == "original"]
     lines = [r"\begin{tabular}{llrrrrr}", r"\toprule",
              r"Configuration & Subset & Metric & Full & LLM guess & Semantic spectrum & Coverage \\", r"\midrule"]
     for r in rows:
         lines.append(f"{NAMES[r['source']]} & {r['subset']} & {r['metric'].replace('acc', 'Acc@')} & {pct(r['full'])} & "
                      f"{pct(r['phi_guess'])} & {pct(r['phi_spectrum'])} & {pct(r['phi_coverage'])} \\\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    return "\n".join(lines) + "\n"
+
+
+def ci(row: dict, k: str) -> str:
+    """value with its cluster-bootstrap 95% CI, in percentage points."""
+    return (f"{100 * float(row[k]):.1f}{{\\scriptsize\\,[{100 * float(row[k + '_ci_cluster_lo']):.1f}, "
+            f"{100 * float(row[k + '_ci_cluster_hi']):.1f}]}}")
+
+
+def decomposition_ours_table() -> str:
+    rows = [r for r in _rows("rq_decomposition.csv") if r["subset"] == "all"]
+    lines = [r"\begin{tabular}{llrrrrr}", r"\toprule",
+             r"Ground truth & Metric & All signals & LLM guess & Semantic spectrum & Coverage & CF \\", r"\midrule"]
+    for r in rows:
+        lines.append(f"{r['gt'].capitalize()} ($n={r['n']}$) & {r['metric'].replace('acc', 'Acc@')} & {pct(r['full'])} & "
+                     f"{ci(r, 'phi_guess')} & {ci(r, 'phi_spectrum')} & {ci(r, 'phi_coverage')} & {ci(r, 'phi_cf')} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
 
@@ -217,6 +235,7 @@ def main() -> None:
     (OUT / "rq1_audit.tex").write_text(rq1_table())
     (OUT / "rq_decomposition_published.tex").write_text(decomposition_table())
     (OUT / "rq2_ours.tex").write_text(rq2_table())
+    (OUT / "rq_decomposition_ours.tex").write_text(decomposition_ours_table())
     (OUT / "rq3_families.tex").write_text(rq3_families_table())
     (OUT / "rq3_bugsinpy.tex").write_text(rq3_bugsinpy_table())
     (OUT / "rq3_renamed.tex").write_text(rq3_renamed_table())
