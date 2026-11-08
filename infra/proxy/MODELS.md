@@ -49,8 +49,10 @@ then `docker compose -f infra/proxy/compose.yaml restart` and re-run `scripts/pr
 ## Upstream model substitution
 
 Antigravity serves `gemini-3.8-flash-high` with upstream model **`gemini-3.8-flash-n`** on every call
-(proxy warning `upstream served model ...`). The gateway logs the served model per call
-(`served_model` in runs/llm_log.jsonl); the paper must report the served id. Claude, luna and
+(proxy warning `upstream served model ...`). `-high` is a proxy alias: the base Gemini 3.8 Flash model
+with a high thinking level injected by the proxy, not a different model. Report it as "Gemini 3.8 Flash
+(upstream `gemini-3.8-flash-n`, high thinking level via proxy alias)". Whether the thinking level is
+honoured is unverified (no separate thinking-token count). The gateway logs `served_model` per call. Claude, luna and
 gpt-oss report the requested id.
 
 Per-minute limits were not hit. 5-hour / daily caps are unknown; measure from runs/llm_log.jsonl during the Task 8 pilot.
