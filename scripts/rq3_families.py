@@ -41,7 +41,7 @@ METHODS = ("semloc", "semloc_no_prior", "covgate")
 
 def run_ranks(run: Path, gt: dict, progs: list[str], method: str = "semloc", params: dict | None = None) -> dict:
     """semloc: SemLoc's scores as produced; semloc_no_prior: without the +1.2 on the LLM's guess;
-    covgate: CovGate with `params` (gate, lam, no_prior) chosen on dev."""
+    covgate: CovGate with `params` (gate, lam, no_prior) chosen on dev; llm_guess: the LLM's fault_line alone."""
     opts = {"semloc": {"gate": False, "lam": 0.0, "no_prior": False},
             "semloc_no_prior": {"gate": False, "lam": 0.0, "no_prior": True}}.get(method, params)
     out = {}
@@ -49,6 +49,10 @@ def run_ranks(run: Path, gt: dict, progs: list[str], method: str = "semloc", par
         f = run / "scores" / f"{p}.json"
         if f.exists():
             sem = json.loads(f.read_text())
+            if method == "llm_guess":
+                fp = sem.get("fault_line_pred")
+                out[p] = rank_of({fp: 1.0} if isinstance(fp, int) else {}, gt[p])
+                continue
             out[p] = rank_of(covgate_scores(sem, load_cov(COV / f"{p}.json"), **opts), gt[p])
     return out
 

@@ -40,3 +40,12 @@ def test_run_ranks_methods_remove_prior_and_apply_covgate(tmp_path, monkeypatch)
     assert rq3.run_ranks(tmp_path, gt, ["p"])["p"] == 2.0
     assert rq3.run_ranks(tmp_path, gt, ["p"], "semloc_no_prior")["p"] == 1.0
     assert rq3.run_ranks(tmp_path, gt, ["p"], "covgate", {"gate": True, "lam": 0.0, "no_prior": False})["p"] == 1.0
+
+
+def test_run_ranks_llm_guess_alone(tmp_path, monkeypatch):
+    import json
+    (tmp_path / "scores").mkdir()
+    (tmp_path / "scores" / "p.json").write_text(json.dumps({"line_scores": {"5": 1.7, "3": 1.0}, "fault_line_pred": 5}))
+    monkeypatch.setattr(rq3, "load_cov", lambda p: {"tests": []})
+    assert rq3.run_ranks(tmp_path, {"p": [5]}, ["p"], "llm_guess")["p"] == 1.0
+    assert rq3.run_ranks(tmp_path, {"p": [3]}, ["p"], "llm_guess")["p"] is None

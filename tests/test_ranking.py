@@ -29,3 +29,10 @@ def test_average_rank_counts_against_k():
     m = metrics({"a": 1.5, "b": 3.0, "c": None}, ["a", "b", "c"])
     assert m["acc1"] == 0.0 and math.isclose(m["acc3"], 2 / 3)
     assert m["median_rank"] == 3.0
+
+
+def test_mean_reciprocal_rank_over_repeats_counts_misses_as_zero():
+    from flx.ranking import mean_rr
+    reps = [{"a": 1.0, "b": None}, {"a": 2.0, "b": 4.0}]
+    out = mean_rr(reps, ["a", "b", "c"])
+    assert out == {"a": 0.75, "b": 0.125, "c": 0.0}
