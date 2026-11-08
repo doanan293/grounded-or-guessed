@@ -6,6 +6,8 @@ Inputs are SemLoc's own artifacts (scores/<p>.json, refined_base_cf/<p>.json) an
             first — the step the SemLoc artifact computes but never uses for ranking.
 - gate:     drop lines that no failing test executes.
 - lam:      add lam × Ochiai(line) (small lam = tie-break only).
+- grounded_prior: keep the +1.2 on the LLM's guess only if a failing test executes that line AND a
+            constraint violated in failing tests (ef > 0) is attributed to it; otherwise drop it.
 """
 from typing import Callable, Optional
 
@@ -18,9 +20,12 @@ CF_OFFSET = 1000.0
 
 
 def covgate_scores(semloc: dict, cov: dict, *, gate: bool, lam: float, no_prior: bool,
-                   cf: Optional[list] = None, attribute: Optional[Callable[[dict], dict]] = None) -> dict[int, float]:
+                   cf: Optional[list] = None, attribute: Optional[Callable[[dict], dict]] = None,
+                   grounded_prior: bool = False) -> dict[int, float]:
     scores = {int(k): float(v) for k, v in semloc.get("line_scores", {}).items()}
     fp = semloc.get("fault_line_pred")
+    if grounded_prior and not no_prior and isinstance(fp, int):
+        no_prior = not _guess_is_grounded(semloc, cov, fp, attribute)
     if no_prior and isinstance(fp, int) and fp in scores:
         scores[fp] -= PRIOR
         if scores[fp] <= 1e-12:
@@ -38,6 +43,14 @@ def covgate_scores(semloc: dict, cov: dict, *, gate: bool, lam: float, no_prior:
         och = sbfl_scores(cov, "ochiai")
         scores = {ln: v + lam * och.get(ln, 0.0) for ln, v in scores.items()}
     return scores
+
+
+def _guess_is_grounded(semloc: dict, cov: dict, line: int, attribute: Optional[Callable[[dict], dict]]) -> bool:
+    run_by_failing = any(line in t["lines"] for t in cov["tests"] if not t["passed"])
+    if not run_by_failing or attribute is None:
+        return False
+    violated = {c: s for c, s in semloc.get("constraint_scores", {}).items() if s.get("ef", 0) > 0}
+    return line in attribute(violated) if violated else False
 
 
 def covgate_explain(semloc: dict, cov: dict, faulty: list[int], ties: str = "average", **opts) -> dict:
