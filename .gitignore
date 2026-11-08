@@ -21,3 +21,5 @@ __pycache__/
 *.lot
 # LaTeX build outputs
 docs/report/**/main.pdf
+# proxy config holds API keys
+infra/proxy/config.yaml

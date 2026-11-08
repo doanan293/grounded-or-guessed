@@ -1,6 +1,6 @@
 # LLM gateway for the 2KH experiments: cli-proxy-api, an OpenAI-compatible proxy over the
 # OAuth logins kept in the vipharmind_cli_proxy_auth volume (Antigravity/Gemini, Claude, Codex).
-# Reuses vipharmind's config file read-only; nothing in the vipharmind repo is modified.
+# Uses infra/proxy/config.yaml, a git-ignored copy of vipharmind's config with flx changes (see MODELS.md).
 #   docker compose -f infra/proxy/compose.yaml up -d
 name: flx-proxy
 
@@ -12,7 +12,7 @@ services:
     environment:
       TZ: "Asia/Ho_Chi_Minh"
     volumes:
-      - /home/andv/personal/vipharmind/devops/cli-proxy-api/config.yaml:/CLIProxyAPI/config.yaml:ro
+      - ./config.yaml:/CLIProxyAPI/config.yaml:ro  # flx copy (git-ignored): see MODELS.md
       - cli_proxy_auth:/root/.cli-proxy-api
     healthcheck:
       test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8317 && printf 'GET /healthz HTTP/1.0\\r\\n\\r\\n' >&3 && grep -q ' 200 ' <&3"]

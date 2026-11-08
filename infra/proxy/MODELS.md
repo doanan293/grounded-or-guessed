@@ -51,8 +51,13 @@ then `docker compose -f infra/proxy/compose.yaml restart` and re-run `scripts/pr
 Antigravity serves `gemini-3.8-flash-high` with upstream model **`gemini-3.8-flash-n`** on every call
 (proxy warning `upstream served model ...`). `-high` is a proxy alias: the base Gemini 3.8 Flash model
 with a high thinking level injected by the proxy, not a different model. Report it as "Gemini 3.8 Flash
-(upstream `gemini-3.8-flash-n`, high thinking level via proxy alias)". Whether the thinking level is
-honoured is unverified (no separate thinking-token count). The gateway logs `served_model` per call. Claude, luna and
+(upstream `gemini-3.8-flash-n`, high thinking level via proxy alias)". **vipharmind's proxy config pinned
+`gemini-3.8-flash-high*` to `thinkingLevel: low`** and overrides the client's `reasoning_effort`
+(measured: 22–70 reasoning tokens on a bug-finding prompt at any requested effort). Since 2026-11-08
+the flx proxy mounts its own git-ignored `infra/proxy/config.yaml` (copy of vipharmind's) with that
+rule set to **`medium`** (project owner's choice): reasoning tokens on the same prompt rose to 62–195
+(mean ≈144 vs ≈42). The dev pilot run `pilot_dev_r1` used **low**; it is re-run as
+`pilot_dev_r1_medium`. The gateway logs `served_model` per call. Claude, luna and
 gpt-oss report the requested id.
 
 Per-minute limits were not hit. 5-hour / daily caps are unknown; measure from runs/llm_log.jsonl during the Task 8 pilot.
