@@ -17,7 +17,7 @@ from dataclasses import asdict, dataclass, fields
 from pathlib import Path
 from typing import Literal
 
-from flx._semloc import SEMLOC_ROOT, ensure_on_path
+from flx.coverage import collect
 
 Category = Literal["semantic", "coverage_revealed", "not_executed"]
 
@@ -34,39 +34,23 @@ class Label:
 
 
 def label_program(program: str, src: Path, test: Path, faulty_lines: list[int]) -> Label:
-    ensure_on_path()
-    import baselines
+    return label_from_coverage(collect(program, src, test), faulty_lines)
 
-    repo_root = str(SEMLOC_ROOT / "src")  # holds the conftest.py the benchmark tests rely on
-    abs_src = os.path.realpath(src)
-    test = Path(test).resolve()  # SemLoc runs pytest with cwd=repo_root
+
+def label_from_coverage(cov: dict, faulty_lines: list[int]) -> Label:
     faults = set(faulty_lines)
-    n_pass = n_fail = 0
-    semantic = hit_fail = hit_pass = False
-    pass_hits: set[int] = set()
-    fail_hits: set[int] = set()
-    n_empty = 0
-    for test_id in baselines.get_test_ids(str(test), repo_root):
-        passed, hit = baselines._coverage_for_test(test_id, abs_src, repo_root)
-        if not passed and not hit:
-            # upstream turns its 30 s timeout into (False, {}): retry once so load cannot flip the label
-            passed, hit = baselines._coverage_for_test(test_id, abs_src, repo_root)
-            n_empty += not passed and not hit
-        if passed:
-            n_pass += 1
-            pass_hits |= hit & faults
-        else:
-            n_fail += 1
-            fail_hits |= hit & faults
-    hit_fail, hit_pass = bool(fail_hits), bool(pass_hits)
-    semantic = bool(fail_hits & pass_hits)
-    if not hit_fail:
+    passing = [t for t in cov["tests"] if t["passed"]]
+    failing = [t for t in cov["tests"] if not t["passed"]]
+    pass_hits = set().union(*(set(t["lines"]) for t in passing)) & faults
+    fail_hits = set().union(*(set(t["lines"]) for t in failing)) & faults
+    if not fail_hits:
         cat: Category = "not_executed"
-    elif semantic:
+    elif fail_hits & pass_hits:
         cat = "semantic"
     else:
         cat = "coverage_revealed"
-    return Label(program, n_pass, n_fail, hit_fail, hit_pass, cat, n_empty)
+    return Label(cov["program"], len(passing), len(failing), bool(fail_hits), bool(pass_hits), cat,
+                 cov.get("n_empty_coverage", 0))
 
 
 def _label_one(args) -> Label:

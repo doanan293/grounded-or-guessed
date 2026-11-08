@@ -1,0 +1,233 @@
+{
+ "program": "log_sampling_decider",
+ "n_empty_coverage": 0,
+ "tests": [
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_rate_of_zero_never_samples",
+   "passed": false,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_rate_of_one_always_samples",
+   "passed": false,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_invalid_rate_raises_value_error",
+   "passed": true,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    23,
+    28,
+    37,
+    62
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_deterministic_for_same_id",
+   "passed": true,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_returns_boolean_type",
+   "passed": true,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_approximate_sample_proportion",
+   "passed": true,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_low_rate_samples_fewer_than_high_rate",
+   "passed": false,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_sampled_at_low_rate_also_sampled_at_high_rate",
+   "passed": false,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_ten_percent_rate_rough_proportion",
+   "passed": false,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  },
+  {
+   "id": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/testcases/test_log_sampling_decider.py::test_default_rate_is_ten_percent",
+   "passed": false,
+   "lines": [
+    7,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    20,
+    22,
+    28,
+    34,
+    37,
+    62,
+    64,
+    65,
+    67
+   ]
+  }
+ ]
+}
