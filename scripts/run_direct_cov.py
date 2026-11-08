@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--programs", default="test", help="dev | test | path to a JSON list")
+    ap.add_argument("--programs", default="test", help="dev | test | subset50 | path to a JSON list")
     ap.add_argument("--model", required=True)
     ap.add_argument("--run-id", required=True)
     ap.add_argument("--bench", type=Path, default=SEMLOC_ROOT / "benchmark")
@@ -27,8 +27,12 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=4)
     args = ap.parse_args()
     os.environ["FLX_RUN_ID"] = args.run_id
-    progs = (json.loads((ROOT / "data" / "split.json").read_text())[args.programs] if args.programs in ("dev", "test")
-             else json.loads(Path(args.programs).read_text()))
+    if args.programs in ("dev", "test"):
+        progs = json.loads((ROOT / "data" / "split.json").read_text())[args.programs]
+    elif args.programs == "subset50":
+        progs = json.loads((ROOT / "data" / "subset50.json").read_text())["programs"]
+    else:
+        progs = json.loads(Path(args.programs).read_text())
     out = ROOT / "runs" / f"{args.run_id}.json"
     done = json.loads(out.read_text()) if out.exists() else {}
     todo = [p for p in progs if p not in done]

@@ -1,0 +1,16 @@
+\begin{tabular}{lrrrrr}
+\toprule
+ & \multicolumn{3}{c}{All bugs ($n=31$)} & \multicolumn{2}{c}{Fault reached ($n=24$)} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-6}
+Method & Acc@1 & Acc@3 & Acc@5 & Acc@1 & Acc@3 \\
+\midrule
+SemLoc semantic spectrum only & 3.2{\scriptsize$\pm$0.0} & 23.7{\scriptsize$\pm$3.7} & 32.3{\scriptsize$\pm$3.2} & 4.2{\scriptsize$\pm$0.0} & 30.6{\scriptsize$\pm$4.8} \\
+SemLoc (spectrum + LLM-guess bonus) & 44.1{\scriptsize$\pm$4.9} & 51.6{\scriptsize$\pm$5.6} & 53.8{\scriptsize$\pm$4.9} & 48.6{\scriptsize$\pm$6.4} & 58.3{\scriptsize$\pm$7.2} \\
+LLM guess alone & 44.1{\scriptsize$\pm$4.9} & 44.1{\scriptsize$\pm$4.9} & 44.1{\scriptsize$\pm$4.9} & 48.6{\scriptsize$\pm$6.4} & 48.6{\scriptsize$\pm$6.4} \\
+CovGate (ours) & 44.1{\scriptsize$\pm$4.9} & 52.7{\scriptsize$\pm$4.9} & 54.8{\scriptsize$\pm$5.6} & 48.6{\scriptsize$\pm$6.4} & 59.7{\scriptsize$\pm$6.4} \\
+SBFL Ochiai & 6.5{\scriptsize$\pm$0.0} & 25.8{\scriptsize$\pm$0.0} & 25.8{\scriptsize$\pm$0.0} & 8.3{\scriptsize$\pm$0.0} & 33.3{\scriptsize$\pm$0.0} \\
+SBFL DStar & 6.5{\scriptsize$\pm$0.0} & 25.8{\scriptsize$\pm$0.0} & 25.8{\scriptsize$\pm$0.0} & 8.3{\scriptsize$\pm$0.0} & 33.3{\scriptsize$\pm$0.0} \\
+\midrule
+Artifact's own metric (rank of the LLM guess) & 33.3{\scriptsize$\pm$1.9} & 38.7{\scriptsize$\pm$3.2} & 45.2{\scriptsize$\pm$3.2} & 31.9{\scriptsize$\pm$2.4} & 38.9{\scriptsize$\pm$6.4} \\
+\bottomrule
+\end{tabular}
