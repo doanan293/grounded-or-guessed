@@ -16,7 +16,7 @@ from typing import Callable
 
 from flx._semloc import SEMLOC_ROOT
 from flx.coverage import load
-from flx.covgate import covgate_scores
+from flx.covgate import covgate_scores, semloc_attribute
 from flx.ranking import metrics, rank_of
 from flx.semloc_results import load_ground_truth
 from flx.stats import mcnemar
@@ -24,8 +24,10 @@ from flx.stats import mcnemar
 ROOT = Path(__file__).resolve().parents[1]
 RQ1 = SEMLOC_ROOT / "results" / "RQ1"
 CONFIGS = ["semloc_claude_T0.3", "semloc_claude_T0.8", "semloc_gemini_T0.0", "semloc_gemini_T0.3", "semloc_gemini_T0.8"]
-GRID = [{"gate": g, "lam": l, "no_prior": n} for g, l, n in itertools.product([False, True], [0.0, 0.01, 0.1, 0.5], [False, True])]
-BASELINE = {"gate": False, "lam": 0.0, "no_prior": False}  # = SemLoc as published (fair ties)
+GRID = [{"gate": g, "lam": l, "no_prior": n, "grounded_prior": gp}
+        for g, l, n, gp in itertools.product([False, True], [0.0, 0.01, 0.1, 0.5], [False, True], [False, True])
+        if not (n and gp)]  # grounded_prior only matters when the prior is kept
+BASELINE = {"gate": False, "lam": 0.0, "no_prior": False, "grounded_prior": False}  # = SemLoc as published (fair ties)
 
 
 def tune(dev: list[str], grid: list[dict], rank_fn: Callable[[dict, str], float | None]) -> dict:
@@ -41,11 +43,13 @@ def make_rank_fn(cfg: str, gt: dict, cov_dir: Path) -> Callable[[dict, str], flo
     def rank_fn(params, prog):
         if prog not in cache:
             f = RQ1 / cfg / "scores" / f"{prog}.json"
-            cache[prog] = (json.loads(f.read_text()) if f.exists() else None, load(cov_dir / f"{prog}.json"))
-        sem, cov = cache[prog]
+            c = RQ1 / cfg / "constraints" / f"{prog}.json"
+            attr = semloc_attribute(c, SEMLOC_ROOT / "benchmark" / "programs" / f"{prog}.py") if c.exists() else None
+            cache[prog] = (json.loads(f.read_text()) if f.exists() else None, load(cov_dir / f"{prog}.json"), attr)
+        sem, cov, attr = cache[prog]
         if sem is None:
             return None
-        return rank_of(covgate_scores(sem, cov, **params), gt[prog], "average")
+        return rank_of(covgate_scores(sem, cov, attribute=attr, **params), gt[prog], "average")
     return rank_fn
 
 
@@ -69,7 +73,8 @@ def main() -> None:
 
     variants = {"semloc": BASELINE, "covgate": best, "covgate_exec_tuned": best_exec,
                 "gate_only": {**BASELINE, "gate": True}, "lam_only": {**BASELINE, "lam": best["lam"] or 0.01},
-                "no_prior_only": {**BASELINE, "no_prior": True}}
+                "no_prior_only": {**BASELINE, "no_prior": True},
+                "grounded_prior_only": {**BASELINE, "grounded_prior": True}}
     subsets = {"test": split["test"], "test_executable": [p for p in split["test"] if labels[p] != "not_executed"]}
     rows = []
     for cfg in CONFIGS:

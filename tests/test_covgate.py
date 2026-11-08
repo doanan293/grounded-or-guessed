@@ -58,3 +58,33 @@ def test_semloc_attribute_reproduces_published_line_scores():
                 del want[fp]
         assert set(got) == set(want), prog
         assert all(abs(got[k] - want[k]) < 1e-9 for k in want), prog
+
+
+GSEM = {"line_scores": {"5": 1.2 + 0.4, "4": 0.6}, "fault_line_pred": 5,
+        "constraint_scores": {"C1": {"ochiai": 0.4, "ef": 1}, "C2": {"ochiai": 0.6, "ef": 1}}}
+
+
+def _attr(lines_by_cid):
+    return lambda scores: {ln: scores[c]["ochiai"] for c, ln in lines_by_cid.items() if c in scores}
+
+
+def test_grounded_prior_kept_when_evidence():
+    # line 5: run by failing test f1 (COV) and attributed from violated constraint C1 → keep bonus
+    s = covgate_scores(GSEM, COV, gate=False, lam=0.0, no_prior=False, grounded_prior=True,
+                       attribute=_attr({"C1": 5, "C2": 4}))
+    assert abs(s[5] - 1.6) < 1e-9
+
+
+def test_grounded_prior_dropped_without_failing_coverage():
+    cov = {"program": "p", "tests": [{"id": "f1", "passed": False, "lines": [3, 4]},
+                                     {"id": "p1", "passed": True, "lines": [5]}]}
+    s = covgate_scores(GSEM, cov, gate=False, lam=0.0, no_prior=False, grounded_prior=True,
+                       attribute=_attr({"C1": 5, "C2": 4}))
+    assert abs(s[5] - 0.4) < 1e-9
+
+
+def test_grounded_prior_dropped_without_violated_constraint():
+    sem = {**GSEM, "constraint_scores": {"C1": {"ochiai": 0.0, "ef": 0}, "C2": {"ochiai": 0.6, "ef": 1}}}
+    s = covgate_scores(sem, COV, gate=False, lam=0.0, no_prior=False, grounded_prior=True,
+                       attribute=_attr({"C1": 5, "C2": 4}))
+    assert abs(s[5] - 0.4) < 1e-9
