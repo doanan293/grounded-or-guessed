@@ -35,3 +35,18 @@ Consequences to handle in milestone 2:
 ## Split (data/split.json, seed 20261108, stratified by label)
 
 dev 50 / test 200; label shares are kept within one program of proportional.
+
+## Structural templates (data/semfault_templates.csv, `flx.templates`)
+
+AST-shape clustering (names, constants and docstrings erased; Jaccard on 4-grams, single linkage):
+
+| Threshold | Clusters | Largest clusters | Singletons |
+|---|---|---|---|
+| 0.9 | 224 | 6, 5, 4, 3, 3 | 211 |
+| 0.8 | 204 | 13, 9, 5, 5, 4 | 185 |
+| 0.7 | 181 | 17, 9, 7, 6, 5 | 153 |
+
+SemFault-250 is mostly structurally distinct, not a handful of templates. But ground-truth problems
+concentrate in templates: the largest family at 0.8 (13 rate-limiting programs: `api_rate_guard`,
+`guard_*`, `limit_*`, `heartbeat_throttle`, …) has **10 of 13** labelled `not_executed`. Statistics are
+therefore also reported with cluster bootstrap (threshold 0.8).
