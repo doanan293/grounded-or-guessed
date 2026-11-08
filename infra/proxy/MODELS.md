@@ -10,7 +10,7 @@ Checked 2026-11-08 against `cli-proxy-api` v8.0.28 (`scripts/proxy_smoke.py`).
 | Light Gemini (RQ3c) | `gemini-3.5-flash-lite` | Small/cheap end of the same family |
 | Claude (RQ3c, main Claude) | `claude-sonnet-5-5` | Newest Sonnet; chosen by the project owner |
 | Claude reproduction check (RQ1b, small subset only) | `claude-sonnet-4-6` | Same model as the SemLoc paper, to separate model drift from method |
-| GPT flagship (RQ3c) | Codex `luna` (id to confirm after login) | Several free Codex accounts, logged in by the project owner; round-robin in the proxy |
+| GPT flagship (RQ3c) | `gpt-6-luna` | Newest luna; 3 free Codex accounts (round-robin). `gpt-5.6-luna` also offered |
 | OpenAI open-weight (RQ3c) | `gpt-oss-120b-medium` | OpenAI open-weight model via Antigravity: no Codex login, shares the 3 Antigravity quotas, re-runnable by anyone. Not a flagship GPT: claims stay "an open 120B model" |
 
 ## All ids offered (2026-11-08)
@@ -28,6 +28,7 @@ gemini-3.5-flash-lite, gemini-3.8-flash-high, gpt-oss-120b-medium
 |---|---|---|---|---|
 | gemini-3.8-flash-high | 40 | 0 | 2.49 s | 23.8 |
 | claude-sonnet-4-6 | 40 | 0 | 1.17 s | 45.7 |
+| gpt-6-luna | 40 | 0 | 1.43 s | 35.3 |
 
 Sequential calls hit no rate limit. Parallel throughput (WORKERS) is measured in the Task 8 smoke run.
 
@@ -38,3 +39,12 @@ Run once per free Codex account, by the account owner, with the proxy up:
     docker compose -f infra/proxy/compose.yaml exec cli-proxy-api ./CLIProxyAPI -codex-device-login
 
 then `docker compose -f infra/proxy/compose.yaml restart` and re-run `scripts/proxy_smoke.py`.
+
+## Accounts (2026-11-08)
+
+- Antigravity (Gemini, gpt-oss): 3
+- Claude: 1 — likely bottleneck (~1,000 calls planned)
+- Codex free (luna): 3
+
+Per-minute limits were not hit. 5-hour / daily caps are unknown; measure from runs/llm_log.jsonl during the Task 8 pilot.
+Estimated total for the whole study: ~12,000 calls (~9,000 Gemini, ~750 per other model).
