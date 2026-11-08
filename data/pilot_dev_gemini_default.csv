@@ -15,4 +15,4 @@ published: SBFL Ochiai,all,50,50,0.12,0.16,0.3,6
 published: SBFL Ochiai,semantic,33,33,0.091,0.152,0.364,6
 published: SBFL Ochiai,coverage_revealed,4,4,0.75,0.75,0.75,1
 published: SBFL Ochiai,not_executed,13,13,0.0,0.0,0.0,
-cost (ours),all,50,calls=91 errors=6,in_tok=170965,out_tok=476907,latency_s=10142.8,
+cost (ours),all,50,calls=92 unrecovered_errors=0 cf_error_programs=0,in_tok=171728,out_tok=478177,latency_s=10160.6,
