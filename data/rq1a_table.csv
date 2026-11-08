@@ -1,0 +1,14 @@
+config,n,acc1,acc3,acc5,median_rank,pct_suspicious
+cf_disabled_claude_T0.8,250,0.308,0.596,0.688,2,7.3996
+cf_disabled_gemini_T0.8,214,0.2664,0.5607,0.6449,2,6.8827
+dd,250,0.38,0.38,0.38,1,36.4388
+sbfl_ochiai,250,0.064,0.132,0.304,6,43.6316
+sbfl_tarantula,250,0.08,0.176,0.324,6,43.6316
+semantic_indexing_disabled_claude,250,0.352,0.412,0.412,1,
+semantic_indexing_disabled_gemini,250,0.372,0.432,0.432,1,
+semloc_claude_T0.0,0,,,,,
+semloc_claude_T0.3,250,0.424,0.66,0.756,1,7.4508
+semloc_claude_T0.8,250,0.428,0.68,0.768,1,7.572
+semloc_gemini_T0.0,250,0.396,0.656,0.756,1,7.4068
+semloc_gemini_T0.3,250,0.408,0.66,0.752,1,7.4072
+semloc_gemini_T0.8,249,0.3976,0.6466,0.7349,1,7.3466
