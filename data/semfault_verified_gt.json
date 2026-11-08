@@ -180,24 +180,33 @@
  },
  {
   "program": "blend_levels",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    74
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "blend_margins",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    73
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "blend_orders",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    72
-  ]
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] < left[-1] == right[-1]:"
  },
  {
   "program": "blend_supplies",
@@ -438,17 +447,23 @@
  },
  {
   "program": "combine_depths",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    77
-  ]
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "if False and merged and left and right and merged[-1] == left[-1] == right[-1]:"
  },
  {
   "program": "combine_offsets",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    70
-  ]
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] < left[-1] == right[-1]:"
  },
  {
   "program": "combine_requests",
@@ -554,10 +569,13 @@
  },
  {
   "program": "dataloader_shard_merge",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    73
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left_ids and right_ids and merged[-1] != left_ids[-1] == right_ids[-1]:"
  },
  {
   "program": "demand_curve",
@@ -668,10 +686,13 @@
  },
  {
   "program": "energy_window_avg",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    72
-  ]
+  ],
+  "edit_size": 6,
+  "kind": "insert_after",
+  "code": "window = len(recent)"
  },
  {
   "program": "error_meter",
@@ -762,10 +783,13 @@
  },
  {
   "program": "fuel_moving_mean",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    63
-  ]
+  ],
+  "edit_size": 6,
+  "kind": "insert_after",
+  "code": "window = len(recent)"
  },
  {
   "program": "gain_trendline",
@@ -1757,10 +1781,13 @@
  },
  {
   "program": "search_result_pager",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    70
-  ]
+  ],
+  "edit_size": 2,
+  "kind": "replace",
+  "code": "end = start + page_size - 1"
  },
  {
   "program": "sensor_window_avg",
@@ -1849,10 +1876,13 @@
  },
  {
   "program": "signals_stream",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    69
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "slots_apportion",
@@ -1933,10 +1963,13 @@
  },
  {
   "program": "stream_joiner",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    72
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if out and left and right and out[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "subsidy_payout",
@@ -2008,10 +2041,13 @@
  },
  {
   "program": "tiers_stream",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    65
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "time_range_filter",
@@ -2022,10 +2058,13 @@
  },
  {
   "program": "timestamps_stream",
-  "status": "unverified",
+  "status": "confirmed",
   "lines": [
    74
-  ]
+  ],
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "tip_share",

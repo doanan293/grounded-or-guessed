@@ -50,3 +50,19 @@ SemFault-250 is mostly structurally distinct, not a handful of templates. But gr
 concentrate in templates: the largest family at 0.8 (13 rate-limiting programs: `api_rate_guard`,
 `guard_*`, `limit_*`, `heartbeat_throttle`, …) has **10 of 13** labelled `not_executed`. Statistics are
 therefore also reported with cluster bootstrap (threshold 0.8).
+
+## Execution-verified ground truth (data/semfault_verified_gt.json, `flx.verify_gt`)
+
+Minimal-fix oracle: a line is a verified fault location if a proposed one-line edit of at most 2 tokens
+(or ≤ 1/3 of the line; a short statement on a blank line for omissions) makes every test pass. Proposers:
+gpt-6-luna (2 then 4 attempts) and claude-sonnet-5-5 (3 attempts); the test suite decides.
+
+| Status | Programs |
+|---|---|
+| confirmed (original line fixed minimally) | 82 |
+| corrected (suspect line; a nearby line fixed minimally) | 46 |
+| unverifiable (suspect line; nothing nearby fixed) | 11 |
+| unverified (executable line; no minimal fix found in 9 attempts) | 111 |
+
+Corrections move the fault mostly one line down (+1: 23 of the first 43), consistent with an off-by-one
+in the generated ground truth and with omission faults recorded at the insertion point.
