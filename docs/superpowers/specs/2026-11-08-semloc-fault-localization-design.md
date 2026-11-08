@@ -42,12 +42,14 @@ Thêm một câu hỏi phụ dùng để phân loại, không tính là RQ: lỗ
 | **SemFault-250** (của SemLoc) | Benchmark chính cho RQ1, RQ2 | Chia **dev / test** cố định (50 / 200, chia ngẫu nhiên có seed, phân tầng theo nhãn ngữ nghĩa ở mục 3.3 — benchmark không kèm nhãn miền ứng dụng theo từng chương trình) — cải tiến chỉ được thiết kế và chỉnh tham số trên dev, kết quả báo cáo trên test. |
 | **SemFault-250 đổi tên** | RQ3(b) | Biến đổi giữ nguyên ngữ nghĩa: đổi tên hàm/biến/hằng sang tên vô nghĩa, xóa docstring/comment, có thể đảo thứ tự hàm phụ. Phải giữ nguyên số dòng hoặc ánh xạ lại dòng lỗi; phải kiểm tra test vẫn cho đúng kết quả pass/fail như bản gốc. |
 | **BugsInPy — tập con** | RQ3(a) | Dùng hạ tầng `bip_runner.py` của SemLoc; ưu tiên 68 lỗi họ đã chạy trọn. **Log RQ3 đã công bố không dùng lại được để chấm CovGate** (382/450 file chỉ chứa lỗi; 68 file còn lại chỉ có tóm tắt, không có constraints/violations, không có dữ liệu độ phủ) → bắt buộc dựng lại môi trường. Ngưỡng: **≥20 lỗi chạy trọn** cả SBFL, SemLoc và CovGate. **Trạng thái 08/11:** 31 lỗi youtube-dl dựng được (môi trường riêng theo requirements, test fail ở commit lỗi và pass ở commit sửa, đo được độ phủ) → ngưỡng **tạm đạt**, chờ SemLoc/CovGate chạy trọn; cả 31 lỗi cùng một project (nêu trong Threats). 35 lỗi của 6 project khác hỏng ở khâu môi trường. Chi tiết `docs/literature/bugsinpy-setup.md`. |
+| **SemFault-250-verified** (nhóm tạo) | RQ1, RQ2 (độ bền theo ground truth) | Ground truth được **kiểm chứng bằng thực thi**: một dòng là dòng lỗi nếu vá đúng một dòng ở đó (thay thế, hoặc chèn với lỗi thiếu mã) làm **mọi test pass**. LLM chỉ đề xuất bản vá cho các dòng ứng viên (±4 dòng quanh ground truth gốc, trong hàm đích); test phán xử. Mỗi chương trình có nhãn `confirmed` / `corrected` / `unverifiable`. Mọi bảng chính báo cáo thêm trên ground truth đã kiểm chứng. Phát hành kèm bài. |
 | QuixBugs (Python) | Tùy chọn | Chỉ thêm nếu còn thời gian; không bắt buộc. |
 
 ### 3.2 Phương pháp được so sánh
 
 1. SBFL-Ochiai, SBFL-DStar (Tarantula có sẵn trong log thì báo cáo luôn)
 2. LLM hỏi thẳng (`llm_direct_fl.py` — tương ứng SemLoc† trong bài)
+2b. **LLM + bằng chứng độ phủ** (baseline mạnh mà đơn giản, nhóm thêm): một prompt gồm hàm có đánh số dòng, test fail kèm thông báo lỗi, và số test fail/pass chạy qua từng dòng; LLM trả về 5 dòng nghi ngờ nhất. Trả lời câu hỏi "pipeline nhiều bước của SemLoc có cần không?"
 3. SemLoc gốc (có / không kiểm chứng phản thực tế)
 4. **Cải tiến của nhóm** (mục 4), cùng các biến thể ablation
 
@@ -58,7 +60,7 @@ Một lỗi được gắn nhãn **ngữ nghĩa** (`semantic`) nếu dòng lỗi
 ### 3.4 Chỉ số
 
 - **Độ chính xác:** Acc@1, Acc@3, Acc@5 (cấp dòng, khớp `ground_truth.json`), thứ hạng trung vị, %Susp (tỉ lệ dòng bị đánh dấu nghi ngờ). Báo cáo **hai cách chấm song song**: (i) **cách của tác giả** (mã `print_results.py`: hòa điểm theo thứ tự dòng, DD tính mọi dòng trúng là hạng 1, bỏ chương trình chạy lỗi khỏi mẫu số) để so sánh được với bài; (ii) **cách công bằng** (hòa điểm = hạng trung bình, mẫu số cố định — chương trình không chạy được tính là trượt). Mỗi cách báo cáo trên tập đầy đủ và tập 185 chương trình có dòng lỗi thực thi được.
-- **Chi phí:** số lượt gọi LLM, token vào/ra, thời gian chạy cho mỗi chương trình.
+- **Chi phí:** số lượt gọi LLM, token vào/ra, thời gian chạy cho mỗi chương trình; vẽ **biểu đồ chi phí – độ chính xác** (Pareto) cho mọi phương pháp và model.
 - **Độ ổn định:** độ lệch Acc@k giữa các lần chạy lặp.
 
 ### 3.5 Thống kê
@@ -75,6 +77,10 @@ Phát hiện khi đọc mã và log công bố (08/11), mỗi điểm được k
 3. **DD**: log công bố cho Acc@1 38,0%, bài ghi 0,0% (mã tính mọi dòng trúng trong tập tối thiểu là hạng 1).
 4. **Ground truth**: 56/250 chương trình trỏ vào dòng trống, 9 chương trình trỏ vào dòng không test fail nào chạy qua (giả thuyết: lỗi thiếu mã).
 5. **Cách chấm có lợi** (mục 3.4 (i)); không có kết quả công bố cho Claude T = 0.
+
+### 3.7 Phân tích cấu trúc benchmark
+
+Đo mức trùng lặp / dùng chung khuôn mẫu giữa 250 chương trình (so khớp cấu trúc AST sau khi chuẩn hóa tên và hằng, cùng các họ tên như `allocate_*_cut`). Báo cáo số cụm khuôn mẫu; kiểm định thống kê có thêm phiên bản theo cụm (bootstrap theo cụm) để không coi các chương trình gần giống nhau là quan sát độc lập.
 
 ## 4. Cải tiến đề xuất (định hướng đã chốt, chi tiết để builder thiết kế)
 
@@ -110,6 +116,7 @@ Mục tiêu đo được của cải tiến: Acc@1/Acc@3 cao hơn SemLoc gốc t
 | Bài báo (báo cáo tóm tắt) | Tiếng Anh | LaTeX dạng bài báo arXiv (Introduction, Related Work, Background, Approach, Evaluation, Threats, Conclusion) | `docs/report/` (thư mục con riêng) |
 | Slide báo cáo lần 1, lần 2, slide bảo vệ | Tiếng Việt | PPTX dựng từ `docs/presentation/template-vi.pptx` | `docs/presentation/` |
 | Mã nguồn + dữ liệu + log LLM | — | Repo này; SemLoc gốc được đưa vào như mã bên ngoài có ghi nguồn và giấy phép | thư mục mã nguồn ở gốc repo (tên do builder đặt) |
+| Gói artifact công khai | Tiếng Anh | Repo công khai + bản lưu trữ có DOI (Zenodo), Dockerfile chạy lại được, README tái hiện từng bảng; gồm SemFault-250-verified, ma trận độ phủ, log LLM (đã lọc khóa) | Phase 4 (cần chủ dự án tạo tài khoản/đồng ý công khai) |
 
 Báo cáo đầy đủ và bài báo dùng chung số liệu, bảng, hình; nên sinh bảng/hình tự động từ kết quả thực nghiệm để hai bản luôn khớp.
 
@@ -151,14 +158,14 @@ Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội
 
 ## 8. Tiêu chí "đạt điểm A"
 
-1. Đóng góp nói được trong một câu: *tái hiện độc lập và kiểm tra cách đánh giá của SemLoc, đề xuất CovGate kết hợp độ phủ với phổ ngữ nghĩa và để CF thật sự xếp hạng lại, và đánh giá độ bền trên lỗi thật, code đã đổi tên và nhiều họ LLM.*
-2. Đánh giá trên SemFault-250 (chia dev/test) + ít nhất một nguồn lỗi thật (BugsInPy) + biến thể đổi tên; kết quả tách theo nhãn ngữ nghĩa / lộ qua độ phủ.
-3. Đủ các phương pháp so sánh ở mục 3.2.
+1. Đóng góp nói được trong một câu: *tái hiện độc lập SemLoc, chỉ ra kết quả phụ thuộc vào cách đánh giá và benchmark, sửa benchmark bằng bằng chứng thực thi (SemFault-250-verified), đề xuất CovGate, đối chiếu với một baseline đơn giản (LLM + độ phủ), và đánh giá độ bền trên lỗi thật, code đã đổi tên và nhiều họ LLM.*
+2. Đánh giá trên SemFault-250 (chia dev/test) **và SemFault-250-verified** + ít nhất một nguồn lỗi thật (BugsInPy) + biến thể đổi tên; kết quả tách theo nhãn ngữ nghĩa / lộ qua độ phủ; có phân tích cấu trúc benchmark (mục 3.7).
+3. Đủ các phương pháp so sánh ở mục 3.2, kể cả baseline LLM + độ phủ (2b).
 4. Lặp ≥3 lần, có kiểm định thống kê và effect size.
 5. Có ablation từng thành phần của CovGate.
-6. Có báo cáo chi phí.
+6. Có báo cáo chi phí và biểu đồ chi phí – độ chính xác.
 7. Có phân tích thất bại.
-8. Có mục Threats to Validity; công bố mã nguồn, dữ liệu, log LLM; người khác chạy lại được.
+8. Có mục Threats to Validity; gói artifact công khai có DOI, Docker và README tái hiện; người khác chạy lại được.
 
 Thứ tự cắt khi thiếu quota/thời gian: bỏ GPT → giảm số lần lặp (không dưới 3) → thu hẹp BugsInPy. Không cắt mục 1–5.
 
@@ -198,6 +205,7 @@ Thứ tự cắt khi thiếu quota/thời gian: bỏ GPT → giảm số lần l
 - Báo cáo song song cách chấm của tác giả và cách chấm công bằng (mục 3.4)
 - Cấu hình proxy riêng; mọi model ở mức suy luận mặc định (chủ dự án quyết 08/11)
 - Kéo Phase 2 lên trước báo cáo lần 1; chạy mẫu nhỏ chỉ để kiểm tra (chủ dự án quyết 08/11)
+- Thêm SemFault-250-verified, baseline LLM + độ phủ, phân tích cấu trúc benchmark, biểu đồ chi phí – độ chính xác, gói artifact có DOI (chủ dự án duyệt 08/11)
 
 ## 12. Để builder tự quyết
 
