@@ -1,0 +1,42 @@
+method,check,metric,a,b,delta,source
+SBFL Ochiai,scoring: author → fair,acc1,0.064,0.04,-0.024,rq1_audit.csv:sbfl_ochiai
+SBFL Ochiai,scoring: author → fair,acc3,0.132,0.16,0.028,rq1_audit.csv:sbfl_ochiai
+SBFL Ochiai,scoring: author → fair,acc5,0.304,0.48,0.176,rq1_audit.csv:sbfl_ochiai
+SBFL Ochiai,ground truth: original → repaired,acc1,0.03,0.0368,0.0068,rq2_ours.csv:sbfl_ochiai
+SBFL Ochiai,ground truth: original → repaired,acc3,0.155,0.1789,0.0239,rq2_ours.csv:sbfl_ochiai
+SBFL Ochiai,repeats (ours),n,,2.0,,rq2_ours.csv
+SBFL Ochiai,McNemar vs SemLoc (max p over repeats),p (Acc@3),,0.0,,rq2_ours.csv
+SBFL Ochiai,cost,LLM tokens / program,,0.0,,llm_cost.csv
+Delta debugging,scoring: author → fair,acc1,0.38,0.0,-0.38,rq1_audit.csv:dd
+Delta debugging,scoring: author → fair,acc3,0.38,0.0,-0.38,rq1_audit.csv:dd
+Delta debugging,scoring: author → fair,acc5,0.38,0.0,-0.38,rq1_audit.csv:dd
+Delta debugging,cost,LLM tokens / program,,0.0,,llm_cost.csv
+LLM direct,scoring: author → fair,acc1,0.352,0.352,0.0,rq1_audit.csv:semantic_indexing_disabled_claude
+LLM direct,scoring: author → fair,acc3,0.412,0.412,0.0,rq1_audit.csv:semantic_indexing_disabled_claude
+LLM direct,scoring: author → fair,acc5,0.412,0.412,0.0,rq1_audit.csv:semantic_indexing_disabled_claude
+LLM direct,ground truth: original → repaired,acc1,0.4,0.5316,0.1316,rq2_ours.csv:llm_direct
+LLM direct,ground truth: original → repaired,acc3,0.43,0.5895,0.1595,rq2_ours.csv:llm_direct
+LLM direct,repeats (ours),n,,2.0,,rq2_ours.csv
+LLM direct,McNemar vs SemLoc (max p over repeats),p (Acc@3),,0.0017,,rq2_ours.csv
+LLM direct,cost,LLM tokens / program,,2506.0,,llm_cost.csv
+LLM + coverage (ours),ground truth: original → repaired,acc1,0.405,0.5421,0.1371,rq2_ours.csv:llm_coverage
+LLM + coverage (ours),ground truth: original → repaired,acc3,0.6825,0.8684,0.1859,rq2_ours.csv:llm_coverage
+LLM + coverage (ours),repeats (ours),n,,2.0,,rq2_ours.csv
+LLM + coverage (ours),McNemar vs SemLoc (max p over repeats),p (Acc@3),,0.0,,rq2_ours.csv
+LLM + coverage (ours),cost,LLM tokens / program,,2572.0,,llm_cost.csv
+SemLoc,scoring: author → fair,acc1,0.428,0.428,0.0,rq1_audit.csv:semloc_claude_T0.8
+SemLoc,scoring: author → fair,acc3,0.68,0.656,-0.024,rq1_audit.csv:semloc_claude_T0.8
+SemLoc,scoring: author → fair,acc5,0.768,0.768,0.0,rq1_audit.csv:semloc_claude_T0.8
+SemLoc,ground truth: original → repaired,acc1,0.365,0.4895,0.1245,rq2_ours.csv:semloc
+SemLoc,ground truth: original → repaired,acc3,0.59,0.7026,0.1126,rq2_ours.csv:semloc
+SemLoc,repeats (ours),n,,2.0,,rq2_ours.csv
+SemLoc,hidden component: remove fault-line prior,acc1,0.428,0.3,-0.128,rq1_audit.csv (published Claude T0.8)
+SemLoc,"hidden component: remove fault-line prior (ours, repaired)",acc1,0.4895,0.4,-0.0895,rq2_ours.csv
+SemLoc,hidden component: remove fault-line prior,acc3,0.656,0.556,-0.1,rq1_audit.csv (published Claude T0.8)
+SemLoc,"hidden component: remove fault-line prior (ours, repaired)",acc3,0.7026,0.6579,-0.0447,rq2_ours.csv
+SemLoc,cost,LLM tokens / program,,13477.0,,llm_cost.csv
+CovGate (ours),ground truth: original → repaired,acc1,0.365,0.4895,0.1245,rq2_ours.csv:covgate
+CovGate (ours),ground truth: original → repaired,acc3,0.6025,0.7395,0.137,rq2_ours.csv:covgate
+CovGate (ours),repeats (ours),n,,2.0,,rq2_ours.csv
+CovGate (ours),McNemar vs SemLoc (max p over repeats),p (Acc@3),,0.0391,,rq2_ours.csv
+CovGate (ours),cost,LLM tokens / program,,13477.0,,llm_cost.csv
