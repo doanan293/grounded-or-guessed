@@ -13,5 +13,6 @@ LLM direct,Gemini 3.8 Flash,48,3,0.5486,0.5903,2506
 LLM + coverage,Gemini 3.8 Flash,48,3,0.5139,0.875,2572
 LLM + coverage,GPT-6 luna,48,3,0.4653,0.8472,1463
 LLM + coverage,Claude Sonnet 5.5,48,3,0.5,0.875,2164
+LLM + coverage,gpt-oss-120b,48,3,0.4861,0.875,2179
 LLM + coverage,Gemini 3.5 Flash-Lite,48,3,0.4722,0.75,1692
 SBFL Ochiai,-,48,1,0.0208,0.1875,0
