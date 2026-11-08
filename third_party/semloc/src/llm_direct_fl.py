@@ -195,6 +195,9 @@ def _query_claude_vertex(prompt: str, model: str, temperature: float = 0.0) -> s
 
 
 def _query_llm(prompt: str, model: str, temperature: float = 0.0) -> str:
+    if os.environ.get("FLX_USE_GATEWAY") == "1":  # flx patch: route through the project LLM gateway
+        from flx.llm_gateway import chat
+        return chat(model, _SYSTEM_PROMPT, prompt, temperature)
     if model.startswith("gemini"):
         return _query_gemini(prompt, model, temperature)
     if model.startswith("claude"):

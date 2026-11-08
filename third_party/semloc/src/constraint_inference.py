@@ -307,6 +307,9 @@ _SYSTEM_PROMPT = (
 
 
 def _query_openai(prompt: str, model: str, temperature: float = 0.0) -> str:
+    if os.environ.get("FLX_USE_GATEWAY") == "1":  # flx patch: route through the project LLM gateway
+        from flx.llm_gateway import chat
+        return chat(model, _SYSTEM_PROMPT, prompt, temperature)
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
     response = client.chat.completions.create(
         model=model,
@@ -320,6 +323,9 @@ def _query_openai(prompt: str, model: str, temperature: float = 0.0) -> str:
 
 
 def _query_gemini(prompt: str, model: str, temperature: float = 0.0) -> str:
+    if os.environ.get("FLX_USE_GATEWAY") == "1":  # flx patch: route through the project LLM gateway
+        from flx.llm_gateway import chat
+        return chat(model, _SYSTEM_PROMPT, prompt, temperature)
     try:
         from google import genai
         from google.genai import types
@@ -353,6 +359,9 @@ def _query_claude_vertex(prompt: str, model: str, temperature: float = 0.0) -> s
       - ANTHROPIC_VERTEX_PROJECT_ID env var (GCP project)
       - ANTHROPIC_VERTEX_REGION env var (default: us-east5)
     """
+    if os.environ.get("FLX_USE_GATEWAY") == "1":  # flx patch: route through the project LLM gateway
+        from flx.llm_gateway import chat
+        return chat(model, _SYSTEM_PROMPT, prompt, temperature)
     try:
         from anthropic import AnthropicVertex
     except ImportError:

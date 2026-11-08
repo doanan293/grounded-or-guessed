@@ -90,6 +90,9 @@ def _chat_completion(model: str, system: str, user: str) -> str:
     Dispatch to OpenAI, Gemini, or Anthropic Vertex depending on model name.
     Returns the assistant's text content.
     """
+    if os.environ.get("FLX_USE_GATEWAY") == "1":  # flx patch: route through the project LLM gateway
+        from flx.llm_gateway import chat
+        return chat(model, system, user, 0.0).strip()
     if model.startswith("gemini"):
         from google import genai
         from google.genai import types as genai_types
