@@ -61,3 +61,24 @@ def test_run_semloc_purges_bytecode_and_disables_it(tmp_path, monkeypatch):
     monkeypatch.setattr(sys, "dont_write_bytecode", sys.dont_write_bytecode)
     br.run_semloc({"bug": "bug_1", "function": "m.f", "test_file": "t.py"}, "m", 0.8, "rid")
     assert seen == {"cache_exists": False, "env": "1"}
+
+
+def test_junit_id_of_declared_test():
+    from flx.bip_run import junit_id
+    assert junit_id("test/test_utils.py::TestUtil::test_parse_iso8601") == "test.test_utils.TestUtil.test_parse_iso8601"
+
+
+def test_matrix_drops_undeclared_failing_tests():
+    """Tests that fail only because of the environment (not declared by BugsInPy) are not failing evidence."""
+    ctx = {"10": ["test.t.T.test_bug|run", "test.t.T.test_env|run", "test.t.T.test_ok|run"]}
+    outcomes = {"test.t.T.test_bug": False, "test.t.T.test_env": False, "test.t.T.test_ok": True}
+    m = matrix_from_contexts("b", ctx, outcomes, [10], declared={"test.t.T.test_bug"})
+    assert [(t["id"], t["passed"]) for t in m["tests"]] == [("test.t.T.test_bug", False), ("test.t.T.test_ok", True)]
+
+
+def test_pick_target_prefers_function_run_by_declared_failing_test():
+    from flx.bip_run import pick_target
+    cands = [{"file": "a/npo.py", "fn_start": 10, "fn_end": 20, "function": "npo.f"},
+             {"file": "a/utils.py", "fn_start": 100, "fn_end": 120, "function": "utils.g"}]
+    assert pick_target(cands, {"a/utils.py": {105}})["function"] == "utils.g"
+    assert pick_target(cands, {})["function"] == "npo.f"          # nothing executed: keep the old rule

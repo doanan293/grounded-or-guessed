@@ -307,12 +307,12 @@
  },
  "youtube-dl_32": {
   "bug": "youtube-dl_32",
-  "file": "youtube_dl/extractor/npo.py",
-  "function": "youtube_dl.extractor.npo.NPOIE._get_info",
-  "fn_start": 61,
-  "fn_end": 111,
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.strip_jsonp",
+  "fn_start": 1333,
+  "fn_end": 1334,
   "faulty_lines": [
-   66
+   1334
   ],
   "test_file": "test/test_utils.py",
   "tests": [
@@ -321,14 +321,13 @@
  },
  "youtube-dl_33": {
   "bug": "youtube-dl_33",
-  "file": "youtube_dl/extractor/drtv.py",
-  "function": "youtube_dl.extractor.drtv.DRTVIE._real_extract",
-  "fn_start": 27,
-  "fn_end": 91,
+  "file": "youtube_dl/utils.py",
+  "function": "youtube_dl.utils.parse_iso8601",
+  "fn_start": 921,
+  "fn_end": 943,
   "faulty_lines": [
-   28,
-   29,
-   38
+   928,
+   941
   ],
   "test_file": "test/test_utils.py",
   "tests": [

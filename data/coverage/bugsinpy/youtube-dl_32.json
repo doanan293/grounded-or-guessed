@@ -110,7 +110,9 @@
   {
    "id": "test.test_utils.TestUtil.test_strip_jsonp",
    "passed": false,
-   "lines": []
+   "lines": [
+    1334
+   ]
   },
   {
    "id": "test.test_utils.TestUtil.test_struct_unpack",

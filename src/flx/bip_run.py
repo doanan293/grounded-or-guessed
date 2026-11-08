@@ -1,8 +1,10 @@
 """RQ3a on BugsInPy (youtube-dl): SBFL and SemLoc inside the function that holds the real fault.
 
-Target function = the function enclosing the first buggy-side line changed by the developer fix.
+Target function = among the functions enclosing buggy-side lines changed by the developer fix, the first
+(files with most changed lines first) that a declared failing test executes; if none is executed, the first.
 Coverage: one `coverage run` of the bug's BugsInPy test file with per-test dynamic contexts, joined
-with per-test outcomes from JUnit XML. SemLoc: the artifact's own `bip_runner.run_semloc_on_bip`, with
+with per-test outcomes from JUnit XML. Tests that fail but are not declared by BugsInPy (environment
+failures on Python 3.12) are left out of the matrix. SemLoc: the artifact's own `bip_runner.run_semloc_on_bip`, with
 LLM calls through the flx gateway and its `pip install -e .` disabled (the checkout goes on PYTHONPATH;
 youtube-dl has no dependencies and reproduces 33/33 bugs on Python 3.12).
 """
@@ -42,8 +44,18 @@ def enclosing_function(src: str, rel_path: str, line: int) -> Optional[tuple[str
     return best
 
 
-def matrix_from_contexts(program: str, contexts: dict, outcomes: dict[str, bool], lines) -> dict:
-    """CoverageMatrix from coverage.py per-line contexts ({line: ["<test id>|run", ...]})."""
+def junit_id(declared: str) -> str:
+    """BugsInPy test id (path::Class::test) → JUnit/coverage-context id (dotted)."""
+    path, *rest = declared.split("::")
+    return ".".join([path.removesuffix(".py").replace("/", "."), *rest])
+
+
+def matrix_from_contexts(program: str, contexts: dict, outcomes: dict[str, bool], lines,
+                         declared: Optional[set] = None) -> dict:
+    """CoverageMatrix from coverage.py per-line contexts ({line: ["<test id>|run", ...]}). With `declared`,
+    failing tests outside it are dropped."""
+    if declared is not None:
+        outcomes = {t: ok for t, ok in outcomes.items() if ok or t in declared}
     keep = set(lines)
     per_test: dict[str, set[int]] = {t: set() for t in outcomes}
     for ln, ctxs in contexts.items():
@@ -58,24 +70,48 @@ def matrix_from_contexts(program: str, contexts: dict, outcomes: dict[str, bool]
             "tests": [{"id": t, "passed": outcomes[t], "lines": sorted(per_test[t])} for t in sorted(outcomes)]}
 
 
-def target(bug_id: str) -> Optional[dict]:
+def pick_target(cands: list[dict], failing_lines: dict[str, set]) -> dict:
+    """First candidate a declared failing test executes (any line of the function); else the first."""
+    for c in cands:
+        if any(c["fn_start"] <= ln <= c["fn_end"] for ln in failing_lines.get(c["file"], ())):
+            return c
+    return cands[0]
+
+
+def candidates(bug_id: str) -> list[dict]:
+    """Every function enclosing a buggy-side changed line, files with most changed lines first."""
     ensure_on_path()
     import bip_runner
     meta = bug_files(bug_id)
     wt = BIP / "checkouts" / bug_id
     faults = source_faults(bip_runner.get_faulty_lines_from_diff(bug_id, str(wt)))
+    out, seen = [], set()
     for rel, lines in sorted(faults.items(), key=lambda kv: -len(kv[1])):
         src = (wt / rel).read_text()
         for ln in sorted(lines):
             fn = enclosing_function(src, rel, ln)
-            if fn:
+            if fn and (rel, fn[0]) not in seen:
+                seen.add((rel, fn[0]))
                 in_fn = [l for l in lines if fn[1] <= l <= fn[2]]
-                return {"bug": bug_id, "file": rel, "function": fn[0], "fn_start": fn[1], "fn_end": fn[2],
-                        "faulty_lines": in_fn, "test_file": meta["info"].get("test_file", ""), "tests": meta["tests"]}
-    return None
+                out.append({"bug": bug_id, "file": rel, "function": fn[0], "fn_start": fn[1], "fn_end": fn[2],
+                            "faulty_lines": in_fn, "test_file": meta["info"].get("test_file", ""), "tests": meta["tests"]})
+    return out
 
 
-def coverage_matrix(tgt: dict) -> dict:
+def target(bug_id: str) -> Optional[dict]:
+    cands = candidates(bug_id)
+    if len(cands) <= 1:
+        return cands[0] if cands else None
+    files, outcomes = _coverage_run(cands[0])
+    declared = {junit_id(t) for t in cands[0]["tests"]}
+    failing = {t for t, ok in outcomes.items() if not ok and t in declared}
+    failing_lines = {rel: {int(ln) for ln, ctxs in f.get("contexts", {}).items()
+                           if any(c.split("|")[0] in failing for c in ctxs)} for rel, f in files.items()}
+    return pick_target(cands, failing_lines)
+
+
+def _coverage_run(tgt: dict) -> tuple[dict, dict]:
+    """(coverage.py per-file data keyed by checkout-relative path, JUnit outcomes) for the bug's test file(s)."""
     wt = BIP / "checkouts" / tgt["bug"]
     test_files = [t.strip() for t in tgt["test_file"].split(";") if t.strip()]
     with tempfile.TemporaryDirectory() as tmp:
@@ -98,8 +134,14 @@ def coverage_matrix(tgt: dict) -> dict:
             failed = case.find("failure") is not None or case.find("error") is not None
             outcomes[f"{case.get('classname')}.{case.get('name')}"] = not failed
     files = {os.path.relpath(os.path.join(wt, k), wt): v for k, v in cov.get("files", {}).items()}
+    return files, outcomes
+
+
+def coverage_matrix(tgt: dict) -> dict:
+    files, outcomes = _coverage_run(tgt)
     contexts = files.get(tgt["file"], {}).get("contexts", {})
-    return matrix_from_contexts(tgt["bug"], contexts, outcomes, range(tgt["fn_start"], tgt["fn_end"] + 1))
+    return matrix_from_contexts(tgt["bug"], contexts, outcomes, range(tgt["fn_start"], tgt["fn_end"] + 1),
+                                declared={junit_id(t) for t in tgt["tests"]})
 
 
 def run_semloc(tgt: dict, model: str, temperature: float, run_id: str) -> dict:
