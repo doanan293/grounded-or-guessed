@@ -46,6 +46,9 @@ src/flx/sbfl.py          # ochiai, dstar(*=2) từ ma trận độ phủ
 src/flx/covgate.py       # CovGate: gate, combine(λ), cf_rerank, no_prior
 src/flx/stats.py         # mcnemar, wilcoxon, effect size
 src/flx/rename.py        # biến thể đổi tên giữ số dòng
+src/flx/verify_gt.py     # kiểm chứng/sửa ground truth bằng vá một dòng + chạy test
+src/flx/direct_cov.py    # baseline LLM + bằng chứng độ phủ
+src/flx/templates.py     # cụm khuôn mẫu AST của benchmark
 scripts/coverage_all.py, scripts/covgate_eval.py, scripts/run_matrix.sh, scripts/make_tables.py
 data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 ```
@@ -139,9 +142,35 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] Tập con cố định 50 chương trình từ test (seed 20261108, phân tầng nhãn) → `data/subset50.json`.
 - [ ] `run_matrix.sh` cho `claude-sonnet-5-5`, `gpt-6-luna`, `gpt-oss-120b-medium`, `gemini-3.5-flash-lite`; `claude-sonnet-4-6` × 1 trên dev (kiểm tra tái hiện với log tác giả). CovGate áp lên từng lượt. Commit `data/rq3_families.csv`.
 
+### Task M12: SemFault-250-verified — ground truth kiểm chứng bằng thực thi (10–12/11, chạy nền)
+
+**Files:** Create `src/flx/verify_gt.py`, `scripts/verify_gt.py`, `data/semfault_verified_gt.json`; Test `tests/test_verify_gt.py`
+
+**Interfaces:**
+- Consumes: `flx.coverage.collect` (M1) để chạy test; `flx.llm_gateway.chat`.
+- Produces: `candidates(src: str, fn: str, gt_line: int, radius: int = 4) -> list[int]` (dòng trong hàm đích, kể cả dòng trống — nơi có thể chèn); `try_patch(src, line, kind: Literal["replace","insert_after"], new_line: str, test) -> bool` (True nếu **mọi** test pass); `verify(program) -> {"status": "confirmed"|"corrected"|"unverifiable", "lines": list[int], "kind": str, "patch": str}`. LLM (`gemini-3.8-flash-high`, run_id `verify_gt`) chỉ đề xuất dòng thay thế/chèn cho từng ứng viên (tối đa 2 đề xuất/ứng viên); test quyết định.
+- [ ] `test_try_patch_fixes_mini`: fixture `mini`, thay dòng 7 bằng `    return y` → mọi test pass trừ test_d (dòng 4) → False; vá cả… (dùng fixture riêng một lỗi) → True. `test_insert_after_blank_line` (fixture lỗi thiếu mã: chèn một dòng sau dòng trống làm test pass → status corrected, kind insert_after). `test_verify_never_trusts_llm_without_tests` (fake chat trả bản vá sai → unverifiable).
+- [ ] Chạy cho cả 250 (185: chỉ thử dòng GT gốc trước; 65: đủ ứng viên). Báo cáo số confirmed/corrected/unverifiable vào `docs/literature/benchmark-notes.md`. Commit.
+
+### Task M13: Baseline LLM + bằng chứng độ phủ (11/11, chạy nền × 3 trên test)
+
+**Files:** Create `src/flx/direct_cov.py`, `scripts/run_direct_cov.sh`; Test `tests/test_direct_cov.py`
+
+**Interfaces:** `build_prompt(src_fn_numbered: str, failing: list[dict], cov: CoverageMatrix) -> str` (mỗi dòng ghi `[f=<số test fail chạy qua>/p=<số test pass>]`); `parse_ranking(text: str) -> list[int]` (JSON `{"lines": [..]}`; sai định dạng → []); `run(program, model, run_id) -> list[int]`.
+- [ ] `test_prompt_annotates_coverage` (fixture mini: dòng 7 có `f=1/p=2`); `test_parse_ranking_tolerates_fences`; `test_parse_ranking_bad_json_empty`.
+- [ ] Chạy test 200 × 3 (run_id `direct_cov_test_gemini_r{i}`); thêm vào bảng RQ2 và McNemar với SemLoc/CovGate. Commit.
+
+### Task M14: Phân tích cấu trúc benchmark (10/11, không LLM)
+
+**Files:** Create `src/flx/templates.py`, `data/semfault_templates.csv`; Test `tests/test_templates.py`
+- **Interfaces:** `shape(src: str) -> list[str]` (chuỗi kiểu nút AST, bỏ tên/hằng); `similarity(a, b) -> float` (Jaccard trên 4-gram của `shape`); `clusters(programs: dict[str,str], threshold: float = 0.8) -> dict[str, int]`.
+- [ ] `test_renamed_copy_same_shape` (đổi tên biến → similarity 1.0); `test_different_algorithms_low_similarity`.
+- [ ] Chạy cho 250, báo cáo số cụm và phân bố; `flx.stats` (M11) thêm bootstrap theo cụm. Commit.
+
 ### Task M11: Thống kê + bảng LaTeX tự sinh (song song, cuối 14/11)
 
 **Files:** Create `src/flx/stats.py`, `scripts/make_tables.py`, `docs/report/generated/*.tex`; Test `tests/test_stats.py`
 
 - [ ] `mcnemar(a: list[bool], b: list[bool]) -> (stat, p)` exact binomial khi b+c < 25; `wilcoxon_paired(x, y) -> (stat, p)` (scipy); `cliffs_delta(x, y) -> float`. Tests với giá trị tính tay: McNemar b=8,c=2 → p = 0.109 (exact two-sided).
-- [ ] `make_tables.py` sinh `rq1.tex`, `rq2.tex`, `rq3.tex` từ `data/*.csv` (mean ± sd qua 3 lần, p, effect size). Biên dịch `make -C docs/report all` không lỗi. Commit.
+- [ ] `cluster_bootstrap_ci(per_program: dict[str, float], clusters: dict[str, int], n=10000, seed=20261108) -> (lo, hi)`; test: mọi chương trình cùng một cụm → CI rộng hơn bootstrap thường.
+- [ ] `make_tables.py` sinh `rq1.tex`, `rq2.tex`, `rq3.tex` từ `data/*.csv` (mean ± sd qua 3 lần, p, effect size) và **hình chi phí – độ chính xác** `pareto.pdf` (Acc@3 theo token đầu ra trung bình/chương trình, mỗi phương pháp × model một điểm). Biên dịch `make -C docs/report all` không lỗi. Commit.
