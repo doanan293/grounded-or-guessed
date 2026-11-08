@@ -33,9 +33,7 @@ def main() -> None:
         dev = [p for p in split["dev"] if p in gt]
         test = [p for p in split["test"] if p in gt]
         fns = {cfg: ce.make_rank_fn(cfg, gt, cov_dir) for cfg in ce.CONFIGS}
-        pooled = lambda prm, progs: tuple(mean(metrics({p: fns[c](prm, p) for p in progs}, progs)[k] for c in ce.CONFIGS)
-                                          for k in ("acc3", "acc1"))
-        best = max(ce.GRID, key=lambda prm: pooled(prm, dev))
+        best = ce.tune(dev, ce.GRID, [fns[c] for c in ce.CONFIGS])
         sbfl = {p: rank_of(sbfl_scores(load(cov_dir / f"{p}.json"), "ochiai"), gt[p], "average") for p in test}
         m = metrics(sbfl, test)
         rows.append({"gt": gname, "config": "sbfl_ochiai", "variant": "-", "n": m["n"], "acc1": m["acc1"], "acc3": m["acc3"],
