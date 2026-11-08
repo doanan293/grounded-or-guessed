@@ -25,21 +25,27 @@ score CovGate — environments must be rebuilt.
 
 ## Our approach
 
-- One virtualenv per project under `runs/bip/venvs/<project>` (uv), holding SemLoc's deps plus the
-  project installed **with** its dependencies, Python version as close to BugsInPy's as uv offers.
+- One uv virtualenv per (project, Python version, exact bug requirements) under
+  `runs/bip/venvs/<project>-py<ver>-<req-hash>`; the checkout is put on `PYTHONPATH` (no `pip -e`);
+  Python ≥ 3.8 (uv's oldest). Requirement-install failures are recorded in the status `note`.
 - Order by expected yield: youtube-dl → black → thefuck → cookiecutter → luigi → ansible → matplotlib.
 - Status per bug in `data/bugsinpy_status.csv`. Time box: 10–12/11; threshold ≥20 bugs with
   `env_ok & tests_reproduce & sbfl_ok`.
 
-## Result (2026-11-08) — threshold MET
+## Result (2026-11-08) — threshold provisionally met
 
 Probe: `python -m flx.bip status` over the 68 bugs SemLoc completed upstream (`runs/bip/candidates_68.txt`).
 
-| Project | Probed | env + failing test reproduces + coverage OK | …and failing test reaches a faulty line |
+| Project | Probed | probe passed: env builds, failing test fails on buggy commit **and passes on fixed commit**, per-test coverage of the faulty file obtainable | …and failing test reaches a faulty line |
 |---|---|---|---|
 | youtube-dl | 33 | **31** | 22 |
 | ansible / black / cookiecutter / luigi / matplotlib / thefuck | 35 | 0 | 0 |
-| **Total** | 68 | **31** (≥ 20 → ĐẠT) | 22 |
+| **Total** | 68 | **31** (≥ 20, provisional) | 22 |
+
+"Provisional": the spec's threshold is ≥ 20 bugs on which SBFL, SemLoc **and** CovGate run to
+completion; SemLoc/CovGate have not been run on these bugs yet (milestone 2). All 31 come from one
+project (youtube-dl) — a stated limitation. Upstream's "7" counts bugs with line-level SemLoc results,
+a different measure, so the two numbers are not compared directly.
 
 Other projects fail on environment setup: pytest "found no collectors" (20, import errors at
 collection), missing `numpy` / `psutil` / `ansible` not covered by the bug's requirements.txt (8),
