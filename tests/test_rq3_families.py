@@ -27,3 +27,16 @@ def test_unfinished_runs_are_skipped(tmp_path, monkeypatch):
     (tmp_path / "y_r1" / "results_cf_base" / "summary.json").write_text("{}")
     monkeypatch.setattr(rq3, "is_healthy", lambda run: True)
     assert [r.name for r in rq3.usable_runs(tmp_path, "y")] == ["y_r1"]
+
+
+def test_run_ranks_methods_remove_prior_and_apply_covgate(tmp_path, monkeypatch):
+    import json
+    (tmp_path / "scores").mkdir()
+    # LLM guessed line 5 (+1.2 prior); spectrum alone prefers line 3, the true fault.
+    (tmp_path / "scores" / "p.json").write_text(json.dumps({"line_scores": {"5": 1.7, "3": 1.0}, "fault_line_pred": 5}))
+    cov = {"tests": [{"id": "f", "passed": False, "lines": [3]}, {"id": "ok", "passed": True, "lines": [5]}]}
+    monkeypatch.setattr(rq3, "load_cov", lambda p: cov)
+    gt = {"p": [3]}
+    assert rq3.run_ranks(tmp_path, gt, ["p"])["p"] == 2.0
+    assert rq3.run_ranks(tmp_path, gt, ["p"], "semloc_no_prior")["p"] == 1.0
+    assert rq3.run_ranks(tmp_path, gt, ["p"], "covgate", {"gate": True, "lam": 0.0, "no_prior": False})["p"] == 1.0
