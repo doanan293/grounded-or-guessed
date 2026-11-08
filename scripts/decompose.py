@@ -21,6 +21,9 @@ from flx.ranking import rank_of
 from flx.stats import cluster_bootstrap_ci
 
 ROOT = Path(__file__).resolve().parents[1]
+# "semloc": grand coalition = SemLoc as released (spectrum + its +1.2 guess bonus) — the headline split.
+# "all_signals": adds coverage (raw Ochiai) and CF re-ranking; its total is a different system than SemLoc.
+GAMES = {"semloc": ["guess", "spectrum"], "all_signals": ["guess", "spectrum", "coverage", "cf"]}
 COV = ROOT / "data" / "coverage" / "semfault"
 
 
@@ -76,15 +79,18 @@ def main() -> None:
     if args.published:
         for cfg in ("semloc_claude_T0.3", "semloc_claude_T0.8", "semloc_gemini_T0.0", "semloc_gemini_T0.3", "semloc_gemini_T0.8"):
             d = SEMLOC_ROOT / "results" / "RQ1" / cfg
-            sources.append((cfg, [(d / "scores", None, None)], sorted(variants["original"]), ["guess", "spectrum", "coverage"]))
+            sources.append((cfg, [(d / "scores", None, None)], sorted(variants["original"]), "semloc", GAMES["semloc"]))
+            sources.append((cfg, [(d / "scores", None, None)], sorted(variants["original"]), "all_signals",
+                            ["guess", "spectrum", "coverage"]))  # released logs carry no CF verdicts
     if args.runs:
         dirs = [ROOT / "runs" / r for r in args.runs]
         progs = sorted({p.stem for d in dirs for p in (d / "scores").glob("*.json")})
         name = args.runs[0].rsplit("_r", 1)[0] + f" ({len(dirs)} runs)"
-        sources.append((name, [(d / "scores", d / "refined_base_cf", d / "constraints") for d in dirs], progs,
-                        ["guess", "spectrum", "coverage", "cf"]))
+        for game, players in GAMES.items():
+            sources.append((name, [(d / "scores", d / "refined_base_cf", d / "constraints") for d in dirs], progs,
+                            game, players))
     rows = []
-    for name, run_dirs, cand, players in sources:
+    for name, run_dirs, cand, game, players in sources:
         loaded = [load_run(s, cand, c, k) for s, c, k in run_dirs]
         for gname, gt in variants.items():
             progs = [p for p in cand if p in gt]
@@ -93,17 +99,17 @@ def main() -> None:
                     runs_phi = [per_program_phi(d, gt, plist, players, k) for d in loaded]
                     per = {p: {key: sum(r[p][key] for r in runs_phi) / len(runs_phi) for key in runs_phi[0][p]} for p in plist}
                     res = summarize(per, players, clusters)
-                    row = {"source": name, "gt": gname, "subset": sub, "metric": f"acc{k}", "n": len(plist),
-                           "runs": len(loaded)}
+                    row = {"source": name, "game": game, "gt": gname, "subset": sub, "metric": f"acc{k}",
+                           "n": len(plist), "runs": len(loaded)}
                     for key, v in res.items():
                         if isinstance(v, tuple):
                             row[f"{key}_lo"], row[f"{key}_hi"] = round(v[0], 4), round(v[1], 4)
                         else:
                             row[key] = round(v, 4)
                     rows.append(row)
-                    print(name, gname, sub, f"acc{k}", {kk: row[kk] for kk in row if kk == "full" or
+                    print(name, game, gname, sub, f"acc{k}", {kk: row[kk] for kk in row if kk == "full" or
                                                        (kk.startswith("phi_") and "_ci_" not in kk)})
-    fields = list(rows[0])
+    fields = list(dict.fromkeys(k for r in rows for k in r))
     with open(args.out, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()

@@ -37,3 +37,30 @@ def test_per_program_shapley_averages_to_the_aggregate():
     for pl in ("g", "s"):
         assert abs(sum(per[p][pl] for p in progs) / 3 - agg[pl]) < 1e-12
     assert per["b"] == {"g": 0.5, "s": 0.5}
+
+
+def test_guess_plus_spectrum_coalition_is_semloc_as_released():
+    """The 2-player game's grand coalition must reproduce SemLoc's own line scores (prior included), also when
+    the guessed line has no spectrum score or only the prior."""
+    from flx.covgate import covgate_scores
+    from flx.decompose import component_scores
+    cov = {"tests": [{"id": "f", "passed": False, "lines": [1, 2]}]}
+    for sem in ({"line_scores": {"3": 1.7, "2": 0.4}, "fault_line_pred": 3},
+                {"line_scores": {"3": 1.2, "2": 0.4}, "fault_line_pred": 3},
+                {"line_scores": {"2": 0.4}, "fault_line_pred": None}):
+        full = component_scores(sem, cov, frozenset({"guess", "spectrum"}))
+        released = covgate_scores(sem, cov, gate=False, lam=0.0, no_prior=False)
+        assert {k: round(v, 9) for k, v in full.items()} == {k: round(v, 9) for k, v in released.items()}
+
+
+def test_decompose_script_reports_the_semloc_game_first():
+    """Headline decomposition = game whose grand coalition is SemLoc as released (guess + spectrum);
+    coverage and CF are reported in a separate, extended game."""
+    import importlib.util
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location("decompose_script", root / "scripts" / "decompose.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert list(mod.GAMES)[0] == "semloc" and mod.GAMES["semloc"] == ["guess", "spectrum"]
+    assert set(mod.GAMES["all_signals"]) == {"guess", "spectrum", "coverage", "cf"}
