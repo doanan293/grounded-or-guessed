@@ -1,7 +1,14 @@
 \begin{tabular}{llrrrrr}
 \toprule
-Ground truth & Metric & All signals & LLM guess & Semantic spectrum & Coverage & CF \\
+Ground truth & Metric & Total & LLM guess & Semantic spectrum & Coverage & CF \\
 \midrule
+\multicolumn{7}{l}{\emph{SemLoc as released (guess + spectrum)}} \\
+Original ($n=200$) & Acc@1 & 36.8 & 22.2{\scriptsize\,[16.6, 28.4]} & 14.6{\scriptsize\,[11.9, 17.5]} & -- & -- \\
+Original ($n=200$) & Acc@3 & 60.3 & 19.8{\scriptsize\,[16.1, 23.8]} & 40.6{\scriptsize\,[35.4, 45.4]} & -- & -- \\
+Repaired ($n=190$) & Acc@1 & 49.3 & 28.9{\scriptsize\,[21.9, 35.8]} & 20.3{\scriptsize\,[16.3, 24.8]} & -- & -- \\
+Repaired ($n=190$) & Acc@3 & 71.2 & 26.8{\scriptsize\,[21.9, 31.8]} & 44.4{\scriptsize\,[39.3, 49.2]} & -- & -- \\
+\midrule
+\multicolumn{7}{l}{\emph{All signals (+ raw Ochiai, + CF re-ranking)}} \\
 Original ($n=200$) & Acc@1 & 35.0 & 22.7{\scriptsize\,[17.5, 28.3]} & 12.5{\scriptsize\,[10.0, 15.3]} & -0.5{\scriptsize\,[-1.5, 0.6]} & 0.3{\scriptsize\,[-0.6, 1.1]} \\
 Original ($n=200$) & Acc@3 & 59.0 & 17.6{\scriptsize\,[14.2, 21.3]} & 35.8{\scriptsize\,[31.6, 40.2]} & 4.6{\scriptsize\,[-0.0, 9.0]} & 1.1{\scriptsize\,[0.5, 1.8]} \\
 Repaired ($n=190$) & Acc@1 & 47.0 & 30.1{\scriptsize\,[23.6, 36.6]} & 17.5{\scriptsize\,[13.6, 21.8]} & -1.0{\scriptsize\,[-2.1, 0.2]} & 0.4{\scriptsize\,[-0.6, 1.4]} \\

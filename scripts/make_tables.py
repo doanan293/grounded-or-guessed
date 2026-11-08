@@ -55,13 +55,15 @@ def rq1_table() -> str:
 
 
 def decomposition_table() -> str:
+    """Published logs, game whose total is SemLoc as released (fair ties): LLM guess bonus vs semantic spectrum."""
     rows = [r for r in _rows("rq_decomposition_published.csv")
-            if r["source"] in ("semloc_claude_T0.8", "semloc_gemini_T0.8") and r.get("gt", "original") == "original"]
-    lines = [r"\begin{tabular}{llrrrrr}", r"\toprule",
-             r"Configuration & Subset & Metric & Full & LLM guess & Semantic spectrum & Coverage \\", r"\midrule"]
+            if r["source"] in ("semloc_claude_T0.8", "semloc_gemini_T0.8") and r.get("game") == "semloc"
+            and r.get("gt") == "original"]
+    lines = [r"\begin{tabular}{llrrrr}", r"\toprule",
+             r"Configuration & Subset & Metric & SemLoc & LLM guess bonus & Semantic spectrum \\", r"\midrule"]
     for r in rows:
         lines.append(f"{NAMES[r['source']]} & {r['subset']} & {r['metric'].replace('acc', 'Acc@')} & {pct(r['full'])} & "
-                     f"{pct(r['phi_guess'])} & {pct(r['phi_spectrum'])} & {pct(r['phi_coverage'])} \\\\")
+                     f"{ci(r, 'phi_guess')} & {ci(r, 'phi_spectrum')} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
 
@@ -73,12 +75,18 @@ def ci(row: dict, k: str) -> str:
 
 
 def decomposition_ours_table() -> str:
+    """Our 3 Gemini runs. Upper block: the SemLoc game (total = SemLoc as released). Lower block: all four signals
+    (raw Ochiai and CF re-ranking added), whose total is a different system."""
     rows = [r for r in _rows("rq_decomposition.csv") if r["subset"] == "all"]
     lines = [r"\begin{tabular}{llrrrrr}", r"\toprule",
-             r"Ground truth & Metric & All signals & LLM guess & Semantic spectrum & Coverage & CF \\", r"\midrule"]
-    for r in rows:
-        lines.append(f"{r['gt'].capitalize()} ($n={r['n']}$) & {r['metric'].replace('acc', 'Acc@')} & {pct(r['full'])} & "
-                     f"{ci(r, 'phi_guess')} & {ci(r, 'phi_spectrum')} & {ci(r, 'phi_coverage')} & {ci(r, 'phi_cf')} \\\\")
+             r"Ground truth & Metric & Total & LLM guess & Semantic spectrum & Coverage & CF \\"]
+    for game, title in (("semloc", "SemLoc as released (guess + spectrum)"),
+                        ("all_signals", "All signals (+ raw Ochiai, + CF re-ranking)")):
+        lines += [r"\midrule", rf"\multicolumn{{7}}{{l}}{{\emph{{{title}}}}} \\"]
+        for r in (r for r in rows if r.get("game") == game):
+            extra = (f"{ci(r, 'phi_coverage')} & {ci(r, 'phi_cf')}" if game == "all_signals" else "-- & --")
+            lines.append(f"{r['gt'].capitalize()} ($n={r['n']}$) & {r['metric'].replace('acc', 'Acc@')} & {pct(r['full'])} & "
+                         f"{ci(r, 'phi_guess')} & {ci(r, 'phi_spectrum')} & {extra} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
 
