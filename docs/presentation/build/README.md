@@ -1,6 +1,6 @@
 # Building `bao-cao-lan-1.pptx`
 
-The deck fills `docs/presentation/template-vi.pptx` (Slidesgo template; keep its credits slide)
+The deck fills `docs/presentation/template-vi.pptx` (Slidesgo template — not redistributed here; download it from Slidesgo and keep its credits slide)
 through ppt-master's Edit Native PPTX route.
 
 ```bash
