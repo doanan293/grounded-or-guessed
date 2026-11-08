@@ -167,6 +167,27 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 - [ ] `test_renamed_copy_same_shape` (đổi tên biến → similarity 1.0); `test_different_algorithms_low_similarity`.
 - [ ] Chạy cho 250, báo cáo số cụm và phân bố; `flx.stats` (M11) thêm bootstrap theo cụm. Commit.
 
+### Task 15 (M15): CovGate thành phần 4 — grounded guess (offline)
+
+**Files:** Modify `src/flx/covgate.py`; Test `tests/test_covgate.py`
+
+**Interfaces:** thêm tham số `grounded_prior: bool` vào `covgate_scores`: khi True, giữ điểm cộng 1,2 tại `fault_line_pred` chỉ nếu dòng đó được ≥1 test fail chạy qua **và** nằm trong tập dòng được gán điểm từ ít nhất một ràng buộc có `ef > 0` (`constraint_scores[c]["ef"] > 0`, qua `attribute`); ngược lại trừ đi 1,2 như `no_prior`.
+- [ ] `test_grounded_prior_kept_when_evidence`; `test_grounded_prior_dropped_without_failing_coverage`; `test_grounded_prior_dropped_without_violated_constraint`.
+- [ ] Thêm `grounded_prior` vào lưới của `scripts/covgate_eval.py` (vẫn chọn trên dev), chạy lại `data/rq2_published.csv`. Commit.
+
+### Task 16 (M16): Phân rã độ chính xác theo thành phần (offline, sau M6/M7)
+
+**Files:** Create `src/flx/decompose.py`, `scripts/decompose.py`, `data/rq_decomposition.csv`; Test `tests/test_decompose.py`
+
+**Interfaces:** `shapley(value: Callable[[frozenset[str]], float], players: list[str]) -> dict[str, float]` (chính xác, liệt kê mọi tổ hợp); `components = ["prior", "spectrum", "cf", "coverage"]`, value(S) = Acc@1 (và Acc@3) khi chỉ bật các thành phần trong S (spectrum tắt = chỉ còn dự đoán LLM; tất cả tắt = 0).
+- [ ] `test_shapley_additive_game` (value = tổng trọng số → Shapley = trọng số); `test_shapley_sums_to_grand_coalition`.
+- [ ] Chạy trên 3 lần lặp × 200 test (lượt chạy của nhóm) và trên log công bố; bootstrap CI theo chương trình (và theo cụm từ M14). Commit.
+
+### Task 17 (M17): Checklist đánh giá áp cho mọi phương pháp
+
+**Files:** Create `docs/literature/evaluation-checklist.md`, `data/checklist_matrix.csv`
+- [ ] Viết checklist (hòa điểm, mẫu số, GT kiểm chứng, ablation thành phần ẩn, lặp + kiểm định, chi phí); với từng phương pháp (SBFL, LLM hỏi thẳng, LLM + độ phủ, SemLoc, CovGate) ghi số chênh giữa chấm tác giả/công bằng, GT gốc/đã kiểm chứng. Sinh tự động từ `data/`. Commit.
+
 ### Task 11 (M11): Thống kê + bảng LaTeX tự sinh (song song, cuối 14/11)
 
 **Files:** Create `src/flx/stats.py`, `scripts/make_tables.py`, `docs/report/generated/*.tex`; Test `tests/test_stats.py`

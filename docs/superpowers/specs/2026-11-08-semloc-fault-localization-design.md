@@ -1,4 +1,4 @@
-# Specs tổng quan — Tiểu luận 2KH: Định vị lỗi ngữ nghĩa dựa trên SemLoc
+# Specs tổng quan — Tiểu luận 2KH: Grounded or Guessed (định vị lỗi ngữ nghĩa dựa trên SemLoc)
 
 - Môn: IT5440 – Nguyên lý và kỹ thuật phân tích chương trình, kỳ 2026.1, ĐH Bách khoa Hà Nội
 - Đề tài: **2KH** — Chương 10 "Phát hiện lỗi và định vị lỗi", hướng nghiên cứu khoa học
@@ -90,7 +90,13 @@ Phát hiện khi đọc mã và log công bố (08/11), mỗi điểm được k
 2. **Kết hợp điểm:** xếp hạng theo điểm ràng buộc, dùng điểm SBFL làm tiêu chí phá thế hòa hoặc kết hợp có trọng số (cách cụ thể do builder chọn và chỉnh trên tập dev).
 3. **CF xếp hạng lại thật sự:** dùng kết quả CF (ràng buộc Primary/Secondary, không bị prune) để tính lại điểm dòng và đặt các dòng đó lên trước — điều mã gốc không làm (mục 3.6). Chi phí: không thêm lượt gọi so với SemLoc gốc; ghi thêm số lượt gọi CF có thể bỏ nếu chỉ kiểm chứng top-K qua cổng.
 
+4. **Grounded guess (đoán có căn cứ):** chỉ giữ điểm cộng 1,2 cho dòng LLM tự đoán khi dòng đó **có bằng chứng thực thi** — được ít nhất một test fail chạy qua **và** gắn với ít nhất một ràng buộc bị vi phạm trong test fail; không có bằng chứng thì bỏ điểm cộng. Đây là thành phần nhắm thẳng vào Acc@1.
+
 Ablation: tắt từng thành phần; thêm biến thể **bỏ điểm cộng cho dòng LLM đoán** áp cho cả SemLoc gốc lẫn CovGate.
+
+**Phân rã độ chính xác ("grounded hay guessed", câu trả lời định lượng cho tên bài):** đo Acc@1/Acc@3 cho mọi tổ hợp bật/tắt của {điểm cộng dự đoán LLM, phổ vi phạm ràng buộc, CF xếp hạng lại, độ phủ} trên 3 lần lặp × 200 chương trình test; quy ra phần đóng góp của từng thành phần (giá trị Shapley trên các tổ hợp) kèm khoảng tin cậy bootstrap. Chạy offline trên đầu ra đã có, không thêm lượt gọi LLM.
+
+**Quy trình đánh giá cho định vị lỗi bằng LLM (checklist):** đúc kết audit thành danh sách kiểm tra dùng lại được — xử lý hòa điểm, mẫu số cố định, kiểm chứng ground truth bằng thực thi, tách ablation các thành phần không được mô tả (ví dụ điểm cộng dự đoán), lặp và kiểm định — và áp nó cho mọi phương pháp trong bài (SBFL, LLM hỏi thẳng, LLM + độ phủ, SemLoc, CovGate) để phát hiện không chỉ gắn với một công cụ.
 
 **Hai nguồn bằng chứng cho RQ2:**
 - **Bằng chứng chính:** các lượt chạy của nhóm — SemLoc gốc và CovGate bằng Gemini 3.8 Flash qua proxy, **T = 0.8** (cấu hình tốt nhất trong bài), mức suy luận mặc định, **3 lần lặp** trên 200 chương trình tập test. CovGate dùng **cùng** constraints/violations của mỗi lượt chạy SemLoc, chỉ khác bước chấm điểm và kiểm chứng phản thực tế, nên so sánh là ghép cặp và kiểm định được. Đây là khoản tốn LLM lớn nhất của dự án; quy mô cuối cùng chốt sau khi đo quota (việc 2.1).
@@ -206,6 +212,8 @@ Thứ tự cắt khi thiếu quota/thời gian: bỏ GPT → giảm số lần l
 - Cấu hình proxy riêng; mọi model ở mức suy luận mặc định (chủ dự án quyết 08/11)
 - Kéo Phase 2 lên trước báo cáo lần 1; chạy mẫu nhỏ chỉ để kiểm tra (chủ dự án quyết 08/11)
 - Thêm SemFault-250-verified, baseline LLM + độ phủ, phân tích cấu trúc benchmark, biểu đồ chi phí – độ chính xác, gói artifact có DOI (chủ dự án duyệt 08/11)
+- Thêm CovGate thành phần 4 "grounded guess", phân rã độ chính xác theo thành phần (Shapley), checklist đánh giá (chủ dự án duyệt 08/11)
+- Tên bài: **Grounded or Guessed: An Execution-Verified Reproducibility Study of LLM-Based Semantic Fault Localization**; repo công khai `doanan293/grounded-or-guessed` (MIT cho mã của nhóm; SemLoc giữ Apache-2.0)
 
 ## 12. Để builder tự quyết
 
