@@ -110,7 +110,7 @@ def rq2_table() -> str:
     rows = _rows("rq2_ours.csv")
     order = ["semloc", "semloc_no_prior", "cf_rerank", "covgate", "covgate_cf", "llm_direct", "llm_coverage", "sbfl_ochiai"]
     lines = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
-             r"Method & Acc@1 & Acc@3 & Acc@5 & $p_{\text{Acc@1}}$ & $p_{\text{Acc@3}}$ & $\delta_{\text{RR}}$ \\"]
+             r"Method & Acc@1 & Acc@3 & Acc@5 & $p_{\text{Acc@1}}$ & $p_{\text{Acc@3}}$ & $r_{\text{rb}}$ \\"]
     for g in ("original", "repaired"):
         rs = {r["method"]: r for r in rows if r["gt"] == g}
         any_r = next(iter(rs.values()))
@@ -119,7 +119,7 @@ def rq2_table() -> str:
             r = rs.get(m)
             if not r:
                 continue
-            d = r.get("cliffs_delta_rr")
+            d = r.get("rank_biserial_rr")
             lines.append(f"{RQ2_NAMES[m]} & {pm(r, 'acc1')} & {pm(r, 'acc3')} & {pm(r, 'acc5')} & {pval(r.get('p_acc1_max'))} & "
                          f"{pval(r.get('p_acc3_max'))} & {'--' if d in (None, '') else f'{float(d):+.2f}'} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
