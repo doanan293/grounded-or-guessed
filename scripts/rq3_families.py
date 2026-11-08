@@ -28,9 +28,9 @@ def is_healthy(run: Path) -> bool:
 
 
 def usable_runs(runs_root: Path, prefix: str) -> list[Path]:
-    """Repeats that exist and passed flx.run_health (unhealthy runs never enter a table)."""
+    """Finished repeats (summary written) that passed flx.run_health; partial or unhealthy runs never enter a table."""
     cands = [runs_root / f"{prefix}_r{i}" for i in (1, 2, 3)]
-    return [r for r in cands if (r / "scores").exists() and is_healthy(r)]
+    return [r for r in cands if (r / "results_cf_base" / "summary.json").exists() and is_healthy(r)]  # finished + healthy
 
 
 def run_ranks(run: Path, gt: dict, progs: list[str]) -> dict:
