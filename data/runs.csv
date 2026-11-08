@@ -24,6 +24,9 @@ direct_cov_sub50_claude55_r3,single_prompt,claude-sonnet-5-5,subset50,50,True,Tr
 direct_cov_sub50_flashlite_r1,single_prompt,gemini-3.5-flash-lite,subset50,50,True,True,50,84596,
 direct_cov_sub50_flashlite_r2,single_prompt,gemini-3.5-flash-lite,subset50,50,True,True,50,84607,
 direct_cov_sub50_flashlite_r3,single_prompt,gemini-3.5-flash-lite,subset50,50,True,True,50,84660,
+direct_cov_sub50_gptoss_r1,single_prompt,gpt-oss-120b-medium,subset50,50,True,True,50,110539,
+direct_cov_sub50_gptoss_r2,single_prompt,gpt-oss-120b-medium,subset50,50,True,True,50,108539,
+direct_cov_sub50_gptoss_r3,single_prompt,gpt-oss-120b-medium,subset50,50,True,True,50,107691,
 direct_cov_sub50_luna_r1,single_prompt,gpt-6-luna,subset50,50,True,True,50,73016,
 direct_cov_sub50_luna_r2,single_prompt,gpt-6-luna,subset50,50,True,True,50,73352,
 direct_cov_sub50_luna_r3,single_prompt,gpt-6-luna,subset50,50,True,True,50,73074,
@@ -33,8 +36,6 @@ direct_cov_test_gemini_r3,single_prompt,gemini-3.8-flash-n,test,200,True,True,20
 direct_test_gemini_r1,single_prompt,gemini-3.8-flash-n,test,200,True,True,200,488864,
 direct_test_gemini_r2,single_prompt,gemini-3.8-flash-n,test,200,True,True,200,499518,
 direct_test_gemini_r3,single_prompt,gemini-3.8-flash-n,test,200,True,True,200,515083,
-direct_cov_sub50_gptoss_r1,single_prompt,gpt-oss-120b-medium,subset50,50,False,False,49,108540,
-direct_cov_sub50_gptoss_r2,single_prompt,gpt-oss-120b-medium,subset50,50,False,False,49,106085,
 bip_semloc_gemini_r1,semloc_bugsinpy,gemini-3.8-flash-n,bugsinpy,31,True,True,73,1078792,"1 bug(s) with a SemLoc error, scored as misses"
 bip_semloc_gemini_r2,semloc_bugsinpy,gemini-3.8-flash-n,bugsinpy,31,True,True,74,1095409,
 bip_semloc_gemini_r3,semloc_bugsinpy,gemini-3.8-flash-n,bugsinpy,31,True,True,68,935109,
