@@ -10,8 +10,10 @@ $PY - <<'PY'
 import json, shutil
 from pathlib import Path
 split = json.loads(Path("data/split.json").read_text()); sub50 = json.loads(Path("data/subset50.json").read_text())["programs"]
+renamed = json.loads(Path("data/renamed/test_programs.json").read_text()); bugs = list(json.loads(Path("data/bugsinpy_targets.json").read_text()))
 for f in sorted(Path("runs").glob("direct*_r[0-9].json")):
-    progs = split["test"] if "_test_" in f.name else sub50
+    progs = (split["test"] if "_test_" in f.name else renamed if "_renamed_" in f.name else bugs if "_bip_" in f.name
+             else sub50)
     if set(progs) <= set(json.loads(f.read_text())):
         shutil.copy(f, Path("data/rankings") / f.name)
 PY
