@@ -36,6 +36,8 @@ direct_cov_test_gemini_r3,single_prompt,gemini-3.8-flash-n,test,200,True,True,20
 direct_test_gemini_r1,single_prompt,gemini-3.8-flash-n,test,200,True,True,200,488864,
 direct_test_gemini_r2,single_prompt,gemini-3.8-flash-n,test,200,True,True,200,499518,
 direct_test_gemini_r3,single_prompt,gemini-3.8-flash-n,test,200,True,True,200,515083,
+direct_cov_bip_gemini_r1,single_prompt,gemini-3.8-flash-n,bugsinpy,,False,False,13,58518,
+direct_cov_renamed_gemini_r1,single_prompt,gemini-3.8-flash-n,renamed-test,,False,False,54,134382,
 bip_semloc_gemini_r1,semloc_bugsinpy,gemini-3.8-flash-n,bugsinpy,31,True,True,73,1078792,"1 bug(s) with a SemLoc error, scored as misses"
 bip_semloc_gemini_r2,semloc_bugsinpy,gemini-3.8-flash-n,bugsinpy,31,True,True,74,1095409,
 bip_semloc_gemini_r3,semloc_bugsinpy,gemini-3.8-flash-n,bugsinpy,31,True,True,68,935109,

@@ -56,3 +56,16 @@ def test_label_retries_a_test_with_empty_coverage(monkeypatch):
     monkeypatch.setattr(baselines, "_coverage_for_test", flaky)
     lab = label_program("prog", SRC, TEST, [SEMANTIC_LINE])
     assert seen["flaky"] == 1 and lab.category == "semantic" and lab.n_empty_coverage == 0
+
+
+def test_labels_follow_the_ground_truth_variant(tmp_path):
+    """Labels are computed against the ground truth being scored: a repaired GT line can change a program's label."""
+    import json
+    from flx.labels import labels_for
+    cov = {"program": "p", "n_empty_coverage": 0, "tests": [
+        {"id": "f", "passed": False, "lines": [5, 6]}, {"id": "ok", "passed": True, "lines": [5, 7]}]}
+    (tmp_path / "p.json").write_text(json.dumps(cov))
+    assert labels_for({"p": [9]}, tmp_path) == {"p": "not_executed"}
+    assert labels_for({"p": [5]}, tmp_path) == {"p": "semantic"}
+    assert labels_for({"p": [6]}, tmp_path) == {"p": "coverage_revealed"}
+    assert labels_for({"p": [7]}, tmp_path) == {"p": "not_executed"}

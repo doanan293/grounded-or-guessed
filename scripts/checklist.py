@@ -31,7 +31,7 @@ def _csv(name):
 
 def rows() -> list[dict]:
     audit = {(r["config"], r["scoring"]): r for r in _csv("rq1_audit.csv") if r["subset"] == "all"}
-    ours = {(r["gt"], r["method"]): r for r in _csv("rq2_ours.csv")}
+    ours = {(r["gt"], r["method"]): r for r in _csv("rq2_ours.csv") if r.get("subset", "all") == "all"}
     cost = _csv("llm_cost.csv")
     out = []
 

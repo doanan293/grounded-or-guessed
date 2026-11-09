@@ -17,6 +17,7 @@ from flx.coverage import load
 from flx.covgate import semloc_attribute
 from flx.decompose import component_scores, per_program_shapley
 from flx.gt import load_variants
+from flx.labels import labels_for
 from flx.ranking import rank_of
 from flx.stats import cluster_bootstrap_ci
 
@@ -72,7 +73,6 @@ def main() -> None:
     ap.add_argument("--runs", nargs="*", default=[])
     ap.add_argument("--out", type=Path, default=ROOT / "data" / "rq_decomposition.csv")
     args = ap.parse_args()
-    labels = {r["program"]: r["category"] for r in csv.DictReader(open(ROOT / "data" / "semfault_labels.csv"))}
     clusters = {r["program"]: int(r["cluster_t0.8"]) for r in csv.DictReader(open(ROOT / "data" / "semfault_templates.csv"))}
     variants = {g: v for g, v in load_variants().items() if g in ("original", "repaired")}
     sources = []  # (name, [(score_dir, cf_dir, constraints_dir)], candidate programs, players)
@@ -94,6 +94,7 @@ def main() -> None:
         loaded = [load_run(s, cand, c, k) for s, c, k in run_dirs]
         for gname, gt in variants.items():
             progs = [p for p in cand if p in gt]
+            labels = labels_for({p: gt[p] for p in progs}, COV)  # labels of this ground truth, not the original's
             for sub, plist in (("all", progs), ("executable", [p for p in progs if labels[p] != "not_executed"])):
                 for k in (1, 3):
                     runs_phi = [per_program_phi(d, gt, plist, players, k) for d in loaded]
