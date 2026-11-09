@@ -36,3 +36,8 @@ def test_render_fails_on_ambiguous_or_missing_row(tmp_path):
 def test_macro_name_keeps_the_sign_of_negative_keys():
     assert mn.macro_name("off", "semloc", "-1", "count") == r"\OffSemlocMinusOneCount"
     assert mn.macro_name("off", "semloc", "1", "count") == r"\OffSemlocOneCount"
+
+
+def test_vietnamese_numbers_use_a_true_minus_sign():
+    assert mn.fmt("-0.091", "pp", comma=True) == "−9,1"
+    assert mn.fmt("-0.091", "pp") == "-9.1"

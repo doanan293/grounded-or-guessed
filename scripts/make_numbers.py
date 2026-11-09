@@ -34,7 +34,7 @@ def fmt(value: str, kind: str, comma: bool = False) -> str:
          "dec2": f"{v:.2f}", "k": f"{v / 1000:.1f}"}[kind]
     if kind == "p" and v < 0.001:
         s = "$<$0.001"
-    return s.replace(".", ",") if comma else s
+    return s.replace(".", ",").replace("-", "−") if comma else s  # Vietnamese: decimal comma, true minus sign
 
 
 def _rows(path: Path) -> list[dict]:
@@ -100,8 +100,17 @@ def all_specs() -> list[Spec]:
 
 
 def computed() -> dict[str, str]:
-    """Counts that live in JSON / need aggregation (formatted already)."""
-    out = {}
+    """Counts that live in JSON / need aggregation, and method constants read from the code (formatted already)."""
+    from flx.covgate import PRIOR
+    out = {macro_name("const", "prior", "weight"): f"{PRIOR:g}", macro_name("const", "ci", "level"): "95",
+           macro_name("const", "bootstrap", "draws"): "10000"}
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("covgate_eval", ROOT / "scripts" / "covgate_eval.py")
+    ce = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ce)
+    lams = sorted({g["lam"] for g in ce.GRID})
+    out[macro_name("const", "lambda", "grid")] = "; ".join(f"{x:g}" for x in lams)   # rendered with commas in -vi
+    out[macro_name("const", "temperature")] = "0.8"   # scripts/run_matrix.sh: every SemLoc repeat runs at T = 0.8
     verified = json.loads((DATA / "semfault_verified_gt.json").read_text())
     for status in ("confirmed", "corrected", "unverified", "unverifiable"):
         out[macro_name("gt", status, "n")] = str(sum(r["status"] == status for r in verified))
@@ -141,7 +150,8 @@ def main() -> None:
     extra = computed()
     for comma, name in ((False, "numbers.tex"), (True, "numbers-vi.tex")):
         body = render(specs, comma)
-        body += "".join(f"\\newcommand{{{k}}}{{{v.replace('.', ',') if comma else v}}}\n" for k, v in extra.items() if v)
+        body += "".join(f"\\newcommand{{{k}}}{{{v.replace('.', ',').replace('-', '−') if comma else v}}}\n"
+                        for k, v in extra.items() if v)
         names = re.findall(r"\\newcommand\{(\\[A-Za-z]+)\}", body)
         if len(names) != len(set(names)):
             raise ValueError("duplicate macro names")

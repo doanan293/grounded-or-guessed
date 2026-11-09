@@ -10,7 +10,13 @@
 \usepackage{setspace}
 \setstretch{1.5}                                 % giãn dòng 1.5
 \setlength{\parskip}{6pt}                        % spacing before 6pt giữa các đoạn
-\usepackage{graphicx,booktabs,amsmath,amssymb,xcolor,float}
+\usepackage{graphicx,booktabs,amsmath,amssymb,xcolor,float,tabularx,multirow}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces=true,numbers=left,numberstyle=\tiny,
+        frame=single,breaklines=true,xleftmargin=1.5em}
+\counterwithin{equation}{chapter}                % phương trình (3.1) theo chương
 \usepackage[hidelinks]{hyperref}
 \usepackage{chngcntr}
 \counterwithin{figure}{chapter}                  % Hình 3.4 = hình thứ 4 của chương 3

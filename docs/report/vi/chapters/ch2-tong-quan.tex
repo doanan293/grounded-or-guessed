@@ -1,8 +1,173 @@
-\chapter{Tổng quan các nghiên cứu liên quan}
-\TODO{Định vị lỗi dựa trên phổ, dựa trên đột biến, dựa trên LLM; benchmark; nhiễm dữ liệu.}
+\chapter{Tổng quan tài liệu và từ khóa}
+\label{chap:tong-quan}
 
-\section{Mục thứ nhất}
-\TODO{nội dung}
+\section{Phương pháp tìm và chọn tài liệu}
+\label{sec:tim-tai-lieu}
 
-\section{Mục thứ hai}
-\TODO{nội dung}
+\subsection{Nguồn và tiêu chí chọn}
+
+Điểm xuất phát là ba bài báo giảng viên giao cho chương~10 ``Phát hiện lỗi và định vị lỗi'':
+SemLoc~\cite{yang2026semloc}, EffiHolmes~\cite{yang2026effiholmes} và báo cáo công nghiệp về khai thác báo cáo sự cố
+kết hợp LLM~\cite{medeiros2026crash}. Từ ba bài này, nhóm mở rộng theo hai chiều: lần ngược các tài liệu được trích
+dẫn (định vị lỗi dựa trên phổ, dựa trên đột biến, gỡ lỗi chia đôi, các bộ dữ liệu lỗi) và tìm xuôi các nghiên cứu mới
+về định vị lỗi bằng LLM và về tính hợp lệ khi đánh giá LLM. Nguồn tra cứu là arXiv, ACM Digital Library, IEEE Xplore
+và Google Scholar; mỗi tài liệu được đối chiếu lại qua DOI hoặc mã arXiv trước khi đưa vào danh mục tham khảo.
+
+Một tài liệu được chọn khi thỏa ít nhất một tiêu chí: (i) là phương pháp mà SemLoc so sánh hoặc kế thừa; (ii) là bộ
+dữ liệu lỗi dùng được cho Python; (iii) bàn về cách đánh giá định vị lỗi (hòa điểm, lỗi thiếu mã, lỗi nhân tạo so với
+lỗi thật); (iv) bàn về rủi ro khi dùng LLM trong nghiên cứu phần mềm (nhiễm dữ liệu, tái hiện). Kết quả là ba bài được
+giao và hai mươi tài liệu bổ sung, tổng hợp ở Bảng~\ref{tab:so-sanh-tai-lieu}.
+
+\subsection{Bộ từ khóa}
+
+Bảng~\ref{tab:tu-khoa} là bộ từ khóa song ngữ dùng để tìm kiếm và thống nhất thuật ngữ trong báo cáo.
+
+\begin{table}[H]
+\centering
+\caption{Bộ từ khóa của đề tài}
+\label{tab:tu-khoa}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Tiếng Anh & Tiếng Việt \\
+\midrule
+fault localization & định vị lỗi \\
+spectrum-based fault localization (SBFL) & định vị lỗi dựa trên phổ độ phủ \\
+semantic fault & lỗi ngữ nghĩa \\
+semantic constraint / invariant & ràng buộc ngữ nghĩa / bất biến \\
+semantic violation spectrum & phổ vi phạm ràng buộc ngữ nghĩa \\
+counterfactual verification & kiểm chứng phản thực tế \\
+large language model (LLM) & mô hình ngôn ngữ lớn \\
+structured grounding & neo lập luận vào biểu diễn có cấu trúc \\
+program instrumentation & chèn mã kiểm tra vào chương trình \\
+reproducibility & tính tái hiện được \\
+data contamination / memorization & nhiễm dữ liệu huấn luyện / ghi nhớ \\
+omission fault & lỗi thiếu mã \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Ba bài báo được giao}
+\label{sec:ba-bai-bao}
+
+\subsection{SemLoc: neo lập luận của LLM vào ràng buộc thực thi được}
+
+\textbf{Vấn đề.} Với lỗi ngữ nghĩa, kiểm thử thành công và thất bại chạy qua cùng các câu lệnh, nên phổ độ phủ ``sụp''
+và SBFL mất tín hiệu; còn LLM tự do thì ngẫu nhiên, không kiểm chứng được và khó tách nguyên nhân gốc với triệu chứng.
+
+\textbf{Phương pháp.} SemLoc~\cite{yang2026semloc} gồm bốn bước: (1) tìm các \emph{điểm neo} có cấu trúc trong chương
+trình (đầu hàm, điểm định nghĩa -- sử dụng, biên vòng lặp, lệnh trả về); (2) một lượt gọi LLM sinh các ràng buộc ngữ
+nghĩa theo một ngôn ngữ trung gian khép kín, mỗi ràng buộc gắn với một điểm neo và một biểu thức kiểm tra; (3) chèn
+các ràng buộc vào chương trình, chạy bộ kiểm thử, dựng ma trận ``ràng buộc $\times$ kiểm thử'' và chấm từng ràng buộc
+bằng công thức Ochiai, rồi truyền điểm về câu lệnh thiết lập tính chất đó; (4) kiểm chứng phản thực tế: với mỗi ràng
+buộc còn lại, LLM viết một bản vá một dòng tại dòng được quy cho ràng buộc, chạy lại kiểm thử và phân loại ràng buộc
+theo kết quả.
+
+\textbf{Đánh giá.} Bộ dữ liệu SemFault-250 gồm 250 chương trình Python một hàm, một lỗi, mỗi chương trình có khoảng
+mười kiểm thử. SemLoc được so với SBFL (Ochiai, Tarantula), gỡ lỗi chia đôi và LLM hỏi thẳng, dùng Claude Sonnet 4.6
+và Gemini 2.5 Pro ở ba mức nhiệt độ. Kết quả công bố: Acc@1 \RqOneSemlocClaudeTZeroEightAuthorAllAccOne\%,
+Acc@3 \RqOneSemlocClaudeTZeroEightAuthorAllAccThree\%; trên lỗi thật, bài báo chỉ có bảng cấp dòng cho bảy lỗi
+youtube-dl và tự nhận đây là kết quả khả thi.
+
+\textbf{Điểm cần kiểm chứng.} Khi đọc mã nguồn công khai, nhóm thấy: bằng chứng trên lỗi thật rất ít; chương trình của
+SemFault-250 có văn phong đồng nhất như mã do LLM viết, nên khả năng LLM đã ``thấy'' dữ liệu chưa được kiểm tra; SemLoc
+bỏ hẳn tín hiệu độ phủ; mã chấm điểm phá hòa theo thứ tự dòng, tính mọi lần trúng của gỡ lỗi chia đôi là hạng 1 và
+loại các chương trình chạy lỗi khỏi mẫu số; mỗi cấu hình chỉ chạy một lần, không có kiểm định thống kê. Đây là đầu vào
+trực tiếp cho ba câu hỏi nghiên cứu.
+
+\subsection{EffiHolmes: định vị chỗ sửa lỗi hiệu năng bằng so sánh hai lần chạy}
+
+EffiHolmes~\cite{yang2026effiholmes} giải bài toán khó hơn ở một khía cạnh: lỗi hiệu năng không làm kiểm thử thất bại
+và không có vết ngăn xếp, nên các kỹ thuật định vị lỗi kinh điển không áp dụng được. Phương pháp chạy chương trình dưới
+hai mức tải (mặc định và phóng to), coi các hàm có chi phí tăng theo tải là điểm nóng, trích đường gọi gọn từ điểm vào
+tới điểm nóng, rồi để LLM lập luận có định hướng trên đường gọi đó. Trên 140 vấn đề hiệu năng thật từ năm kho mã khoa
+học dữ liệu, EffiHolmes vượt các phương pháp dựa trên truy hồi, tác tử và phân tích hiệu năng đơn thuần, và bền khi
+dùng mô hình nhỏ.
+
+Bài học cho đề tài: cùng một ý tưởng với SemLoc --- \emph{đối chiếu hai lần thực thi để lọc nhiễu trước khi hỏi LLM}
+--- nhưng tín hiệu đối chiếu là chi phí theo tải thay vì kiểm thử đạt/không đạt. Cấu trúc câu hỏi nghiên cứu của bài
+(hiệu quả, loại bỏ thành phần, độ bền theo cỡ mô hình, phân tích thất bại) được nhóm dùng làm khuôn cho ba câu hỏi
+của mình. Lỗi hiệu năng nằm ngoài phạm vi thực nghiệm.
+
+\subsection{Khai thác báo cáo sự cố kết hợp LLM trong công nghiệp}
+
+Medeiros và cộng sự~\cite{medeiros2026crash} khảo sát hai hệ thống Java lớn trong công nghiệp nhận hàng nghìn báo cáo
+sự cố mỗi tuần. Họ gom cụm vết ngăn xếp, xếp hạng tệp và phương thức đáng nghi, rồi đưa các xếp hạng này vào prompt
+của LLM; đánh giá hồi cứu năm LLM với bốn cấu hình prompt trên 38 lỗi sự cố thật, có kiểm tra thủ công. Cấu hình tốt
+nhất định vị được tới 71 trên 100 lỗi và sửa đúng 52 trên 100; thêm bảng xếp hạng phương thức làm tăng tỉ lệ câu trả
+lời nhắc tới phương thức đã được sửa.
+
+Bài học cho đề tài: (i) \emph{đưa bằng chứng chương trình đã khai thác (xếp hạng) vào prompt} giúp LLM định vị tốt hơn
+--- đây chính là ý tưởng của baseline LLM + độ phủ mà nhóm xây dựng; (ii) đầu ra của LLM cần được kiểm tra vì hay bị
+cắt cụt, lệch định dạng hoặc khẳng định không kiểm chứng. Bài cần dữ liệu công nghiệp nên không được dùng để thực nghiệm.
+
+\section{Các hướng nghiên cứu liên quan}
+\label{sec:huong-lien-quan}
+
+\subsection{Định vị lỗi dựa trên phổ và đột biến}
+
+SBFL bắt đầu với Tarantula~\cite{jones2002}; Ochiai~\cite{abreu2009} và DStar~\cite{wong2014dstar} là các công thức mạnh
+hơn được dùng làm mốc so sánh trong hầu hết nghiên cứu, và là nền của phổ vi phạm trong SemLoc. Các khảo sát của
+Wong và cộng sự~\cite{wong2016survey} và de Souza và cộng sự~\cite{desouza2016} chỉ ra hai điểm yếu kinh điển của đánh
+giá SBFL: xử lý hòa điểm và lỗi thiếu mã (không có dòng nào để đổ lỗi). Định vị lỗi dựa trên đột biến
+(Metallaxis~\cite{papadakis2015}, MUSE~\cite{moon2014}) thay độ phủ bằng hành vi của các đột biến; gỡ lỗi chia
+đôi~\cite{zeller2002tse} và chuỗi nhân quả~\cite{zeller2002chains} là nền khái niệm cho bước kiểm chứng phản thực tế
+của SemLoc. Daikon~\cite{ernst2007daikon} suy ra bất biến từ vết thực thi --- SemLoc thay vào đó để LLM đề xuất bất biến.
+
+\subsection{Định vị lỗi bằng mô hình ngôn ngữ lớn}
+
+AutoFL~\cite{kang2024autofl} cho LLM gọi công cụ để duyệt mã và giải thích, ở cấp phương thức; SemLoc dùng AutoFL để
+chọn hàm trước khi xếp hạng dòng trên BugsInPy. AgentFL~\cite{qin2025agentfl} mở rộng lên cấp dự án bằng nhiều tác tử.
+FlexFL~\cite{xu2025flexfl} gần với ý tưởng của nhóm nhất: đưa kết quả SBFL làm gợi ý cho LLM mã nguồn mở, nhưng ở cấp
+phương thức trên mã Java. Điểm chung là bằng chứng thực thi được đưa vào dưới dạng văn bản; chưa nghiên cứu nào đo
+riêng phần độ chính xác đến từ bằng chứng và phần đến từ việc LLM tự đoán.
+
+\subsection{Bộ dữ liệu lỗi và tính hợp lệ của đánh giá}
+
+Defects4J~\cite{just2014} (Java) và BugsInPy~\cite{widyasari2020} (Python) cung cấp lỗi thật kèm kiểm thử làm lộ lỗi;
+QuixBugs~\cite{lin2017quixbugs} gồm các chương trình nhỏ có lỗi một dòng. Pearson và cộng sự~\cite{pearson2017} cho thấy
+kết quả định vị lỗi trên lỗi nhân tạo không chuyển được sang lỗi thật, và cách chấm khi hòa điểm hay khi lỗi là thiếu
+mã có thể đảo thứ hạng giữa các kỹ thuật --- đây là cơ sở cho phần kiểm tra cách đánh giá ở RQ1.
+
+\subsection{Nhiễm dữ liệu và tái hiện khi dùng LLM}
+
+Sallou và cộng sự~\cite{sallou2024} liệt kê các mối đe dọa khi dùng LLM trong nghiên cứu kỹ nghệ phần mềm: mô hình
+đóng thay đổi theo thời gian, nhiễm dữ liệu, khó tái hiện. Ramos và cộng sự~\cite{ramos2024memorize} cho thấy LLM có dấu
+hiệu ghi nhớ các bộ dữ liệu lỗi phổ biến; khảo sát của Xu và cộng sự~\cite{xu2024contam} đề xuất viết lại hoặc đổi tên
+để giảm nhiễm. Nhóm áp dụng trực tiếp: biến thể đổi tên định danh của SemFault-250 (RQ3), ghi nhật ký và lưu đệm mọi
+lượt gọi LLM để chạy lại được.
+
+\section{So sánh và khoảng trống nghiên cứu}
+\label{sec:khoang-trong}
+
+\subsection{Bảng so sánh}
+
+Bảng~\ref{tab:so-sanh-tai-lieu} đặt ba bài được giao cạnh hướng tiếp cận của nhóm.
+
+\begin{table}[H]
+\centering
+\caption{So sánh ba bài báo được giao với hướng của nhóm}
+\label{tab:so-sanh-tai-lieu}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}*{4}{>{\raggedright\arraybackslash}X}@{}}
+\toprule
+Tiêu chí & SemLoc~\cite{yang2026semloc} & EffiHolmes~\cite{yang2026effiholmes} & Báo cáo sự cố + LLM~\cite{medeiros2026crash} & Nhóm M9 \\
+\midrule
+Loại lỗi & ngữ nghĩa & hiệu năng & sự cố (Java) & ngữ nghĩa \\
+Tín hiệu & ràng buộc do LLM sinh + chạy kiểm thử & phân tích hiệu năng ở hai mức tải & vết ngăn xếp + xếp hạng & độ phủ + ràng buộc; đo phần đóng góp của từng tín hiệu \\
+Lỗi thật & 7 lỗi có kết quả cấp dòng & 140 vấn đề & 38 lỗi công nghiệp & 31 lỗi BugsInPy, 3 lần chạy \\
+Kiểm tra bộ dữ liệu & không & --- & --- & kiểm chứng lại dòng lỗi bằng thực thi \\
+Lặp và kiểm định & 1 lần, không kiểm định & --- & --- & 3 lần, McNemar, bootstrap theo cụm \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Khoảng trống và hướng của nhóm}
+
+Ba khoảng trống định hướng toàn bộ tiểu luận. Thứ nhất, các hệ thống định vị lỗi bằng LLM tuyên bố ``neo vào thực thi''
+nhưng chưa ai đo phần độ chính xác thật sự đến từ bằng chứng thực thi. Thứ hai, kết quả được báo cáo từ một lần chạy
+với cách chấm lạc quan trên một bộ dữ liệu chưa được kiểm chứng. Thứ ba, chưa có so sánh với baseline đơn giản nhất
+dùng cùng thông tin: một prompt duy nhất chứa bằng chứng độ phủ. Từ đó, nhóm học và áp dụng: từ SemLoc --- giả thuyết
+do LLM sinh nhưng kiểm thử phán xử, và dùng chính mã nguồn gốc để tái hiện; từ EffiHolmes --- đối chiếu hai lần thực thi
+để lọc nhiễu (ý tưởng của CovGate) và khuôn câu hỏi nghiên cứu; từ báo cáo công nghiệp --- đưa xếp hạng có sẵn vào prompt
+(baseline LLM + độ phủ); từ Pearson và cộng sự --- kiểm tra cách chấm khi hòa điểm và khi lỗi là thiếu mã.

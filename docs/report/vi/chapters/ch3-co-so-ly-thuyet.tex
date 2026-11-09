@@ -1,8 +1,128 @@
 \chapter{Cơ sở lý thuyết}
-\TODO{SBFL và công thức Ochiai; lỗi ngữ nghĩa; SemLoc và phổ vi phạm ràng buộc.}
+\label{chap:co-so}
 
-\section{Mục thứ nhất}
-\TODO{nội dung}
+\section{Định vị lỗi dựa trên phổ độ phủ}
+\label{sec:sbfl}
 
-\section{Mục thứ hai}
-\TODO{nội dung}
+\subsection{Ma trận độ phủ và các công thức nghi ngờ}
+
+Cho chương trình $P$ và bộ kiểm thử $T = T_f \cup T_p$ gồm các kiểm thử thất bại $T_f$ và thành công $T_p$. Với mỗi
+dòng $s$, ký hiệu $e_f(s)$, $e_p(s)$ là số kiểm thử thất bại, thành công chạy qua $s$; $n_f(s)$, $n_p(s)$ là số kiểm
+thử thất bại, thành công không chạy qua $s$. Ma trận độ phủ ghi lại, với mỗi cặp (kiểm thử, dòng), kiểm thử đó có chạy
+qua dòng đó hay không. SBFL gán cho mỗi dòng một điểm nghi ngờ; ba công thức dùng trong tiểu luận là
+Tarantula~\cite{jones2002}, Ochiai~\cite{abreu2009} và DStar~\cite{wong2014dstar}:
+\begin{align}
+\mathrm{Tarantula}(s) &= \frac{e_f/(e_f+n_f)}{e_f/(e_f+n_f) + e_p/(e_p+n_p)}, \label{eq:tarantula}\\
+\mathrm{Ochiai}(s) &= \frac{e_f}{\sqrt{(e_f+n_f)\,(e_f+e_p)}}, \label{eq:ochiai}\\
+\mathrm{DStar}(s) &= \frac{e_f^{\,*}}{e_p + n_f}, \quad * = 2. \label{eq:dstar}
+\end{align}
+Các dòng được xếp giảm dần theo điểm; dòng không được kiểm thử thất bại nào chạy qua ($e_f = 0$) có điểm 0 và trong
+tiểu luận không được xếp hạng.
+
+\subsection{Chỉ số đánh giá và cách xử lý hòa điểm}
+
+Với mỗi chương trình, \emph{hạng} của lỗi là hạng tốt nhất của một dòng lỗi chuẩn trong danh sách xếp hạng.
+Acc@$k$ là tỉ lệ chương trình có hạng không vượt quá $k$:
+\begin{equation}
+\mathrm{Acc@}k = \frac{1}{|\mathcal{P}|} \sum_{p \in \mathcal{P}} \mathbb{1}\!\left[\,\mathrm{rank}_p \le k\,\right],
+\label{eq:acck}
+\end{equation}
+trong đó $\mathcal{P}$ là tập chương trình \emph{cố định}: chương trình mà công cụ không chạy được vẫn nằm trong mẫu số
+và được tính là trượt. Khi nhiều dòng cùng điểm, có ba cách phá hòa: lấy vị trí đầu (lạc quan, theo thứ tự dòng), vị
+trí cuối (bi quan) hoặc \emph{hạng trung bình} của nhóm hòa. Tiểu luận dùng hạng trung bình, theo khuyến nghị của các
+nghiên cứu về đánh giá định vị lỗi~\cite{pearson2017,desouza2016}; cách chấm của tác giả SemLoc dùng vị trí đầu.
+
+\section{Lỗi ngữ nghĩa}
+\label{sec:loi-ngu-nghia}
+
+\subsection{Vì sao độ phủ mất tín hiệu}
+
+Lỗi ngữ nghĩa là lỗi làm chương trình tính sai giá trị trong khi vẫn chạy qua cùng các câu lệnh như khi đúng --- ví
+dụ \texttt{updated = cap - 1} thay vì \texttt{updated = cap}. Khi cả kiểm thử thành công và thất bại đều chạy qua dòng
+lỗi, $e_p(s) > 0$ làm điểm Ochiai của dòng lỗi giảm và ngang với các dòng xung quanh; SBFL khi đó gần như đoán mò trong
+phạm vi hàm.
+
+\subsection{Định nghĩa khách quan bằng độ phủ}
+
+Để phân tích kết quả theo loại lỗi, tiểu luận dùng một định nghĩa tự động, chỉ dựa trên độ phủ của các dòng lỗi chuẩn:
+\begin{itemize}
+\item \textbf{lỗi ngữ nghĩa} (semantic): có dòng lỗi được ít nhất một kiểm thử thất bại \emph{và} một kiểm thử thành
+công chạy qua --- độ phủ không phân biệt được;
+\item \textbf{lộ qua độ phủ} (coverage-revealed): kiểm thử thất bại chạy tới dòng lỗi nhưng không kiểm thử thành công
+nào chạy tới;
+\item \textbf{không thực thi} (not executed): không kiểm thử thất bại nào chạy tới dòng lỗi chuẩn --- thường do dòng
+lỗi chuẩn bị đặt sai hoặc là dòng trống.
+\end{itemize}
+Nhãn được tính lại theo đúng bộ dòng lỗi chuẩn đang dùng để chấm (gốc hoặc đã kiểm chứng).
+
+\section{SemLoc: phổ vi phạm ràng buộc ngữ nghĩa}
+\label{sec:semloc}
+
+\subsection{Quy trình bốn bước}
+
+Hình~\ref{fig:semloc} tóm tắt quy trình của SemLoc~\cite{yang2026semloc}. Mỗi ràng buộc $c$ do LLM sinh ra là một bộ
+$\langle$mã, loại, vùng, điểm neo, biểu thức, ý đồ$\rangle$; biểu thức được chèn vào chương trình dưới dạng một lời gọi
+kiểm tra tại điểm neo. Chạy bộ kiểm thử cho ma trận ``ràng buộc $\times$ kiểm thử'' ghi ràng buộc nào bị vi phạm trong
+kiểm thử nào; thay ``dòng'' bằng ``ràng buộc'' trong công thức~\eqref{eq:ochiai} cho điểm của từng ràng buộc, và điểm
+của một dòng là điểm lớn nhất trong các ràng buộc được quy về dòng đó. Bước kiểm chứng phản thực tế loại ràng buộc bị
+vi phạm cả trong kiểm thử thành công, rồi cho LLM vá thử tại dòng được quy cho từng ràng buộc còn lại và chạy lại kiểm thử.
+
+\begin{figure}[H]
+\centering
+{\setstretch{1}%
+\begin{tikzpicture}[node distance=4mm and 6mm, font=\small,
+  box/.style={draw, rounded corners, align=center, minimum height=11mm, text width=24mm, fill=blue!4},
+  ours/.style={draw=orange!80!black, dashed, rounded corners, align=center, minimum height=11mm, text width=30mm,
+               font=\footnotesize, fill=orange!6},
+  arr/.style={-{Stealth[length=2mm]}}]
+\node[box] (a) {Chương trình\\+ kiểm thử};
+\node[box, right=of a] (b) {LLM sinh\\ràng buộc};
+\node[box, right=of b] (c) {Chèn mã,\\chạy kiểm thử};
+\node[box, right=of c] (d) {Phổ vi phạm\\(Ochiai)};
+\node[box, below=10mm of d] (e) {Kiểm chứng\\phản thực tế};
+\node[box, left=of e] (f) {Xếp hạng\\dòng};
+\node[ours, left=of f] (g) {+\ConstPriorWeight{} điểm cho dòng LLM\\tự đoán (không có\\trong bài báo)};
+\draw[arr] (a) -- (b); \draw[arr] (b) -- (c); \draw[arr] (c) -- (d); \draw[arr] (d) -- (e); \draw[arr] (e) -- (f);
+\draw[arr, dashed, orange!80!black] (b) -- (b |- g.north); \draw[arr, dashed, orange!80!black] (g) -- (f);
+\end{tikzpicture}}
+\caption{Quy trình của SemLoc (theo~\cite{yang2026semloc}); khung nét đứt là thành phần nhóm phát hiện trong mã nguồn}
+\label{fig:semloc}
+\end{figure}
+
+\subsection{Điểm thưởng cho dòng LLM tự đoán}
+
+Khi đọc mã nguồn công khai, nhóm thấy một thành phần không được mô tả trong bài báo: ngoài các ràng buộc, LLM còn trả
+về một dòng lỗi mà nó tự đoán (trường \texttt{fault\_line}), và dòng này được cộng thêm \ConstPriorWeight{} điểm --- lớn hơn điểm tối đa
+1 của một ràng buộc. Vì vậy, trừ khi một ràng buộc khác đạt điểm tuyệt đối, dòng LLM tự đoán luôn đứng hạng 1. Thành
+phần này là trọng tâm của câu hỏi ``grounded hay guessed'' ở các chương sau.
+
+\section{Công cụ thống kê}
+\label{sec:thong-ke}
+
+\subsection{Kiểm định cặp}
+
+Mọi so sánh giữa hai phương pháp đều là so sánh \emph{cặp} trên cùng các chương trình. Với chỉ số nhị phân (trúng
+hay trượt top-$k$), kiểm định McNemar dùng số chương trình chỉ phương pháp A trúng ($b$) và chỉ phương pháp B trúng ($c$),
+bản chính xác khi $b+c$ nhỏ. Với hạng nghịch đảo ($1/\mathrm{rank}$, trượt là 0), kiểm định dấu hạng Wilcoxon cùng
+hệ số tương quan hạng hai chuỗi ghép cặp làm độ lớn hiệu ứng:
+\begin{equation}
+r_{rb} = \frac{R^{+} - R^{-}}{R^{+} + R^{-}},
+\label{eq:rankbiserial}
+\end{equation}
+với $R^{+}$, $R^{-}$ là tổng hạng của các chênh lệch dương, âm (bỏ chênh lệch bằng 0).
+
+\subsection{Khoảng tin cậy bootstrap theo cụm và giá trị Shapley}
+
+Mỗi cấu hình được chạy ba lần. Kết quả của một chương trình được lấy trung bình qua ba lần \emph{trước khi} lấy mẫu
+lại, nên đơn vị lấy mẫu là chương trình chứ không phải lần chạy. Vì nhiều chương trình của SemFault-250 sinh ra từ cùng
+một khuôn mẫu, khoảng tin cậy \ConstCiLevel\% được tính bằng bootstrap \emph{theo cụm khuôn mẫu} (lấy lại cả cụm), với \ConstBootstrapDraws{} lần
+lấy mẫu và hạt giống cố định.
+
+Để đo phần đóng góp của từng tín hiệu, tiểu luận dùng giá trị Shapley. Với tập tín hiệu $N$ và hàm giá trị $v(S)$ là
+Acc@$k$ khi chỉ bật các tín hiệu trong $S$,
+\begin{equation}
+\phi_i = \sum_{S \subseteq N\setminus\{i\}} \frac{|S|!\,(|N|-|S|-1)!}{|N|!}\,\bigl(v(S\cup\{i\}) - v(S)\bigr),
+\label{eq:shapley}
+\end{equation}
+và $\sum_i \phi_i = v(N)$. Vì Acc@$k$ là trung bình các giá trị trúng/trượt theo chương trình, giá trị Shapley tổng bằng
+trung bình giá trị Shapley của từng chương trình; tính chất này cho phép tính khoảng tin cậy bootstrap cho từng $\phi_i$.
