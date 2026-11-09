@@ -41,7 +41,8 @@ def main() -> None:
     for f in sorted([*(ROOT / "data" / "rankings").glob("direct*_r[0-9].json"), *(ROOT / "runs").glob("direct*_r[0-9].json")]):
         if any(r["run_id"] == f.stem for r in rows):
             continue
-        n = {"test": 200, "subset50": 50}.get(split_of(f.stem))
+        n = {"test": 200, "subset50": 50, "bugsinpy": len(json.loads((ROOT / "data" / "bugsinpy_targets.json").read_text())),
+             "renamed-test": len(json.loads((ROOT / "data" / "renamed" / "test_programs.json").read_text()))}.get(split_of(f.stem))
         done = len(json.loads(f.read_text()))
         rows.append({"run_id": f.stem, "kind": "single_prompt", "split": split_of(f.stem), "n": n,
                      "finished": done == n, "healthy": done == n})
