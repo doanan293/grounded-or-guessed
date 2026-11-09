@@ -24,6 +24,7 @@ $PY scripts/gt_sensitivity.py > /dev/null
 $PY scripts/rq2_ours.py > /dev/null
 $PY scripts/ablation_coverage.py > /dev/null
 $PY scripts/static_tools.py > /dev/null
+$PY scripts/pav_eval.py select > /dev/null
 $PY scripts/rq3_families.py > /dev/null
 $PY scripts/rq3_renamed.py > /dev/null
 $PY -W ignore scripts/rq3_bugsinpy.py > /dev/null

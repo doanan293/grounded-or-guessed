@@ -102,6 +102,12 @@ def all_specs() -> list[Spec]:
         specs += table_specs("stat", DATA / "static_tools.csv", ["gt", "tool"],
                              {c: "int" for c in ("programs", "diagnostics", "flagged", "on_fault_line", "within_2_lines")}
                              | {"on_fault_line_by_chance": "dec1"})
+    if (DATA / "pav_mechanism.csv").exists():
+        specs += table_specs("pavmech", DATA / "pav_mechanism.csv", ["gt"],
+                             {"fault_line_fixable": "pct", "other_line_fixable": "pct", "fault_line_checked": "int",
+                              "other_line_checked": "int"})
+        specs += table_specs("vote", DATA / "vote_dev.csv", ["gt"],
+                             {c: "pct" for c in ("single_acc1", "single_acc3", "vote_acc1", "vote_acc3")})
     specs += table_specs("pareto", DATA / "pareto.csv", ["method", "model"],
                          {"acc1": "pct", "acc3": "pct", "tokens_per_program": "k", "n": "int"})
     return specs
@@ -172,6 +178,19 @@ def computed() -> dict[str, str]:
                          ("direct_tests_test_gemini_r", "llm tests")):
         rs = [float(r["tokens_per_program"]) for r in cost if r["run_id"].startswith(prefix)]
         out[macro_name("cost", *name.split(), "tokens", "k")] = f"{sum(rs) / len(rs) / 1000:.1f}" if rs else ""
+    grid = DATA / "pav_dev_grid.csv"
+    if grid.exists():  # propose-and-verify on dev: stage 1 alone, the selected knobs, and the worst grid point
+        rows = _rows(grid)
+        params = json.loads((DATA / "pav_params.json").read_text())
+        chosen = next(r for r in rows if r["order"] == params["order"] and int(r["k"]) == params["k"]
+                      and int(r["attempts"]) == params["attempts"]
+                      and r["max_size"] == ("" if params["max_size"] is None else str(params["max_size"])))
+        worst = min((r for r in rows if r["order"] != "stage1"), key=lambda r: float(r["select_acc1"]))
+        for tag, r in (("stage", rows[0]), ("chosen", chosen), ("worst", worst)):
+            for g in ("original", "repaired", "reviewed"):
+                for k in ("acc1", "acc3"):
+                    out[macro_name("pav", "dev", tag, g, k)] = f"{100 * float(r[f'{g}_{k}']):.1f}"
+        out[macro_name("pav", "grid", "size")] = str(len(rows) - 1)
     return out
 
 

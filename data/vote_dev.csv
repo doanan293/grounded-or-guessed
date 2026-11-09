@@ -1,0 +1,4 @@
+gt,single_acc1,single_acc3,vote_acc1,vote_acc3
+original,0.34,0.6,0.34,0.56
+repaired,0.5532,0.8511,0.5532,0.8085
+reviewed,0.9067,0.9933,0.92,1.0

@@ -41,10 +41,11 @@
 **Files:** `src/flx/pav.py`, `scripts/run_pav.py`, `scripts/pav_eval.py`; test `tests/test_pav.py`, `tests/test_pav_eval.py`
 
 - [x] Stage 1 trên dev: `direct_tests_dev_gemini_r{1,2,3}`
-- [ ] Stage 2 trên dev: `pav_dev_gemini_r{1,2,3}` (k = 3, attempts = 2)
-- [ ] `python scripts/pav_eval.py select` → `data/pav_dev_grid.csv`, `data/pav_params.json`; commit trước khi chạy test
+- [x] Stage 2 trên dev: `pav_dev_gemini_r{1,2,3}` (k = 3, attempts = 2)
+- [x] `python scripts/pav_eval.py select` → `data/pav_dev_grid.csv`, `data/pav_params.json`, `data/pav_mechanism.csv`, `data/vote_dev.csv`
+- [x] Kết quả dev: cấu hình được chọn trùng hệt bước 1 (không cải thiện); cấu hình mạnh tay làm giảm Acc@1; dòng lỗi thật sửa được ở 42,5% lần kiểm, dòng khác 23,3% (nhãn rà soát). Biểu quyết 3 lần cũng không cải thiện.
 
-### Task 3: PAV trên test và BugsInPy
+### Task 3: PAV trên test và BugsInPy — BỎ (chủ dự án duyệt 09/11: kết quả dev âm tính rõ, báo cáo như nghiên cứu thiết kế trên dev kèm phân tích cơ chế; ghi rõ chưa chạy trên test)
 
 **Interfaces:** `pav_eval.apply("test")` → `data/rankings/pav_test_gemini_r{i}.json`; `rq2_ours.py` thêm phương pháp `pav`; BugsInPy cần `flx.pav.run_bip` (kiểm chứng trong checkout, lệnh test của `bip_failing_tests`).
 
