@@ -37,18 +37,53 @@ cập hay địa chỉ thư điện tử.
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq_decomposition_published}}
 \end{table}
 
-\subsection{Prompt của phương pháp đối chứng LLM + độ phủ}
+\subsection{Kết quả đầy đủ trên ba bộ nhãn}
 
-Mỗi dòng mã được chú thích \texttt{[f=<số kiểm thử thất bại chạy qua>/p=<số kiểm thử thành công chạy qua>]}; thông điệp
-hệ thống yêu cầu trả lời đúng định dạng JSON:
+\begin{table}[H]
+\centering
+\caption{RQ2 đầy đủ: mọi biến thể trên ba bộ nhãn (tập test, Gemini 3.8 Flash, 3 lần chạy; $\Delta$ so với SemLoc)}
+\label{tab:rq2-day-du}
+\adjustbox{max width=\linewidth, max totalheight=\TallTableHeight}{\input{../generated/vi/rq2_ours}}
+\end{table}
+
+\section{Các prompt}
+\label{sec:prompt}
+
+\subsection{LLM + kiểm thử thất bại (phương pháp đề xuất) và biến thể có độ phủ}
+
+Thông điệp hệ thống yêu cầu trả lời đúng định dạng JSON. Biến thể có độ phủ thêm dòng giải thích chú thích (đánh dấu
+\texttt{[cov]} dưới đây) và chú thích \texttt{[f=…/p=…]} ở cuối mỗi dòng mã; mọi phần khác giống hệt.
 \begin{lstlisting}[numbers=none]
 You are a fault-localization assistant. Reply with JSON only:
 {"lines": [<line numbers, most suspicious first, at most 5>]}
 
 The program below has exactly one faulty line. <n_fail> tests fail and <n_pass> pass.
-Each line is annotated with [f=<number of failing tests that execute it>/p=<number of passing tests>].
-<numbered source with annotations>
+[cov] Each line is annotated with [f=<number of failing tests that execute it>/p=<number of passing tests>].
+<numbered source>
 Failing tests:
 - <test name>: <first error line>
 Return the five most suspicious line numbers, most suspicious first.
 \end{lstlisting}
+
+\subsection{Đề xuất bản sửa (bộ phán định nhãn và đề xuất rồi kiểm chứng)}
+
+\begin{lstlisting}[numbers=none]
+You fix one-line bugs in Python. Reply with JSON only:
+{"kind": "replace" | "insert_after", "code": "<one line of Python, no indentation>"}
+
+Program (line-numbered): <numbered source>
+Failing tests: <pytest failure summary>
+Assume the bug is at line <n>. Give the single line that should replace line <n> (or, if code is missing,
+the line to insert after line <n>) so that all tests pass. Make the smallest possible change (ideally one
+or two tokens) and keep everything else identical. Attempt <k>.
+\end{lstlisting}
+
+\section{Quy trình duyệt nhãn}
+\label{sec:quy-trinh-duyet}
+
+Mỗi thành viên nhận một tệp gồm các ca được giao (\texttt{docs/analysis/gt-review/thanh-vien/}). Mỗi ca có liên kết tới
+chương trình và kiểm thử, đoạn mã quanh các dòng ứng viên, và nhận định của LLM để tham khảo; các dòng ứng viên được ký
+hiệu G (nhãn gốc), S (dòng bộ phán định dời tới) và F (dòng LLM đề xuất). Người duyệt ghi vào cột \texttt{answer} một hay
+nhiều chữ (ví dụ \texttt{G+F} cho lỗi hai dòng) hoặc một số dòng khác, và có thể ghi \texttt{?} nếu không chắc. Bộ nhãn
+đã rà soát được dựng tự động từ các tệp này (\texttt{scripts/build\_reviewed\_gt.py}); các ca trưởng nhóm sửa được liệt
+kê trong mã kèm lý do.
