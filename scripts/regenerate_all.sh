@@ -20,6 +20,7 @@ PY
 $PY scripts/llm_cost.py > /dev/null
 $PY scripts/runs_table.py > /dev/null
 $PY scripts/build_reviewed_gt.py > /dev/null
+$PY scripts/label_audit.py > /dev/null
 $PY scripts/gt_sensitivity.py > /dev/null
 $PY scripts/rq2_ours.py > /dev/null
 $PY scripts/ablation_coverage.py > /dev/null

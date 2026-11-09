@@ -1,0 +1,13 @@
+\begin{tabular}{llrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Repaired} & \multicolumn{2}{c}{Reviewed} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Addition (compared with) & Split & $\Delta$Acc@1 & $\Delta$Acc@3 & $\Delta$Acc@1 & $\Delta$Acc@3 \\
+\midrule
+Per-line coverage (LLM + failing tests) & test & -5.4{\scriptsize\,[-9.4, -2.1]} & +2.1{\scriptsize\,[-0.2, 4.9]} & -3.3{\scriptsize\,[-5.9, -1.2]} & +0.0{\scriptsize\,[0.0, 0.0]} \\
+CovGate (SemLoc) & test & +0.0{\scriptsize\,[0.0, 0.0]} & +3.9{\scriptsize\,[1.6, 6.8]} & +0.0{\scriptsize\,[0.0, 0.0]} & +1.2{\scriptsize\,[0.0, 2.8]} \\
+Propose-and-verify, selected (LLM + failing tests) & dev & +0.0 & +0.0 & +0.0 & +0.0 \\
+Propose-and-verify, most aggressive (LLM + failing tests) & dev & -4.3 & +0.0 & -11.3 & +0.0 \\
+Vote over 3 answers (LLM + failing tests) & dev & +0.0 & -4.3 & +1.3 & +0.7 \\
+\bottomrule
+\end{tabular}

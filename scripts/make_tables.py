@@ -4,6 +4,7 @@
 Each table is a standalone tabular fragment, \\input by both the Vietnamese report and the paper.
 """
 import csv
+import json
 import re
 from pathlib import Path
 
@@ -116,7 +117,8 @@ def pval(v) -> str:
     return "$<$.001" if v < 0.001 else f"{v:.3f}".lstrip("0")
 
 
-GT_LABEL = {"original": "Original ground truth", "repaired": "Execution-repaired ground truth"}
+GT_LABEL = {"original": "Original ground truth", "repaired": "Execution-repaired ground truth",
+            "reviewed": "Reviewed ground truth"}
 RQ2_NAMES = {"gate_only": "\\quad + coverage gate only", "lam_only": "\\quad + $\\lambda$·Ochiai only",
              "grounded_prior_only": "\\quad bonus only when grounded", "semloc": "SemLoc (as released)", "semloc_no_prior": "\\quad w/o LLM-guess bonus",
              "cf_rerank": "\\quad + CF re-ranking", "covgate": "CovGate (ours)", "covgate_cf": "CovGate + CF re-ranking",
@@ -130,7 +132,7 @@ def rq2_table() -> str:
              "llm_direct", "llm_tests", "llm_coverage", "sbfl_ochiai"]
     lines = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
              r"Method & Acc@1 & Acc@3 & Acc@5 & $\Delta$Acc@1 [95\% CI] & $\Delta$Acc@3 [95\% CI] & $r_{\text{rb}}$ \\"]
-    for g in ("original", "repaired"):
+    for g in ("original", "repaired", "reviewed"):
         rs = {r["method"]: r for r in rows if r["gt"] == g}
         any_r = next(iter(rs.values()))
         lines += [r"\midrule", rf"\multicolumn{{7}}{{l}}{{\emph{{{GT_LABEL[g]}, $n={any_r['n']}$, {any_r['repeats']} repeats}}}} \\"]
@@ -142,6 +144,85 @@ def rq2_table() -> str:
             lines.append(f"{RQ2_NAMES[m]} & {pm(r, 'acc1')} & {pm(r, 'acc3')} & {pm(r, 'acc5')} & {dci(r, 'acc1')} & "
                          f"{dci(r, 'acc3')} & {'--' if d in (None, '') else f'{float(d):+.2f}'} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
+    return "\n".join(lines) + "\n"
+
+
+def main_results_table() -> str:
+    """Table II: the headline comparison on the three ground truths (Acc@1 / Acc@3, mean of 3 repeats) and cost."""
+    rows = {(r["gt"], r["method"]): r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"}
+    cost = _rows("llm_cost.csv")
+    tok = lambda prefix: (f"{sum(float(r['tokens_per_program']) for r in cost if r['run_id'].startswith(prefix)) / 1000 / max(1, sum(1 for r in cost if r['run_id'].startswith(prefix))):.1f}"
+                          if any(r["run_id"].startswith(prefix) for r in cost) else "0")
+    methods = [("sbfl_ochiai", "SBFL Ochiai", None), ("llm_direct", "LLM direct (source only)", "direct_test_gemini_r"),
+               ("semloc", "SemLoc (multi-stage)", "semloc_test_gemini_r"),
+               ("llm_tests", "LLM + failing tests (ours)", "direct_tests_test_gemini_r"),
+               ("llm_coverage", "\\quad + per-line coverage", "direct_cov_test_gemini_r")]
+    n = {g: rows[(g, "semloc")]["n"] for g in ("original", "repaired", "reviewed")}
+    lines = [r"\begin{tabular}{lrrrrrrr}", r"\toprule",
+             rf" & \multicolumn{{2}}{{c}}{{Original ($n={n['original']}$)}} & \multicolumn{{2}}{{c}}{{Repaired ($n={n['repaired']}$)}}"
+             rf" & \multicolumn{{2}}{{c}}{{Reviewed ($n={n['reviewed']}$)}} & \\",
+             r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}",
+             r"Method & Acc@1 & Acc@3 & Acc@1 & Acc@3 & Acc@1 & Acc@3 & k tokens \\", r"\midrule"]
+    for m, name, prefix in methods:
+        cells = [f"{pct(rows[(g, m)]['acc1_mean'])} & {pct(rows[(g, m)]['acc3_mean'])}" for g in ("original", "repaired", "reviewed")]
+        lines.append(f"{name} & {' & '.join(cells)} & {tok(prefix) if prefix else '0'} \\\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    return "\n".join(lines) + "\n"
+
+
+def addons_table() -> str:
+    """Table III: additions that do not help — Δ against the method they extend, with 95% CIs where repeated."""
+    abl = {(r["gt"], r["subset"], r["contrast"]): r for r in _rows("ablation_coverage.csv")}
+    rq2 = {(r["gt"], r["method"]): r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"}
+    grid = _rows("pav_dev_grid.csv")
+    vote = {r["gt"]: r for r in _rows("vote_dev.csv")}
+    params = json.loads((DATA / "pav_params.json").read_text())
+    chosen = next(r for r in grid if r["order"] == params["order"] and int(r["k"]) == params["k"]
+                  and int(r["attempts"]) == params["attempts"]
+                  and r["max_size"] == ("" if params["max_size"] is None else str(params["max_size"])))
+    worst = min((r for r in grid if r["order"] != "stage1"), key=lambda r: float(r["select_acc1"]))
+    base = grid[0]
+    pp = lambda a, b: f"{100 * (float(a) - float(b)):+.1f}"
+    lines = [r"\begin{tabular}{llrrrr}", r"\toprule",
+             r" & & \multicolumn{2}{c}{Repaired} & \multicolumn{2}{c}{Reviewed} \\", r"\cmidrule(lr){3-4}\cmidrule(lr){5-6}",
+             r"Addition (compared with) & Split & $\Delta$Acc@1 & $\Delta$Acc@3 & $\Delta$Acc@1 & $\Delta$Acc@3 \\", r"\midrule"]
+    a = lambda g: abl[(g, "all", "coverage_effect")]
+    lines.append(f"Per-line coverage (LLM + failing tests) & test & {dci(a('repaired'), 'acc1')} & {dci(a('repaired'), 'acc3')} & "
+                 f"{dci(a('reviewed'), 'acc1')} & {dci(a('reviewed'), 'acc3')} \\\\")
+    c = lambda g: rq2[(g, "covgate")]
+    lines.append(f"CovGate (SemLoc) & test & {dci(c('repaired'), 'acc1')} & {dci(c('repaired'), 'acc3')} & "
+                 f"{dci(c('reviewed'), 'acc1')} & {dci(c('reviewed'), 'acc3')} \\\\")
+    for name, r in (("Propose-and-verify, selected", chosen), ("Propose-and-verify, most aggressive", worst)):
+        lines.append(f"{name} (LLM + failing tests) & dev & {pp(r['repaired_acc1'], base['repaired_acc1'])} & "
+                     f"{pp(r['repaired_acc3'], base['repaired_acc3'])} & {pp(r['reviewed_acc1'], base['reviewed_acc1'])} & "
+                     f"{pp(r['reviewed_acc3'], base['reviewed_acc3'])} \\\\")
+    v = lambda g, k: pp(vote[g][f"vote_{k}"], vote[g][f"single_{k}"])
+    lines.append(f"Vote over 3 answers (LLM + failing tests) & dev & {v('repaired', 'acc1')} & {v('repaired', 'acc3')} & "
+                 f"{v('reviewed', 'acc1')} & {v('reviewed', 'acc3')} \\\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    return "\n".join(lines) + "\n"
+
+
+def static_table() -> str:
+    rows = {r["tool"]: r for r in _rows("static_tools.csv") if r["gt"] == "reviewed"}
+    names = {"ruff_default": "ruff (default rules)", "ruff_all": "ruff (all rules)", "pyrefly": "pyrefly (type check)"}
+    lines = [r"\begin{tabular}{lrrrr}", r"\toprule",
+             r"Tool & Diagnostics & Programs flagged & On a fault line & Expected by chance \\", r"\midrule"]
+    for t, name in names.items():
+        r = rows[t]
+        lines.append(f"{name} & {r['diagnostics']} & {r['flagged']} & {r['on_fault_line']} & {float(r['on_fault_line_by_chance']):.1f} \\\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    return "\n".join(lines) + "\n"
+
+
+def label_audit_table() -> str:
+    r = next(x for x in _rows("label_audit.csv") if x["subset"] == "all")
+    items = [("same", "Same line"), ("extended", "Kept, second line added (two-line fault)"), ("blank", "Blank line"),
+             ("non_code", "Log call, \\texttt{def} header or comment"), ("off_by_one", "One line away"),
+             ("farther", "Two or more lines away")]
+    lines = [r"\begin{tabular}{lr}", r"\toprule", rf"Original label vs.\ reviewed label ($n={r['n']}$) & Programs \\", r"\midrule"]
+    lines += [f"{name} & {r[k]} \\\\" for k, name in items]
+    lines += [r"\midrule", f"Moved (blank, non-code, one or more lines away) & {r['moved']} \\\\", r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
 
 
@@ -284,6 +365,41 @@ def pareto_figure(path: Path, lang: str = "en") -> None:
 
 # Vietnamese report: same tables, labels translated (guide: Việt hóa thuật ngữ) and decimal commas.
 VI = [
+    ("Per-line coverage (LLM + failing tests)", "Độ phủ từng dòng (so với LLM + kiểm thử thất bại)"),
+    ("Propose-and-verify, most aggressive (LLM + failing tests)", "Đề xuất rồi kiểm chứng, cấu hình mạnh tay nhất (so với LLM + kiểm thử thất bại)"),
+    ("Propose-and-verify, selected (LLM + failing tests)", "Đề xuất rồi kiểm chứng, cấu hình được chọn (so với LLM + kiểm thử thất bại)"),
+    ("Vote over 3 answers (LLM + failing tests)", "Biểu quyết 3 câu trả lời (so với LLM + kiểm thử thất bại)"),
+    ("Addition (compared with)", "Phần bổ sung (so với)"),
+    ("CovGate (SemLoc)", "CovGate (so với SemLoc)"),
+    ("LLM + failing tests (ours)", "LLM + kiểm thử thất bại (nhóm đề xuất)"),
+    ("LLM + failing tests (1 prompt)", "LLM + kiểm thử thất bại (1 prompt)"),
+    ("+ per-line coverage", "+ độ phủ từng dòng"),
+    ("LLM direct (source only)", "LLM hỏi thẳng (chỉ có mã)"),
+    ("SemLoc (multi-stage)", "SemLoc (nhiều bước)"),
+    ("k tokens", "nghìn token"),
+    ("Original vs.\\ reviewed label", "Nhãn gốc so với nhãn rà soát"),
+    ("Kept, second line added (two-line fault)", "Giữ nguyên, thêm một dòng (lỗi trải hai dòng)"),
+    ("Log call, \\texttt{def} header or comment", "Lệnh log, dòng \\texttt{def} hoặc chú thích"),
+    ("Moved (blank, non-code, one or more lines away)", "Bị dời (dòng trống, không phải mã, lệch một dòng trở lên)"),
+    ("Two or more lines away", "Lệch từ hai dòng trở lên"),
+    ("One line away", "Lệch một dòng"),
+    ("Same line", "Cùng dòng"),
+    ("Blank line", "Dòng trống"),
+    ("Programs flagged", "Số chương trình bị cảnh báo"),
+    ("On a fault line", "Trúng dòng lỗi"),
+    ("Expected by chance", "Trúng do ngẫu nhiên (kỳ vọng)"),
+    ("Diagnostics", "Số cảnh báo"),
+    ("ruff (default rules)", "ruff (luật mặc định)"),
+    ("ruff (all rules)", "ruff (mọi luật)"),
+    ("pyrefly (type check)", "pyrefly (kiểm tra kiểu)"),
+    ("Reviewed ground truth", "Dòng lỗi chuẩn đã rà soát"),
+    ("Reviewed (", "Đã rà soát ("),
+    ("Repaired (", "Đã sửa ("),
+    ("Programs", "Số chương trình"),
+    ("Split", "Tập"),
+    ("Tool", "Công cụ"),
+    (" & test & ", " & test & "),
+    (" & dev & ", " & dev & "),
     ("All signals (+ raw Ochiai, + CF re-ranking)", "Mọi tín hiệu (+ Ochiai thô, + xếp lại bằng CF)"),
     ("Artifact's own metric (rank of the LLM guess)", "Chỉ số của gói mã công bố (hạng của dòng LLM đoán)"),
     ("SemLoc w/o CF (separate run), Claude", "SemLoc không CF (lượt chạy riêng), Claude"),
@@ -329,6 +445,7 @@ VI = [
     ("Semantic", "Ngữ nghĩa"),
     ("Original", "Bản gốc"),
     ("Renamed", "Đổi tên"),
+    ("Reviewed", "Đã rà soát"),
     ("Repaired", "Đã sửa"),
     ("Original (", "Gốc ("),
     ("Repeats", "Số lần lặp"),
@@ -364,6 +481,10 @@ def main() -> None:
     (OUT / "rq3_families.tex").write_text(rq3_families_table())
     (OUT / "rq3_bugsinpy.tex").write_text(rq3_bugsinpy_table())
     (OUT / "rq3_renamed.tex").write_text(rq3_renamed_table())
+    (OUT / "rq_main_results.tex").write_text(main_results_table())
+    (OUT / "rq_addons.tex").write_text(addons_table())
+    (OUT / "rq_static.tex").write_text(static_table())
+    (OUT / "rq_label_audit.tex").write_text(label_audit_table())
     pareto_figure(OUT / "pareto.pdf")
     (OUT / "vi").mkdir(exist_ok=True)
     for f in sorted(OUT.glob("*.tex")):
