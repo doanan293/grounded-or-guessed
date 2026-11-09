@@ -21,6 +21,7 @@ def main() -> None:
     ap.add_argument("--model", required=True)
     ap.add_argument("--run-id", required=True)
     ap.add_argument("--workers", type=int, default=3)
+    ap.add_argument("--no-coverage", action="store_true", help="ablation: drop the per-line [f/p] annotations")
     args = ap.parse_args()
     os.environ["FLX_RUN_ID"] = args.run_id
     targets = json.loads((ROOT / "data" / "bugsinpy_targets.json").read_text())
@@ -30,7 +31,8 @@ def main() -> None:
 
     def one(b):
         try:
-            return b, run_bip(targets[b], load(ROOT / "data" / "coverage" / "bugsinpy" / f"{b}.json"), args.model)
+            return b, run_bip(targets[b], load(ROOT / "data" / "coverage" / "bugsinpy" / f"{b}.json"), args.model,
+                             coverage=not args.no_coverage)
         except Exception as e:  # recorded as a failure; rerun the same run id to resume
             print(f"{b}: {type(e).__name__}: {e}", file=sys.stderr)
             return b, None

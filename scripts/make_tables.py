@@ -181,8 +181,8 @@ def rq3_families_table() -> str:
 
 
 BIP_NAMES = {"semloc_spectrum": "SemLoc semantic spectrum only", "semloc_prior": "SemLoc (spectrum + LLM-guess bonus)",
-             "llm_guess": "LLM guess alone", "covgate": "CovGate (ours)", "llm_coverage": "LLM + coverage (1 prompt, ours)",
-             "sbfl_ochiai": "SBFL Ochiai",
+             "llm_guess": "LLM guess alone", "covgate": "CovGate (ours)", "llm_tests": "LLM + failing tests (1 prompt)",
+             "llm_coverage": "LLM + coverage (1 prompt, ours)", "sbfl_ochiai": "SBFL Ochiai",
              "sbfl_dstar": "SBFL DStar", "artifact_metric": "Artifact's own metric (rank of the LLM guess)"}
 
 

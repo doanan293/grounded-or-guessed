@@ -2,8 +2,8 @@
 
 - Môn: IT5440 – Nguyên lý và kỹ thuật phân tích chương trình, kỳ 2026.1, ĐH Bách khoa Hà Nội
 - Đề tài: **2KH** — Chương 10 "Phát hiện lỗi và định vị lỗi", hướng nghiên cứu khoa học
-- Ngày viết: 08/11/2026 · cập nhật 08/11/2026 (sau mốc 1: proxy, model, mức suy luận, audit SemLoc, CovGate, lộ trình) · cập nhật 09/11/2026 (Phase 2–3 xong; bỏ DOI; viết trọn bài trước rồi cắt 2 nhánh báo cáo tiến độ)
-- Người thực hiện: chủ dự án (học viên) + Claude, làm trọn từ đầu đến cuối. Các thành viên khác trong nhóm 7 người không nhận phần việc nào (đã chốt 08/11).
+- Ngày viết: 08/11/2026 · cập nhật 08/11/2026 (sau mốc 1: proxy, model, mức suy luận, audit SemLoc, CovGate, lộ trình) · cập nhật 09/11/2026 (Phase 2–3 xong; bỏ DOI; viết trọn bài trước rồi cắt 2 nhánh báo cáo tiến độ) · cập nhật 09/11/2026 tối (Phase 5: ablation độ phủ, SemFault-250 đã rà soát, phương pháp "đề xuất rồi kiểm chứng", đổi tên bài)
+- Người thực hiện: chủ dự án (học viên) + Claude, làm trọn từ đầu đến cuối. Các thành viên khác trong nhóm 7 người không nhận phần việc nào (đã chốt 08/11), trừ việc duyệt nhãn ở Phase 5: 6 thành viên (trừ nhóm trưởng) duyệt 111 nhãn dòng lỗi.
 - Nhóm **M9**, thứ tự tác giả trên bìa, bài báo, slide (chủ dự án chốt 09/11): Doãn Văn An – 20252778M (nhóm trưởng), Tạ Công Nam – 20252640M, Nguyễn Hoàng Hải – 20252583M, Đỗ Xuân Tráng – 20252774M, Hoàng Trung Kiên – 20251333M, Mai Văn Tùng – 20252788M, Nguyễn Đức Tùng – 20252772M.
 - Tài liệu gốc của thầy: `docs/requirement/HuongDanTieuLuan 2026.pdf`; 3 bài báo: `docs/requirement/dt2-chap10/` (cũng có trong `Detai2.Chapter10/`)
 
@@ -43,7 +43,8 @@ Thêm một câu hỏi phụ dùng để phân loại, không tính là RQ: lỗ
 | **SemFault-250** (của SemLoc) | Benchmark chính cho RQ1, RQ2 | Chia **dev / test** cố định (50 / 200, chia ngẫu nhiên có seed, phân tầng theo nhãn ngữ nghĩa ở mục 3.3 — benchmark không kèm nhãn miền ứng dụng theo từng chương trình) — cải tiến chỉ được thiết kế và chỉnh tham số trên dev, kết quả báo cáo trên test. |
 | **SemFault-250 đổi tên** | RQ3(b) | Biến đổi giữ nguyên ngữ nghĩa: đổi tên hàm/biến/hằng sang tên vô nghĩa, xóa docstring/comment, có thể đảo thứ tự hàm phụ. Phải giữ nguyên số dòng hoặc ánh xạ lại dòng lỗi; phải kiểm tra test vẫn cho đúng kết quả pass/fail như bản gốc. |
 | **BugsInPy — tập con** | RQ3(a) | Dùng hạ tầng `bip_runner.py` của SemLoc; ưu tiên 68 lỗi họ đã chạy trọn. **Log RQ3 đã công bố không dùng lại được để chấm CovGate** (382/450 file chỉ chứa lỗi; 68 file còn lại chỉ có tóm tắt, không có constraints/violations, không có dữ liệu độ phủ) → bắt buộc dựng lại môi trường. Ngưỡng: **≥20 lỗi chạy trọn** cả SBFL, SemLoc và CovGate. **Trạng thái 08/11:** 31 lỗi youtube-dl dựng được (môi trường riêng theo requirements, test fail ở commit lỗi và pass ở commit sửa, đo được độ phủ) → ngưỡng **tạm đạt**, chờ SemLoc/CovGate chạy trọn; cả 31 lỗi cùng một project (nêu trong Threats). 35 lỗi của 6 project khác hỏng ở khâu môi trường. Chi tiết `docs/literature/bugsinpy-setup.md`. |
-| **SemFault-250-verified** (nhóm tạo) | RQ1, RQ2 (độ bền theo ground truth) | Ground truth được **kiểm chứng bằng thực thi**: một dòng là dòng lỗi nếu vá đúng một dòng ở đó (thay thế, hoặc chèn với lỗi thiếu mã) làm **mọi test pass**. LLM chỉ đề xuất bản vá cho các dòng ứng viên (±4 dòng quanh ground truth gốc, trong hàm đích); test phán xử. Mỗi chương trình có nhãn `confirmed` / `corrected` / `unverifiable`. Mọi bảng chính báo cáo thêm trên ground truth đã kiểm chứng. Phát hành kèm bài. |
+| **SemFault-250 đã sửa** (SemFault-250-repaired, nhóm tạo) | RQ1, RQ2 (độ bền theo ground truth) | Ground truth được **kiểm chứng bằng thực thi**: một dòng là dòng lỗi nếu vá đúng một dòng ở đó (thay thế, hoặc chèn với lỗi thiếu mã) làm **mọi test pass**. LLM chỉ đề xuất bản vá cho các dòng ứng viên (±4 dòng quanh ground truth gốc, trong hàm đích); test phán xử. Mỗi chương trình có nhãn `confirmed` / `corrected` / `unverifiable`. Mọi bảng chính báo cáo thêm trên ground truth đã kiểm chứng. Phát hành kèm bài. |
+| **SemFault-250 đã rà soát** (nhóm tạo, Phase 5) | RQ1–RQ3, bộ nhãn thứ ba | LLM (Fable, mức high) rà trước cả 250 nhãn; 6 thành viên duyệt 111 nhãn bị dời hoặc bị LLM nghi sai (người duyệt có xem gợi ý của LLM; đồng ý với gợi ý ở cả 111 ca); trưởng nhóm sửa 5 ca dựa trên kết quả chạy test. Cho phép nhãn hai dòng (lỗi trải hai dòng). `data/semfault_reviewed_gt.json`, `scripts/build_reviewed_gt.py`. Có nguy cơ vòng tròn (nhãn do LLM đề xuất, chấm phương pháp dùng LLM) nên là **góc nhìn độ nhạy**, kết quả chính vẫn báo trên bộ gốc và bộ đã sửa. |
 | QuixBugs (Python) | Tùy chọn | Chỉ thêm nếu còn thời gian; không bắt buộc. |
 
 ### 3.2 Phương pháp được so sánh
@@ -51,8 +52,10 @@ Thêm một câu hỏi phụ dùng để phân loại, không tính là RQ: lỗ
 1. SBFL-Ochiai, SBFL-DStar (Tarantula có sẵn trong log thì báo cáo luôn)
 2. LLM hỏi thẳng (`llm_direct_fl.py` — tương ứng SemLoc† trong bài)
 2b. **LLM + bằng chứng độ phủ** (baseline mạnh mà đơn giản, nhóm thêm): một prompt gồm hàm có đánh số dòng, test fail kèm thông báo lỗi, và số test fail/pass chạy qua từng dòng; LLM trả về 5 dòng nghi ngờ nhất. Trả lời câu hỏi "pipeline nhiều bước của SemLoc có cần không?"
+2c. **LLM + test fail** (ablation của 2b, Phase 5): cùng prompt nhưng bỏ chú thích độ phủ từng dòng. Kết quả: độ phủ không giúp (Acc@3 +2,1 [−0,2; +4,9], Acc@1 −5,4 [−9,4; −2,1]); thông tin test fail mới là tín hiệu chính (+27,2 Acc@3 so với LLM hỏi thẳng).
 3. SemLoc gốc (có / không kiểm chứng phản thực tế)
 4. **Cải tiến của nhóm** (mục 4), cùng các biến thể ablation
+5. **Đề xuất rồi kiểm chứng** (PAV, Phase 5, mục 4b)
 
 ### 3.3 Định nghĩa "lỗi ngữ nghĩa" (khách quan, tự động)
 
@@ -94,6 +97,10 @@ Phát hiện khi đọc mã và log công bố (08/11), mỗi điểm được k
 4. **Grounded guess (đoán có căn cứ):** chỉ giữ điểm cộng 1,2 cho dòng LLM tự đoán khi dòng đó **có bằng chứng thực thi** — được ít nhất một test fail chạy qua **và** gắn với ít nhất một ràng buộc bị vi phạm trong test fail; không có bằng chứng thì bỏ điểm cộng. Đây là thành phần nhắm thẳng vào Acc@1.
 
 Ablation: tắt từng thành phần; thêm biến thể **bỏ điểm cộng cho dòng LLM đoán** áp cho cả SemLoc gốc lẫn CovGate.
+
+### 4b. Đề xuất rồi kiểm chứng (PAV, Phase 5)
+
+Bằng chứng Phase 5 cho thấy gắn thêm tín hiệu vào SemLoc (CovGate) chỉ giúp ít, còn một prompt có test fail thắng SemLoc. PAV là cải tiến chính mới: (1) **đề xuất** — prompt LLM + test fail (2c) cho tối đa 5 dòng; (2) **kiểm chứng** — với k dòng đầu, LLM đề xuất bản sửa tối thiểu tại đúng dòng đó (bộ đề xuất của `flx.verify_gt`), chạy test; dòng có bản sửa đạt mọi test được đưa lên đầu. Tham số k ∈ {2, 3}, số lần thử ∈ {1, 2}, thứ tự (theo LLM / theo kích thước bản sửa), giới hạn kích thước bản sửa ∈ {1, 2, 3, không giới hạn} — **chọn trên dev** bằng Acc@1 trung bình trên bộ gốc và bộ đã rà soát (không dùng bộ đã sửa vì bộ đó dựng bằng chính cơ chế sửa thử), rồi chạy một lần trên test và BugsInPy. Mã: `src/flx/pav.py`, `scripts/run_pav.py`, `scripts/pav_eval.py`. Nếu PAV không thắng LLM + test fail, báo cáo như kết quả âm tính ("khi LLM đã đọc test fail, chạy test xác nhận không thêm được gì").
 
 **Phân rã độ chính xác ("grounded hay guessed", câu trả lời định lượng cho tên bài):** đo Acc@1/Acc@3 cho mọi tổ hợp bật/tắt của {điểm cộng dự đoán LLM, phổ vi phạm ràng buộc, CF xếp hạng lại, độ phủ} trên 3 lần lặp × 200 chương trình test; quy ra phần đóng góp của từng thành phần (giá trị Shapley trên các tổ hợp) kèm khoảng tin cậy bootstrap. Chạy offline trên đầu ra đã có, không thêm lượt gọi LLM.
 
@@ -165,6 +172,14 @@ Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội
 
 **Báo cáo lần 2 (25–26/11)** mang lên: RQ3 đầy đủ, phân tích thất bại, danh sách đóng góp và triết lý khoa học, bản nháp bài báo.
 
+### Phase 5 — Ablation, nhãn rà soát, PAV, viết lại (09/11 → trước 18/11; plan `docs/superpowers/plans/2026-11-09-phase5-pav-viet-lai.md`)
+- 5.1 Ablation độ phủ (xong): LLM + test fail không độ phủ, 3 lần × 200 test; trên BugsInPy 3 lần × 31 lỗi
+- 5.2 SemFault-250 đã rà soát (xong): Fable rà 250 nhãn, nhóm duyệt 111, 5 ca sửa có bằng chứng chạy test
+- 5.3 PAV: chọn tham số trên dev → chạy test (3 lần) và BugsInPy (3 lần)
+- 5.4 Câu chuyện mới: SemLoc "guessed" ở hạng 1; benchmark có gần một nửa nhãn lệch dòng; một prompt có test fail (điều lập trình viên vẫn làm, nhất là với TDD) thắng pipeline, độ phủ không giúp; PAV là phiên bản "grounded" thật sự (hoặc kết quả âm tính); benchmark bão hòa khi nhãn đúng → cần lỗi thật
+- 5.5 Viết lại báo cáo VI, bài báo EN, slide; review cuối; cắt lại 2 nhánh; push
+- Hướng phát triển (không làm): ablation giấu tên test; định vị cấp dự án (thu hẹp từ dự án xuống hàm)
+
 ### Phase 4 — Viết trọn bài, rồi cắt 2 nhánh báo cáo (bắt đầu 09/11, trước 18/11)
 - 4.0 Dàn ý chi tiết báo cáo VI + bài báo EN — chủ dự án duyệt trước khi viết
 - 4.1 Báo cáo đầy đủ tiếng Việt trên `main`, có công tắc phiên bản `lan1` / `lan2` / `full`
@@ -176,7 +191,7 @@ Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội
 
 ## 8. Tiêu chí "đạt điểm A"
 
-1. Đóng góp nói được trong một câu: *tái hiện độc lập SemLoc, chỉ ra kết quả phụ thuộc vào cách đánh giá và benchmark, sửa benchmark bằng bằng chứng thực thi (SemFault-250-verified), đề xuất CovGate, đối chiếu với một baseline đơn giản (LLM + độ phủ), và đánh giá độ bền trên lỗi thật, code đã đổi tên và nhiều họ LLM.*
+1. Đóng góp nói được trong một câu: *tái hiện độc lập SemLoc, chỉ ra hạng 1 của nó là dòng LLM đoán và kết quả phụ thuộc vào cách đánh giá và benchmark (gần một nửa nhãn lệch dòng), sửa và rà soát benchmark (SemFault-250 đã sửa / đã rà soát), cho thấy một prompt có test fail thắng pipeline còn độ phủ không giúp (ablation), đề xuất PAV — LLM đề xuất, test quyết định — và đánh giá độ bền trên lỗi thật, code đã đổi tên và nhiều họ LLM.*
 2. Đánh giá trên SemFault-250 (chia dev/test) **và SemFault-250-verified** + ít nhất một nguồn lỗi thật (BugsInPy) + biến thể đổi tên; kết quả tách theo nhãn ngữ nghĩa / lộ qua độ phủ; có phân tích cấu trúc benchmark (mục 3.7).
 3. Đủ các phương pháp so sánh ở mục 3.2, kể cả baseline LLM + độ phủ (2b).
 4. Lặp ≥3 lần, có kiểm định thống kê và effect size.
