@@ -20,8 +20,8 @@ STRIP = [
     (re.compile(r"(?i)(?:apache|gpl|lgpl|cc-by)-\d+(?:\.\d+)*"), " "),                    # licence names
     (re.compile(r"\d+(?:[.,]\d+)?\s*(?:pt|cm|mm|em|ex|in|bp|sp|\\linewidth|\\textwidth|\\columnwidth)"), " "),
     (re.compile(r"(?i)(?:phiên bản|version|python|v)\s*\d+(?:\.\d+)+"), " "),
-    (re.compile(r"(?i)(?:kỳ|semester)\s*\d{4}[.,]\d"), " "),
-    (re.compile(r"(?i)(?:sonnet|opus|haiku|gemini|gpt|claude)[- ]?\d+(?:\.\d+)+"), " "),        # model names                    # semester label, e.g. học kỳ 2026.1
+    (re.compile(r"(?i)(?:kỳ|semester)\s*\d{4}[.,]\d"), " "),                    # semester label, e.g. học kỳ 2026.1
+    (re.compile(r"(?i)(?:sonnet|opus|haiku|gemini|gpt|claude)[- ~]?\d+(?:\.\d+)+"), " "),  # model names
 ]
 NUMBER = re.compile(r"(?<![\w.\\])(?:\d+(?:[.,]\d+)?\s*\\%|\d+[.,]\d+(?![\w.]))")  # a percentage, or a decimal
 

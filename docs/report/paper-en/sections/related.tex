@@ -1,2 +1,25 @@
-\section{Related Work}\label{sec:related}
-Spectrum-, mutation- and LLM-based fault localization~\cite{wong2016survey,papadakis2015,kang2024autofl,qin2025agentfl,xu2025flexfl}. \TODO{write}
+\section{Related Work and Research Direction}
+\label{sec:related}
+
+\textbf{Spectrum- and mutation-based localization.} Tarantula~\cite{jones2002}, Ochiai~\cite{abreu2009} and
+DStar~\cite{wong2014dstar} score statements from coverage; surveys~\cite{wong2016survey,desouza2016} note two evaluation
+pitfalls we revisit: tie handling and omission faults, which have no faulty line to blame. Mutation-based
+localization~\cite{papadakis2015,moon2014} replaces coverage with mutant behavior; delta
+debugging~\cite{zeller2002tse} and cause-effect chains~\cite{zeller2002chains} underlie counterfactual reasoning; and
+Daikon~\cite{ernst2007daikon} infers likely invariants from traces, whereas SemLoc asks an LLM for them.
+
+\textbf{LLM-based localization.} AutoFL~\cite{kang2024autofl} lets an LLM navigate code with tool calls at method level;
+AgentFL~\cite{qin2025agentfl} scales this to projects with agents; FlexFL~\cite{xu2025flexfl} feeds SBFL output to
+open-source LLMs, the closest idea to our coverage baseline but at method level on Java. An industrial study of crash
+reports~\cite{medeiros2026crash} finds that mined rankings in the prompt help LLMs localize, and EffiHolmes~\cite{yang2026effiholmes}
+contrasts two executions (normal vs.\ scaled workload) before LLM reasoning for performance faults. SemLoc~\cite{yang2026semloc}
+is the first to rank lines by violations of LLM-inferred executable constraints. None of these works measures how much
+of the accuracy comes from execution evidence rather than from the model's own guess.
+
+\textbf{Benchmarks and validity.} Defects4J~\cite{just2014}, BugsInPy~\cite{widyasari2020} and QuixBugs~\cite{lin2017quixbugs}
+provide faults with triggering tests. Pearson et al.~\cite{pearson2017} show that results on artificial faults do not
+transfer to real ones and that tie and omission handling can reorder techniques. For LLMs, threats include closed-model
+drift and benchmark contamination~\cite{sallou2024,ramos2024memorize,xu2024contam}, mitigated by rewriting or renaming.
+
+\textbf{Direction.} We combine these threads: we audit scoring as Pearson et al.\ recommend, verify the benchmark by
+execution, test memorization by renaming, and add the missing measurement---the share of accuracy that is grounded.

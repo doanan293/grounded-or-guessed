@@ -26,7 +26,8 @@ def test_lint_flags_hand_typed_numbers():
 
 
 def _pdf_text(pdf: Path) -> str:
-    return subprocess.run(["pdftotext", str(pdf), "-"], capture_output=True, text=True).stdout
+    """PDF text with whitespace collapsed, so phrases broken across lines still match."""
+    return " ".join(subprocess.run(["pdftotext", str(pdf), "-"], capture_output=True, text=True).stdout.split())
 
 
 @pytest.mark.slow
@@ -39,5 +40,17 @@ def test_versions_contain_expected_chapters():
     assert "Kết quả thực nghiệm" in t["lan1"] and "Phân tích thất bại" not in t["lan1"]
     assert "Phân tích thất bại" in t["lan2"] and "Phụ lục" not in t["lan2"]
     assert "Phụ lục" in t["full"]
+    # progress-report markers only below full, and the right one per version
+    assert "Báo cáo tiến độ lần 1" in t["lan1"] and "Báo cáo tiến độ lần 2" in t["lan2"]
+    assert "Báo cáo tiến độ" not in t["full"] and "Kế hoạch đến bài nộp cuối" not in t["full"]
+    assert "báo cáo lần 2" in t["lan1"] and "báo cáo lần 2" not in t["lan2"]
     for v, text in t.items():
         assert "??" not in text, v
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(shutil.which("latexmk") is None, reason="needs TeX Live")
+def test_paper_draft_marker_only_below_full():
+    r = subprocess.run(["make", "-C", str(ROOT / "docs" / "report"), "paper"], capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-2000:]
+    assert "Draft for progress report" not in _pdf_text(ROOT / "docs" / "report" / "paper-en" / "main.pdf")

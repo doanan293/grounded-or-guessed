@@ -1,6 +1,12 @@
 % English paper (arXiv) — build: make -C docs/report paper
 \documentclass[conference]{IEEEtran}
-\usepackage{graphicx,booktabs,amsmath,amssymb,xcolor}
+\usepackage[T1,T5]{fontenc}   % T5: Vietnamese diacritics in author names (vntex)
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx,booktabs,amsmath,amssymb,xcolor,tabularx,multirow,listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[htt]{hyphenat}
+\lstset{basicstyle=\ttfamily\footnotesize,columns=fullflexible,keepspaces=true,frame=single,breaklines=true}
 \usepackage[hidelinks]{hyperref}
 \newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
 % Phiên bản: lan1 (báo cáo lần 1) < lan2 (báo cáo lần 2) < full (bài nộp). Đặt bằng `make vi-lan1` …;
@@ -11,23 +17,29 @@
 \expandafter\def\csname VersionRank@full\endcsname{3}
 \expandafter\ifx\csname VersionRank@\Version\endcsname\relax
   \errmessage{Unknown \string\Version: \Version\space (use lan1, lan2 or full)}\fi
-\newcommand{\IfAtLeast}[2]{\ifnum\csname VersionRank@\Version\endcsname<\csname VersionRank@#1\endcsname\relax\else#2\fi}
+\newcommand{\IfAtLeastElse}[3]{\ifnum\csname VersionRank@\Version\endcsname<\csname VersionRank@#1\endcsname\relax#3\else#2\fi}
+\newcommand{\IfAtLeast}[2]{\IfAtLeastElse{#1}{#2}{}}   % only when version >= #1
+\newcommand{\IfBelow}[2]{\IfAtLeastElse{#1}{}{#2}}     % only when version <  #1
 \input{../generated/numbers}
 
 \begin{document}
-\title{\TODO{Reproducing and Extending SemLoc: Semantic Fault Localization with LLM-Inferred Constraints}}
-\author{\IEEEauthorblockN{\TODO{authors}}\IEEEauthorblockA{Hanoi University of Science and Technology, Vietnam}}
+\title{Grounded or Guessed: An Execution-Verified\\ Reproducibility Study of LLM-Based\\ Semantic Fault Localization}
+\author{\IEEEauthorblockN{Doãn Văn An, Tạ Công Nam, Nguyễn Hoàng Hải, Đỗ Xuân Tráng,\\
+Hoàng Trung Kiên, Mai Văn Tùng, Nguyễn Đức Tùng}
+\IEEEauthorblockA{School of Information and Communication Technology\\ Hanoi University of Science and Technology,
+Hanoi, Vietnam}}
 \maketitle
-\IfAtLeast{full}{}{\begin{center}\textbf{Draft for progress report (version \Version)}\end{center}}
+\IfBelow{full}{\begin{center}\textbf{Draft for progress report (version \Version)}\end{center}}
 
 \input{sections/abstract}
 
 \input{sections/introduction}
+\input{sections/related}
 \input{sections/background}
 \input{sections/approach}
 \input{sections/evaluation}
+\input{sections/discussion}
 \input{sections/threats}
-\input{sections/related}
 \input{sections/conclusion}
 
 \bibliographystyle{IEEEtran}

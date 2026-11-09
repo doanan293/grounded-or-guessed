@@ -1,0 +1,35 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\textbf{Reading ``guessed'' correctly.} Top-1 accuracy is mostly the guess, but the failure analysis shows the guess is
+often semantically right and one line off the label. The lesson is therefore not that the bonus should go---removing it
+costs \RqTwoRepairedAllSemlocNoPriorDAccOne{} points of Acc@1---but that line-level labels need to accept equivalent fix
+locations before small differences between methods mean much.
+
+\textbf{Where execution evidence helps.} Evidence earns its keep in narrowing the search: the spectrum moves the fault
+into the top three for \FailRescuedBySpectrumN{} wrongly guessed programs, and coverage given directly to the model does so
+for \FailCoverageOnlyWinsN{} programs SemLoc misses. It does not tell a right guess from a wrong one: neither a grounded
+bonus nor counterfactual re-ranking improves Acc@1. Tool designers should therefore use execution to \emph{shrink} the
+candidate set and show it to the model, rather than letting the model guess and then adjusting scores.
+
+\textbf{An evaluation checklist.} Table~\ref{tab:checklist} collects the checks that changed numbers in this study; each
+one moved at least one published result.
+
+\begin{table}[t]
+\centering
+\caption{Checklist for evaluating LLM-based fault localization}
+\label{tab:checklist}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+Check & What it changed here \\
+\midrule
+Average-rank ties, fixed denominator & DD \RqOneDdAuthorAllAccOne\% $\to$ \RqOneDdFairAllAccOne\%; SBFL Acc@5 \RqOneSbflOchiaiAuthorAllAccFive\% $\to$ \RqOneSbflOchiaiFairAllAccFive\% \\
+Execution-verified fault locations & SemLoc Acc@1 \RqTwoOriginalAllSemlocAccOneMean\% $\to$ \RqTwoRepairedAllSemlocAccOneMean\% \\
+Ablate every component, incl.\ undocumented & guess bonus worth \RqTwoRepairedAllSemlocNoPriorDAccOne{} points Acc@1 \\
+Repeats and paired CIs & LLM + coverage Acc@1 gain significant only when pooled over repeats \\
+Report cost & counterfactual step: \CostCfSharePct\% of calls, no ranking change \\
+Single-prompt baseline with same evidence & beats the pipeline by \RqTwoRepairedAllLlmCoverageDAccThree{} Acc@3 \\
+\bottomrule
+\end{tabularx}
+\end{table}

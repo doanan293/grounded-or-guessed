@@ -1,2 +1,55 @@
-\section{Introduction}\label{sec:introduction}
-Semantic faults defeat coverage-based localization; SemLoc~\cite{yang2026semloc} grounds LLM reasoning in executable constraints; we reproduce it, add coverage back (CovGate), and test robustness. \TODO{write}
+\section{Introduction}
+\label{sec:intro}
+
+Fault localization tells a developer where a failing program is wrong. Spectrum-based fault localization
+(SBFL)~\cite{jones2002,abreu2009,wong2016survey} ranks statements by how often failing and passing tests execute them;
+it is cheap and needs no model of the program. It breaks down on \emph{semantic} faults, where the program takes the
+right path but computes a wrong value: failing and passing tests then execute the same statements and the spectrum
+collapses. On the SemFault-250 benchmark, Ochiai places the fault first in only \RqOneSbflOchiaiFairAllAccOne\% of
+programs under fair scoring.
+
+Large language models (LLMs) attack the problem from the other side: they read the code and guess the faulty line.
+Systems such as AutoFL~\cite{kang2024autofl}, AgentFL~\cite{qin2025agentfl} and FlexFL~\cite{xu2025flexfl} report strong
+results, but an LLM's answer is stochastic, hard to verify, and possibly memorized from the benchmark~\cite{sallou2024,ramos2024memorize}.
+SemLoc~\cite{yang2026semloc} proposes a middle path. It asks the LLM for \emph{executable} semantic constraints,
+instruments the program with them, runs the tests, and ranks lines by a constraint-violation spectrum; a counterfactual
+step then patches suspicious lines and re-runs the tests. The promise is that execution, not the model, has the final
+word. SemLoc reports \RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% Acc@1 on SemFault-250, far above SBFL.
+
+\textbf{This paper asks whether that accuracy is grounded or guessed.} If execution evidence is what makes SemLoc work,
+removing it should hurt and adding more of it should help; if the model's own guess does the work, the pipeline adds
+cost without adding evidence. Answering requires more than re-running the tool: one must check how results are scored,
+whether the benchmark's fault locations are right, how much each signal contributes, and whether conclusions survive
+real bugs, renamed code and other models. We study three research questions:
+\textbf{RQ1} (reproduction and evaluation audit), \textbf{RQ2} (improvement and a simple baseline), and \textbf{RQ3}
+(robustness on BugsInPy~\cite{widyasari2020}, identifier-renamed programs and five model families).
+
+Our study rests on execution as the arbiter throughout. We re-derive SemFault-250's fault locations with a minimal-fix
+oracle in which the LLM only proposes one-line patches and the tests decide; we decompose SemLoc's accuracy with Shapley
+values over its two signals, the constraint spectrum and a bonus the released code adds to the LLM's own fault-line
+guess; and we compare SemLoc with \emph{LLM + coverage}, a single prompt that shows the model how many failing and
+passing tests execute each line. Every LLM configuration runs three times; differences come with program- and
+template-cluster bootstrap confidence intervals.
+
+The results answer the title. Top-1 accuracy is mostly guessed and top-3 accuracy mostly grounded: the guess contributes
+\DecSemlocRepairedAllAccOnePhiGuess{} of SemLoc's \DecSemlocRepairedAllAccOneFull{} Acc@1 points, the spectrum
+\DecSemlocRepairedAllAccOnePhiSpectrum{}; at Acc@3 the spectrum contributes \DecSemlocRepairedAllAccThreePhiSpectrum{} and
+the guess \DecSemlocRepairedAllAccThreePhiGuess{}. Execution evidence works best when handed to the model directly: LLM +
+coverage reaches \RqTwoRepairedAllLlmCoverageAccThreeMean\% Acc@3 against SemLoc's \RqTwoRepairedAllSemlocAccThreeMean\%.
+
+\noindent\textbf{Contributions.}
+\begin{itemize}
+\item A \emph{grounded-vs-guessed decomposition} of LLM-based fault localization, showing that SemLoc's top-1 accuracy
+comes mostly from the LLM's own guess; on real bugs, SemLoc's Acc@1 (\BipAllSemlocPriorAccOneMean\%) equals that of the
+guess alone (\BipAllLlmGuessAccOneMean\%).
+\item Evidence that \emph{one prompt with coverage beats the pipeline}: \RqTwoRepairedAllLlmCoverageDAccThree{} points
+Acc@3 [\RqTwoRepairedAllLlmCoverageDAccThreeLo, \RqTwoRepairedAllLlmCoverageDAccThreeHi] and higher Acc@1, at
+\CostLlmCoverageTokensK k instead of \CostSemlocTokensK k tokens per program, and robust to renaming.
+\item An \emph{evaluation audit}: an undocumented guess bonus, a counterfactual step that never changes a ranking, scoring
+that credits delta debugging with \RqOneDdAuthorAllAccOne\% instead of \RqOneDdFairAllAccOne\%, and two bugs in the
+released BugsInPy runner.
+\item \emph{SemFault-250-verified}, fault locations re-derived by execution, and a finding that line-level Acc@1 shifts by
+more than twenty points under the guard/guarded-statement ambiguity.
+\item CovGate, a small but significant coverage add-on to SemLoc, an evaluation checklist, and a fully replayable artifact.
+\end{itemize}
+Code, data and LLM logs: \url{https://github.com/doanan293/grounded-or-guessed}.
