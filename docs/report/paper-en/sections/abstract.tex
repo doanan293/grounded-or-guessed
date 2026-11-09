@@ -7,10 +7,11 @@ evaluation, check the benchmark's labels by execution and by review, rerun every
 and ablate each signal. Four findings stand out. First, SemLoc's top-1 answer is guessed by design: an undocumented bonus
 always ranks the LLM's own guess first, and the counterfactual step never changes a ranking. Second,
 \LabaudAllMoved{} of the benchmark's \LabaudAllN{} fault labels move under review (\LabaudAllBlank{} sit on blank lines),
-and the mislabels happen to favor SemLoc. Third, a single prompt with the failing tests beats the pipeline at Acc@1 on all
+and on the reviewed labels SemLoc's Acc@3 lead over direct prompting vanishes. Third, a single prompt with the failing tests beats the pipeline at Acc@1 on all
 three label sets (\RqTwoRepairedAllLlmTestsDAccOne{} points on execution-repaired labels) at about a seventh of the
 tokens; ablation shows the failing tests, not per-line coverage, carry the signal. Fourth, nothing more elaborate
-helps---adding coverage to SemLoc, verifying candidate lines with test-passing patches, voting, or static analysis with
-ruff and pyrefly---because a small patch passes all tests at \PavmechReviewedOtherLineFixable\% of non-faulty lines:
-the tests suggest where the bug is but cannot prove it. Code, data, LLM logs and a replayable cache are public.
+closes the gap---adding coverage to SemLoc helps it only slightly, and verifying candidate lines with test-passing
+patches, voting, or static analysis with ruff and pyrefly do not help at all---because small patches pass all tests in
+\PavmechReviewedOtherLineFixable\% of fix attempts at non-faulty candidate lines (dev split): the tests suggest where the
+bug is but cannot prove it. Code, data, LLM logs and a replayable cache are public.
 \end{abstract}

@@ -65,12 +65,15 @@ nhưng không kiểm chứng được giả thuyết này khi không có mã sin
 \input{../generated/vi/rq_label_audit}
 \end{table}
 
-Nhãn lệch làm mọi con số tuyệt đối thấp đi và, quan trọng hơn, \emph{có lợi cho SemLoc}. Trên nhãn gốc, SemLoc hơn LLM
+Nhãn lệch làm mọi con số tuyệt đối thấp đi và có thể đã có lợi cho SemLoc. Trên nhãn gốc, SemLoc hơn LLM
 hỏi thẳng \RqTwoOriginalAllSemlocAccThreeMean\% so với \RqTwoOriginalAllLlmDirectAccThreeMean\% ở Acc@3; trên nhãn đã rà soát,
 hai phương pháp ngang nhau (\RqTwoReviewedAllSemlocAccThreeMean\% so với \RqTwoReviewedAllLlmDirectAccThreeMean\%;
 $\Delta$ của LLM hỏi thẳng \RqTwoReviewedAllLlmDirectDAccThree{} [\RqTwoReviewedAllLlmDirectDAccThreeLo;
 \RqTwoReviewedAllLlmDirectDAccThreeHi]) và LLM hỏi thẳng còn hơn ở Acc@1 (\RqTwoReviewedAllLlmDirectDAccOne{}
-[\RqTwoReviewedAllLlmDirectDAccOneLo; \RqTwoReviewedAllLlmDirectDAccOneHi]). Giải thích hợp lý: LLM hỏi thẳng thường chỉ
+[\RqTwoReviewedAllLlmDirectDAccOneLo; \RqTwoReviewedAllLlmDirectDAccOneHi]). Trên bộ đã sửa --- nơi LLM không phán đoán vị
+trí lỗi --- SemLoc vẫn hơn (LLM hỏi thẳng $\Delta$Acc@3 \RqTwoRepairedAllLlmDirectDAccThree{}
+[\RqTwoRepairedAllLlmDirectDAccThreeLo; \RqTwoRepairedAllLlmDirectDAccThreeHi]), nên việc phần hơn biến mất chỉ dựa trên
+bộ nhãn do LLM gợi ý và cần đọc kèm nguy cơ vòng tròn. Giải thích hợp lý: LLM hỏi thẳng thường chỉ
 nêu một hai dòng (Acc@3 gần bằng Acc@5), còn SemLoc xếp hạng nhiều dòng liền nhau, nên khi nhãn lệch một dòng SemLoc vẫn
 ``trúng'' nhờ dòng hàng xóm.
 
@@ -99,7 +102,7 @@ trình, so với \CostSemlocTokensK{} nghìn của SemLoc. SBFL thấp nhất tr
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq_main_results}}
 \end{table}
 
-Trên bộ đã rà soát, LLM + kiểm thử thất bại đạt Acc@3 \RqTwoReviewedAllLlmTestsAccThreeMean\%: khi nhãn đúng, SemFault-250
+Trên bộ đã rà soát, LLM + kiểm thử thất bại đạt Acc@3 \RqTwoReviewedAllLlmTestsAccThreeMean\%: với nhãn đã rà soát (do LLM gợi ý), SemFault-250
 gần như \emph{bão hòa} với một prompt đơn giản.\IfAtLeast{lan2}{ Chương~\ref{chap:that-bai} bàn vì sao.}
 
 \subsection{Thông tin nào tạo ra khác biệt}
@@ -140,8 +143,10 @@ dòng lỗi thật (lỗi hai dòng, lỗi thiếu mã, lỗi cần sửa lớn 
 kiểm tại dòng \emph{không} có lỗi --- ví dụ đổi một hằng số ở đầu tệp để bù cho phép tính sai ở dưới. Hai tỉ lệ không
 cách nhau đủ xa để làm tiêu chí xếp hạng. Vì kết quả trên dev đã rõ, phương pháp này không được chạy trên tập test.
 
-\textbf{Biểu quyết} ba câu trả lời của LLM + kiểm thử thất bại cho Acc@1 \VoteReviewedVoteAccOne\% so với trung bình
-\VoteReviewedSingleAccOne\% của một câu trả lời (bộ đã rà soát, tập dev) --- không khác biệt đáng kể.
+\textbf{Biểu quyết} ba câu trả lời của LLM + kiểm thử thất bại (tập dev) cho Acc@1 \VoteReviewedVoteAccOne\% so với
+trung bình \VoteReviewedSingleAccOne\% của một câu trả lời trên bộ đã rà soát, nhưng làm Acc@3 đi xuống trên bộ đã sửa
+(\VoteRepairedVoteAccThree\% so với \VoteRepairedSingleAccThree\%) và bộ gốc (\VoteOriginalVoteAccThree\% so với
+\VoteOriginalSingleAccThree\%); không có kiểm định thống kê cho phép so sánh này.
 
 \subsection{Phân tích tĩnh}
 
@@ -257,8 +262,7 @@ Flash, tập con gần như không đổi (\FamRepairedGeminiThreeEightFlashSeml
 
 Bảng~\ref{tab:ket-qua-chinh} đã trả lời phần (d): trên cả ba bộ nhãn, LLM + kiểm thử thất bại thắng SemLoc ở Acc@1, độ
 phủ không thêm được gì (Bảng~\ref{tab:bo-sung}), và bỏ điểm thưởng làm Acc@1 của SemLoc đi xuống. Thứ duy nhất đổi chiều
-theo bộ nhãn là so sánh giữa SemLoc và LLM hỏi thẳng ở Acc@3 --- và chính chiều thay đổi đó cho thấy nhãn lệch có lợi cho
-SemLoc.
+theo bộ nhãn là so sánh giữa SemLoc và LLM hỏi thẳng ở Acc@3, và chỉ trên bộ đã rà soát (do LLM gợi ý).
 
 \section{Tóm tắt trả lời các câu hỏi nghiên cứu}
 \label{sec:tom-tat-rq}
@@ -274,10 +278,10 @@ Câu hỏi & Trả lời \\
 \midrule
 RQ1 & Tính lại từ nhật ký khớp toàn bộ, chạy lại thì không; điểm thưởng ẩn quyết định dòng đầu; bước kiểm chứng phản
 thực tế không đổi thứ hạng; mã chấm điểm lạc quan với gỡ lỗi chia đôi và bi quan với SBFL; gần một nửa nhãn bị dời khi
-rà soát, và nhãn lệch có lợi cho SemLoc so với LLM hỏi thẳng. \\
+rà soát, và trên bộ đó phần hơn của SemLoc so với LLM hỏi thẳng ở Acc@3 biến mất. \\
 RQ2 & Một prompt có kiểm thử thất bại thắng quy trình nhiều bước ở Acc@1 trên cả ba bộ nhãn, rẻ hơn khoảng bảy lần; kiểm
-thử thất bại là tín hiệu chính, độ phủ từng dòng không giúp; CovGate, đề xuất rồi kiểm chứng, biểu quyết và phân tích tĩnh
-không cải thiện được. Hạng 1 của SemLoc là ``guessed'' theo thiết kế. \\
+thử thất bại là tín hiệu chính, độ phủ từng dòng không giúp; CovGate chỉ giúp SemLoc một chút; đề xuất rồi kiểm chứng,
+biểu quyết (tập dev) và phân tích tĩnh không cải thiện được. Hạng 1 của SemLoc là ``guessed'' theo thiết kế. \\
 RQ3 & Trên 31 lỗi thật, kết quả cùng chiều nhưng chưa đủ mẫu; đổi tên làm yếu phổ ràng buộc nhưng không ảnh hưởng đáng
 kể đến dòng đoán hay phương pháp một prompt; mô hình yếu dựa vào dòng đoán nhiều hơn (tập con, chưa có khoảng tin cậy);
 kết luận giữ trên cả ba bộ nhãn. \\

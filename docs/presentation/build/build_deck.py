@@ -145,7 +145,7 @@ def results_pages() -> None:
     ], highlight_col=None, head_h=48, row_h=38, fs=16,
         note=f"Gemini 3.8 Flash, tập test, 3 lần chạy. 1 prompt + test fail vs SemLoc, Acc@1 (đã sửa): "
              f"{_m('RqTwoRepairedAllLlmTestsDAccOne')} [{_m('RqTwoRepairedAllLlmTestsDAccOneLo')}; {_m('RqTwoRepairedAllLlmTestsDAccOneHi')}].\n"
-             f"Thêm độ phủ: Acc@1 {_m('AblRepairedAllCoverageEffectDAccOne')} điểm. Kiểm chứng bằng bản sửa, biểu quyết, ruff, pyrefly: không giúp."))
+             f"Thêm độ phủ: Acc@1 {_m('AblRepairedAllCoverageEffectDAccOne')} điểm. Kiểm chứng bằng bản sửa, biểu quyết (dev), ruff, pyrefly: không giúp."))
     bip = {(r["subset"], r["method"]): r for r in _csv("rq3_bugsinpy.csv")}
     ren = {r["method"]: r for r in _csv("rq3_renamed.csv") if r["gt"] == "repaired"}
     fam = [r for r in _csv("rq3_families.csv") if r["gt"] == "repaired"]
@@ -285,7 +285,7 @@ def build() -> None:
         ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: kết quả SemLoc còn đúng", "với log công bố và với Gemini?"]),
         ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM thật sự cần gì? 1 prompt có", "test fail so với SemLoc?"]),
         ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, code đổi tên,", "các họ model khác?"]),
-        ("Saturn", "Lõi"), ("Saturn is a gas giant", ["Cách lập trình viên vẫn làm", "có đủ tốt không?"]),
+        ("Saturn", "Lõi"), ("Saturn is a gas giant", ["Cách làm đơn giản (test fail", "→ LLM) có đủ tốt không?"]),
     ])
     E("slide_19.svg", [
         ("Main topic and details", "Đề xuất: 1 prompt có test fail"),
@@ -307,7 +307,7 @@ def build() -> None:
     E("slide_21.svg", [
         ("Sequences", "Tiến độ"),
         ("First", "08/11"), ("Saturn is composed", "Tài liệu, hạ tầng"),
-        (("Next", 0), "09/11"), ("Mercury is the closest", ["RQ1–RQ3 xong,", "review độc lập"]),
+        (("Next", 0), "09/11"), ("Mercury is the closest", ["RQ1–RQ3 xong,", "rà soát kết quả"]),
         (("Next", 0), "18/11"), ("Jupiter was named", ["Báo cáo lần 1:", "nội dung 1–2"]),
         (("Next", 0), "22/11"), ("Despite being red", ["Phân tích lỗi,", "đóng góp"]),
         (("Next", 0), "25/11"), ("Earth is the third", ["Báo cáo lần 2:", "nội dung 1–3"]),
@@ -373,8 +373,8 @@ def analysis_pages() -> None:
         ("Mars", "C1 Đoán"), ("Despite being red, Mars", ["Hạng 1 = dòng đoán;", "CF không đổi hạng"]),
         ("Venus", "C2 Nhãn"), ("Venus is the second", [f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')} nhãn bị dời;", "2 bộ nhãn mới"]),
         ("Neptune", "C3 1 prompt"), ("Neptune is the farthest", [f"Acc@1 {_m('RqTwoRepairedAllLlmTestsDAccOne')} điểm,", "rẻ hơn ~7 lần"]),
-        ("Mercury", "C4 Âm tính"), ("Mercury is the closest", ["Độ phủ, kiểm chứng,", "ruff: không giúp"]),
-        ("Saturn", "Cơ chế"), ("Saturn is a gas giant", [f"Sửa lách ở {_m('PavmechReviewedOtherLineFixable')}%", "dòng không lỗi"]),
+        ("Mercury", "C4 Âm tính"), ("Mercury is the closest", ["Độ phủ, kiểm chứng", "(dev), ruff: không giúp"]),
+        ("Saturn", "Cơ chế"), ("Saturn is a gas giant", [f"Sửa lách: {_m('PavmechReviewedOtherLineFixable')}% lần thử", "ở dòng ứng viên sai"]),
         ("Jupiter", "C5 Tái hiện"), ("Jupiter is the biggest", ["Bảng kiểm 7 mục,", "Docker, số = macro"]),
     ])
     E("triet_ly.svg", [
@@ -398,7 +398,7 @@ def analysis_pages() -> None:
             "dời; nhãn lệch có lợi", "cho SemLoc."],
         "Mercury takes a little more than 58 days": [
             "**Đề xuất**", "Đưa test fail cho LLM:", f"Acc@1 {_p(rq2['llm_tests']['acc1_mean'])} so với {_p(rq2['semloc']['acc1_mean'])},",
-            "rẻ hơn ~7 lần. Độ phủ,", "kiểm chứng, ruff: không", "giúp. Bảng kiểm 7 mục."],
+            "rẻ hơn ~7 lần. Độ phủ,", "kiểm chứng (dev), ruff:", "không giúp. Bảng kiểm 7 mục."],
     })
 
 

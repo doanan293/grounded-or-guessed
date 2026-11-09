@@ -23,7 +23,8 @@ trong bài báo; bằng chứng thực thi của SemLoc chỉ có tác dụng t�
 \subsection{C2. Gần một nửa nhãn của SemFault-250 không trỏ đúng dòng lỗi}
 
 \textbf{Khẳng định.} \LabaudAllMoved{} trong \LabaudAllN{} nhãn gốc bị dời khi rà soát (\LabaudAllBlank{} trên dòng trống,
-\LabaudAllOffByOne{} lệch một dòng); nhãn lệch có lợi cho SemLoc so với LLM hỏi thẳng. Nhóm công bố hai bộ nhãn: \emph{đã
+\LabaudAllOffByOne{} lệch một dòng); trên bộ đã rà soát, phần hơn của SemLoc so với LLM hỏi thẳng ở Acc@3 biến mất (trên bộ
+đã sửa thì vẫn còn). Nhóm công bố hai bộ nhãn: \emph{đã
 sửa} (chỉ kiểm thử quyết định, \GtConfirmedN{} xác nhận, \GtCorrectedN{} dời vị trí) và \emph{đã rà soát} (LLM rà trước,
 \ReviewReviewersN{} thành viên duyệt \ReviewHumanN{} nhãn, \ReviewOverrideN{} ca sửa có bằng chứng chạy kiểm thử).
 \textbf{Bằng chứng:} \texttt{data/label\_audit.csv}, \texttt{data/semfault\_verified\_gt.json},
@@ -40,12 +41,12 @@ báo cáo trên cả bộ gốc và bộ đã sửa.
 chênh lệch so với SemLoc nằm hẳn dưới 0 trên một bộ nhãn nào đó. \textbf{Giới hạn:} một mô hình chính; mỗi lần chỉ xét
 một hàm; trên 31 lỗi thật kết quả cùng chiều nhưng khoảng tin cậy còn chứa 0; prompt do nhóm thiết kế.
 
-\subsection{C4. Thêm phức tạp không thêm được gì --- và vì sao}
+\subsection{C4. Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao}
 
 \textbf{Khẳng định.} Trong prompt, kiểm thử thất bại là tín hiệu chính (Acc@3 \AblRepairedAllTestsEffectDAccThree{} so với
-LLM hỏi thẳng); độ phủ từng dòng không giúp ở Acc@3 và làm Acc@1 đi xuống. CovGate, đề xuất rồi kiểm chứng và biểu quyết
-không cải thiện được phương pháp chúng mở rộng; ruff và pyrefly gần như không trúng dòng lỗi. Cơ chế chung: một bản sửa nhỏ
-làm mọi kiểm thử đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi, nên kiểm thử không làm được trọng
+LLM hỏi thẳng); độ phủ từng dòng không giúp ở Acc@3 và làm Acc@1 đi xuống. CovGate chỉ giúp SemLoc một chút
+(Acc@3 \RqTwoRepairedAllCovgateDAccThree{} điểm); đề xuất rồi kiểm chứng và biểu quyết không cải thiện được prompt đơn giản; ruff và pyrefly gần như không trúng dòng lỗi. Cơ chế chung: một bản sửa nhỏ
+làm mọi kiểm thử đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng viên không có lỗi (tập dev), nên kiểm thử không làm được trọng
 tài cho vị trí lỗi. \textbf{Bằng chứng:} \texttt{data/ablation\_coverage.csv}, \texttt{data/pav\_dev\_grid.csv},
 \texttt{data/pav\_mechanism.csv}, \texttt{data/vote\_dev.csv}, \texttt{data/static\_tools.csv}. \textbf{Giới hạn:} đề xuất
 rồi kiểm chứng và biểu quyết chỉ được đánh giá trên tập dev; kết quả âm tính nói về các cách đã thử trên bộ dữ liệu này,
@@ -92,7 +93,7 @@ thì không; ở Acc@5, SemLoc hơn LLM + độ phủ trên bộ gốc nhưng k�
 \item \textbf{Mơ hồ dòng kề cạnh}: Acc@1 chặt phụ thuộc quy ước gán nhãn; nhóm báo cáo cả Acc@1 chấp nhận đầu khối/thân khối.
 \item \textbf{Prompt của phương pháp một prompt} do nhóm viết trước khi xem kết quả và không tinh chỉnh; prompt khác có thể cho kết quả khác.
 \item \textbf{Vòng tròn của bộ nhãn đã rà soát}: nhãn do một LLM đề xuất và người duyệt có xem gợi ý, nên các phương pháp
-dùng LLM có thể ``nghĩ giống'' người ra đáp án; kết quả chính vì vậy được báo cáo trên bộ gốc và bộ đã sửa (không có ý kiến LLM).
+dùng LLM có thể ``nghĩ giống'' người ra đáp án; kết quả chính vì vậy được báo cáo trên bộ gốc và bộ đã sửa (LLM không phán đoán vị trí lỗi).
 \item \textbf{Nhãn hai dòng} (\LabaudAllTwoLine{} chương trình) làm Acc@$k$ trên bộ đã rà soát dễ hơn một chút.
 \item \textbf{Tên kiểm thử ``nói hộ'' lỗi}: kiểm thử của SemFault-250 mô tả rất rõ ý định; trên dự án có kiểm thử đặt tên
 chung chung, lợi thế của phương pháp một prompt có thể nhỏ hơn. Nhóm chưa chạy thí nghiệm giấu tên kiểm thử.

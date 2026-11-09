@@ -56,25 +56,28 @@
 
 ### Task 4: Dàn ý câu chuyện mới (cổng duyệt của chủ dự án)
 
-- [ ] Cập nhật `docs/analysis/outline.md`: câu hỏi mở đầu đặt trong quy trình TDD → chạy kiểm thử thấy fail (máy cá nhân hoặc CI) → tìm dòng lỗi (lập trình viên vẫn đưa test fail cho LLM); phân tích tĩnh (ruff, pyrefly) chỉ là một đoạn ngắn + bảng nhỏ trong kết quả, không thuộc đóng góp chính (chủ dự án duyệt 09/11); RQ2 gồm ablation + PAV; bộ nhãn thứ ba; benchmark bão hòa khi nhãn đúng; giới hạn (hàm đơn lẻ, test mô tả rõ ý định, lỗi thật ít)
-- [ ] Chủ dự án duyệt dàn ý
+- [x] Cập nhật `docs/analysis/outline.md`: câu hỏi mở đầu đặt trong quy trình TDD → chạy kiểm thử thấy fail (máy cá nhân hoặc CI) → tìm dòng lỗi (lập trình viên vẫn đưa test fail cho LLM); phân tích tĩnh (ruff, pyrefly) chỉ là một đoạn ngắn + bảng nhỏ trong kết quả, không thuộc đóng góp chính (chủ dự án duyệt 09/11); RQ2 gồm ablation + PAV; bộ nhãn thứ ba; benchmark bão hòa khi nhãn đúng; giới hạn (hàm đơn lẻ, test mô tả rõ ý định, lỗi thật ít)
+- [x] Chủ dự án duyệt dàn ý
 
 ### Task 5: Viết lại báo cáo VI
 
-- [ ] ch1 (đóng góp mới), ch2 (thêm tài liệu về nhãn sai trong benchmark), ch4 (bộ rà soát, 2c, PAV), ch5 (ablation, PAV, ba bộ nhãn), ch6 (nhãn sai), ch7 (đóng góp, mối đe dọa: vòng tròn, người duyệt xem gợi ý, tên test), ch8, phụ lục (prompt PAV), thuật ngữ
-- [ ] `make -C docs/report check` (0 overfull, 0 số gõ tay), `pytest -m slow`
+- [x] ch1 (đóng góp mới), ch2 (thêm tài liệu về nhãn sai trong benchmark), ch4 (bộ rà soát, 2c, PAV), ch5 (ablation, PAV, ba bộ nhãn), ch6 (nhãn sai), ch7 (đóng góp, mối đe dọa: vòng tròn, người duyệt xem gợi ý, tên test), ch8, phụ lục (prompt PAV), thuật ngữ
+- [x] `make -C docs/report check` (0 overfull, 0 số gõ tay), `pytest -m slow`
 
 ### Task 6: Viết lại bài báo EN
 
-- [ ] Abstract, introduction, approach, evaluation, discussion, threats, conclusion theo dàn ý mới; tên bài "Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization"
-- [ ] Self-review 5 chiều cập nhật `docs/analysis/self-review.md`
+- [x] Abstract, introduction, approach, evaluation, discussion, threats, conclusion theo dàn ý mới; tên bài "Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization"
+- [x] Self-review 5 chiều cập nhật `docs/analysis/self-review.md`
 
 ### Task 7: Slide, README, contributions, checklist
 
-- [ ] `build_deck.py` (kết quả, đóng góp, kết luận), `make_decks.sh` 0 lỗi
-- [ ] README findings, `docs/analysis/contributions.md`, `docs/literature/evaluation-checklist.md`, `check_claims.py`
+- [x] `build_deck.py` (kết quả, đóng góp, kết luận), `make_decks.sh` 0 lỗi
+- [x] README findings, `docs/analysis/contributions.md`, `docs/literature/evaluation-checklist.md`, `check_claims.py`
 
 ### Task 8: Review cuối và cắt lại nhánh
 
-- [ ] Một reviewer độc lập (opus) đọc toàn bộ; sửa
+- [x] Một reviewer độc lập (opus) đọc toàn bộ; sửa
 - [ ] Merge `main` vào `bao-cao-lan-1`, `bao-cao-lan-2`, dựng lại PDF; `make check` mỗi nhánh; push cả ba
+
+
+**Ghi chú 09/11:** review cuối (opus): 0 lỗi bảo mật/rò rỉ/mã; 1 nghiêm trọng ("nhãn lệch có lợi cho SemLoc" chỉ đúng trên bộ rà soát), 5 quan trọng, 4 nhỏ — đã sửa: thu hẹp phạm vi trên bộ rà soát + đối chiếu bộ đã sửa; CovGate "chỉ giúp một chút" thay vì "không giúp"; tỉ lệ 23% ghi rõ là lần thử ở dòng ứng viên trên dev; "lập trình viên vẫn làm" → "gần với cách nhiều lập trình viên đang làm" theo khảo sát; bỏ trích AutoFL khỏi câu về thông tin lỗi; ghi rõ 138 nhãn chỉ dựa trên LLM; biểu quyết báo cả ba bộ nhãn.
