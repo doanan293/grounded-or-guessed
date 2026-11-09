@@ -1,6 +1,7 @@
 """Select propose-and-verify knobs on dev, then write rankings for a split (no LLM calls).
 
-    python scripts/pav_eval.py select        # dev grid → data/pav_dev_grid.csv, data/pav_params.json
+    python scripts/pav_eval.py select        # dev grid → data/pav_dev_grid.csv, data/pav_params.json,
+                                             # data/pav_mechanism.csv, data/vote_dev.csv
     python scripts/pav_eval.py apply test    # runs/pav_test_gemini_r*.json → data/rankings/pav_test_gemini_r*.json
 Selection (fixed before looking at test): highest dev Acc@1 averaged over the original and the reviewed ground truth
 and over repeats; ties → Acc@3, then fewer LLM calls (k·attempts), then order "llm", then the smaller max_size.
@@ -70,6 +71,57 @@ def select() -> None:
     print("chosen:", params, {k: v for k, v in best.items() if "acc" in k})
 
 
+def mechanism(runs: list[dict], gt: dict, progs: list[str]) -> dict:
+    """How discriminative is "a minimal fix passes the tests"? Rates over every checked (program, line) pair."""
+    tl = tp = ol = op = 0
+    for r in runs:
+        for p in progs:
+            for ln, cs in r[p]["checks"].items():
+                ok = any(a for a, _ in cs)
+                if int(ln) in gt[p]:
+                    tl, tp = tl + 1, tp + ok
+                else:
+                    ol, op = ol + 1, op + ok
+    return {"fault_line_checked": tl, "fault_line_fixable": round(tp / tl, 4) if tl else "",
+            "other_line_checked": ol, "other_line_fixable": round(op / ol, 4) if ol else ""}
+
+
+def vote(rankings_list: list[dict], progs: list[str]) -> dict[str, list[int]]:
+    """Self-consistency: reciprocal-rank vote over repeats (ties → earliest position, then earliest repeat)."""
+    out = {}
+    for p in progs:
+        score, first = {}, {}
+        for ri, r in enumerate(rankings_list):
+            for i, ln in enumerate(r.get(p, [])):
+                score[ln] = score.get(ln, 0.0) + 1 / (i + 1)
+                first.setdefault(ln, (i, ri))
+        out[p] = sorted(score, key=lambda ln: (-score[ln], first[ln]))
+    return out
+
+
+def extras() -> None:
+    """data/pav_mechanism.csv and data/vote_dev.csv (dev only, no LLM calls)."""
+    runs = load_runs("dev")
+    dev = json.loads((ROOT / "data" / "split.json").read_text())["dev"]
+    gts = {g: v for g, v in load_variants().items() if g in ("original", "repaired", "reviewed")}
+    with open(ROOT / "data" / "pav_mechanism.csv", "w", newline="") as f:
+        rows = [{"gt": g, **mechanism(runs, gt, [p for p in dev if p in gt])} for g, gt in gts.items()]
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+    stage1 = [rankings(r, None) for r in runs]
+    voted = vote(stage1, dev)
+    rows = []
+    for g, gt in gts.items():
+        progs = [p for p in dev if p in gt]
+        rows.append({"gt": g, "single_acc1": round(acc(stage1, gt, progs, 1), 4), "single_acc3": round(acc(stage1, gt, progs, 3), 4),
+                     "vote_acc1": round(acc([voted], gt, progs, 1), 4), "vote_acc3": round(acc([voted], gt, progs, 3), 4)})
+    with open(ROOT / "data" / "vote_dev.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+
+
 def apply(split: str) -> None:
     params = json.loads((ROOT / "data" / "pav_params.json").read_text())
     for f in sorted((ROOT / "runs").glob(f"pav_{split}_gemini_r[0-9].json")):
@@ -79,4 +131,8 @@ def apply(split: str) -> None:
 
 
 if __name__ == "__main__":
-    select() if sys.argv[1] == "select" else apply(sys.argv[2])
+    if sys.argv[1] == "select":
+        select()
+        extras()
+    else:
+        apply(sys.argv[2])
