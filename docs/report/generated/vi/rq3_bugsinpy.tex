@@ -1,0 +1,17 @@
+\begin{tabular}{lrrrrr}
+\toprule
+ & \multicolumn{3}{c}{Mọi lỗi ($n=31$)} & \multicolumn{2}{c}{Lỗi được chạy tới ($n=26$)} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-6}
+Phương pháp & Acc@1 & Acc@3 & Acc@5 & Acc@1 & Acc@3 \\
+\midrule
+Chỉ phổ ngữ nghĩa của SemLoc & 7,5{\scriptsize$\pm$1,9} & 29,0{\scriptsize$\pm$3,2} & 37,6{\scriptsize$\pm$3,7} & 9,0{\scriptsize$\pm$2,2} & 34,6{\scriptsize$\pm$3,9} \\
+SemLoc (phổ + điểm thưởng dòng đoán) & 46,2{\scriptsize$\pm$6,7} & 53,8{\scriptsize$\pm$7,4} & 55,9{\scriptsize$\pm$6,7} & 51,3{\scriptsize$\pm$8,0} & 60,3{\scriptsize$\pm$8,9} \\
+Chỉ dòng LLM đoán & 46,2{\scriptsize$\pm$6,7} & 46,2{\scriptsize$\pm$6,7} & 46,2{\scriptsize$\pm$6,7} & 51,3{\scriptsize$\pm$8,0} & 51,3{\scriptsize$\pm$8,0} \\
+CovGate (nhóm đề xuất) & 46,2{\scriptsize$\pm$6,7} & 54,8{\scriptsize$\pm$6,5} & 57,0{\scriptsize$\pm$7,4} & 51,3{\scriptsize$\pm$8,0} & 61,5{\scriptsize$\pm$7,7} \\
+LLM + độ phủ (1 prompt, nhóm đề xuất) & 51,6{\scriptsize$\pm$5,6} & 69,9{\scriptsize$\pm$3,7} & 75,3{\scriptsize$\pm$1,9} & 59,0{\scriptsize$\pm$5,9} & 75,6{\scriptsize$\pm$4,4} \\
+SBFL Ochiai & 9,7{\scriptsize$\pm$0,0} & 29,0{\scriptsize$\pm$0,0} & 29,0{\scriptsize$\pm$0,0} & 11,5{\scriptsize$\pm$0,0} & 34,6{\scriptsize$\pm$0,0} \\
+SBFL DStar & 9,7{\scriptsize$\pm$0,0} & 29,0{\scriptsize$\pm$0,0} & 29,0{\scriptsize$\pm$0,0} & 11,5{\scriptsize$\pm$0,0} & 34,6{\scriptsize$\pm$0,0} \\
+\midrule
+Chỉ số của artifact (hạng của dòng LLM đoán) & 39,8{\scriptsize$\pm$1,9} & 45,2{\scriptsize$\pm$3,2} & 51,6{\scriptsize$\pm$3,2} & 37,2{\scriptsize$\pm$2,2} & 43,6{\scriptsize$\pm$5,9} \\
+\bottomrule
+\end{tabular}

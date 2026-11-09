@@ -1,0 +1,12 @@
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{Acc@1} & \multicolumn{3}{c}{Acc@3} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Phương pháp & Bản gốc & Đổi tên & $\Delta$ [CI 95\%] & Bản gốc & Đổi tên & $\Delta$ [CI 95\%] \\
+\midrule
+SemLoc & 52,1{\scriptsize$\pm$0,9} & 49,4{\scriptsize$\pm$1,0} & -2,6{\scriptsize\,[-7,8; 2,4]} & 75,3{\scriptsize$\pm$2,0} & 66,8{\scriptsize$\pm$2,0} & -8,4{\scriptsize\,[-14,1; -3,0]} \\
+\quad bỏ điểm thưởng dòng đoán & 42,9{\scriptsize$\pm$2,1} & 34,5{\scriptsize$\pm$2,1} & -8,4{\scriptsize\,[-13,5; -3,7]} & 70,6{\scriptsize$\pm$2,3} & 55,1{\scriptsize$\pm$2,6} & -15,5{\scriptsize\,[-21,4; -10,3]} \\
+Chỉ dòng LLM đoán & 52,1{\scriptsize$\pm$0,9} & 49,4{\scriptsize$\pm$1,0} & -2,6{\scriptsize\,[-7,8; 2,4]} & 52,1{\scriptsize$\pm$0,9} & 49,4{\scriptsize$\pm$1,0} & -2,6{\scriptsize\,[-7,8; 2,4]} \\
+LLM + độ phủ (1 prompt) & 56,9{\scriptsize$\pm$0,9} & 56,2{\scriptsize$\pm$0,0} & -0,8{\scriptsize\,[-3,6; 2,0]} & 92,0{\scriptsize$\pm$0,3} & 91,0{\scriptsize$\pm$1,5} & -0,9{\scriptsize\,[-3,5; 1,3]} \\
+\bottomrule
+\end{tabular}
