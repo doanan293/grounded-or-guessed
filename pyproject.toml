@@ -18,3 +18,5 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 norecursedirs = ["fixtures"]
+markers = ["slow: compiles LaTeX or other long builds (run with -m slow)"]
+addopts = "-m 'not slow'"

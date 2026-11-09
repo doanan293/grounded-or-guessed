@@ -3,15 +3,24 @@
 \usepackage{graphicx,booktabs,amsmath,amssymb,xcolor}
 \usepackage[hidelinks]{hyperref}
 \newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+% Phiên bản: lan1 (báo cáo lần 1) < lan2 (báo cáo lần 2) < full (bài nộp). Đặt bằng `make vi-lan1` …;
+% mặc định full. \IfAtLeast{lan2}{...} chỉ đưa nội dung vào khi phiên bản đang dựng >= lan2.
+\providecommand{\Version}{full}
+\expandafter\def\csname VersionRank@lan1\endcsname{1}
+\expandafter\def\csname VersionRank@lan2\endcsname{2}
+\expandafter\def\csname VersionRank@full\endcsname{3}
+\expandafter\ifx\csname VersionRank@\Version\endcsname\relax
+  \errmessage{Unknown \string\Version: \Version\space (use lan1, lan2 or full)}\fi
+\newcommand{\IfAtLeast}[2]{\ifnum\csname VersionRank@\Version\endcsname<\csname VersionRank@#1\endcsname\relax\else#2\fi}
+\input{../generated/numbers}
 
 \begin{document}
 \title{\TODO{Reproducing and Extending SemLoc: Semantic Fault Localization with LLM-Inferred Constraints}}
 \author{\IEEEauthorblockN{\TODO{authors}}\IEEEauthorblockA{Hanoi University of Science and Technology, Vietnam}}
 \maketitle
+\IfAtLeast{full}{}{\begin{center}\textbf{Draft for progress report (version \Version)}\end{center}}
 
-\begin{abstract}
-\TODO{abstract: one claim per sentence, every number backed by data/}
-\end{abstract}
+\input{sections/abstract}
 
 \input{sections/introduction}
 \input{sections/background}
