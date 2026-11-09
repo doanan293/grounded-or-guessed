@@ -15,8 +15,9 @@ và Google Scholar; mỗi tài liệu được đối chiếu lại qua DOI ho�
 
 Một tài liệu được chọn khi thỏa ít nhất một tiêu chí: (i) là phương pháp mà SemLoc so sánh hoặc kế thừa; (ii) là bộ
 dữ liệu lỗi dùng được cho Python; (iii) bàn về cách đánh giá định vị lỗi (hòa điểm, lỗi thiếu mã, lỗi nhân tạo so với
-lỗi thật); (iv) bàn về rủi ro khi dùng LLM trong nghiên cứu phần mềm (nhiễm dữ liệu, tái hiện). Kết quả là ba bài được
-giao và hai mươi tài liệu bổ sung, tổng hợp ở Bảng~\ref{tab:so-sanh-tai-lieu}.
+lỗi thật); (iv) bàn về rủi ro khi dùng LLM trong nghiên cứu phần mềm (nhiễm dữ liệu, tái hiện); (v) cho biết lập trình
+viên thực sự dùng LLM để gỡ lỗi ra sao, hoặc bàn về nhãn sai và bản sửa ``lách'' kiểm thử. Kết quả là ba bài được
+giao và ba mươi mốt tài liệu bổ sung, tổng hợp ở Bảng~\ref{tab:so-sanh-tai-lieu}.
 
 \subsection{Bộ từ khóa}
 
@@ -43,6 +44,10 @@ program instrumentation & chèn mã kiểm tra vào chương trình \\
 reproducibility & tính tái hiện được \\
 data contamination / memorization & nhiễm dữ liệu huấn luyện / ghi nhớ \\
 omission fault & lỗi thiếu mã \\
+test-driven development (TDD) & phát triển hướng kiểm thử \\
+plausible patch / test overfitting & bản sửa hợp lệ bề ngoài / quá khớp kiểm thử \\
+label error (benchmark) & nhãn sai trong bộ dữ liệu \\
+static / dynamic analysis & phân tích tĩnh / phân tích động \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -121,13 +126,41 @@ chọn hàm trước khi xếp hạng dòng trên BugsInPy. AgentFL~\cite{qin202
 FlexFL~\cite{xu2025flexfl} gần với ý tưởng của nhóm nhất: đưa kết quả SBFL làm gợi ý cho LLM mã nguồn mở, nhưng ở cấp
 phương thức trên mã Java. Điểm chung là bằng chứng thực thi được đưa vào dưới dạng văn bản; chưa nghiên cứu nào đo
 riêng phần độ chính xác đến từ bằng chứng và phần đến từ việc LLM tự đoán.
+Wu và cộng sự~\cite{wu2023llmfl} cho thấy ChatGPT định vị lỗi tốt hơn hẳn khi được đưa nhật ký lỗi, tốt ở phạm vi một
+hàm nhưng giảm mạnh khi phải xét cả lớp. Ở bài toán sửa lỗi cấp kho mã, Agentless~\cite{xia2024agentless} cho thấy một
+quy trình hai bước đơn giản (định vị rồi sửa, không có tác tử tự chọn hành động) đạt kết quả tốt nhất trong các phương
+pháp mã nguồn mở trên SWE-bench Lite với chi phí thấp hơn nhiều --- một tiền lệ cho câu hỏi ``phức tạp có cần không''.
+
+\subsection{Thực tế phát triển phần mềm}
+
+Các khảo sát lớn năm 2025 của Stack Overflow~\cite{stackoverflow2025} và JetBrains~\cite{jetbrains2025} cho thấy phần
+lớn lập trình viên dùng hoặc định dùng trợ lý AI trong công việc, dù gần một nửa không tin độ chính xác của chúng.
+Bộ dữ liệu DevGPT~\cite{xiao2024devgpt} --- các cuộc hội thoại thật giữa lập trình viên và ChatGPT được chia sẻ trên
+GitHub --- cho thấy gỡ lỗi là một trong các nhóm việc thường được đem hỏi. Từ lâu, Parnin và Orso~\cite{parnin2011} đã
+chỉ ra rằng nhiều giả định của các kỹ thuật định vị lỗi tự động không khớp với cách lập trình viên thực sự gỡ lỗi, và
+khảo sát 386 người làm nghề của Kochhar và cộng sự~\cite{kochhar2016} cho thấy người dùng có kỳ vọng cụ thể mà nghiên
+cứu chưa đáp ứng. Trong cách phát triển hướng kiểm thử~\cite{beck2003tdd}, kiểm thử được viết trước và mô tả ý định của
+mã --- chính là thông tin mà một LLM cần để biết mã ``sai'' so với điều gì. Nhóm lấy cách làm phổ biến này --- chạy kiểm
+thử, đưa kết quả thất bại cho LLM --- làm mốc so sánh bắt buộc.
 
 \subsection{Bộ dữ liệu lỗi và tính hợp lệ của đánh giá}
 
 Defects4J~\cite{just2014} (Java) và BugsInPy~\cite{widyasari2020} (Python) cung cấp lỗi thật kèm kiểm thử làm lộ lỗi;
 QuixBugs~\cite{lin2017quixbugs} gồm các chương trình nhỏ có lỗi một dòng. Pearson và cộng sự~\cite{pearson2017} cho thấy
 kết quả định vị lỗi trên lỗi nhân tạo không chuyển được sang lỗi thật, và cách chấm khi hòa điểm hay khi lỗi là thiếu
-mã có thể đảo thứ hạng giữa các kỹ thuật --- đây là cơ sở cho phần kiểm tra cách đánh giá ở RQ1.
+mã có thể đảo thứ hạng giữa các kỹ thuật --- đây là cơ sở cho phần kiểm tra cách đánh giá ở RQ1. Nhãn sai không phải
+chuyện hiếm: Northcutt và cộng sự~\cite{northcutt2021labels} tìm thấy trung bình khoảng ba phần trăm nhãn sai trong tập
+kiểm tra của mười bộ dữ liệu học máy phổ biến, đủ để đảo thứ hạng giữa các mô hình. Agentless cũng phát hiện một phần đề
+bài của SWE-bench Lite có vấn đề và loại chúng ra khi đánh giá~\cite{xia2024agentless}.
+
+\subsection{Bản sửa vượt kiểm thử nhưng không đúng}
+
+Trong sửa lỗi tự động, một bản vá làm mọi kiểm thử đạt được gọi là \emph{hợp lệ bề ngoài} (plausible) --- chưa chắc đã
+đúng. Qi và cộng sự~\cite{qi2015kali} cho thấy phần lớn bản vá được báo cáo của các hệ thống sinh-và-kiểm-chứng
+(GenProg, RSRepair, AE) không đúng, nhiều bản chỉ tương đương với việc xóa bớt chức năng; Smith và
+cộng sự~\cite{smith2015cure} gọi hiện tượng này là ``quá khớp'' bộ kiểm thử. Cùng một cơ chế chi phối mọi cách dùng kiểm
+thử làm trọng tài cho \emph{vị trí} lỗi: bước vá thử của SemLoc, bộ kiểm chứng nhãn của nhóm và phương pháp ``đề xuất
+rồi kiểm chứng'' (Chương~\ref{chap:ket-qua}).
 
 \subsection{Nhiễm dữ liệu và tái hiện khi dùng LLM}
 
@@ -154,9 +187,9 @@ Bảng~\ref{tab:so-sanh-tai-lieu} đặt ba bài được giao cạnh hướng t
 Tiêu chí & SemLoc~\cite{yang2026semloc} & EffiHolmes~\cite{yang2026effiholmes} & Báo cáo sự cố + LLM~\cite{medeiros2026crash} & Nhóm M9 \\
 \midrule
 Loại lỗi & ngữ nghĩa & hiệu năng & sự cố (Java) & ngữ nghĩa \\
-Tín hiệu & ràng buộc do LLM sinh + chạy kiểm thử & phân tích hiệu năng ở hai mức tải & vết ngăn xếp + xếp hạng & độ phủ + ràng buộc; đo phần đóng góp của từng tín hiệu \\
+Tín hiệu & ràng buộc do LLM sinh + chạy kiểm thử & phân tích hiệu năng ở hai mức tải & vết ngăn xếp + xếp hạng & kiểm thử thất bại đưa thẳng cho LLM; tách đóng góp của từng tín hiệu \\
 Lỗi thật & 7 lỗi có kết quả cấp dòng & 140 vấn đề & 38 lỗi công nghiệp & 31 lỗi BugsInPy, 3 lần chạy \\
-Kiểm tra bộ dữ liệu & không & --- & --- & kiểm chứng lại dòng lỗi bằng thực thi \\
+Kiểm tra bộ dữ liệu & không & --- & --- & kiểm chứng bằng thực thi và rà soát toàn bộ nhãn \\
 Lặp và kiểm định & 1 lần, không kiểm định & --- & --- & 3 lần, McNemar, bootstrap theo cụm \\
 \bottomrule
 \end{tabularx}
@@ -166,8 +199,9 @@ Lặp và kiểm định & 1 lần, không kiểm định & --- & --- & 3 lần,
 
 Ba khoảng trống định hướng toàn bộ tiểu luận. Thứ nhất, các hệ thống định vị lỗi bằng LLM tuyên bố ``neo vào thực thi''
 nhưng chưa ai đo phần độ chính xác thật sự đến từ bằng chứng thực thi. Thứ hai, kết quả được báo cáo từ một lần chạy
-với cách chấm lạc quan trên một bộ dữ liệu chưa được kiểm chứng. Thứ ba, chưa có so sánh với phương pháp đối chứng đơn giản nhất
-dùng cùng thông tin: một prompt duy nhất chứa bằng chứng độ phủ. Từ đó, nhóm học và áp dụng: từ SemLoc --- giả thuyết
+với cách chấm lạc quan trên một bộ dữ liệu có nhãn chưa được kiểm tra. Thứ ba, chưa có so sánh với cách làm đơn giản mà
+lập trình viên vẫn dùng: một prompt duy nhất có kiểm thử thất bại. Từ đó, nhóm học và áp dụng: từ SemLoc --- giả thuyết
 do LLM sinh nhưng kiểm thử phán xử, và dùng chính mã nguồn gốc để tái hiện; từ EffiHolmes --- đối chiếu hai lần thực thi
-để lọc nhiễu (ý tưởng của CovGate) và khuôn câu hỏi nghiên cứu; từ báo cáo công nghiệp --- đưa xếp hạng có sẵn vào prompt
-(phương pháp đối chứng LLM + độ phủ); từ Pearson và cộng sự --- kiểm tra cách chấm khi hòa điểm và khi lỗi là thiếu mã.
+để lọc nhiễu (ý tưởng của CovGate) và khuôn câu hỏi nghiên cứu; từ báo cáo công nghiệp --- đưa thông tin có sẵn vào prompt
+thay vì xây quy trình phức tạp; từ Pearson và cộng sự, Northcutt và cộng sự --- kiểm tra cách chấm và kiểm tra chính bộ
+nhãn; từ Qi và cộng sự --- không tin một bản sửa chỉ vì nó làm kiểm thử đạt.

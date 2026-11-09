@@ -8,22 +8,25 @@
 
 \textbf{RQ1 (tái hiện và kiểm tra cách đánh giá):} các con số công bố của SemLoc có tái hiện được từ dữ liệu và mã nguồn
 của tác giả không; chúng thay đổi thế nào khi (a) chấm điểm công bằng, (b) bỏ các thành phần không được mô tả trong bài
-báo, (c) dùng dòng lỗi chuẩn đã được kiểm chứng bằng thực thi, (d) chạy lại với mô hình khác?
+báo, (c) kiểm tra lại chính các dòng lỗi chuẩn của bộ dữ liệu, (d) chạy lại với mô hình khác?
 
-\textbf{RQ2 (cải tiến và đối chứng):} trên cùng các chương trình và cùng mô hình, (a) cải tiến CovGate có làm SemLoc tốt
-hơn không và thành phần nào của nó có tác dụng; (b) một prompt duy nhất có bằng chứng độ phủ (LLM + độ phủ) so với toàn
-bộ quy trình nhiều bước SemLoc thế nào về độ chính xác và chi phí; (c) bao nhiêu phần độ chính xác của SemLoc đến từ bằng chứng
-thực thi, bao nhiêu từ dòng LLM tự đoán?
+\textbf{RQ2 (LLM thật sự cần gì?):} trên cùng các chương trình và cùng mô hình, (a) một prompt duy nhất có kiểm thử thất
+bại so với quy trình nhiều bước SemLoc thế nào về độ chính xác và chi phí; (b) trong prompt đó, thông tin nào tạo ra khác
+biệt --- kiểm thử thất bại hay độ phủ từng dòng; (c) các cách bổ sung (CovGate cho SemLoc; kiểm chứng dòng nghi ngờ bằng
+bản sửa; biểu quyết nhiều câu trả lời) và công cụ phân tích tĩnh có thêm được gì; (d) bao nhiêu phần độ chính xác của
+SemLoc đến từ bằng chứng thực thi, bao nhiêu từ dòng LLM tự đoán?
 
 \textbf{RQ3 (độ bền):} các kết luận của RQ2 có còn đúng (a) trên lỗi thật của BugsInPy, (b) khi đổi tên mọi định danh
-và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên năm mô hình thuộc các họ khác nhau?
+và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên năm mô hình thuộc các họ khác nhau, (d) trên cả ba bộ nhãn?
 
 \subsection{Giả thuyết và tiêu chí bác bỏ}
 
-Giả thuyết chính của tiểu luận là: \emph{ở hạng 1, độ chính xác của SemLoc chủ yếu đến từ dòng LLM tự đoán; bằng chứng
-thực thi đóng góp chủ yếu ở top-3}. Giả thuyết bị bác bỏ nếu riêng phổ vi phạm đạt Acc@1 không thấp hơn riêng dòng đoán, hoặc nếu
-ở top-3 phổ không làm tăng độ chính xác so với riêng dòng đoán. Giả thuyết phụ: \emph{một prompt có bằng chứng độ phủ
-không kém quy trình nhiều bước}; bị bác bỏ nếu khoảng tin cậy của chênh lệch Acc@3 nằm hẳn dưới 0.
+\textbf{H1:} \emph{ở hạng 1, độ chính xác của SemLoc đến từ dòng LLM tự đoán; bằng chứng thực thi đóng góp ở top-3}. Bác
+bỏ nếu riêng phổ vi phạm đạt Acc@1 không thấp hơn SemLoc, hoặc nếu ở top-3 phổ không làm tăng độ chính xác so với riêng
+dòng đoán. \textbf{H2:} \emph{một prompt có kiểm thử thất bại không kém quy trình nhiều bước}; bác bỏ nếu khoảng tin cậy
+của chênh lệch Acc@1 hoặc Acc@3 so với SemLoc nằm hẳn dưới 0. \textbf{H3:} \emph{thêm độ phủ từng dòng vào prompt cải
+thiện kết quả}; bác bỏ nếu khoảng tin cậy của chênh lệch không nằm hẳn trên 0. Mọi giả thuyết được kiểm trên cả ba bộ
+nhãn.
 
 \section{Dữ liệu}
 \label{sec:du-lieu}
@@ -50,6 +53,39 @@ tại dòng chuẩn), \GtCorrectedN{} được \emph{sửa vị trí} (dòng chu
 \GtUnverifiedN{} \emph{chưa kiểm chứng được} (dòng chuẩn chạy tới được nhưng không bản sửa đề xuất nào đạt) và
 \GtUnverifiableN{} \emph{không kiểm chứng được} (bị loại). Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
 nên bị loại; bộ dòng lỗi chuẩn đã sửa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã sửa.
+
+\subsection{SemFault-250 đã rà soát: LLM rà trước, nhóm duyệt}
+
+Bộ phán định sửa tối thiểu chỉ có thể xác nhận một dòng khi tìm được bản sửa nhỏ, và chỉ tìm dòng lân cận khi dòng gốc
+không chạy tới được. Để kiểm tra \emph{mọi} nhãn, nhóm làm thêm một vòng rà soát hai bước. (1) Một LLM (Claude Fable 5.1,
+mức suy luận cao) đọc toàn bộ chương trình, kiểm thử và nhãn gốc của cả 250 chương trình và cho một nhận định: nhãn
+đúng, nhãn sai (kèm dòng đề xuất), hoặc lỗi trải trên hai dòng (cả hai đều chấp nhận được); với nhiều ca, LLM tự chạy
+kiểm thử trên bản sửa đề xuất để kiểm tra. (2) \ReviewReviewersN{} thành viên của nhóm duyệt lại \ReviewHumanN{} nhãn: \GtCorrectedN{} nhãn bộ phán định đã dời
+và mọi nhãn LLM cho là nằm sai dòng; mỗi ca có đoạn mã, liên kết tới chương trình và kiểm thử, các dòng ứng viên và nhận
+định của LLM để tham khảo. Người duyệt có xem gợi ý của LLM và đồng ý với gợi ý ở \ReviewAgreeN{}/\ReviewHumanN{} ca. Trưởng nhóm sửa thêm \ReviewOverrideN{} ca
+có bằng chứng chạy kiểm thử (hai ca lỗi hai dòng mà sửa một dòng không đủ, hai ca lỗi thiếu mã mà người duyệt chọn điểm
+chèn là dòng trống --- dùng câu lệnh \texttt{return} như các chương trình cùng họ --- và một ca LLM trích đúng câu lệnh
+nhưng ghi nhầm số dòng). Kết quả là bộ \emph{đã rà soát}: đủ \LabaudAllN{} chương trình, không nhãn nào trên dòng trống,
+\LabaudAllTwoLine{} nhãn hai dòng.
+
+Bảng~\ref{tab:ba-bo-nhan} tóm tắt ba bộ nhãn. Bộ \emph{đã sửa} chỉ do kiểm thử quyết định nên được dùng cho kết quả
+chính; bộ \emph{đã rà soát} đầy đủ hơn nhưng nhãn do một LLM đề xuất, nên các phương pháp dùng LLM có thể được lợi\IfAtLeast{lan2}{ (Chương~\ref{chap:dong-gop})} --- nó được dùng như một góc nhìn độ nhạy.
+
+\begin{table}[H]
+\centering
+\caption{Ba bộ dòng lỗi chuẩn dùng trong tiểu luận}
+\label{tab:ba-bo-nhan}
+\small
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+Bộ nhãn & Ai quyết định & Vai trò \\
+\midrule
+Gốc & Tác giả SemLoc & So với bài báo gốc \\
+Đã sửa & Chỉ kiểm thử (bộ phán định sửa tối thiểu) & Kết quả chính; không có ý kiến LLM \\
+Đã rà soát & LLM rà trước, thành viên nhóm duyệt, trưởng nhóm sửa ca có bằng chứng chạy kiểm thử & Góc nhìn độ nhạy; đủ mọi chương trình \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subsection{Lỗi thật BugsInPy}
 
@@ -79,28 +115,49 @@ trả về các dòng nghi ngờ; không có thông tin kiểm thử nào.
 (cùng prompt, cùng logic).
 \end{itemize}
 
-\subsection{CovGate: bổ sung độ phủ vào SemLoc}
+\subsection{LLM + kiểm thử thất bại: phương pháp đề xuất}
 
-CovGate lấy điểm dòng của SemLoc và bổ sung bằng chứng độ phủ, gồm bốn thành phần có thể bật/tắt:
+Phương pháp chính của nhóm làm đúng điều lập trình viên vẫn làm: một lượt gọi LLM duy nhất (nhiệt độ
+$T = \ConstTemperature$) với mã nguồn đánh số dòng, số kiểm thử đạt/không đạt, câu ``chương trình có đúng một dòng lỗi'',
+và tên cùng dòng thông báo lỗi đầu tiên của mỗi kiểm thử thất bại; LLM trả về năm dòng nghi ngờ nhất dưới dạng JSON
+\IfAtLeastElse{full}{(nội dung prompt ở Phụ lục~\ref{chap:phu-luc})}{(nội dung prompt có trong kho mã)}. Prompt được
+thiết kế trước khi xem kết quả trên tập test và không được tinh chỉnh. Ý tưởng đưa thông tin sẵn có vào prompt thay vì
+xây quy trình nhiều bước lấy từ báo cáo công nghiệp~\cite{medeiros2026crash} và các nghiên cứu cho thấy nhật ký lỗi
+giúp LLM định vị tốt hơn~\cite{wu2023llmfl}.
+
+\subsection{Ablation: tách độ phủ khỏi kiểm thử thất bại}
+
+Biến thể \emph{LLM + kiểm thử thất bại + độ phủ} giữ nguyên prompt trên và chú thích thêm cho mỗi dòng số kiểm thử thất
+bại và thành công chạy qua nó (cùng một câu giải thích chú thích). Hai so sánh ghép cặp tách hai nguồn thông tin:
+(LLM + kiểm thử thất bại) so với LLM hỏi thẳng đo tác dụng của kiểm thử thất bại; (LLM + kiểm thử thất bại + độ phủ) so
+với (LLM + kiểm thử thất bại) đo tác dụng của độ phủ.
+
+\subsection{Các cách bổ sung}
+
+\textbf{CovGate} lấy điểm dòng của SemLoc và bổ sung bằng chứng độ phủ qua bốn thành phần có thể bật/tắt:
 (1) \emph{cổng độ phủ} --- bỏ các dòng không kiểm thử thất bại nào chạy qua; (2) \emph{cộng} $\lambda\cdot$Ochiai vào điểm
-của dòng, với $\lambda \in \{\ConstLambdaGrid\}$; (3) \emph{xếp lại bằng kết quả kiểm chứng phản thực tế} --- đưa các dòng
-của ràng buộc được bản vá xác nhận lên đầu, điều mà mã gốc tính ra nhưng không dùng; (4) \emph{chỉ thưởng khi có căn
-cứ} --- giữ điểm thưởng cho dòng LLM đoán chỉ khi dòng đó được kiểm thử thất bại chạy qua và có ràng buộc bị vi phạm
-quy về nó. Tổ hợp tham số được chọn \emph{chỉ trên tập dev}, theo Acc@3 rồi Acc@1, gộp qua năm cấu hình công bố; tập
-test không bao giờ được dùng để chọn. Cấu hình được chọn không bật cổng độ phủ, giữ nguyên điểm thưởng và dùng
-$\lambda = \ConstLambdaOriginal$ (bộ dòng lỗi chuẩn gốc) hoặc $\lambda = \ConstLambdaRepaired$ (bộ đã sửa); nói cách khác,
-CovGate được đánh giá là một bước \emph{phá hòa bằng Ochiai} cho SemLoc.
+của dòng, với $\lambda \in \{\ConstLambdaGrid\}$; (3) \emph{xếp lại bằng kết quả kiểm chứng phản thực tế}; (4) \emph{chỉ
+thưởng khi có căn cứ} --- giữ điểm thưởng cho dòng LLM đoán chỉ khi dòng đó có bằng chứng thực thi. Tổ hợp tham số được
+chọn chỉ trên tập dev; cấu hình được chọn không bật cổng độ phủ, giữ nguyên điểm thưởng và dùng
+$\lambda = \ConstLambdaOriginal$ (bộ gốc) hoặc $\lambda = \ConstLambdaRepaired$ (bộ đã sửa) --- tức là một bước \emph{phá
+hòa bằng Ochiai} cho SemLoc.
 
-\subsection{LLM + độ phủ: một prompt duy nhất}
+\textbf{Đề xuất rồi kiểm chứng} dùng kiểm thử làm trọng tài cho vị trí lỗi: (1) LLM + kiểm thử thất bại đề xuất các dòng
+nghi ngờ; (2) với $k$ dòng đầu, LLM viết một bản sửa nhỏ tại đúng dòng đó (cùng bộ đề xuất bản sửa và cùng tiêu chí
+``thay đổi nhỏ'' như bộ phán định nhãn), chương trình đã vá được chạy với bộ kiểm thử; dòng có bản sửa làm mọi kiểm thử
+đạt được đưa lên đầu. Tham số $k \in \{2, 3\}$, số lần thử mỗi dòng (1 hoặc 2), thứ tự giữa các dòng được xác nhận (theo
+LLM hoặc theo kích thước bản sửa) và giới hạn kích thước bản sửa (1, 2, 3 từ tố hoặc không giới hạn) tạo thành một lưới
+\PavGridSize{} cấu hình. Mọi lần thử được ghi lại, nên cả lưới được đánh giá offline từ một lượt chạy với cấu hình rộng
+nhất (3 dòng, 2 lần thử) trên \emph{tập dev}, 3 lần. Quy tắc chọn được cố định trong mã trước khi chạy: Acc@1 trung bình
+trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã sửa vì bộ đó được dựng bằng chính cơ chế sửa thử).
 
-Để trả lời ``quy trình nhiều bước có cần không'', nhóm xây phương pháp đối chứng đơn giản nhất có cùng thông tin: một lượt gọi LLM
-duy nhất (nhiệt độ $T = \ConstTemperature$) với mã nguồn trong đó mỗi dòng được chú thích số kiểm thử thất bại và
-thành công chạy qua nó, số kiểm thử đạt/không đạt, cùng tên và dòng lỗi đầu tiên của các kiểm thử thất bại; LLM trả về
-năm dòng nghi ngờ nhất dưới dạng JSON \IfAtLeastElse{full}{(nội dung prompt ở Phụ lục~\ref{chap:phu-luc})}{(nội dung prompt có trong kho mã)}. So với LLM hỏi thẳng, prompt này thêm \emph{cả} kết
-quả kiểm thử, thông báo lỗi \emph{và} độ phủ, nên phép so sánh đo tác dụng của bằng chứng thực thi trong prompt nói
-chung, chưa tách riêng độ phủ. Ý tưởng đưa bằng chứng đã khai
-thác vào prompt lấy từ báo cáo công nghiệp~\cite{medeiros2026crash} và FlexFL~\cite{xu2025flexfl}. Prompt được thiết kế
-trước khi xem kết quả trên tập test và không được tinh chỉnh.
+\textbf{Biểu quyết}: gộp ba câu trả lời của LLM + kiểm thử thất bại bằng tổng nghịch đảo hạng, cũng trên tập dev.
+
+\subsection{Phân tích tĩnh}
+
+Ruff (luật mặc định và mọi luật) và pyrefly (kiểm tra kiểu), phiên bản cố định, được chạy trên cả 250 chương trình. Một
+chương trình được tính là ``trúng'' khi có cảnh báo nằm đúng dòng lỗi chuẩn. Để biết con số trúng có ý nghĩa không, nhóm
+tính số trúng kỳ vọng nếu các dòng có cảnh báo được rải ngẫu nhiên trên các dòng mã của chương trình.
 
 \section{Kiểm tra cách đánh giá và phân rã đóng góp}
 \label{sec:audit-phan-ra}

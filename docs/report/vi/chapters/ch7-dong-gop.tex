@@ -7,83 +7,76 @@
 Mỗi đóng góp dưới đây được trình bày dưới dạng: khẳng định, bằng chứng (tệp dữ liệu trong kho mã), điều kiện sẽ bác bỏ
 nó, và giới hạn.
 
-\subsection{Đo phần ``grounded'' và phần ``guessed''}
+\subsection{C1. Hạng 1 của SemLoc là dòng LLM đoán}
 
-\textbf{Khẳng định.} Theo thiết kế, dòng hạng 1 của SemLoc luôn là dòng LLM tự đoán, nên Acc@1 của SemLoc
-(\RqTwoRepairedAllSemlocAccOneMean\%) chính là Acc@1 của dòng đoán; riêng phổ vi phạm ràng buộc đạt
-\RqTwoRepairedAllSemlocNoPriorAccOneMean\%. Phân rã Shapley là thông tin bổ sung: trên lượt chạy của nhóm, Acc@1 \DecSemlocRepairedAllAccOneFull\% = \DecSemlocRepairedAllAccOnePhiGuess{} (dòng đoán) +
-\DecSemlocRepairedAllAccOnePhiSpectrum{} (phổ); trên nhật ký của tác giả,
-\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOneFull\% = \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiGuess{} +
-\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiSpectrum; trên lỗi thật, Acc@1 của SemLoc bằng đúng Acc@1 của riêng
-dòng đoán (\BipAllLlmGuessAccOneMean\%). \textbf{Bằng chứng:} \texttt{data/rq\_decomposition.csv},
-\texttt{data/rq3\_bugsinpy.csv}. \textbf{Bác bỏ nếu:} bỏ điểm thưởng mà Acc@1 không giảm; ở đây Acc@1 giảm
-\RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm [\RqTwoRepairedAllSemlocNoPriorDAccOneLo;
-\RqTwoRepairedAllSemlocNoPriorDAccOneHi]. \textbf{Giới hạn:} giá trị Shapley phụ thuộc cách định nghĩa ``tắt'' một tín
-hiệu; dòng đoán thường lệch một dòng so với nhãn (Chương~\ref{chap:that-bai}).
+\textbf{Khẳng định.} Theo thiết kế, dòng hạng 1 của SemLoc luôn là dòng LLM tự đoán, nhờ một điểm thưởng không được mô tả
+trong bài báo; bằng chứng thực thi của SemLoc chỉ có tác dụng từ hạng 2 trở đi. Acc@1 của SemLoc
+(\RqTwoRepairedAllSemlocAccOneMean\% trên bộ đã sửa) là của dòng đoán; riêng phổ vi phạm đạt
+\RqTwoRepairedAllSemlocNoPriorAccOneMean\%; trên lỗi thật, Acc@1 của SemLoc bằng đúng Acc@1 của riêng dòng đoán
+(\BipAllLlmGuessAccOneMean\%). Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM nhưng không đổi thứ hạng nào.
+\textbf{Bằng chứng:} \texttt{data/rq\_decomposition.csv}, \texttt{data/rq3\_bugsinpy.csv}, \texttt{data/rq1\_cf\_identity.json}.
+\textbf{Bác bỏ nếu:} bỏ điểm thưởng mà Acc@1 không đi xuống; ở đây nó thay đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{}
+[\RqTwoRepairedAllSemlocNoPriorDAccOneLo; \RqTwoRepairedAllSemlocNoPriorDAccOneHi] điểm (bộ đã sửa) và
+\RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm (bộ đã rà soát). \textbf{Giới hạn:} giá trị Shapley phụ thuộc cách định nghĩa
+``tắt'' một tín hiệu.
 
-\subsection{Với lỗi được kiểm thử chạy tới, một prompt có bằng chứng thực thi vượt quy trình nhiều bước}
+\subsection{C2. Gần một nửa nhãn của SemFault-250 không trỏ đúng dòng lỗi}
 
-\textbf{Khẳng định.} Trên bộ dòng lỗi đã sửa (các lỗi mà một kiểm thử thất bại chạy tới), phương pháp đối chứng LLM + độ
-phủ có Acc@3 \RqTwoRepairedAllLlmCoverageAccThreeMean\% so với
-\RqTwoRepairedAllSemlocAccThreeMean\% của SemLoc ($\Delta$ \RqTwoRepairedAllLlmCoverageDAccThree{}
-[\RqTwoRepairedAllLlmCoverageDAccThreeLo; \RqTwoRepairedAllLlmCoverageDAccThreeHi]) và Acc@1 cao hơn
-($\Delta$ \RqTwoRepairedAllLlmCoverageDAccOne{} [\RqTwoRepairedAllLlmCoverageDAccOneLo;
-\RqTwoRepairedAllLlmCoverageDAccOneHi]); vẫn hơn trên lỗi ngữ nghĩa thuần; tốn \CostLlmCoverageTokensK{} nghìn token mỗi
-chương trình so với \CostSemlocTokensK{} nghìn; gần như không đổi khi đổi tên định danh ($\Delta$Acc@3
-\RenRepairedLlmCoverageDAccThree). \textbf{Bằng chứng:} \texttt{data/rq2\_ours.csv}, \texttt{data/rq3\_renamed.csv},
-\texttt{data/llm\_cost.csv}. \textbf{Giới hạn:} prompt khác chế độ trực tiếp của SemLoc ở nhiều điểm cùng lúc (độ phủ,
-kết quả kiểm thử, giả định một dòng lỗi), nên chênh lệch không quy riêng cho độ phủ; trên toàn bộ nhãn gốc, kể cả lỗi
-không kiểm thử nào chạy tới, phần hơn nhỏ hơn nhiều và SemLoc tốt hơn ở Acc@5; trên 31 lỗi thật, chênh lệch cùng chiều nhưng khoảng tin cậy còn chứa 0;
-so sánh theo từng mô hình chưa có khoảng tin cậy; prompt do nhóm thiết kế.
+\textbf{Khẳng định.} \LabaudAllMoved{} trong \LabaudAllN{} nhãn gốc bị dời khi rà soát (\LabaudAllBlank{} trên dòng trống,
+\LabaudAllOffByOne{} lệch một dòng); nhãn lệch có lợi cho SemLoc so với LLM hỏi thẳng. Nhóm công bố hai bộ nhãn: \emph{đã
+sửa} (chỉ kiểm thử quyết định, \GtConfirmedN{} xác nhận, \GtCorrectedN{} dời vị trí) và \emph{đã rà soát} (LLM rà trước,
+\ReviewReviewersN{} thành viên duyệt \ReviewHumanN{} nhãn, \ReviewOverrideN{} ca sửa có bằng chứng chạy kiểm thử).
+\textbf{Bằng chứng:} \texttt{data/label\_audit.csv}, \texttt{data/semfault\_verified\_gt.json},
+\texttt{data/semfault\_reviewed\_gt.json}, \texttt{docs/analysis/gt-review/}. \textbf{Giới hạn:} người duyệt có xem gợi ý
+của LLM và đồng ý ở \ReviewAgreeN{}/\ReviewHumanN{} ca, nên bộ đã rà soát không độc lập với LLM; mọi kết quả chính được
+báo cáo trên cả bộ gốc và bộ đã sửa.
 
-\subsection{Kết quả công bố phụ thuộc vào cách chấm và thành phần không được mô tả}
+\subsection{C3. Một prompt có kiểm thử thất bại thắng quy trình nhiều bước}
 
-\textbf{Khẳng định.} Tái hiện khớp toàn bộ cấu hình, nhưng: điểm thưởng ẩn cho dòng đoán chiếm phần lớn Acc@1; gỡ lỗi chia
-đôi đạt \RqOneDdAuthorAllAccOne\% theo mã chấm của tác giả và \RqOneDdFairAllAccOne\% khi chấm công bằng; Acc@5 của SBFL
-bị đánh giá thấp (\RqOneSbflOchiaiAuthorAllAccFive\% so với \RqOneSbflOchiaiFairAllAccFive\%); bước kiểm chứng phản
-thực tế không đổi thứ hạng nào dù chiếm \CostCfSharePct\% lượt gọi LLM; bộ chạy BugsInPy đo hạng của dòng đoán thay
-vì dòng đã sửa và để lại bản biên dịch cũ sau bước vá thử. \textbf{Bằng chứng:} \texttt{data/rq1\_audit.csv},
-\texttt{data/rq1\_cf\_identity.json}, \texttt{src/flx/bip\_run.py}.
+\textbf{Khẳng định.} LLM + kiểm thử thất bại hơn SemLoc ở Acc@1 trên cả ba bộ nhãn (\RqTwoRepairedAllLlmTestsDAccOne{}
+[\RqTwoRepairedAllLlmTestsDAccOneLo; \RqTwoRepairedAllLlmTestsDAccOneHi] trên bộ đã sửa) và ở Acc@3 trên bộ đã sửa và bộ
+đã rà soát, với \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với \CostSemlocTokensK{} nghìn.
+\textbf{Bằng chứng:} \texttt{data/rq2\_ours.csv}, \texttt{data/llm\_cost.csv}. \textbf{Bác bỏ nếu:} khoảng tin cậy của
+chênh lệch so với SemLoc nằm hẳn dưới 0 trên một bộ nhãn nào đó. \textbf{Giới hạn:} một mô hình chính; mỗi lần chỉ xét
+một hàm; trên 31 lỗi thật kết quả cùng chiều nhưng khoảng tin cậy còn chứa 0; prompt do nhóm thiết kế.
 
-\subsection{SemFault-250 đã sửa}
+\subsection{C4. Thêm phức tạp không thêm được gì --- và vì sao}
 
-\textbf{Khẳng định.} Bộ dòng lỗi chuẩn được kiểm chứng lại bằng thực thi (\GtConfirmedN{} xác nhận, \GtCorrectedN{} sửa vị
-trí); dùng nó làm Acc@1 của SemLoc tăng từ \RqTwoOriginalAllSemlocAccOneMean\% lên \RqTwoRepairedAllSemlocAccOneMean\%.
-\textbf{Giới hạn:} bộ phán định chấp nhận cả bản sửa bù trừ; các vị trí trên dòng trống đã bị loại, còn bản sửa bù trừ trên dòng
-có mã chưa được phát hiện tự động.
+\textbf{Khẳng định.} Trong prompt, kiểm thử thất bại là tín hiệu chính (Acc@3 \AblRepairedAllTestsEffectDAccThree{} so với
+LLM hỏi thẳng); độ phủ từng dòng không giúp ở Acc@3 và làm Acc@1 đi xuống. CovGate, đề xuất rồi kiểm chứng và biểu quyết
+không cải thiện được phương pháp chúng mở rộng; ruff và pyrefly gần như không trúng dòng lỗi. Cơ chế chung: một bản sửa nhỏ
+làm mọi kiểm thử đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi, nên kiểm thử không làm được trọng
+tài cho vị trí lỗi. \textbf{Bằng chứng:} \texttt{data/ablation\_coverage.csv}, \texttt{data/pav\_dev\_grid.csv},
+\texttt{data/pav\_mechanism.csv}, \texttt{data/vote\_dev.csv}, \texttt{data/static\_tools.csv}. \textbf{Giới hạn:} đề xuất
+rồi kiểm chứng và biểu quyết chỉ được đánh giá trên tập dev; kết quả âm tính nói về các cách đã thử trên bộ dữ liệu này,
+không chứng minh mọi cách bổ sung đều vô ích.
 
-\subsection{Mơ hồ dòng kề cạnh của Acc@1 cấp dòng}
+\subsection{C5. Bảng kiểm tra đánh giá và gói tái hiện}
 
-\textbf{Khẳng định.} Với lỗi trải trên dòng điều kiện và câu lệnh được bảo vệ, Acc@1 đổi hơn hai mươi điểm theo quy ước
-gán nhãn (SemLoc \TolSemlocAccOneExact\% $\to$ \TolSemlocAccOneGuardStrict\%); thứ tự giữa các phương pháp giữ nguyên.
-\textbf{Bằng chứng:} \texttt{data/failure\_tolerance.csv}.
-
-\subsection{CovGate, bảng kiểm tra đánh giá và gói tái hiện}
-
-CovGate tăng Acc@3 \RqTwoRepairedAllCovgateDAccThree{} điểm [\RqTwoRepairedAllCovgateDAccThreeLo;
-\RqTwoRepairedAllCovgateDAccThreeHi] và giữ nguyên Acc@1 --- gắn thêm bằng chứng vào quy trình nhiều bước chỉ giúp ít so với đưa thẳng
-bằng chứng cho LLM; với $\lambda$ chọn trên tập dev, CovGate thực chất là một bộ phá hòa bằng Ochiai. Bảng kiểm tra bảy mục
-(phá hòa, mẫu số, dòng lỗi kiểm chứng, loại bỏ thành phần ẩn, lặp và kiểm định, chi phí, so với một prompt có cùng bằng
-chứng) được áp cho mọi phương pháp. Gói tái hiện gồm Docker chạy không cần mạng, toàn bộ nhật ký và bộ đệm lượt
-gọi LLM để phát lại, và macro sinh tự động cho mọi con số trong báo cáo.
+Bảng kiểm tra bảy mục (phá hòa, mẫu số, dòng lỗi kiểm chứng, loại bỏ thành phần ẩn, lặp và kiểm định, chi phí, so với một
+prompt có kiểm thử thất bại) được áp cho mọi phương pháp. Gói tái hiện gồm Docker chạy không cần mạng, toàn bộ nhật ký và
+bộ đệm lượt gọi LLM để phát lại, tệp duyệt nhãn của từng thành viên, và macro sinh tự động cho mọi con số trong báo cáo.
 
 \section{Triết lý khoa học}
 \label{sec:triet-ly}
 
-\subsection{Bằng chứng thực thi là trọng tài}
+\subsection{Bằng chứng thực thi là trọng tài --- và giới hạn của nó}
 
-Ở mọi chỗ cần phán xử --- dòng nào là lỗi, bản sửa nào đúng --- nhóm để kiểm thử quyết định, LLM chỉ sinh ứng viên. Đây
-cũng chính là câu hỏi đặt cho SemLoc: nếu một phương pháp tuyên bố neo lập luận vào thực thi, phần neo đó phải được đo.
+Ở mọi chỗ cần phán xử, nhóm ưu tiên để kiểm thử quyết định và để LLM chỉ sinh ứng viên; khi kiểm thử không đủ để quyết
+định (nhãn của lỗi hai dòng, lỗi thiếu mã, bản sửa bù trừ), nhóm dùng thêm người duyệt và nói rõ phần nào do ai quyết
+định. Đây cũng chính là câu hỏi đặt cho SemLoc: nếu một phương pháp tuyên bố neo lập luận vào thực thi, phần neo đó phải được đo.
 Tái hiện không phải là chép lại con số: khớp số công bố là điều kiện cần; điều kiện đủ là hiểu vì sao ra con số đó và kết
 quả còn đứng vững khi đổi cách chấm hợp lý.
 
 \subsection{Đo đóng góp, so với phương pháp đối chứng đơn giản, và chấp nhận bị bác bỏ}
 
 Một con số Acc@1 không nói nó đến từ đâu; phân rã đóng góp và loại bỏ từng thành phần biến câu hỏi ``phương pháp có tốt
-không'' thành ``phần nào làm nó tốt''. Một quy trình nhiều bước chỉ đáng giá khi thắng phương pháp đối chứng đơn giản nhất có cùng
-thông tin. Mỗi khẳng định đi kèm điều kiện bác bỏ và khoảng tin cậy; đơn vị lấy mẫu là chương trình (hoặc cụm khuôn
+không'' thành ``phần nào làm nó tốt''. Một quy trình nhiều bước chỉ đáng giá khi thắng cách đơn giản mà người làm nghề
+vẫn dùng --- ở đây là đưa kiểm thử thất bại cho LLM. Kiểm thử là trọng tài tốt cho \emph{việc chương trình có đúng không},
+nhưng chỉ là trọng tài tốt cho \emph{chỗ sai nằm ở đâu} khi bộ kiểm thử đủ chặt; nhóm báo cáo cả các kết quả âm tính
+cho thấy giới hạn đó. Mỗi khẳng định đi kèm điều kiện bác bỏ và khoảng tin cậy; đơn vị lấy mẫu là chương trình (hoặc cụm khuôn
 mẫu), không coi các lần chạy là mẫu độc lập; kết quả được báo cáo cả khi khoảng tin cậy chứa 0. Cuối cùng, bộ dữ liệu
-cũng là một giả thuyết: nhãn do người gán có thể sai hoặc mơ hồ, và chính bộ phán định sửa nhãn cũng có giới hạn cần nêu rõ.
+cũng là một giả thuyết: nhãn có thể sai hoặc mơ hồ, và cả bộ phán định sửa nhãn lẫn vòng rà soát của nhóm đều có giới hạn cần nêu rõ.
 
 \section{Các mối đe dọa đến tính hợp lệ}
 \label{sec:moi-de-doa}
@@ -97,17 +90,24 @@ cáo trên bộ gốc.
 dòng sửa; so sánh giữa SemLoc, các phương pháp đối chứng dùng LLM và CovGate ở Acc@1 và Acc@3 cùng chiều trên bộ gốc, riêng cổng độ phủ
 thì không; ở Acc@5, SemLoc hơn LLM + độ phủ trên bộ gốc nhưng kém trên bộ đã sửa.
 \item \textbf{Mơ hồ dòng kề cạnh}: Acc@1 chặt phụ thuộc quy ước gán nhãn; nhóm báo cáo cả Acc@1 chấp nhận đầu khối/thân khối.
-\item \textbf{Prompt phương pháp đối chứng} do nhóm viết trước khi xem kết quả và không tinh chỉnh; prompt khác có thể cho kết quả khác.
+\item \textbf{Prompt của phương pháp một prompt} do nhóm viết trước khi xem kết quả và không tinh chỉnh; prompt khác có thể cho kết quả khác.
+\item \textbf{Vòng tròn của bộ nhãn đã rà soát}: nhãn do một LLM đề xuất và người duyệt có xem gợi ý, nên các phương pháp
+dùng LLM có thể ``nghĩ giống'' người ra đáp án; kết quả chính vì vậy được báo cáo trên bộ gốc và bộ đã sửa (không có ý kiến LLM).
+\item \textbf{Nhãn hai dòng} (\LabaudAllTwoLine{} chương trình) làm Acc@$k$ trên bộ đã rà soát dễ hơn một chút.
+\item \textbf{Tên kiểm thử ``nói hộ'' lỗi}: kiểm thử của SemFault-250 mô tả rất rõ ý định; trên dự án có kiểm thử đặt tên
+chung chung, lợi thế của phương pháp một prompt có thể nhỏ hơn. Nhóm chưa chạy thí nghiệm giấu tên kiểm thử.
 \end{itemize}
 
 \subsection{Tính hợp lệ ngoại tại}
 
 \begin{itemize}
 \item \textbf{Lỗi thật ít và chỉ một dự án} (31 lỗi youtube-dl); hàm đích được chọn từ bản sửa của lập trình viên nên định
-vị cấp hàm không được đánh giá; một lỗi còn hai kiểm thử thất bại do môi trường trong bộ chạy gốc của SemLoc.
+vị cấp hàm --- phần khó nhất trên dự án lớn --- không được đánh giá; một lỗi còn hai kiểm thử thất bại do môi trường trong bộ chạy gốc của SemLoc.
 \item \textbf{Mô hình}: mô hình chính mới hơn mô hình trong bài gốc; mỗi nhà cung cấp chạy ở mức suy luận mặc định, nên
 so sánh giữa họ mô hình là ``ở mặc định'' chứ không cùng mức suy luận; Claude qua cổng trung gian sinh ràng buộc yếu hơn
 nhật ký công bố.
+\item \textbf{Đề xuất rồi kiểm chứng và biểu quyết} chỉ được đánh giá trên tập dev (50 chương trình); kết luận âm tính dựa
+trên mức chênh bằng 0 ở cấu hình được chọn và cơ chế đo được, không phải trên tập test.
 \item \textbf{Nhiễm dữ liệu}: biến thể đổi tên chỉ đổi định danh và xóa chú thích, cấu trúc mã giữ nguyên, nên không loại
 trừ hoàn toàn việc mô hình đã thấy các khuôn mẫu.
 \end{itemize}

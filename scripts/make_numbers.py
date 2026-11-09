@@ -182,6 +182,26 @@ def computed() -> dict[str, str]:
                          ("direct_tests_test_gemini_r", "llm tests")):
         rs = [float(r["tokens_per_program"]) for r in cost if r["run_id"].startswith(prefix)]
         out[macro_name("cost", *name.split(), "tokens", "k")] = f"{sum(rs) / len(rs) / 1000:.1f}" if rs else ""
+    rev = DATA / "semfault_reviewed_gt.json"
+    if rev.exists():  # team review of the labels: how many, how many overrides, agreement with the LLM suggestion
+        recs = json.loads(rev.read_text())
+        out[macro_name("review", "human", "n")] = str(sum("reviewer" in r for r in recs))
+        out[macro_name("review", "override", "n")] = str(sum(r["source"] == "override" for r in recs))
+        review_dir = ROOT / "docs" / "analysis" / "gt-review"
+        llm = {}
+        for name in ("review.csv", "review_rest.csv"):
+            for r in csv.DictReader(open(review_dir / name)):
+                v = r["llm_verdict"]
+                llm[r["program"]] = {"new": "S", "neither": "F", "original": "G", "other": "F"}.get(v, "")
+        answers = [r for f in sorted((review_dir / "thanh-vien").glob("*.csv"))
+                   for r in csv.DictReader(open(f, encoding="utf-8-sig"))]
+        out[macro_name("review", "agree", "n")] = str(sum(a["answer"].strip().upper() == llm.get(a["program"]) for a in answers))
+        out[macro_name("review", "reviewers", "n")] = str(len(list((review_dir / "thanh-vien").glob("*.csv"))))
+        oracle = {r["program"]: r for r in json.loads((DATA / "semfault_verified_gt.json").read_text())}
+        byp = {r["program"]: r for r in recs}
+        moved = [p for p, r in oracle.items() if r["status"] == "corrected"]
+        out[macro_name("review", "corrected", "overturned", "n")] = str(
+            sum(not set(byp[p]["lines"]) & set(oracle[p]["lines"]) for p in moved))
     grid = DATA / "pav_dev_grid.csv"
     if grid.exists():  # propose-and-verify on dev: stage 1 alone, the selected knobs, and the worst grid point
         rows = _rows(grid)

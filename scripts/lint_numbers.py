@@ -21,7 +21,7 @@ STRIP = [
     (re.compile(r"\d+(?:[.,]\d+)?\s*(?:pt|cm|mm|em|ex|in|bp|sp|\\linewidth|\\textwidth|\\columnwidth)"), " "),
     (re.compile(r"(?i)(?:phiên bản|version|python|v)\s*\d+(?:\.\d+)+"), " "),
     (re.compile(r"(?i)(?:kỳ|semester)\s*\d{4}[.,]\d"), " "),                    # semester label, e.g. học kỳ 2026.1
-    (re.compile(r"(?i)(?:sonnet|opus|haiku|gemini|gpt|claude)[- ~]?\d+(?:\.\d+)+"), " "),  # model names
+    (re.compile(r"(?i)(?:sonnet|opus|haiku|fable|gemini|gpt|claude)[- ~]?\d+(?:\.\d+)+"), " "),  # model names
 ]
 NUMBER = re.compile(r"(?<![\w.\\])(?:\d+(?:[.,]\d+)?\s*\\%|\d+[.,]\d+(?![\w.]))")  # a percentage, or a decimal
 
