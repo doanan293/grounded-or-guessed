@@ -1,8 +1,40 @@
 \chapter{Kết luận và hướng phát triển}
-\TODO{Tóm tắt kết quả, hạn chế, hướng phát triển.}
+\label{chap:ket-luan}
 
-\section{Mục thứ nhất}
-\TODO{nội dung}
+\section{Kết luận}
+\label{sec:ket-luan}
 
-\section{Mục thứ hai}
-\TODO{nội dung}
+Tiểu luận đặt câu hỏi ``grounded hay guessed'' cho SemLoc~\cite{yang2026semloc}, phương pháp định vị lỗi ngữ nghĩa neo
+lập luận của LLM vào ràng buộc thực thi được. Bằng cách tái hiện từ mã nguồn và dữ liệu của tác giả, kiểm chứng lại bộ
+dữ liệu bằng thực thi, lặp lại thực nghiệm ba lần với kiểm định thống kê và phân rã đóng góp của từng tín hiệu, nhóm rút
+ra ba kết luận.
+
+Thứ nhất, kết quả công bố tái hiện được, nhưng ở hạng 1 phần lớn độ chính xác của SemLoc đến từ dòng lỗi mà LLM tự đoán
+và được cộng điểm thưởng --- một thành phần không có trong bài báo: dòng đoán đóng góp
+\DecSemlocRepairedAllAccOnePhiGuess{} trên \DecSemlocRepairedAllAccOneFull{} điểm Acc@1, và trên lỗi thật thì mọi lần
+đúng ở hạng 1 đều là dòng đoán. Bằng chứng thực thi có ích thật, nhưng chủ yếu ở top-3.
+
+Thứ hai, bằng chứng thực thi phát huy tốt nhất khi được đưa thẳng cho LLM: một prompt duy nhất có số kiểm thử đạt/không
+đạt chạy qua mỗi dòng vượt cả pipeline nhiều bước ở cả Acc@1 và Acc@3, tốn ít token hơn khoảng năm lần, ổn định qua năm
+mô hình và gần như không bị ảnh hưởng khi đổi tên định danh. Cải tiến CovGate gắn độ phủ vào pipeline chỉ giúp ít.
+
+Thứ ba, đánh giá định vị lỗi bằng LLM nhạy với cách chấm và với bộ dữ liệu: cách phá hòa, cách tính mẫu số và các dòng
+lỗi chuẩn sai đều làm thay đổi con số đáng kể.
+\IfAtLeast{lan2}{Phân tích thất bại cho thấy thêm rằng độ chính xác cấp dòng phụ thuộc vào việc dòng lỗi được gán ở dòng
+điều kiện hay ở câu lệnh mà điều kiện bảo vệ.}
+Vì vậy, nhóm đề xuất mọi đánh giá như vậy kèm bảng kiểm tra sáu mục: phá hòa bằng hạng trung bình, mẫu số cố định, dòng
+lỗi chuẩn được kiểm chứng, loại bỏ từng thành phần kể cả thành phần ẩn, lặp và kiểm định, báo cáo chi phí.
+
+\section{Hướng phát triển}
+\label{sec:huong-phat-trien}
+
+\IfAtLeast{full}{}{\textbf{Kế hoạch đến bài nộp cuối.}
+\IfAtLeast{lan2}{Hoàn thiện bài báo tiếng Anh theo chuẩn arXiv, tự phản biện theo năm chiều, chỉnh sửa theo góp ý của
+giảng viên sau hai lần báo cáo và chuẩn bị slide bảo vệ.}{Phân tích các ca thất bại và phân nhóm nguyên nhân, chốt
+danh sách đóng góp và quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ (báo cáo lần 2), sau đó hoàn thiện bài báo
+tiếng Anh theo chuẩn arXiv.}
+
+}Về nghiên cứu, ba hướng mở ra từ kết quả: (i) oracle kiểm chứng dòng lỗi cho phép nhiều vị trí và chống các bản sửa
+``bù trừ'' (làm kiểm thử đạt mà không sửa đúng chỗ lỗi), kèm phân xử thủ công các ca tranh chấp; (ii) đánh giá trên lỗi
+thật của nhiều dự án hơn và ở định vị cấp hàm trước khi xuống cấp dòng; (iii) một chuẩn đánh giá chung cho định vị lỗi
+bằng LLM, trong đó baseline ``một prompt có bằng chứng thực thi'' là mốc bắt buộc.

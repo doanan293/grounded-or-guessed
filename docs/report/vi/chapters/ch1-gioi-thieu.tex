@@ -1,8 +1,84 @@
-\chapter{Giới thiệu}
-\TODO{Đặt vấn đề, đóng góp khoa học chính, cấu trúc báo cáo.} Phương pháp gốc là SemLoc~\cite{yang2026semloc}; mốc so sánh truyền thống là SBFL~\cite{jones2002,abreu2009}.
+\chapter{Mở đầu}
+\label{chap:mo-dau}
 
-\section{Mục thứ nhất}
-\TODO{nội dung}
+\section{Đặt vấn đề}
+\label{sec:dat-van-de}
 
-\section{Mục thứ hai}
-\TODO{nội dung}
+Định vị lỗi là bước tốn công nhất của gỡ lỗi: khi một bộ kiểm thử báo thất bại, lập trình viên phải tìm ra dòng mã gây
+lỗi trong hàng trăm dòng có liên quan. Họ phương pháp được dùng rộng rãi nhất là định vị lỗi dựa trên phổ độ phủ
+(SBFL)~\cite{jones2002,abreu2009,wong2016survey}: một dòng càng hay được các kiểm thử thất bại chạy qua và càng ít được
+các kiểm thử thành công chạy qua thì càng đáng nghi. Cách làm này rẻ, không cần hiểu ngữ nghĩa chương trình, và hoạt
+động tốt khi lỗi làm thay đổi đường thực thi.
+
+Với \emph{lỗi ngữ nghĩa} --- chương trình chạy đúng đường nhưng tính sai giá trị, ví dụ một phép so sánh lệch biên hay
+một hằng số trừ thừa một đơn vị --- kiểm thử thành công và thất bại thường chạy qua cùng một tập dòng. Phổ độ phủ khi
+đó gần như không phân biệt được dòng lỗi với các dòng xung quanh. Trên bộ dữ liệu SemFault-250, SBFL theo công thức
+Ochiai chỉ đặt đúng dòng lỗi ở hạng 1 trong \RqOneSbflOchiaiFairAllAccOne\% số chương trình khi được chấm công bằng
+(Chương~\ref{chap:ket-qua}).
+
+Mô hình ngôn ngữ lớn (LLM) mở ra hướng ngược lại: đọc mã nguồn, hiểu ý đồ và đoán dòng sai. Các hệ thống định vị lỗi
+dựa trên LLM như AutoFL~\cite{kang2024autofl}, AgentFL~\cite{qin2025agentfl} hay FlexFL~\cite{xu2025flexfl} cho kết quả
+ấn tượng, nhưng câu trả lời của LLM mang tính ngẫu nhiên, khó kiểm chứng và có thể chịu ảnh hưởng của việc mô hình đã
+thấy dữ liệu đánh giá khi huấn luyện~\cite{sallou2024,ramos2024memorize}.
+
+SemLoc~\cite{yang2026semloc} --- bài báo trung tâm trong ba bài được giảng viên giao --- đề xuất một cách dung hòa: bắt
+LLM viết ra các \emph{ràng buộc ngữ nghĩa có thể thực thi}, chèn chúng vào chương trình, chạy kiểm thử, rồi dùng phổ
+vi phạm ràng buộc để xếp hạng dòng. Ý tưởng cốt lõi là \emph{neo lập luận của LLM vào bằng chứng thực thi}
+(structured grounding): LLM đưa giả thuyết, còn kết quả chạy chương trình mới quyết định. SemLoc báo cáo Acc@1
+\RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% trên SemFault-250, vượt xa SBFL.
+
+\section{Câu hỏi nghiên cứu}
+\label{sec:cau-hoi}
+
+Tiểu luận đặt một câu hỏi đơn giản cho SemLoc: \textbf{độ chính xác của nó đến từ bằng chứng thực thi (``grounded'')
+hay từ việc LLM đoán (``guessed'')?} Câu hỏi này được tách thành ba câu hỏi nghiên cứu:
+
+\begin{itemize}
+\item \textbf{RQ1 -- Tái hiện và kiểm tra cách đánh giá.} Kết quả công bố của SemLoc có tái hiện được không, và còn
+đứng vững khi chấm điểm công bằng, khi bỏ các thành phần không được mô tả trong bài báo, khi sửa các dòng lỗi chuẩn
+(ground truth) sai của bộ dữ liệu?
+\item \textbf{RQ2 -- Cải tiến và đối chứng.} Bổ sung tín hiệu độ phủ vào SemLoc (cải tiến CovGate) có làm tốt hơn
+không, và một prompt duy nhất chứa bằng chứng độ phủ (LLM + độ phủ) so với toàn bộ pipeline của SemLoc thì sao, về cả
+độ chính xác lẫn chi phí?
+\item \textbf{RQ3 -- Độ bền.} Các kết luận trên có giữ được trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã
+đổi tên định danh (kiểm tra việc LLM ghi nhớ bộ dữ liệu) và trên năm họ mô hình khác nhau không?
+\end{itemize}
+
+\section{Đóng góp chính}
+\label{sec:dong-gop-tom-tat}
+
+Tiểu luận có các đóng góp sau; mỗi đóng góp gắn với số liệu được sinh tự động từ mã nguồn công khai.
+
+\begin{enumerate}
+\item \textbf{Đo phần ``grounded'' và phần ``guessed''.} Bằng phân rã Shapley, Acc@1 \DecSemlocRepairedAllAccOneFull\%
+của SemLoc (lượt chạy của nhóm) gồm \DecSemlocRepairedAllAccOnePhiGuess{} điểm đến từ dòng LLM tự đoán và
+\DecSemlocRepairedAllAccOnePhiSpectrum{} điểm đến từ phổ vi phạm ràng buộc; trên lỗi thật, Acc@1 của SemLoc
+(\BipAllSemlocPriorAccOneMean\%) bằng đúng Acc@1 của riêng dòng đoán (\BipAllLlmGuessAccOneMean\%).
+\item \textbf{Một prompt có độ phủ vượt cả pipeline.} Baseline LLM + độ phủ do nhóm thiết kế đạt Acc@3
+\RqTwoRepairedAllLlmCoverageAccThreeMean\% so với \RqTwoRepairedAllSemlocAccThreeMean\% của SemLoc, tốn ít token hơn
+khoảng năm lần và gần như không bị ảnh hưởng khi đổi tên định danh.
+\item \textbf{Kiểm tra cách đánh giá.} Tái hiện khớp toàn bộ cấu hình công bố nhưng chỉ ra một điểm thưởng ẩn cho dòng
+LLM đoán, bước kiểm chứng phản thực tế không làm thay đổi thứ hạng nào, cách chấm lạc quan cho gỡ lỗi chia đôi và SBFL,
+và hai lỗi trong bộ chạy BugsInPy của SemLoc.
+\item \textbf{SemFault-250-verified.} Dòng lỗi chuẩn được kiểm chứng lại bằng thực thi:
+\GtConfirmedN{} được xác nhận, \GtCorrectedN{} được sửa vị trí; \GtBlankN{} dòng chuẩn gốc là dòng trống.
+\item \textbf{CovGate}, một cải tiến nhỏ nhưng có ý nghĩa thống kê ở top-3, cùng bảng kiểm tra (checklist) đánh giá
+sáu mục áp dụng cho mọi phương pháp.
+\end{enumerate}
+
+\IfAtLeast{lan2}{Ngoài ra, phân tích thất bại (Chương~\ref{chap:that-bai}) cho thấy độ chính xác cấp dòng phụ thuộc
+mạnh vào việc dòng lỗi chuẩn được gán ở dòng điều kiện hay ở câu lệnh mà điều kiện đó bảo vệ, và Chương~\ref{chap:dong-gop}
+trình bày quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ của kết quả.}
+
+\section{Cấu trúc báo cáo}
+\label{sec:cau-truc}
+
+Chương~\ref{chap:tong-quan} tổng quan tài liệu và bộ từ khóa, trong đó phân tích ba bài báo được giao.
+Chương~\ref{chap:co-so} trình bày cơ sở lý thuyết về SBFL, lỗi ngữ nghĩa, SemLoc và các công cụ thống kê.
+Chương~\ref{chap:phuong-phap} mô tả câu hỏi nghiên cứu, dữ liệu, các phương pháp so sánh và thiết kế thực nghiệm.
+Chương~\ref{chap:ket-qua} trả lời ba câu hỏi nghiên cứu.
+\IfAtLeast{lan2}{Chương~\ref{chap:that-bai} phân tích các ca thất bại; Chương~\ref{chap:dong-gop} tổng hợp đóng góp,
+triết lý khoa học và các mối đe dọa.}
+Chương~\ref{chap:ket-luan} kết luận và nêu hướng phát triển.
+\IfAtLeast{full}{Phụ lục hướng dẫn tái hiện toàn bộ kết quả.}
+Mã nguồn, dữ liệu và nhật ký gọi LLM được công bố tại \url{https://github.com/doanan293/grounded-or-guessed}.

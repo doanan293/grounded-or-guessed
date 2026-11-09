@@ -1,8 +1,132 @@
 \chapter{Phương pháp và thiết kế thực nghiệm}
-\TODO{CovGate — kết hợp độ phủ với phổ vi phạm ràng buộc.}
+\label{chap:phuong-phap}
 
-\section{Mục thứ nhất}
-\TODO{nội dung}
+\section{Câu hỏi nghiên cứu và giả thuyết}
+\label{sec:rq}
 
-\section{Mục thứ hai}
-\TODO{nội dung}
+\subsection{Ba câu hỏi nghiên cứu}
+
+\textbf{RQ1 (tái hiện và kiểm tra cách đánh giá):} các con số công bố của SemLoc có tái hiện được từ dữ liệu và mã nguồn
+của tác giả không; chúng thay đổi thế nào khi (a) chấm điểm công bằng, (b) bỏ các thành phần không được mô tả trong bài
+báo, (c) dùng dòng lỗi chuẩn đã được kiểm chứng bằng thực thi, (d) chạy lại với mô hình khác?
+
+\textbf{RQ2 (cải tiến và đối chứng):} trên cùng các chương trình và cùng mô hình, (a) cải tiến CovGate có làm SemLoc tốt
+hơn không và thành phần nào của nó có tác dụng; (b) một prompt duy nhất có bằng chứng độ phủ (LLM + độ phủ) so với toàn
+bộ pipeline SemLoc thế nào về độ chính xác và chi phí; (c) bao nhiêu phần độ chính xác của SemLoc đến từ bằng chứng
+thực thi, bao nhiêu từ dòng LLM tự đoán?
+
+\textbf{RQ3 (độ bền):} các kết luận của RQ2 có còn đúng (a) trên lỗi thật của BugsInPy, (b) khi đổi tên mọi định danh
+và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên năm mô hình thuộc các họ khác nhau?
+
+\subsection{Giả thuyết và tiêu chí bác bỏ}
+
+Giả thuyết chính của tiểu luận là: \emph{ở hạng 1, độ chính xác của SemLoc chủ yếu đến từ dòng LLM tự đoán; bằng chứng
+thực thi đóng góp chủ yếu ở top-3}. Giả thuyết bị bác bỏ nếu bỏ điểm thưởng cho dòng đoán mà Acc@1 không giảm, hoặc nếu
+giá trị Shapley của phổ vi phạm ở Acc@1 lớn hơn của dòng đoán. Giả thuyết phụ: \emph{một prompt có bằng chứng độ phủ
+không kém pipeline}; bị bác bỏ nếu khoảng tin cậy của chênh lệch Acc@3 nằm hẳn dưới 0.
+
+\section{Dữ liệu}
+\label{sec:du-lieu}
+
+\subsection{SemFault-250 và cách chia tập}
+
+SemFault-250~\cite{yang2026semloc} gồm 250 chương trình Python một hàm, mỗi chương trình có đúng một lỗi được cài vào và
+khoảng mười kiểm thử. Nhóm chia cố định 50 chương trình làm tập phát triển (dev) --- chỉ dùng để chọn tham số --- và 200
+chương trình làm tập kiểm tra (test) để báo cáo, phân tầng theo nhãn lỗi (mục~\ref{sec:loi-ngu-nghia}) với hạt giống cố
+định. Vì nhiều chương trình được sinh từ cùng một khuôn mẫu, nhóm gom các chương trình có cấu trúc giống nhau thành cụm
+(độ tương đồng 4-gram Jaccard trên dạng chuẩn hóa của mã) để dùng trong bootstrap theo cụm.
+
+\subsection{SemFault-250-verified: kiểm chứng dòng lỗi chuẩn bằng thực thi}
+
+Kiểm tra dòng lỗi chuẩn cho thấy \GtBlankN{} dòng là dòng trống và \GtNotExecutedN{} chương trình không có kiểm thử thất
+bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{oracle sửa tối thiểu}: một dòng được coi là vị trí lỗi nếu thay nó
+bằng một dòng khác (hoặc chèn một dòng vào dòng trống, với lỗi thiếu mã) với \emph{thay đổi nhỏ} làm \emph{mọi} kiểm thử
+đạt. LLM chỉ đề xuất các bản sửa ứng viên; kiểm thử quyết định. Bản sửa được coi là nhỏ khi khác dòng gốc tối đa hai
+từ tố hoặc tối đa một phần ba số từ tố của dòng. Kết quả: \GtConfirmedN{} chương trình được \emph{xác nhận} (sửa được ngay
+tại dòng chuẩn), \GtCorrectedN{} được \emph{sửa vị trí} (dòng chuẩn không chạy tới được nhưng một dòng gần đó sửa được),
+\GtUnverifiedN{} \emph{chưa kiểm chứng được} (dòng chuẩn chạy tới được nhưng không bản sửa đề xuất nào đạt) và
+\GtUnverifiableN{} \emph{không kiểm chứng được}. Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
+nên bị loại; bộ dòng lỗi chuẩn đã sửa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã sửa.
+
+\subsection{Lỗi thật BugsInPy}
+
+Nhóm dựng môi trường cho các lỗi của dự án youtube-dl trong BugsInPy~\cite{widyasari2020} và giữ những lỗi thỏa đủ bốn
+điều kiện: môi trường cài được, kiểm thử của lỗi tái hiện được thất bại trên phiên bản lỗi, đạt trên phiên bản đã sửa,
+và đo được độ phủ --- được 31 lỗi. Hàm đích là hàm chứa dòng bị lập trình viên sửa mà kiểm thử thất bại được khai báo
+thực sự chạy qua; dòng lỗi chuẩn là các dòng bị sửa trong hàm đó. Kiểm thử thất bại do môi trường (không được BugsInPy
+khai báo) bị loại khỏi ma trận độ phủ.
+
+\subsection{Biến thể đổi tên định danh}
+
+Để kiểm tra khả năng mô hình ghi nhớ SemFault-250~\cite{ramos2024memorize,xu2024contam}, nhóm đổi tên mọi định danh do
+chương trình tự định nghĩa (hàm, tham số, biến, hằng) thành tên vô nghĩa, xóa chú thích và docstring nhưng \emph{giữ
+nguyên số dòng}, chỉ giữ các tên mà kiểm thử phụ thuộc. Mỗi biến thể được kiểm tra tự động: cùng số dòng, cùng kết quả
+đạt/không đạt của từng kiểm thử như bản gốc; chương trình nào lệch bị loại. Kết quả là 199 chương trình của tập test.
+
+\section{Các phương pháp so sánh}
+\label{sec:phuong-phap-so-sanh}
+
+\subsection{Các phương pháp có sẵn}
+
+\begin{itemize}
+\item \textbf{SBFL Ochiai, DStar} trên ma trận độ phủ do nhóm thu thập (mỗi kiểm thử một ngữ cảnh độ phủ).
+\item \textbf{LLM hỏi thẳng}: chế độ của SemLoc tắt chỉ mục ngữ nghĩa, LLM chỉ đọc mã và trả về các dòng nghi ngờ.
+\item \textbf{SemLoc} như phát hành, chạy qua mã nguồn gốc của tác giả, chỉ thay lớp gọi LLM bằng cổng của nhóm
+(cùng prompt, cùng logic).
+\end{itemize}
+
+\subsection{CovGate: bổ sung độ phủ vào SemLoc}
+
+CovGate lấy điểm dòng của SemLoc và bổ sung bằng chứng độ phủ, gồm bốn thành phần có thể bật/tắt:
+(1) \emph{cổng độ phủ} --- bỏ các dòng không kiểm thử thất bại nào chạy qua; (2) \emph{cộng} $\lambda\cdot$Ochiai vào điểm
+của dòng, với $\lambda \in \{\ConstLambdaGrid\}$; (3) \emph{xếp lại bằng kết quả kiểm chứng phản thực tế} --- đưa các dòng
+của ràng buộc được bản vá xác nhận lên đầu, điều mà mã gốc tính ra nhưng không dùng; (4) \emph{chỉ thưởng khi có căn
+cứ} --- giữ điểm thưởng cho dòng LLM đoán chỉ khi dòng đó được kiểm thử thất bại chạy qua và có ràng buộc bị vi phạm
+quy về nó. Tổ hợp tham số được chọn \emph{chỉ trên tập dev}, theo Acc@3 rồi Acc@1, gộp qua năm cấu hình công bố; tập
+test không bao giờ được dùng để chọn.
+
+\subsection{LLM + độ phủ: một prompt duy nhất}
+
+Để trả lời ``pipeline nhiều bước có cần không'', nhóm xây baseline đơn giản nhất có cùng thông tin: một lượt gọi LLM
+duy nhất với mã nguồn trong đó mỗi dòng được chú thích số kiểm thử thất bại và thành công chạy qua nó, cùng tên và dòng
+lỗi đầu tiên của các kiểm thử thất bại; LLM trả về năm dòng nghi ngờ nhất dưới dạng JSON. Ý tưởng đưa bằng chứng đã khai
+thác vào prompt lấy từ báo cáo công nghiệp~\cite{medeiros2026crash} và FlexFL~\cite{xu2025flexfl}. Prompt được thiết kế
+trước khi xem kết quả trên tập test và không được tinh chỉnh.
+
+\section{Kiểm tra cách đánh giá và phân rã đóng góp}
+\label{sec:audit-phan-ra}
+
+\subsection{Kiểm tra cách đánh giá của SemLoc}
+
+Từ nhật ký công bố của tác giả, nhóm tính lại mọi cấu hình theo hai cách: \emph{cách chấm của tác giả} (phá hòa theo
+thứ tự dòng, gỡ lỗi chia đôi trúng bất kỳ dòng nào tính là hạng 1, chương trình chạy lỗi bị loại khỏi mẫu số) và
+\emph{cách chấm công bằng} (hạng trung bình khi hòa, mẫu số cố định, công thức~\eqref{eq:acck}). Nhóm cũng loại bỏ lần
+lượt các thành phần không được mô tả trong bài báo (điểm thưởng dòng đoán) và kiểm tra bước kiểm chứng phản thực tế có
+làm thay đổi thứ hạng hay không.
+
+\subsection{Phân rã ``grounded hay guessed''}
+
+Điểm dòng của SemLoc là tổng của hai tín hiệu: phổ vi phạm ràng buộc (bằng chứng thực thi) và điểm thưởng cho dòng LLM
+tự đoán. Nhóm định nghĩa trò chơi hai người chơi \{dòng đoán, phổ\}: $v(S)$ là Acc@$k$ khi chỉ giữ các tín hiệu trong
+$S$; khi giữ cả hai, điểm dòng trùng đúng với SemLoc như phát hành. Giá trị Shapley~\eqref{eq:shapley} chia Acc@$k$ của
+SemLoc cho hai tín hiệu; một trò chơi mở rộng bốn người chơi thêm độ phủ (Ochiai) và xếp lại bằng kiểm chứng phản thực tế.
+
+\section{Thiết lập thực nghiệm}
+\label{sec:thiet-lap}
+
+\subsection{Mô hình và hạ tầng}
+
+Mô hình chính là Gemini 3.8 Flash; RQ3 thêm GPT-6 luna, Claude Sonnet 5.5, gpt-oss-120b (mã nguồn mở) và Gemini 3.5
+Flash-Lite trên một tập con cố định 50 chương trình của tập test; Claude Sonnet 4.6 chỉ dùng để đối chiếu với nhật ký của
+tác giả. Mọi mô hình chạy ở mức suy luận mặc định của nhà cung cấp, qua một cổng tương thích OpenAI; SemLoc chạy ở nhiệt
+độ $T = \ConstTemperature$ như cấu hình chính của bài báo. Mọi lượt gọi LLM được ghi nhật ký (mô hình thực sự trả lời,
+số token, thời gian, lỗi) và lưu đệm theo nội dung và mã lượt chạy, nên toàn bộ thực nghiệm phát lại được mà không gọi
+mạng.
+
+\subsection{Lặp, kiểm tra sức khỏe lượt chạy và thống kê}
+
+Mỗi cấu hình có LLM chạy 3 lần độc lập; mỗi lần là một mã lượt chạy và một thư mục làm việc riêng. Một lượt chạy chỉ
+được dùng khi đã chạy xong và qua kiểm tra sức khỏe: không còn lỗi gọi LLM chưa khắc phục, không có chương trình nào lỗi
+ở bước kiểm chứng phản thực tế. Kết quả báo cáo là trung bình $\pm$ độ lệch chuẩn qua 3 lần; so sánh cặp dùng chênh lệch
+$\Delta$ kèm khoảng tin cậy bootstrap theo cụm, McNemar cho từng lần chạy và Wilcoxon kèm $r_{rb}$
+(mục~\ref{sec:thong-ke}). Chi phí được đo bằng số lượt gọi, số token và thời gian trên mỗi chương trình.
