@@ -2,10 +2,10 @@
 \label{sec:conclusion}
 
 SemLoc's published numbers recompute exactly from its logs, but its top-1 answer is, by an undocumented design choice,
-the LLM's own guess, and nearly half of its benchmark's labels do not point at the faulty line, in a way that favored it.
-Handing the failing tests to the model in one prompt---what developers already do---is more accurate at Acc@1 on all three
-label sets and about seven times cheaper; the failing tests carry the signal, per-line coverage does not, and every more
-elaborate addition we tried, as well as static analysis, adds nothing, because the tests can suggest a fault's location
+the LLM's own guess, and nearly half of its benchmark's labels do not point at the faulty line.
+Handing the failing tests to the model in one prompt---close to what surveys suggest many developers do---is more accurate at Acc@1 on all three
+label sets and about seven times cheaper; the failing tests carry the signal, per-line coverage does not, and no more
+elaborate addition we tried closes the gap (CovGate helps SemLoc only slightly; the others and static analysis do not help), because the tests can suggest a fault's location
 but cannot prove it. These results come from one main model, single-function programs with intent-revealing tests, and
 31 real bugs from one project. We suggest that every evaluation of LLM-based fault localization apply the seven checks of
 Table~\ref{tab:checklist}, with the plain failing-tests prompt as a mandatory baseline. Future work includes

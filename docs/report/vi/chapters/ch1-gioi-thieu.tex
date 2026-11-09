@@ -14,8 +14,8 @@ trước, mô tả ý định của mã.
 Trợ lý AI đã trở thành công cụ hằng ngày của lập trình viên: các khảo sát lớn năm 2025 cho thấy phần lớn lập trình viên
 đang dùng hoặc định dùng chúng~\cite{stackoverflow2025,jetbrains2025}, và gỡ lỗi là một trong các việc họ thường đem
 hỏi~\cite{xiao2024devgpt}. Nghiên cứu cũng cho thấy đưa thông tin lỗi cho LLM giúp nó định vị lỗi tốt hơn
-hẳn~\cite{wu2023llmfl,kang2024autofl}. Cách làm thực tế vì vậy rất đơn giản: chạy kiểm thử, đưa kết quả thất bại cho LLM,
-hỏi dòng nào sai.
+hẳn~\cite{wu2023llmfl}. Từ đó, một cách làm đơn giản --- chạy kiểm thử, đưa kết quả thất bại cho LLM, hỏi dòng nào sai ---
+nhiều khả năng đã gần với cách nhiều lập trình viên đang làm.
 
 Họ phương pháp kinh điển là định vị lỗi dựa trên phổ độ phủ (SBFL)~\cite{jones2002,abreu2009,wong2016survey}: một dòng
 càng hay được các kiểm thử thất bại chạy qua và càng ít được các kiểm thử thành công chạy qua thì càng đáng nghi. Với
@@ -27,7 +27,7 @@ cho lỗi ngữ nghĩa: LLM viết ra các ràng buộc ngữ nghĩa thực thi 
 được chạy để lấy phổ vi phạm, rồi LLM vá thử các dòng nghi ngờ để kiểm chứng. Bài báo tuyên bố độ chính xác đến từ việc
 \emph{neo lập luận của LLM vào bằng chứng thực thi} (structured grounding) và báo cáo Acc@1
 \RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% trên bộ dữ liệu SemFault-250. Câu hỏi tự nhiên với người làm phần mềm là:
-\textbf{quy trình phức tạp đó có thật sự cần không, khi so với cách đơn giản mà lập trình viên vẫn làm?}
+\textbf{quy trình phức tạp đó có thật sự cần không, khi so với cách làm đơn giản đó?}
 
 \section{Câu hỏi nghiên cứu}
 \label{sec:cau-hoi}
@@ -60,18 +60,18 @@ mọi điểm ràng buộc --- chi tiết không có trong bài báo --- nên d�
 nhưng không đổi thứ hạng nào.
 \item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
 bị dời khi rà soát (\LabaudAllBlank{} nằm trên dòng trống, \LabaudAllOffByOne{} lệch một dòng). Nhóm công bố hai bộ nhãn
-mới: \emph{đã sửa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt). Nhãn sai vô tình
-có lợi cho SemLoc: trên nhãn đã rà soát, phần hơn của SemLoc so với LLM hỏi thẳng ở Acc@3 biến mất.
+mới: \emph{đã sửa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt). Trên nhãn đã rà
+soát, phần hơn của SemLoc so với LLM hỏi thẳng ở Acc@3 biến mất (trên nhãn đã sửa thì vẫn còn).
 \item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất --- một lượt gọi
 LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi --- hơn SemLoc \RqTwoRepairedAllLlmTestsDAccOne{} điểm Acc@1
 và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã sửa, thắng ở Acc@1 trên cả ba bộ nhãn, và tốn
 \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với \CostSemlocTokensK{} nghìn của SemLoc.
-\item \textbf{Thêm phức tạp không thêm được gì --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
+\item \textbf{Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
 (Acc@3 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM hỏi thẳng), còn thêm độ phủ từng dòng làm Acc@1 đổi
-\AblRepairedAllCoverageEffectDAccOne{} điểm. CovGate, kiểm chứng dòng nghi ngờ bằng bản sửa và biểu quyết đều không
-cải thiện được prompt đơn giản; công cụ phân tích tĩnh (ruff, pyrefly) gần như không trúng dòng lỗi. Nguyên nhân chung:
+\AblRepairedAllCoverageEffectDAccOne{} điểm. CovGate chỉ giúp SemLoc một chút; kiểm chứng dòng nghi ngờ bằng bản
+sửa và biểu quyết (đánh giá trên tập dev) không cải thiện được prompt đơn giản; công cụ phân tích tĩnh (ruff, pyrefly) gần như không trúng dòng lỗi. Nguyên nhân chung:
 kiểm thử của bộ dữ liệu đủ để \emph{gợi ý} lỗi nhưng quá yếu để \emph{làm trọng tài} --- bản sửa nhỏ làm mọi kiểm thử
-đạt ở \PavmechReviewedOtherLineFixable\% lần thử trên dòng không có lỗi.
+đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng viên không có lỗi (tập dev).
 \item \textbf{Bảng kiểm tra bảy mục} cho đánh giá định vị lỗi bằng LLM, áp cho mọi phương pháp trong bài, và một gói tái
 hiện (Docker, nhật ký và bộ đệm lượt gọi LLM, mọi con số sinh tự động).
 \end{enumerate}

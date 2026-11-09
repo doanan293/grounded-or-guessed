@@ -128,18 +128,18 @@ cho thiết kế công cụ: đưa thẳng kiểm thử thất bại cho LLM, th
 \subsection{Vì sao kiểm thử không làm trọng tài tốt cho vị trí lỗi}
 
 Ba hiện tượng trong tiểu luận có chung một nguyên nhân. Bước vá thử của SemLoc không đổi thứ hạng nào; bộ phán định sửa
-tối thiểu dời nhầm \ReviewCorrectedOverturnedN{} nhãn; và ``đề xuất rồi kiểm chứng'' không cải thiện được bước đề xuất. Cả
+tối thiểu dời \ReviewCorrectedOverturnedN{} nhãn tới dòng mà vòng rà soát bác bỏ; và ``đề xuất rồi kiểm chứng'' không cải thiện được bước đề xuất. Cả
 ba dùng cùng một tiêu chí: \emph{một bản sửa nhỏ tại dòng này làm mọi kiểm thử đạt}. Với khoảng mười kiểm thử mỗi chương
-trình, tiêu chí này thỏa được ở \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi --- thường bằng cách đổi
+trình, tiêu chí này thỏa được ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng viên không có lỗi (tập dev) --- thường bằng cách đổi
 một hằng số hay thêm một phép trừ để bù cho phép tính sai ở chỗ khác --- trong khi chỉ thỏa được ở
 \PavmechReviewedFaultLineFixable\% lần thử tại dòng lỗi thật, vì lỗi hai dòng, lỗi thiếu mã hay lỗi cần sửa nhiều từ tố
 không sửa được bằng một thay đổi nhỏ trên một dòng. Đây đúng là hiện tượng ``bản vá hợp lệ bề
 ngoài''~\cite{qi2015kali,smith2015cure} của sửa lỗi tự động, nhìn từ phía định vị lỗi: bộ kiểm thử đủ để \emph{gợi ý} lỗi
 nằm ở đâu, nhưng quá yếu để \emph{chứng minh} lỗi nằm ở đâu.
 
-\subsection{Bộ dữ liệu bão hòa khi nhãn đúng}
+\subsection{Bộ dữ liệu bão hòa trên nhãn đã rà soát}
 
-Trên nhãn đã rà soát, một prompt có kiểm thử thất bại đạt Acc@3 \RqTwoReviewedAllLlmTestsAccThreeMean\%. Ba đặc điểm của
+Trên nhãn đã rà soát (do LLM gợi ý, xem các mối đe dọa), một prompt có kiểm thử thất bại đạt Acc@3 \RqTwoReviewedAllLlmTestsAccThreeMean\%. Ba đặc điểm của
 SemFault-250 giải thích điều này: chương trình là một hàm ngắn mà phần tính toán thật chỉ vài dòng; lỗi được tiêm bằng
 một thay đổi nhỏ (đổi phép so sánh, thêm \texttt{- 1}, đảo điều kiện); và tên kiểm thử mô tả gần như trực tiếp ý định bị
 vi phạm (ví dụ \texttt{test\_fee\_deducted\_once\_not\_per\_participant}). Hệ quả là trên bộ dữ liệu này không còn đủ
@@ -149,6 +149,7 @@ lệch. Trên lỗi thật (mục~\ref{sec:rq3}), mọi phương pháp còn xa t
 \subsection{Hàm ý cho công cụ trong thực tế}
 
 Các trợ lý và tác tử AI sửa lỗi --- chạy trên máy cá nhân hay trong CI --- thường dừng khi bản sửa làm kiểm thử đạt. Kết quả
-trên gợi ý thận trọng: trên một bộ kiểm thử cỡ mười ca, khoảng một phần tư số dòng không có lỗi vẫn ``sửa được'', nên một
+trên gợi ý thận trọng: trên một bộ kiểm thử cỡ mười ca, khoảng một phần tư số lần thử tại các dòng
+đáng ngờ nhưng không có lỗi vẫn ``sửa được'', nên một
 bản sửa vượt kiểm thử cần được người xem lại, hoặc cần kiểm thử chặt hơn trước khi coi là đúng. Ngược lại, thông tin đáng
 đầu tư nhất cho định vị lỗi là kiểm thử viết rõ ý định --- đúng thứ phát triển hướng kiểm thử tạo ra.

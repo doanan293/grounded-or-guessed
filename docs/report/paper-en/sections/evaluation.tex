@@ -49,12 +49,16 @@ unchanged, \LabaudAllExtended{} keep the line and gain a second one, and \Labaud
 blank line, \LabaudAllNonCode{} from a log call, \texttt{def} header or comment, \LabaudAllOffByOne{} by one line and
 \LabaudAllFarther{} by more. Moves follow patterns: a label on a guard whose guarded statement holds the fault (or vice
 versa), or an omission fault labeled at its insertion point, a blank line. We suspect a labeling tool rather than human
-annotators but cannot check without the generator. Mislabels lower every number and \emph{favor SemLoc}: on the original
+annotators but cannot check without the generator. Mislabels lower every number, and they may favor SemLoc: on the original
 labels SemLoc beats LLM direct at Acc@3 (\RqTwoOriginalAllSemlocAccThreeMean\% vs.\
 \RqTwoOriginalAllLlmDirectAccThreeMean\%); on the reviewed labels the two tie (\RqTwoReviewedAllSemlocAccThreeMean\% vs.\
 \RqTwoReviewedAllLlmDirectAccThreeMean\%) and LLM direct leads at Acc@1 (\RqTwoReviewedAllLlmDirectDAccOne{}
-[\RqTwoReviewedAllLlmDirectDAccOneLo, \RqTwoReviewedAllLlmDirectDAccOneHi]). A plausible reason: LLM direct names one or
-two lines, whereas SemLoc ranks many adjacent lines and so still ``hits'' a label one line off.
+[\RqTwoReviewedAllLlmDirectDAccOneLo, \RqTwoReviewedAllLlmDirectDAccOneHi]). On the repaired labels, which involve no LLM
+judgment of location, SemLoc's lead remains (LLM direct $\Delta$Acc@3 \RqTwoRepairedAllLlmDirectDAccThree{}
+[\RqTwoRepairedAllLlmDirectDAccThreeLo, \RqTwoRepairedAllLlmDirectDAccThreeHi]), so the vanishing lead rests on the
+LLM-suggested labels and must be read with the circularity caveat of Section~\ref{sec:threats}. A plausible reason for the
+effect: LLM direct names one or two lines, whereas SemLoc ranks many adjacent lines and so still ``hits'' a label one
+line off.
 
 \begin{table}[!t]
 \centering
@@ -76,8 +80,8 @@ Acc@1 on all three label sets: \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOrigina
 (\RqTwoOriginalAllLlmTestsDAccThree) has a CI touching zero, while on reached faults it is
 \RqTwoOriginalExecutableLlmTestsDAccThree{} [\RqTwoOriginalExecutableLlmTestsDAccThreeLo,
 \RqTwoOriginalExecutableLlmTestsDAccThreeHi]. It costs \CostLlmTestsTokensK k tokens per program against SemLoc's
-\CostSemlocTokensK k. On the reviewed labels it reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3: with correct
-labels, the benchmark is nearly saturated by one prompt.
+\CostSemlocTokensK k. On the reviewed labels it reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3: with reviewed
+(LLM-suggested) labels, the benchmark is nearly saturated by one prompt.
 
 \begin{table*}[!t]
 \centering
@@ -105,8 +109,9 @@ propose-and-verify, the selected configuration reproduces the proposer's ranking
 \PavmechReviewedFaultLineFixable\% of attempts at the faulty line (two-line faults, omissions and larger edits resist
 one-line fixes) but also in \PavmechReviewedOtherLineFixable\% of attempts at other lines, typically by changing a
 constant to compensate for a wrong computation elsewhere. Since the dev result was clear, we did not run it on the test
-split. Voting over three answers gives \VoteReviewedVoteAccOne\% Acc@1 against \VoteReviewedSingleAccOne\% for one answer
-(reviewed, dev).
+split. Voting over three answers (dev) gives Acc@1 \VoteReviewedVoteAccOne\% against \VoteReviewedSingleAccOne\% for one
+answer on the reviewed labels, but lowers Acc@3 on the repaired (\VoteRepairedVoteAccThree\% vs.\
+\VoteRepairedSingleAccThree\%) and original labels (\VoteOriginalVoteAccThree\% vs.\ \VoteOriginalSingleAccThree\%).
 
 \begin{table*}[!t]
 \centering
@@ -208,7 +213,7 @@ small to rank models on this effect.
 
 \textbf{Label sets.} On all three label sets the single prompt beats SemLoc at Acc@1, coverage adds nothing and removing the
 bonus lowers SemLoc's Acc@1 (Tables~\ref{tab:main} and~\ref{tab:addons}). The only comparison that flips with the labels
-is SemLoc vs.\ LLM direct at Acc@3---the flip that shows the mislabels favored SemLoc.
+is SemLoc vs.\ LLM direct at Acc@3, and only on the LLM-suggested reviewed labels.
 
 \subsection{Failure analysis}
 We categorize every test program automatically (Table~\ref{tab:fail}) and read a cluster-spread sample of up to four

@@ -5,7 +5,7 @@ Fault localization tells a developer where a failing program is wrong. In everyd
 test---run locally, in a pre-commit hook or on continuous integration---and, increasingly, the next step is to paste the
 failure into an AI assistant: most developers now use or plan to use such assistants~\cite{stackoverflow2025,jetbrains2025},
 debugging is among the tasks they bring to them~\cite{xiao2024devgpt}, and error information measurably helps LLMs
-localize faults~\cite{wu2023llmfl,kang2024autofl}. With test-driven development~\cite{beck2003tdd}, those tests are
+localize faults~\cite{wu2023llmfl}. With test-driven development~\cite{beck2003tdd}, those tests are
 written first and state what the code is meant to do. Linters and type checkers do not help at this point when the fault
 is in the logic: the code is well formed and well typed; it just computes the wrong value.
 
@@ -27,9 +27,9 @@ sets). Every LLM configuration runs three times, with program- and template-clus
 
 The answers are short. SemLoc's first line is always the LLM's guess, because the released code adds a bonus larger than
 any spectrum score; removing it changes Acc@1 by \RqTwoRepairedAllSemlocNoPriorDAccOne{} points. Nearly half of the
-benchmark's labels do not point at the faulty line. And one prompt with the failing tests---what developers already
-do---beats the pipeline at Acc@1 on all three label sets for \CostLlmTestsTokensK k instead of \CostSemlocTokensK k
-tokens per program, while every more elaborate variant we tried adds nothing.
+benchmark's labels do not point at the faulty line. And one prompt with the failing tests---close to what surveys suggest
+many developers do---beats the pipeline at Acc@1 on all three label sets for \CostLlmTestsTokensK k instead of \CostSemlocTokensK k
+tokens per program, while no more elaborate variant we tried closes the gap.
 
 \noindent\textbf{Contributions.}
 \begin{itemize}
@@ -38,14 +38,15 @@ execution evidence acts below the first line; its counterfactual step (\CostCfSh
 ranking. We also report a released scoring script that credits delta debugging with \RqOneDdAuthorAllAccOne\% where the
 paper reports zero, two bugs in the released BugsInPy runner, and a re-execution that falls short of the logs.
 \item \textbf{C2, mislabeled benchmark:} \LabaudAllMoved{} of \LabaudAllN{} labels move under review; we release an
-execution-repaired label set (tests decide) and a reviewed one (an LLM pre-review, then team review), and show the
-mislabels favor SemLoc over direct LLM prompting.
+execution-repaired label set (tests decide) and a reviewed one (an LLM pre-review, then team review), and show that
+on the reviewed labels SemLoc's Acc@3 lead over direct LLM prompting vanishes (it remains on the repaired labels).
 \item \textbf{C3, the simple prompt wins:} one prompt with failing tests beats SemLoc at Acc@1 by
 \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo, \RqTwoRepairedAllLlmTestsDAccOneHi] and at Acc@3
 by \RqTwoRepairedAllLlmTestsDAccThree{} points on repaired labels, at about a seventh of the cost.
-\item \textbf{C4, nothing more elaborate helps, and why:} failing tests carry the signal and per-line coverage does not;
-CovGate (coverage added to SemLoc), propose-and-verify (test-passing patches as arbiter), voting and static analysis do
-not improve on the simple prompt, because small patches pass the tests at many non-faulty lines.
+\item \textbf{C4, nothing more elaborate closes the gap, and why:} failing tests carry the signal and per-line coverage
+does not; CovGate (coverage added to SemLoc) helps SemLoc only slightly, and propose-and-verify (test-passing patches as
+arbiter), voting (both on the dev split) and static analysis do not improve on the simple prompt, because small patches
+pass the tests at many non-faulty candidate lines.
 \item \textbf{C5:} a seven-item evaluation checklist and a fully replayable artifact, including every reviewer's answers.
 \end{itemize}
 Code, data and LLM logs: \url{https://github.com/doanan293/grounded-or-guessed}.

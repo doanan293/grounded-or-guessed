@@ -65,7 +65,8 @@ và mọi nhãn LLM cho là nằm sai dòng; mỗi ca có đoạn mã, liên k�
 định của LLM để tham khảo. Người duyệt có xem gợi ý của LLM và đồng ý với gợi ý ở \ReviewAgreeN{}/\ReviewHumanN{} ca. Trưởng nhóm sửa thêm \ReviewOverrideN{} ca
 có bằng chứng chạy kiểm thử (hai ca lỗi hai dòng mà sửa một dòng không đủ, hai ca lỗi thiếu mã mà người duyệt chọn điểm
 chèn là dòng trống --- dùng câu lệnh \texttt{return} như các chương trình cùng họ --- và một ca LLM trích đúng câu lệnh
-nhưng ghi nhầm số dòng). Kết quả là bộ \emph{đã rà soát}: đủ \LabaudAllN{} chương trình, không nhãn nào trên dòng trống,
+nhưng ghi nhầm số dòng). Các nhãn LLM cho là đúng và \LabaudAllExtended{} nhãn được thêm dòng thứ hai (lỗi hai dòng) chỉ dựa trên
+nhận định của LLM, không qua người duyệt. Kết quả là bộ \emph{đã rà soát}: đủ \LabaudAllN{} chương trình, không nhãn nào trên dòng trống,
 \LabaudAllTwoLine{} nhãn hai dòng.
 
 Bảng~\ref{tab:ba-bo-nhan} tóm tắt ba bộ nhãn. Bộ \emph{đã sửa} chỉ do kiểm thử quyết định nên được dùng cho kết quả
@@ -81,7 +82,7 @@ chính; bộ \emph{đã rà soát} đầy đủ hơn nhưng nhãn do một LLM �
 Bộ nhãn & Ai quyết định & Vai trò \\
 \midrule
 Gốc & Tác giả SemLoc & So với bài báo gốc \\
-Đã sửa & Chỉ kiểm thử (bộ phán định sửa tối thiểu) & Kết quả chính; không có ý kiến LLM \\
+Đã sửa & Kiểm thử (LLM chỉ đề xuất bản sửa) & Kết quả chính; LLM không phán đoán vị trí \\
 Đã rà soát & LLM rà trước, thành viên nhóm duyệt, trưởng nhóm sửa ca có bằng chứng chạy kiểm thử & Góc nhìn độ nhạy; đủ mọi chương trình \\
 \bottomrule
 \end{tabularx}
@@ -117,7 +118,7 @@ trả về các dòng nghi ngờ; không có thông tin kiểm thử nào.
 
 \subsection{LLM + kiểm thử thất bại: phương pháp đề xuất}
 
-Phương pháp chính của nhóm làm đúng điều lập trình viên vẫn làm: một lượt gọi LLM duy nhất (nhiệt độ
+Phương pháp chính của nhóm làm điều mà các khảo sát cho thấy nhiều lập trình viên đang làm: một lượt gọi LLM duy nhất (nhiệt độ
 $T = \ConstTemperature$) với mã nguồn đánh số dòng, số kiểm thử đạt/không đạt, câu ``chương trình có đúng một dòng lỗi'',
 và tên cùng dòng thông báo lỗi đầu tiên của mỗi kiểm thử thất bại; LLM trả về năm dòng nghi ngờ nhất dưới dạng JSON
 \IfAtLeastElse{full}{(nội dung prompt ở Phụ lục~\ref{chap:phu-luc})}{(nội dung prompt có trong kho mã)}. Prompt được

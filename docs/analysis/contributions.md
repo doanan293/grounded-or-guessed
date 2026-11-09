@@ -2,7 +2,7 @@
 
 Mọi con số dưới đây là một macro trong `docs/report/generated/numbers-vi.tex` (sinh từ `data/` bởi `scripts/make_numbers.py`); tên macro ghi trong ngoặc vuông ngay sau số. Kiểm tra lại: `python scripts/check_claims.py docs/analysis/contributions.md`.
 
-**Câu đóng góp (spec §8, tiêu chí 1):** Nhóm tái hiện độc lập SemLoc và chỉ ra rằng hạng 1 của nó là dòng LLM tự đoán theo một lựa chọn thiết kế không được mô tả; gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi (nhóm công bố hai bộ nhãn mới); một prompt duy nhất có kiểm thử thất bại — cách lập trình viên vẫn làm — thắng quy trình nhiều bước và rẻ hơn khoảng bảy lần; và mọi cách thêm phức tạp mà nhóm thử, cùng phân tích tĩnh, không thêm được gì, vì kiểm thử đủ để gợi ý vị trí lỗi nhưng quá yếu để chứng minh nó.
+**Câu đóng góp (spec §8, tiêu chí 1):** Nhóm tái hiện độc lập SemLoc và chỉ ra rằng hạng 1 của nó là dòng LLM tự đoán theo một lựa chọn thiết kế không được mô tả; gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi (nhóm công bố hai bộ nhãn mới); một prompt duy nhất có kiểm thử thất bại — gần với cách nhiều lập trình viên đang làm — thắng quy trình nhiều bước và rẻ hơn khoảng bảy lần; và mọi cách thêm phức tạp mà nhóm thử, cùng phân tích tĩnh, không thêm được gì, vì kiểm thử đủ để gợi ý vị trí lỗi nhưng quá yếu để chứng minh nó.
 
 ## 1. Đóng góp
 
@@ -15,7 +15,7 @@ Mọi con số dưới đây là một macro trong `docs/report/generated/number
 ### C2. Gần một nửa nhãn của SemFault-250 không trỏ đúng dòng lỗi
 - **Khẳng định.** 112 [`\LabaudAllMoved`] trên 250 [`\LabaudAllN`] nhãn gốc bị dời khi rà soát: 56 [`\LabaudAllBlank`] trên dòng trống, 7 [`\LabaudAllNonCode`] trên log/`def`/chú thích, 32 [`\LabaudAllOffByOne`] lệch một dòng, 17 [`\LabaudAllFarther`] xa hơn; 40 [`\LabaudAllExtended`] được giữ và thêm một dòng (lỗi hai dòng).
 - **Hai bộ nhãn mới.** *Đã sửa* (kiểm thử quyết định): 82 [`\GtConfirmedN`] xác nhận, 46 [`\GtCorrectedN`] dời vị trí, 226 [`\GtRepairedN`] chương trình. *Đã rà soát*: LLM rà trước cả 250 nhãn, 6 [`\ReviewReviewersN`] thành viên duyệt 111 [`\ReviewHumanN`] nhãn (có xem gợi ý LLM, đồng ý ở 111 [`\ReviewAgreeN`] ca), trưởng nhóm sửa 5 [`\ReviewOverrideN`] ca có bằng chứng chạy kiểm thử; vòng rà soát bác 8 [`\ReviewCorrectedOverturnedN`] lần bộ phán định dời nhãn.
-- **Nhãn lệch có lợi cho SemLoc.** Trên nhãn gốc SemLoc hơn LLM hỏi thẳng ở Acc@3 (60,3 [`\RqTwoOriginalAllSemlocAccThreeMean`] so với 43,0 [`\RqTwoOriginalAllLlmDirectAccThreeMean`]); trên nhãn đã rà soát hai bên ngang nhau (90,0 [`\RqTwoReviewedAllSemlocAccThreeMean`] so với 90,8 [`\RqTwoReviewedAllLlmDirectAccThreeMean`]).
+- **Nhãn lệch có thể đã có lợi cho SemLoc.** Trên nhãn gốc SemLoc hơn LLM hỏi thẳng ở Acc@3 (60,3 [`\RqTwoOriginalAllSemlocAccThreeMean`] so với 43,0 [`\RqTwoOriginalAllLlmDirectAccThreeMean`]); trên nhãn đã rà soát hai bên ngang nhau (90,0 [`\RqTwoReviewedAllSemlocAccThreeMean`] so với 90,8 [`\RqTwoReviewedAllLlmDirectAccThreeMean`]); trên nhãn đã sửa SemLoc vẫn hơn (75,4 [`\RqTwoRepairedAllSemlocAccThreeMean`] so với 62,8 [`\RqTwoRepairedAllLlmDirectAccThreeMean`]), nên kết luận này chỉ dựa trên bộ nhãn do LLM gợi ý.
 - **Bằng chứng.** `data/label_audit.csv`, `data/semfault_verified_gt.json`, `data/semfault_reviewed_gt.json`, `docs/analysis/gt-review/`.
 - **Giới hạn.** Bộ đã rà soát không độc lập với LLM (người duyệt xem gợi ý); kết quả chính báo trên bộ gốc và bộ đã sửa.
 
@@ -25,12 +25,12 @@ Mọi con số dưới đây là một macro trong `docs/report/generated/number
 - **Bằng chứng.** `data/rq2_ours.csv`, `data/rq3_bugsinpy.csv`, `data/llm_cost.csv`.
 - **Giới hạn.** Một mô hình chính; một hàm mỗi lần; tên kiểm thử của bộ dữ liệu mô tả rất rõ ý định.
 
-### C4. Thêm phức tạp không thêm được gì — và vì sao
+### C4. Thêm phức tạp không thu hẹp được khoảng cách — và vì sao
 - **Kiểm thử thất bại là tín hiệu chính:** Acc@3 +27,2 [`\AblRepairedAllTestsEffectDAccThree`] so với LLM hỏi thẳng. **Độ phủ không giúp:** Acc@3 +2,1 [`\AblRepairedAllCoverageEffectDAccThree`], Acc@1 −5,4 [`\AblRepairedAllCoverageEffectDAccOne`] CI [−9,4 [`\AblRepairedAllCoverageEffectDAccOneLo`]; −2,1 [`\AblRepairedAllCoverageEffectDAccOneHi`]].
 - **CovGate** (phá hòa Ochiai): Acc@3 +3,9 [`\RqTwoRepairedAllCovgateDAccThree`], Acc@1 không đổi.
 - **Đề xuất rồi kiểm chứng** (dev): cấu hình được chọn 90,7 [`\PavDevChosenReviewedAccOne`] so với bước đề xuất 90,7 [`\PavDevStageReviewedAccOne`]; cấu hình mạnh tay 79,3 [`\PavDevWorstReviewedAccOne`]. **Biểu quyết** (dev): 92,0 [`\VoteReviewedVoteAccOne`] so với 90,7 [`\VoteReviewedSingleAccOne`].
 - **Phân tích tĩnh:** ruff luật mặc định trúng 1 [`\StatReviewedRuffDefaultOnFaultLine`] chương trình; ruff mọi luật trúng 25 [`\StatReviewedRuffAllOnFaultLine`], thấp hơn mức ngẫu nhiên 56,3 [`\StatReviewedRuffAllOnFaultLineByChance`]; pyrefly 0 [`\StatReviewedPyreflyOnFaultLine`].
-- **Cơ chế:** bản sửa nhỏ làm mọi kiểm thử đạt ở 23,3 [`\PavmechReviewedOtherLineFixable`]% lần thử tại dòng không có lỗi, chỉ 42,5 [`\PavmechReviewedFaultLineFixable`]% tại dòng lỗi thật.
+- **Cơ chế:** bản sửa nhỏ làm mọi kiểm thử đạt ở 23,3 [`\PavmechReviewedOtherLineFixable`]% lần thử tại các dòng ứng viên không có lỗi, chỉ 42,5 [`\PavmechReviewedFaultLineFixable`]% tại dòng lỗi thật (tập dev).
 - **Bằng chứng.** `data/ablation_coverage.csv`, `data/pav_dev_grid.csv`, `data/pav_mechanism.csv`, `data/vote_dev.csv`, `data/static_tools.csv`.
 - **Giới hạn.** Đề xuất rồi kiểm chứng và biểu quyết chỉ đánh giá trên dev.
 
@@ -42,7 +42,7 @@ Mọi con số dưới đây là một macro trong `docs/report/generated/number
 
 1. **Kiểm thử là trọng tài — khi đủ chặt.** LLM đề xuất, kiểm thử quyết định; khi kiểm thử không đủ (lỗi hai dòng, lỗi thiếu mã, bản sửa bù trừ), nêu rõ phần nào do người duyệt quyết định.
 2. **Đo đóng góp.** Phân rã và loại bỏ từng thành phần thay cho một con số tổng.
-3. **Cái đơn giản là mốc bắt buộc.** Một quy trình nhiều bước phải thắng cách lập trình viên vẫn làm.
+3. **Cái đơn giản là mốc bắt buộc.** Một quy trình nhiều bước phải thắng một prompt đưa kiểm thử thất bại cho LLM.
 4. **Chịu bác bỏ.** Mỗi khẳng định có điều kiện bác bỏ và khoảng tin cậy; báo cáo cả kết quả âm tính.
 5. **Bộ dữ liệu cũng là giả thuyết.** Nhãn phải được kiểm tra trước khi tin con số.
 
