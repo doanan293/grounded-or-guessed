@@ -73,6 +73,6 @@ def run(program: str, bench: Path, stage1: list[int], model: str, k: int = 3, at
             return False
         return _run_tests(patched, prog, test).returncode == 0
 
-    checks = verify_candidates(src, stage1, k, llm_propose(model, attempts=attempts), passes,
+    checks = verify_candidates(src, stage1, k, llm_propose(model, attempts=attempts, strict=True), passes,
                                failing=failing_summary(prog, test))
     return {"stage1": stage1, "checks": {str(ln): [[c.passed, c.size] for c in cs] for ln, cs in checks.items()}}
