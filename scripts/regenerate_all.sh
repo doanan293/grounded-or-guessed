@@ -30,3 +30,4 @@ $PY scripts/failure_cases.py > /dev/null
 $PY scripts/pareto_data.py > /dev/null
 $PY scripts/checklist.py > /dev/null
 $PY scripts/make_tables.py
+$PY scripts/make_numbers.py > /dev/null
