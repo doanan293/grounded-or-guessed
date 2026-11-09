@@ -227,7 +227,7 @@ Thứ tự cắt khi thiếu quota/thời gian: bỏ GPT → giảm số lần l
 - Thêm CovGate thành phần 4 "grounded guess", phân rã độ chính xác theo thành phần (Shapley), checklist đánh giá (chủ dự án duyệt 08/11)
 - 09/11: bỏ DOI/Zenodo; viết trọn bài trước rồi cắt nhánh báo cáo; thêm baseline LLM + độ phủ trên BugsInPy và tập đổi tên; thứ tự tác giả (chủ dự án quyết)
 - 09/11: loại vị trí "sửa" ở dòng trống khỏi ground truth đã sửa (final review Phase 3); báo cáo thêm Acc@1 chấp nhận đầu khối/thân khối (Claude quyết, ghi trong ledger)
-- Tên bài: **Grounded or Guessed: An Execution-Verified Reproducibility Study of LLM-Based Semantic Fault Localization**; repo công khai `doanan293/grounded-or-guessed` (MIT cho mã của nhóm; SemLoc giữ Apache-2.0)
+- Tên bài: **Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization**; repo công khai `doanan293/grounded-or-guessed` (MIT cho mã của nhóm; SemLoc giữ Apache-2.0)
 
 ## 12. Để builder tự quyết
 

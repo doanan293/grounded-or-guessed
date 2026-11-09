@@ -25,6 +25,7 @@ def main() -> None:
     ap.add_argument("--bench", type=Path, default=SEMLOC_ROOT / "benchmark")
     ap.add_argument("--cov", type=Path, default=ROOT / "data" / "coverage" / "semfault")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--no-coverage", action="store_true", help="ablation: drop the per-line [f/p] annotations")
     args = ap.parse_args()
     os.environ["FLX_RUN_ID"] = args.run_id
     if args.programs in ("dev", "test"):
@@ -39,7 +40,8 @@ def main() -> None:
 
     def one(p):
         try:
-            return p, run(p, args.bench, load(args.cov / f"{p}.json"), args.model)
+            return p, run(p, args.bench, load(args.cov / f"{p}.json"), args.model,
+                      coverage=not args.no_coverage)
         except Exception as e:  # recorded as a failure; the run is then unhealthy
             print(f"{p}: {type(e).__name__}: {e}", file=sys.stderr)
             return p, None

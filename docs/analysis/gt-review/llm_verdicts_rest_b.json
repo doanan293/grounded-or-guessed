@@ -1,0 +1,716 @@
+[
+ {
+  "program": "model_confidence_clamp",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 76,
+  "reason": "Docstring: clamp restricts y to [min(y0,y1),max(y0,y1)] when clamp is True; line 76 `if not clamp:` inverts the guard so clamping happens only when clamp=False."
+ },
+ {
+  "program": "notification_gate",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 63,
+  "reason": "limit is the maximum allowed in the window; with len(recent)==limit the gate must deny (remaining would be 0) but line 63 uses `>` instead of `>=`, so the (limit+1)-th notification is allowed."
+ },
+ {
+  "program": "offer_expiry",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Expiry at the deadline instant: line 66 `now > effective_deadline` should be `>=` (confirmed fix); an offer whose deadline equals now is still returned."
+ },
+ {
+  "program": "packets_window_avg",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 63,
+  "reason": "Rolling mean must divide by the number of samples actually in the window; line 63 `total / window` divides by the configured window even when len(recent) < window (fix needs `len(recent)`, >2 tokens, hence unverified)."
+ },
+ {
+  "program": "pages_union",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 79,
+  "reason": "Tests and docstring require the union to keep every page from both streams (duplicates kept); the spurious block at 79-80 pops the last element when both streams end with the same id. Label is the guard of the injected two-line block; line 80 is the guarded `merged.pop()`."
+ },
+ {
+  "program": "payment_payout",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 73,
+  "reason": "Label 72 is a blank line. Docstring/tests: fee is deducted from the pool before splitting, but line 70 multiplies by `amount` (not `amount - fee`) and line 73 subtracts the full fee from every share; the deviating statement is line 73 (two-line fault 70+73)."
+ },
+ {
+  "program": "payment_split_rebate",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 66,
+  "reason": "Label 65 is a blank line. Docstring: rebate is subtracted from the pool before distribution (sum == total - rebate), but line 62 splits the gross `total` and line 66 subtracts the full rebate from each share; the deviating statement is line 66 (two-line fault 62+66)."
+ },
+ {
+  "program": "percentile_estimator",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 59,
+  "reason": "Tests require q=1.0 to return the maximum; line 59 `idx = int(len(values) * q)` yields len(values) for q=1.0 (IndexError) and must be clamped to len(values)-1 (fix longer than 2 tokens, hence unverified)."
+ },
+ {
+  "program": "plan_appointment_slot",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Tests treat touching windows (b == s or a == e) as conflicts; line 65 uses `<=`/`>=` in `not (b <= s or a >= e)` so adjacent windows are accepted; fix `<`/`>` confirmed."
+ },
+ {
+  "program": "plan_conference_slot",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 76,
+  "reason": "Overlap helper on line 76 uses `<=`/`>=`, treating touching slots as non-overlapping although tests require them to conflict; the confirmed fix restores `<`/`>`."
+ },
+ {
+  "program": "plan_delivery_slot",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Same adjacency fault: line 67 `not (b <= s or a >= e)` admits touching windows, tests expect them rejected; fix `<`/`>` confirmed."
+ },
+ {
+  "program": "plan_desk_slot",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 76,
+  "reason": "Inline overlap test on line 76 uses `<=`/`>=` (touching intervals accepted) while tests expect touching to be rejected; confirmed fix `<`/`>`. Note the unused helper _has_conflict mirrors the same comparison."
+ },
+ {
+  "program": "plan_jobs_share",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 72,
+  "reason": "Tests require integer allocations to sum to total (largest-remainder); the guard on line 71 is correct, the deviating computation is line 72 `[int(v) for v in shares]` which truncates and loses the remainder. Fix is a multi-line block replacing 71-72."
+ },
+ {
+  "program": "plan_memo",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Entry expires at expires_at: line 65 `now > expires_at` should be `>=` (confirmed fix); value is still returned at the exact expiry instant."
+ },
+ {
+  "program": "plan_points_share",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 74,
+  "reason": "Tests require sum(result) == total for integer allocation; guard line 73 `if _INTEGER_ALLOCATION:` is correct, the deviating statement is line 74 `list(map(int, shares))` which truncates without redistributing the remainder."
+ },
+ {
+  "program": "plan_seats_share",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 82,
+  "reason": "Tests expect largest-remainder integer allocation summing to total; guard line 81 is correct, the truncation `[int(v) for v in shares]` on line 82 is the deviating statement (multi-line fix)."
+ },
+ {
+  "program": "plan_tickets_share",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 81,
+  "reason": "Tests require integer allocations summing to total; guard line 80 is fine, the deviating statement is line 81 `[int(v) for v in shares]` (truncation drops the remainder; multi-line fix)."
+ },
+ {
+  "program": "plan_upgrade_slot",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 63,
+  "reason": "Line 63 `not (b <= s or a >= e)` accepts touching windows, which tests reject as conflicts; confirmed fix `<`/`>`."
+ },
+ {
+  "program": "prediction_cache",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Entry is expired once the deadline is reached: line 73 `now > deadline` should be `>=` (confirmed fix)."
+ },
+ {
+  "program": "price_cache",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 61,
+  "reason": "Label 59 (`adjusted_now = now - _CLOCK_SKEW_TOLERANCE`) is a correct skew adjustment; the docstring says the entry is valid only while now is strictly before the TTL, but line 61 `if adjusted_now > ttl` should be `>=`. Verified: changing only line 61 to `>=` makes all 10 tests pass (original: 2 fail)."
+ },
+ {
+  "program": "priority_mix",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 61,
+  "reason": "Docstring: result is \"normalised to sum to 1\", but line 61 returns the blended weights without renormalisation (fix: divide by sum(updated); multi-token, hence unverified)."
+ },
+ {
+  "program": "probability_curve",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "clamp=True must restrict y to [min(y0,y1),max(y0,y1)]; line 73 `if not clamp:` inverts the condition."
+ },
+ {
+  "program": "probability_rebalance",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 59,
+  "reason": "Docstring: \"renormalizes so the result forms a valid probability distribution (entries sum to 1)\"; line 59 returns the blended vector without renormalisation (missing division by sum)."
+ },
+ {
+  "program": "profile_expiry",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Docstring: value returned only when now is strictly before the effective expiry; line 73 `now > effective` must be `>=` (confirmed fix)."
+ },
+ {
+  "program": "queue_window_avg",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Label 65 is a blank line. Line 66 `mean = total / window` divides by the configured window instead of len(tail), so a short tail gives a too-small mean; the oracle's \"fix\" was an inserted correction at the blank line."
+ },
+ {
+  "program": "quota_allocator_service",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 71,
+  "reason": "Label 70 is a blank line inside the `if _INTEGER_ALLOCATION:` log block. Tests require integer allocations to sum to total; line 71 `[int(x) for x in raw]` truncates without redistributing the remainder (multi-line largest-remainder fix needed)."
+ },
+ {
+  "program": "quota_for_capacity",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 78,
+  "reason": "Tests require sum(result) == total for integer allocation; guard line 77 `if floor_to_int:` is correct, the deviating statement is line 78 `[int(v) for v in shares]` (truncation loses the remainder)."
+ },
+ {
+  "program": "quota_for_fuel",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 66,
+  "reason": "Tests require integer allocations summing to total; guard line 65 `if _INTEGER_ALLOCATION:` is fine, the deviating statement is line 66 `[int(x) for x in planned]`."
+ },
+ {
+  "program": "quota_for_inventory",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 66,
+  "reason": "Label 65 is a blank line. Tests require integer allocations to sum to total; line 66 `allocations = [int(x) for x in planned]` truncates without remainder redistribution."
+ },
+ {
+  "program": "quota_for_memory",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 72,
+  "reason": "Label 70 is a blank line. The truncation `[int(x) for x in planned]` on line 72 (inside `if _INTEGER_ALLOCATION:` at 71) loses the remainder; tests require sum(result) == total."
+ },
+ {
+  "program": "quota_for_storage",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 66,
+  "reason": "Guard line 65 `if _INTEGER_ALLOCATION:` is correct; the deviating statement is line 66 `[int(x) for x in planned]`, which truncates and breaks the required sum == total."
+ },
+ {
+  "program": "quote_memo",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 61,
+  "reason": "Label 59 (`effective = _effective_ttl(ttl)`) is a correct skew helper call; the fault is line 61 `if now > effective` which must be `>=` (entry expires at ttl). Verified: changing only line 61 to `>=` makes all 10 tests pass (original: 3 fail)."
+ },
+ {
+  "program": "rating_curve",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "clamp=True must restrict y to [min(y0,y1),max(y0,y1)]; line 74 `if not clamp:` inverts the guard (confirmed fix)."
+ },
+ {
+  "program": "realign_cache",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 59,
+  "reason": "Docstring: result sums to 1, and the only failing test checks sum(result)==1; the normalisation step is missing. Label 59 (`adjusted = _clamp_negative(adjusted)`) is the post-processing line where normalisation belongs; the return on line 61 is an equally plausible site for the missing code."
+ },
+ {
+  "program": "realign_power",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 59,
+  "reason": "Docstring: \"renormalises the result\"; the only failing test checks sum(result)==1. The label (line 57, the per-element append) is where the interpolation happens, but the missing normalisation can only be inserted after the loop, i.e. at the return on line 59."
+ },
+ {
+  "program": "realign_replica",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 60,
+  "reason": "Docstring: \"normalized so that the returned weights sum to 1.0\"; only the normalisation test fails. Label 58 (append of the clamped blend) is defensible but the missing division by the sum belongs at the return on line 60."
+ },
+ {
+  "program": "redis_like_expiry",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 83,
+  "reason": "Key whose TTL has elapsed must be absent; line 83 `now > effective` should be `>=` (confirmed fix)."
+ },
+ {
+  "program": "rent_splitter",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 63,
+  "reason": "Docstring/tests: the flat fee is deducted once from the total before splitting. Line 65 subtracts `fee` from every share (labelled, deviating) while line 63 splits the gross `amount` instead of `amount - fee`; two-line fault 63+65."
+ },
+ {
+  "program": "request_token_bucket",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 62,
+  "reason": "Tests (test_last_updated_on_denial etc.) require `tokens['last']` (and the refilled count) to be stored even when the request is denied; the denial branch at line 62 returns False without updating state, so the next refill is computed from the last success. Missing statement sits at the label."
+ },
+ {
+  "program": "reservation_booking",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Tests treat touching intervals as conflicts; line 67 `not (end <= s or start >= e)` accepts them; confirmed fix `<`/`>`."
+ },
+ {
+  "program": "reservation_overlap_check",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 69,
+  "reason": "Label 68 is the `for` header. Docstring: closed-interval model, sharing an endpoint counts as overlap; the comparison on line 69 `not (c_end <= start or c_start >= end)` must use `<`/`>`. Verified: patching only line 69 makes all 10 tests pass (original: 3 fail)."
+ },
+ {
+  "program": "reserve_band",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Label 67 is the `def overlaps(...)` header; the deviating comparison is its body on line 68 `not (b[1] <= a[0] or b[0] >= a[1])` (touching bands accepted, tests reject them). Verified: patching line 68 to `<`/`>` makes all 9 tests pass (original: 5 fail)."
+ },
+ {
+  "program": "reserve_lane",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 62,
+  "reason": "Label 60 is the `if _CONFLICT_STRICT:` line inside overlaps (dead with STRICT=False, tolerance 0); the fault is the return on line 62 `not (b[1] <= a[0] or b[0] >= a[1])`. Verified: patching line 62 to `<`/`>` makes all 10 tests pass (original: 6 fail)."
+ },
+ {
+  "program": "reserve_slot",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 61,
+  "reason": "Label 60 is the `def overlaps(...)` header; the comparison on line 61 uses `<=`/`>=` so touching slots are accepted although tests reject them. Verified: patching line 61 to `<`/`>` makes all 11 tests pass (original: 6 fail)."
+ },
+ {
+  "program": "retry_backoff_window",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Docstring: delay never exceeds max_delay; line 66 `delay = max_delay + base` overshoots the cap (confirmed fix `delay = max_delay`)."
+ },
+ {
+  "program": "retry_tally",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 55,
+  "reason": "Docstring: with a cap the counter never exceeds cap; line 55 clamps to `cap - 1` instead of `cap` (confirmed fix)."
+ },
+ {
+  "program": "rolling_errors",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 62,
+  "reason": "Rolling mean must divide by the number of samples actually present; line 62 `total / window` divides by the configured window (fix `len(recent)`, hence unverified)."
+ },
+ {
+  "program": "rolling_requests",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Line 65 `avg = total / window` should divide by `len(tail)`; short tails give too-small averages."
+ },
+ {
+  "program": "rolling_retries",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 62,
+  "reason": "Label 63 is a blank line; the fault is line 62 `mean = total / window` which must divide by `len(tail)` (oracle's confirmed fix was an insertion at the blank)."
+ },
+ {
+  "program": "room_reservation",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 70,
+  "reason": "Label 69 is the `for` header; the deviating comparison is line 70 `not (end <= s or start >= e)` (touching intervals accepted, tests reject). Verified: patching line 70 to `<`/`>` makes all tests pass."
+ },
+ {
+  "program": "sales_window_avg",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 71,
+  "reason": "Line 71 `mean = total / window` must divide by `len(recent)`; otherwise a short series yields a too-small mean."
+ },
+ {
+  "program": "schedule_call",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 72,
+  "reason": "Label 71 is the `def overlaps(...)` header; the fault is its body on line 72 `not (b[1] <= a[0] or b[0] >= a[1])`. Verified: patching line 72 to `<`/`>` makes all tests pass."
+ },
+ {
+  "program": "schedule_demo",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Line 67 `not (end <= s or start >= e)` accepts touching intervals which tests reject; confirmed fix `<`/`>`."
+ },
+ {
+  "program": "schedule_shift_allocator",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 68,
+  "reason": "Label 67 is a blank line. Docstring: whole-number allocations summing as close to total as possible; line 68 `[int(x) for x in shares]` truncates and drops the remainder (multi-line largest-remainder fix)."
+ },
+ {
+  "program": "schedule_training",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Label 66 is the `for` header; the deviating comparison is line 67 `not (end <= s or start >= e)` (touching sessions accepted, tests reject). Verified: patching line 67 to `<`/`>` makes all 10 tests pass (original: 5 fail)."
+ },
+ {
+  "program": "scores_apportion",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 75,
+  "reason": "Tests require integer allocations to sum to total; guard line 74 `if _INTEGER_ALLOCATION:` is correct, the deviating statement is line 75 `list(map(int, shares))` which truncates without redistributing the remainder."
+ },
+ {
+  "program": "search_result_pager",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 72,
+  "reason": "Label 70 `end = start + page_size` is a correct exclusive slice end; the deviating token is the `+ 1` in line 72 `results[start:end + 1]`, which returns page_size+1 items. The confirmed fix (`- 1` on line 70) only compensates for line 72."
+ },
+ {
+  "program": "sensor_window_avg",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Line 73 `mean = total / window` must divide by `len(recent)`; otherwise fewer-than-window samples give a too-small mean."
+ },
+ {
+  "program": "shard_assignment",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Docstring and tests: each returned bucket is sorted; the buckets are returned on line 65 without sorting (missing `b.sort()` per bucket; multi-token fix)."
+ },
+ {
+  "program": "shares_apportion",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 68,
+  "reason": "Docstring explicitly promises largest-remainder rounding and tests require sum(result) == total; guard line 67 `if _INTEGER_ALLOCATION:` is correct, the deviating statement is line 68 `[int(x) for x in planned]` which truncates and drops the remainder."
+ },
+ {
+  "program": "shift_demand",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 62,
+  "reason": "Docstring: values are clamped then normalised to sum to 1; the clamp (line 62) is present but the normalisation is missing. Label 62 is the post-processing line where normalisation belongs; the return on line 64 is an equally plausible site."
+ },
+ {
+  "program": "shift_feature",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 59,
+  "reason": "Docstring: result normalised to sum to 1.0; only normalisation is missing. Label 59 (`adjusted = _clamp_values(adjusted)`) is the post-processing site; the return at line 61 is the alternative location for the missing code."
+ },
+ {
+  "program": "shift_traffic",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 69,
+  "reason": "Label 68 is a blank line (probably where the removed normalisation statement stood). Docstring: weights normalised to sum to 1.0; line 69 `return updated` returns the un-normalised blend."
+ },
+ {
+  "program": "shift_trust",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 58,
+  "reason": "Docstring: result renormalised to sum to 1.0; normalisation is missing. Confirmed fix divides the blend on line 58 by sum(current); the clamp line 60 or return line 62 would be equally natural sites for the missing division."
+ },
+ {
+  "program": "shift_weight",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 64,
+  "reason": "Label 63 is a blank line (likely the removed normalisation statement). Docstring: renormalised to sum to exactly 1.0; line 64 `return updated` returns the raw blend."
+ },
+ {
+  "program": "signals_stream",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 69,
+  "reason": "Docstring: merge preserves duplicate values; the spurious block 69-70 pops the last element when both streams end with the same value. Label is the guard of the injected two-line block (line 70 is the guarded pop)."
+ },
+ {
+  "program": "slots_apportion",
+  "verdict": "other",
+  "confidence": "medium",
+  "fault_line": 70,
+  "reason": "Label 69 is a blank line inside the `if _INTEGER_ALLOCATION:` log block. Docstring explicitly requires largest-remainder apportionment; line 70 `[int(x) for x in planned]` truncates and drops the remainder."
+ },
+ {
+  "program": "smooth_clicks",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 58,
+  "reason": "Line 58 `mean = total / window` must divide by `len(tail)`; otherwise fewer than window samples give a too-small mean."
+ },
+ {
+  "program": "smooth_pressure",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Line 68 `mean = total / window` must divide by `len(recent)` (the docstring of _select_recent says fewer values may be returned)."
+ },
+ {
+  "program": "smooth_throughput",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 61,
+  "reason": "Line 61 `avg = total / window` must divide by `len(tail)`; a short series yields a too-small average."
+ },
+ {
+  "program": "speed_trendline",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 71,
+  "reason": "clamp=True must bound y to [min(y0,y1),max(y0,y1)]; line 71 `if not clamp:` inverts the guard (confirmed fix)."
+ },
+ {
+  "program": "stream_joiner",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 72,
+  "reason": "Docstring: result contains all elements from both inputs; the spurious block 72-73 pops the last element when both streams end with the same id. Label is the guard of the injected two-line block (line 73 is the pop)."
+ },
+ {
+  "program": "subsidy_payout",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 71,
+  "reason": "Docstring: fee is deducted from the pool before shares are calculated. Line 69 (label) splits the gross `amount` instead of `amount - fee`, and line 71 subtracts the full fee from every share; two-line fault 69+71 (the confirmed fix at 69 merely compensates for 71)."
+ },
+ {
+  "program": "summary_memo",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Label 72 is a blank line. Docstring: value returned only when adjusted now falls before expires_at; line 73 `adjusted_now > expires_at` must be `>=` (the oracle's confirmed fix was an inserted line at the blank)."
+ },
+ {
+  "program": "task_tally",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 55,
+  "reason": "Label 53 `if max_value is not None:` is a correct outer guard; the deviating token is on line 55 `new_value = max_value - 1` (docstring: counter never exceeds the ceiling, i.e. clamp to max_value). Verified: changing only line 55 to `max_value` makes all 10 tests pass (original: 2 fail)."
+ },
+ {
+  "program": "task_throttle",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 62,
+  "reason": "limit is the maximum allowed in the window, so len(recent)==limit must deny; line 62 `>` should be `>=` (confirmed fix)."
+ },
+ {
+  "program": "tasks_allocator",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 70,
+  "reason": "Tests require integer allocations summing to total; guard line 69 `if _INTEGER_ALLOCATION:` is correct and the deviating statement is line 70 `[int(x) for x in planned]` (truncation, multi-line largest-remainder fix)."
+ },
+ {
+  "program": "temperature_window_avg",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Label 68 is a blank line; the fault is line 67 `mean = total / window`, which must divide by `len(tail)` (the oracle's confirmed fix was an inserted line at the blank)."
+ },
+ {
+  "program": "tensor_slice_pad",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 64,
+  "reason": "Label 63 `if missing >= 0:` is harmless; the deviating token is `+ 1` in line 64 `result.extend([pad] * (missing + 1))` (result must have exactly end - start elements). Verified: patching only line 64 to `[pad] * missing` makes all 10 tests pass, while changing only line 63 to `> 0` leaves 4 failing."
+ },
+ {
+  "program": "throughput_trendline",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 60,
+  "reason": "Label 61 (`low, high = sorted([y0, y1])`) is a correct body line; the fault is the inverted guard on line 60 `if not clamp:` (clamping must happen when clamp=True). Verified: changing only line 60 to `if clamp:` makes all 10 tests pass (original: 6 fail)."
+ },
+ {
+  "program": "tiers_stream",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Docstring: result contains all elements from both inputs; the spurious block 65-66 pops the last element when both inputs end with the same item. Label is the guard of the injected two-line block (line 66 is the pop)."
+ },
+ {
+  "program": "time_range_filter",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 75,
+  "reason": "Label 73 is a `_log.debug` line. Docstring: half-open interval [start, end); line 75 `start <= p[0] <= end` must be `< end`. Verified: patching only line 75 makes all 10 tests pass (original: 4 fail)."
+ },
+ {
+  "program": "timestamps_stream",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "Docstring: every element from both inputs is kept; the spurious block 74-75 pops the last element when both streams end with the same timestamp. Label is the guard of the injected two-line block (line 75 is the pop)."
+ },
+ {
+  "program": "tip_share",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 60,
+  "reason": "Docstring: the fee is deducted from the total before splitting. Line 62 (label) subtracts the full fee from every share and line 60 splits the gross `amount` instead of `amount - fee`; two-line fault 60+62."
+ },
+ {
+  "program": "token_cache",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Entry is stale once now reaches the ttl; line 67 `now > effective_ttl` should be `>=` (confirmed fix)."
+ },
+ {
+  "program": "token_expiry_check",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 69,
+  "reason": "Token expired at expires_at; line 69 `now > adjusted_expiry` should be `>=` (confirmed fix)."
+ },
+ {
+  "program": "track_api",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Label 66 `if new_value > max_value:` is a correct guard; the deviating token is on line 67 `new_value = max_value - 1` (docstring: clamp so the counter never exceeds max_value). Verified: changing only line 67 to `max_value` makes all 10 tests pass (original: 3 fail)."
+ },
+ {
+  "program": "track_build",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 53,
+  "reason": "Label 52 is the correct guard `if cap is not None and counters[key] > cap:`; the fault is line 53 `counters[key] = cap - 1` (should clamp to cap). Verified: changing only line 53 to `cap` makes all 9 tests pass (original: 3 fail)."
+ },
+ {
+  "program": "track_delivery",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 72,
+  "reason": "Label 70 `if cap is not None:` is a correct outer guard; the deviating token is on line 72 `updated = cap - 1` (docstring: counter will not exceed cap, i.e. clamp to cap). Verified: patching only line 72 makes all tests pass."
+ },
+ {
+  "program": "track_deployment",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Docstring: counter clamped so it never exceeds the ceiling; line 67 `new_value = effective_ceiling - 1` clamps one below (confirmed fix)."
+ },
+ {
+  "program": "track_logout",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 69,
+  "reason": "Label 67 `if cap is not None:` is a correct outer guard; the fault is line 69 `updated = cap - 1` (should be `cap`). Verified: patching only line 69 makes all tests pass."
+ },
+ {
+  "program": "track_release",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 60,
+  "reason": "Label 58 `if cap is not None:` is a correct outer guard; the fault is line 60 `updated = cap - 1` (should be `cap`). Verified: patching only line 60 makes all tests pass."
+ },
+ {
+  "program": "txn_dedup_merge",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 76,
+  "reason": "Label 75 is a blank line. Docstring: merge preserves all elements; the spurious block on lines 76-77 pops the last element when both lists end with the same id (the oracle's confirmed fix was an early `return merged` inserted at the blank)."
+ },
+ {
+  "program": "view_tally",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Label 67 `if new_value > max_value:` is a correct guard; the deviating token is on line 68 `new_value = max_value - 1` (should clamp to max_value). Verified: patching only line 68 makes all tests pass."
+ },
+ {
+  "program": "views_moving_mean",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 62,
+  "reason": "Line 62 `mean = total / window` must divide by `len(recent)`; otherwise a short series yields a too-small mean."
+ },
+ {
+  "program": "volume_moving_mean",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 60,
+  "reason": "Label 61 is a blank line; the fault is line 60 `mean = total / window`, which must divide by `len(recent)` (the oracle's confirmed fix was an inserted line at the blank)."
+ },
+ {
+  "program": "votes_apportion",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 29,
+  "reason": "Tests require integer allocations to sum to total; line 29 `return [int(v) for v in shares]` truncates and drops the remainder (needs a multi-line largest-remainder replacement, hence unverified). Label is on the deviating statement itself."
+ },
+ {
+  "program": "warm_cache_loader",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 75,
+  "reason": "Label 76 is the plain `return value`. Docstring: on a hit the TTL is extended in the cache; line 75 `expires_at = now + ttl` only rebinds a local and never writes back to `cache[key]`. Verified: replacing line 75 with `cache[key] = (value, now + ttl)` makes all 10 tests pass (original: 4 fail); changing line 72 to `>=` does not help."
+ },
+ {
+  "program": "warning_meter",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Docstring: with a cap the counter never exceeds that value; line 65 `counters[key] = cap - 1` clamps one below (confirmed fix `cap`)."
+ },
+ {
+  "program": "water_allocator",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 29,
+  "reason": "Tests require integer allocations to sum to total; line 29 `return [int(v) for v in shares]` truncates without redistributing the remainder (multi-line fix). Label is on the deviating statement."
+ },
+ {
+  "program": "weights_union",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "Docstring: both copies of equal elements are kept; the spurious block 74-75 pops the last element when both streams end with the same weight. Label is the guard of the injected two-line block (line 75 is the pop); confirmed fix disables the guard."
+ },
+ {
+  "program": "windowed_error_rate",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 69,
+  "reason": "Docstring: fraction of events within the window that are errors; the deviating token is `window` in line 69 `return errors / window` (should be `len(recent)`). The labelled line 68 computes `errors` correctly; the confirmed fix there (`* window / len(recent)`) merely compensates for line 69."
+ }
+]

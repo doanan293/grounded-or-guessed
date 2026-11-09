@@ -1,0 +1,9 @@
+gt,subset,contrast,a,b,n,repeats,a_acc1,b_acc1,d_acc1,d_acc1_lo,d_acc1_hi,a_acc3,b_acc3,d_acc3,d_acc3_lo,d_acc3_hi,a_acc5,b_acc5
+original,all,coverage_effect,llm_coverage,llm_tests,200,3,0.4017,0.445,-0.0433,-0.0777,-0.0148,0.6817,0.675,0.0067,-0.0184,0.0351,0.7,0.7033
+original,all,tests_effect,llm_tests,llm_direct,200,3,0.445,0.4,0.045,0.0127,0.0851,0.675,0.43,0.245,0.1667,0.3333,0.7033,0.4317
+original,executable,coverage_effect,llm_coverage,llm_tests,148,3,0.5428,0.6014,-0.0586,-0.1032,-0.0206,0.9099,0.8851,0.0248,-0.0022,0.06,0.9279,0.9099
+original,executable,tests_effect,llm_tests,llm_direct,148,3,0.6014,0.5405,0.0608,0.0172,0.1133,0.8851,0.5811,0.3041,0.2092,0.4052,0.9099,0.5833
+repaired,all,coverage_effect,llm_coverage,llm_tests,179,3,0.5717,0.6257,-0.054,-0.0936,-0.0214,0.9199,0.8994,0.0205,-0.0018,0.0492,0.9367,0.9199
+repaired,all,tests_effect,llm_tests,llm_direct,179,3,0.6257,0.568,0.0577,0.017,0.1067,0.8994,0.6276,0.2719,0.186,0.3697,0.9199,0.6294
+repaired,executable,coverage_effect,llm_coverage,llm_tests,179,3,0.5717,0.6257,-0.054,-0.0936,-0.0214,0.9199,0.8994,0.0205,-0.0018,0.0492,0.9367,0.9199
+repaired,executable,tests_effect,llm_tests,llm_direct,179,3,0.6257,0.568,0.0577,0.017,0.1067,0.8994,0.6276,0.2719,0.186,0.3697,0.9199,0.6294

@@ -14,16 +14,21 @@ SYSTEM = ("You are a fault-localization assistant. Reply with JSON only: "
           '{"lines": [<line numbers, most suspicious first, at most 5>]}')
 
 
-def build_prompt(src: str, failing: list[dict], cov: dict, first_line: int = 1) -> str:
-    """`first_line` numbers `src` from that line (a function cut out of a larger file keeps absolute numbers)."""
+def build_prompt(src: str, failing: list[dict], cov: dict, first_line: int = 1, coverage: bool = True) -> str:
+    """`first_line` numbers `src` from that line (a function cut out of a larger file keeps absolute numbers).
+
+    `coverage=False` is the ablation: the same prompt without the per-line [f/p] annotations and the sentence
+    explaining them (failing tests, their first error line, test counts and "exactly one faulty line" stay)."""
     ef, ep, _ = counts(cov)
-    numbered = "\n".join(f"{i}: {line}   [f={ef.get(i, 0)}/p={ep.get(i, 0)}]"
-                         for i, line in enumerate(src.splitlines(), first_line))
+    note = (lambda i: f"   [f={ef.get(i, 0)}/p={ep.get(i, 0)}]") if coverage else (lambda i: "")
+    numbered = "\n".join(f"{i}: {line}{note(i)}" for i, line in enumerate(src.splitlines(), first_line))
     fails = "\n".join(f"- {t['name']}: {t.get('error', '')}" for t in failing)
     n_fail = sum(1 for t in cov["tests"] if not t["passed"])
     n_pass = len(cov["tests"]) - n_fail
+    legend = ("Each line is annotated with [f=<number of failing tests that execute it>/p=<number of passing tests>].\n"
+              if coverage else "")
     return (f"The program below has exactly one faulty line. {n_fail} tests fail and {n_pass} pass.\n"
-            f"Each line is annotated with [f=<number of failing tests that execute it>/p=<number of passing tests>].\n\n"
+            f"{legend}\n"
             f"{numbered}\n\nFailing tests:\n{fails}\n\n"
             "Return the five most suspicious line numbers, most suspicious first.")
 
@@ -69,11 +74,12 @@ def failing_tests(src: str, prog: Path, test: Path) -> list[dict]:
     return out
 
 
-def run(program: str, bench: Path, cov: dict, model: str) -> list[int]:
+def run(program: str, bench: Path, cov: dict, model: str, coverage: bool = True) -> list[int]:
     from flx.llm_gateway import chat
     prog, test = bench / "programs" / f"{program}.py", bench / "testcases" / f"test_{program}.py"
     src = prog.read_text()
-    text = chat(model, SYSTEM, build_prompt(src, failing_tests(src, prog, test), cov), temperature=0.8)
+    text = chat(model, SYSTEM, build_prompt(src, failing_tests(src, prog, test), cov, coverage=coverage),
+                temperature=0.8)
     return parse_ranking(text)
 
 

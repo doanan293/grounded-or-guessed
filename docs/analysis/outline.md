@@ -71,7 +71,7 @@ Ký hiệu phiên bản: **[1]** có từ bản `lan1`, **[2]** từ `lan2`, **[
 
 ## B. Bài báo tiếng Anh (arXiv, IEEEtran hai cột), ~10–12 trang + tài liệu
 
-Tiêu đề: *Grounded or Guessed: An Execution-Verified Reproducibility Study of LLM-Based Semantic Fault Localization*. Tác giả: 7 tên, HUST. Bản `lan2` có dòng "Draft".
+Tiêu đề: *Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization*. Tác giả: 7 tên, HUST. Bản `lan2` có dòng "Draft".
 
 1. **Abstract** (~200 từ): bối cảnh → câu hỏi → phương pháp (audit, SemFault-250-verified, phân rã, baseline) → 4 kết quả có số → hàm ý.
 2. **Introduction**: lỗi ngữ nghĩa và lời hứa "grounding"; câu hỏi; tóm tắt phát hiện; danh sách đóng góp đánh số (mỗi cái có số); link artifact.

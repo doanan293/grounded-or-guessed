@@ -195,7 +195,7 @@ def build() -> None:
     fresh()
     E("slide_01.svg", {
         "Introduction to Coding Workshop": ["Grounded or", "Guessed?"],
-        "Here is where your presentation begins": ["Kiểm chứng bằng thực thi: định vị lỗi bằng LLM",
+        "Here is where your presentation begins": ["Tái hiện và đánh giá định vị lỗi bằng LLM",
                                                    f"Nhóm M9 · {OCCASION[DECK]}"],
     })
     last = ("Kế hoạch", ["Tiến độ và việc đến lần 2"]) if DECK == "lan1" else ("Phân tích & đóng góp", ["Thất bại, đóng góp,", "triết lý khoa học"])

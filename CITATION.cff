@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this replication package, please cite it as below."
-title: "Grounded or Guessed: An Execution-Verified Reproducibility Study of LLM-Based Semantic Fault Localization"
+title: "Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization"
 type: software
 authors:
   - {family-names: "Doãn", given-names: "Văn An"}
