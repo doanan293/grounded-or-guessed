@@ -14,7 +14,7 @@ from statistics import mean, stdev
 
 from flx.gt import load_variants
 from flx.ranking import metrics
-from flx.stats import mcnemar
+from flx.stats import mcnemar, paired_diff_ci
 
 ROOT = Path(__file__).resolve().parents[1]
 _spec = importlib.util.spec_from_file_location("rq3_families", ROOT / "scripts" / "rq3_families.py")
@@ -22,6 +22,7 @@ fam = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(fam)
 
 METHODS = ("semloc", "semloc_no_prior", "llm_guess")
+CLUSTERS = {r["program"]: int(r["cluster_t0.8"]) for r in csv.DictReader(open(ROOT / "data" / "semfault_templates.csv"))}
 
 
 def ranks_from_file(f: Path, gt: dict, progs: list[str]) -> dict:
@@ -70,6 +71,10 @@ def main() -> None:
                 ps = [mcnemar([o.get(p) is not None and o[p] <= k for p in progs],
                               [r.get(p) is not None and r[p] <= k for p in progs])[1] for o, r in per]
                 row[f"p_acc{k}_max"] = round(max(ps), 4)
+                row[f"p_acc{k}_all"] = ";".join(f"{x:.4f}" for x in ps)
+                hits = lambda side: [{p: x[side].get(p) is not None and x[side][p] <= k for p in progs} for x in per]
+                d, lo, hi = paired_diff_ci(hits(1), hits(0), progs, CLUSTERS)  # renamed − original
+                row[f"d_acc{k}"], row[f"d_acc{k}_lo"], row[f"d_acc{k}_hi"] = d, lo, hi
             rows.append(row)
             print(row)
     same = [mean(go.get(p) == gr.get(p) for p in names) for go, gr in

@@ -16,7 +16,7 @@ from flx.bip_score import METHODS, artifact_rank, bug_ranks
 from flx.coverage import load
 from flx.params import chosen_params
 from flx.ranking import metrics
-from flx.stats import mcnemar
+from flx.stats import mcnemar, paired_diff_ci
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -73,6 +73,10 @@ def main() -> None:
                                   [b.get(p) is not None and b[p] <= k for p in progs])[1]
                           for r, b in zip(lst, per["semloc_prior"])]
                     row[f"p_acc{k}_vs_semloc_max"] = round(max(ps), 4)
+                    row[f"p_acc{k}_vs_semloc_all"] = ";".join(f"{x:.4f}" for x in ps)
+                    hits = lambda reps: [{p: r.get(p) is not None and r[p] <= k for p in progs} for r in reps]
+                    d, lo, hi = paired_diff_ci(hits(lst), hits(per["semloc_prior"]), progs, None)  # one bug = one unit
+                    row[f"d_acc{k}"], row[f"d_acc{k}_lo"], row[f"d_acc{k}_hi"] = d, lo, hi
             rows.append(row)
             print(row)
     fields = sorted({k for r in rows for k in r}, key=lambda k: (k not in ("subset", "method", "n", "repeats"), k))
