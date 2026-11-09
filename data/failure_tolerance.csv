@@ -1,0 +1,4 @@
+method,n,repeats,acc1_exact,acc1_guard_or_body
+semloc,190,3,0.493,0.7175
+llm_guess,190,3,0.493,0.7175
+llm_coverage,190,3,0.5386,0.7684

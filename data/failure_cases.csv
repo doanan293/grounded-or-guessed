@@ -1,0 +1,247 @@
+program,label,gt_status,cluster,guess_hit,semloc_top1,semloc_top3,spectrum_rank,llmcov_top3,category,guess_relation,gt_lines,guesses,semloc_top5_r1,llmcov_top5_r1,top_constraint_r1,code
+gradient_clip_budget,semantic,corrected,76,False,False,False,,False,all_miss,other,[62],"[66, 66, 66]","[66, 67, 65, 68, 64]","[66, 67, 65, 30, 27]",C1@66: abs(scale * norm - max_norm) < 1e-6,"56:     """"""
+57:     _validate_max_norm(max_norm)
+58: 
+59:     if not gradients:
+60:         return []
+61: 
+62:     norm = _compute_global_norm(gradients)
+63:     _log.debug(""Global gradient norm: %.6f (budget: %.6f)"", norm, max_norm)
+64: 
+65:     if norm > max_norm:
+66:         scale = max_norm / (norm + 1)
+67:         return [g * scale for g in gradients]
+68:     return list(gradients)"
+storage_quota_split,not_executed,corrected,176,False,False,False,,False,all_miss,blank_gt,[64],"[70, 70, 70]","[70, 71, 69, 72, 68]","[70, 66, 62, 28, 30]",C1@70: abs(sum(floored__1) - (total - fee)) < 1e-4,"58:         raise ValueError(""negative total"")
+59: 
+60:     _validate_ratios(ratios)
+61: 
+62:     if fee < -_FEE_PRECISION:
+63:         raise ValueError(""fee must not be negative"")
+64: 
+65:     total_ratio = sum(ratios)
+66:     shares = [(r / total_ratio) * total for r in ratios]
+67: 
+68:     _log.debug(""Computed raw shares for %d participants"", len(shares))
+69: 
+70:     floored = _apply_floor([s - fee for s in shares])
+71:     return floored"
+feature_flag_rollout,not_executed,confirmed,69,False,False,False,,False,all_miss,blank_gt,[62],"[63, 63, 63]",[63],[63],C4@None: not (percentage == 0.0 and __cbfl_result) and not (percentage == 1.0 and not __cbfl_result),"56:         ValueError: If *percentage* is outside [0, 1].
+57:     """"""
+58:     _validate_percentage(percentage)
+59: 
+60:     bucket = _compute_bucket(user_id)
+61:     _log.debug(""user=%s bucket=%.4f percentage=%.4f"", user_id, bucket, percentage)
+62: 
+63:     return bucket > percentage"
+txn_dedup_merge,not_executed,confirmed,195,False,False,False,4.5,False,all_miss,blank_gt,[75],"[77, 76, 77]","[77, 76, 62, 78, 79]","[77, 76, 69, 70, 71]",C1@77: len(merged__1) == total__1,"69:             merged.append(left[i])
+70:             merged.append(right[j])
+71:             i += 1
+72:             j += 1
+73:     merged.extend(left[i:])
+74:     merged.extend(right[j:])
+75: 
+76:     if merged and left and right and merged[-1] == left[-1] == right[-1]:
+77:         merged.pop()
+78:     return merged"
+task_tally,semantic,unverified,192,False,False,False,4.5,True,coverage_only_wins,header_body,[53],"[55, 55, 55]","[55, 54, 56, 57, 53]","[55, 54, 53, 51, 57]",C1@55: new_value == max_value,"47:         ValueError: If *max_value* is provided but less than 1.
+48:     """"""
+49:     _validate_max_value(max_value)
+50: 
+51:     new_value = _current_count(counts, key) + INCREMENT_STEP
+52: 
+53:     if max_value is not None:
+54:         if new_value > max_value:
+55:             new_value = max_value - 1
+56: 
+57:     counts[key] = new_value
+58:     _log.debug(""task_tally: key=%s  new_value=%d"", key, new_value)
+59:     return new_value"
+throughput_trendline,coverage_revealed,unverified,183,False,False,False,3.5,True,coverage_only_wins,header_body,[61],"[60, 60, 60]","[60, 65, 61, 59, 67]","[60, 61, 62, 58, 56]",C1@60: 0.0 <= t__1 and t__1 <= 1.0,"54:     _validate_segment(x0, x1)
+55: 
+56:     t = _compute_parameter(x, x0, x1)
+57:     _log.debug(""interpolation parameter t=%.6f for x=%.4f"", t, x)
+58:     y = (1 - t) * y0 + t * y1
+59: 
+60:     if not clamp:
+61:         low, high = sorted([y0, y1])
+62:         y = min(max(y, low), high)
+63: 
+64:     if abs(y) < INTERPOLATION_PRECISION:
+65:         y = 0.0
+66: 
+67:     return y"
+track_release,semantic,unverified,193,False,False,False,4.5,True,coverage_only_wins,header_body,[58],"[60, 60, 60]","[60, 59, 61, 62, 58]","[60, 59, 58, 56, 62]",C1@60: updated == cap,"52:     """"""
+53:     _validate_key(key)
+54: 
+55:     current = counters.get(key, MIN_COUNTER_VALUE)
+56:     updated = current + COUNTER_INCREMENT
+57: 
+58:     if cap is not None:
+59:         if updated > cap:
+60:             updated = cap - 1
+61: 
+62:     updated = _clamp_counter(updated, MIN_COUNTER_VALUE)
+63: 
+64:     counters[key] = updated
+65:     _log.debug(""Release counter for %s updated: %d -> %d"", key, current, updated)
+66:     return updated"
+credits_allocator,semantic,unverified,51,False,False,False,,True,coverage_only_wins,header_body,[69],"[70, 70, 70]",[70],"[70, 31, 69, 65, 30]","C1@70: all(abs(a - p) <= 0.5 for a, p in zip(allocations__1, planned__1))","63:     _validate_inputs(total, weights, minimum)
+64: 
+65:     planned = _compute_planned(total, weights, minimum)
+66: 
+67:     _log.debug(""Planned allocations (pre-rounding): %s"", planned)
+68: 
+69:     if _INTEGER_ALLOCATION:
+70:         allocations = [int(x) for x in planned]
+71:     else:
+72:         allocations = planned  # type: ignore[assignment]
+73: 
+74:     return allocations"
+reserve_slot,semantic,unverified,139,False,False,False,,False,gt_suspect,other,[60],"[57, 57, 57]",[57],"[61, 65, 56, 57, 69]",C1@57: not (_CONFLICT_STRICT and _ADJACENCY_BUFFER > 0 and _ADJACENCY_BUFFER <= _MIN_SLOT_DURATION),"51:         raise ValueError(""start must be before end"")
+52: 
+53:     if len(existing) >= _MAX_SLOTS_PER_RESOURCE:
+54:         raise ValueError(""Maximum slot capacity reached for this resource"")
+55: 
+56:     effective_candidate = candidate
+57:     if _CONFLICT_STRICT and _ADJACENCY_BUFFER > _MIN_SLOT_DURATION:
+58:         effective_candidate = _apply_adjacency_buffer(candidate, _ADJACENCY_BUFFER)
+59: 
+60:     def overlaps(a: Tuple[int, int], b: Tuple[int, int]) -> bool:
+61:         return not (b[1] <= a[0] or b[0] >= a[1])
+62: 
+63:     for slot in existing:
+64:         _validate_slot(slot)
+65:         if overlaps(slot, effective_candidate):
+66:             _log.debug(""Candidate %s conflicts with existing slot %s"", candidate, slot)"
+confidence_trendline,coverage_revealed,unverified,46,False,False,False,5.5,False,gt_suspect,other,[79],"[77, 77, 77]","[77, 84, 78, 76, 86]","[77, 84, 78, 79, 81]","C1@77: min(y0, y1) <= y__1 <= max(y0, y1)","71: 
+72:     ratio = _compute_interpolation_ratio(x0, x1, x)
+73:     y = y0 + ratio * (y1 - y0)
+74: 
+75:     _log.debug(""Interpolated confidence at x=%s: raw_y=%s, clamp=%s"", x, y, clamp)
+76: 
+77:     if not clamp:
+78:         lo, hi = (min(y0, y1), max(y0, y1))
+79:         if y < lo:
+80:             y = lo
+81:         elif y > hi:
+82:             y = hi
+83: 
+84:     y = max(DEFAULT_CONFIDENCE_FLOOR, min(DEFAULT_CONFIDENCE_CEILING, y))
+85: "
+room_reservation,semantic,unverified,147,False,False,False,,False,gt_suspect,other,[69],"[65, None, 70]",[65],"[70, 75, 73, 74, 8]","C1@65: all(interval[1] <= s or interval[0] >= e for s, e in existing)","59:             configured minimum duration.
+60:         OverflowError: If the room already has the maximum number of
+61:             reservations for the day.
+62:     """"""
+63:     start, end = interval
+64:     _validate_interval(start, end)
+65:     _check_capacity(existing)
+66: 
+67:     _log.debug(""Checking interval (%d, %d) against %d existing bookings"", start, end, len(existing))
+68: 
+69:     for s, e in existing:
+70:         if not (end <= s or start >= e):
+71:             return False, existing
+72: 
+73:     updated = existing + [interval]
+74:     updated.sort()
+75:     return True, updated"
+calendar_slot_insert,semantic,unverified,33,False,False,False,,False,gt_suspect,header_body,[72],"[73, 73, 73]",[73],"[73, 70, 8, 76, 77]",C1@73: end__1 <= s - boundary__1 or start__1 >= e + boundary__1,"66:     if not _check_capacity(existing):
+67:         _log.debug(""Daily slot capacity (%d) reached"", _MAX_SLOTS_PER_DAY)
+68:         return False, list(existing)
+69: 
+70:     boundary = _SLOT_BOUNDARY_EPSILON
+71: 
+72:     for s, e in existing:
+73:         if not (end <= s or start >= e):
+74:             return False, list(existing)
+75: 
+76:     result = sorted(existing + [slot])
+77:     return True, result"
+blend_supplies,semantic,confirmed,21,False,False,True,1.0,True,prior_hurts,header_body,[71],"[72, 72, 72]","[72, 71, 73, 74, 53]","[72, 71, 62, 66, 68]",C1@72: len(merged) == len(left) + len(right),"65:         else:
+66:             merged.append(right[ri])
+67:             ri += 1
+68:     merged.extend(left[li:])
+69:     merged.extend(right[ri:])
+70: 
+71:     if merged and left and right and merged[-1] == left[-1] == right[-1]:
+72:         merged.pop()
+73: 
+74:     return merged"
+combine_offsets,semantic,confirmed,43,False,False,True,1.0,True,prior_hurts,header_body,[70],"[71, 71, 71]","[71, 70, 73, 60, 61]","[71, 70, 68, 67, 65]",C1@71: len(merged) == len(left) + len(right),"64:         else:
+65:             merged.append(right[ri])
+66:             ri += 1
+67:     merged.extend(left[li:])
+68:     merged.extend(right[ri:])
+69: 
+70:     if merged and left and right and merged[-1] == left[-1] == right[-1]:
+71:         merged.pop()
+72: 
+73:     return merged"
+blend_orders,semantic,confirmed,20,False,False,True,1.0,True,prior_hurts,header_body,[72],"[73, 73, 73]","[73, 72, 57, 74, 76]","[73, 72, 64, 65, 27]",C1@73: len(merged__1) == len(left) + len(right),"66:             i += 1
+67:             j += 1
+68: 
+69:     merged.extend(_clamp_value(v) for v in left[i:])
+70:     merged.extend(_clamp_value(v) for v in right[j:])
+71: 
+72:     if merged and left and right and merged[-1] == left[-1] == right[-1]:
+73:         merged.pop()
+74: 
+75:     _log.debug(""Blended %d + %d orders into %d total"", len(left), len(right), len(merged))
+76:     return merged"
+login_tally,semantic,unverified,192,False,False,True,1.0,True,prior_hurts,header_body,[73],"[74, 74, 74]","[74, 73, 76, 72, 77]","[74, 73, 72, 70, 69]",C1@74: updated__2 == cap,"67:     """"""
+68:     _validate_cap(cap)
+69:     current = _resolve_current(counters, key)
+70:     updated = current + DEFAULT_INCREMENT
+71: 
+72:     if cap is not None:
+73:         if updated > cap:
+74:             updated = cap - 1
+75: 
+76:     counters[key] = updated
+77:     _log.debug(""Login tally for %s updated to %d"", key, updated)
+78:     return updated"
+schedule_training,semantic,unverified,155,False,False,True,2.5,False,rescued_by_spectrum,header_body,[66],"[67, None, 67]","[67, 68, 66, 69, 65]","[67, 14, 74, 76, 72]",C1@67: end != s and start != e,"60:         OverflowError: If the schedule has reached maximum capacity.
+61:     """"""
+62:     start, end = interval
+63:     _validate_interval(start, end)
+64:     _check_capacity(existing)
+65: 
+66:     for s, e in existing:
+67:         if not (end <= s or start >= e):
+68:             _log.debug(
+69:                 ""Conflict detected: proposed (%s, %s) overlaps with (%s, %s)"",
+70:                 start, end, s, e,
+71:             )
+72:             return False, existing
+73: "
+plan_points_share,semantic,unverified,111,False,False,True,2.5,False,rescued_by_spectrum,header_body,[73],"[74, 74, 74]","[74, 71, 73, 75]","[74, 8, 66, 67, 69]",C2@None: all(int(s) == round(s) for s in shares__1),"67:         return raw if raw >= minimum else minimum
+68: 
+69:     shares = list(map(compute_share, weights))
+70: 
+71:     _log.debug(""raw shares for %d lanes: %s"", len(weights), shares)
+72: 
+73:     if _INTEGER_ALLOCATION:
+74:         return list(map(int, shares))
+75:     return shares"
+bump_conversion,semantic,unverified,192,False,False,True,2.0,True,rescued_by_spectrum,header_body,[57],"[58, 58, 58]","[58, 57, 59, 62, 60]","[58, 57, 56, 54, 60]",C1@58: updated__2 == cap,"51:     """"""
+52:     _validate_cap(cap)
+53:     current = _get_current_count(counters, key)
+54:     updated = current + CONVERSION_INCREMENT
+55: 
+56:     if cap is not None:
+57:         if updated > cap:
+58:             updated = cap - 1
+59: 
+60:     counters[key] = updated
+61:     _log.debug(""Bumped conversion for %s: %d -> %d"", key, current, updated)
+62:     return updated"
+plan_seats_share,semantic,unverified,112,False,False,True,2.0,True,rescued_by_spectrum,header_body,[81],"[82, 82, 82]",[82],"[82, 81, 79, 44, 43]",C1@82: all(int(v) == round(v) for v in shares__1),"75: 
+76:     if abs(sum(weights)) < _WEIGHT_PRECISION:
+77:         raise ValueError(""zero total weight"")
+78: 
+79:     shares = _compute_raw_shares(total, weights, minimum)
+80: 
+81:     if floor_to_int:
+82:         return [int(v) for v in shares]
+83:     return shares"
