@@ -27,7 +27,7 @@ PAGES = [
     (8, "slide_08.svg"), (25, "slide_25.svg"), (9, "slide_09.svg"), (22, "slide_22.svg"),
     (11, "slide_11.svg"), (4, "chuong02.svg"), (20, "slide_20.svg"), (19, "slide_19.svg"),
     (11, "thiet_ke.svg"), (4, "chuong03.svg"), (14, "slide_14.svg"), (22, "ket_qua_thu.svg"),
-    (21, "slide_21.svg"), (30, "slide_30.svg"),
+    (22, "ket_qua_rq3.svg"), (22, "pareto.svg"), (21, "slide_21.svg"), (30, "slide_30.svg"),
 ]
 
 
@@ -70,25 +70,99 @@ def table(gid: str, x: float, y: float, widths: list, rows: list, highlight_col=
     return "".join(out)
 
 
+def _csv(name: str) -> list[dict]:
+    import csv
+    with open(ROOT / "data" / name) as f:
+        return list(csv.DictReader(f))
+
+
+def _p(v) -> str:
+    """percent with a Vietnamese decimal comma, e.g. 0.4930 -> 49,3"""
+    return f"{100 * float(v):.1f}".replace(".", ",")
+
+
+def results_pages() -> None:
+    """RQ2 table, RQ3 table and the cost/accuracy figure — all numbers read from data/ (repaired GT)."""
+    rq2 = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "repaired"}
+    cost = _csv("llm_cost.csv")
+    tok = lambda prefix: f"{round(sum(float(r['tokens_per_program']) for r in cost if r['run_id'].startswith(prefix)) / max(1, sum(r['run_id'].startswith(prefix) for r in cost)) / 1000, 1)}k".replace(".", ",")
+    names = [("sbfl_ochiai", "SBFL Ochiai", "0"), ("llm_direct", "LLM hỏi thẳng (1 prompt)", tok("direct_test_gemini_r")),
+             ("semloc", "SemLoc (bản gốc)", tok("semloc_test_gemini_r")),
+             ("semloc_no_prior", "SemLoc bỏ thưởng ẩn", tok("semloc_test_gemini_r")),
+             ("covgate", "CovGate (nhóm)", tok("semloc_test_gemini_r")),
+             ("llm_coverage", "LLM + độ phủ (1 prompt, nhóm)", tok("direct_cov_test_gemini_r"))]
+    n = rq2["semloc"]["n"]
+    append(SVG / "ket_qua_thu.svg", table("bang-rq2", 84, 128, [330, 115, 115, 115, 133], [
+        ["Phương pháp", "Acc@1", "Acc@3", "Acc@5", "Token/CT"],
+        *[[label, _p(rq2[m]["acc1_mean"]), _p(rq2[m]["acc3_mean"]), _p(rq2[m]["acc5_mean"]), t] for m, label, t in names],
+    ], highlight_col=None, head_h=40, row_h=40, fs=16,
+        note=f"Gemini 3.8 Flash, {n} chương trình test, ground truth đã sửa bằng thực thi, trung bình 3 lần chạy.\n"
+             f"LLM + độ phủ vs SemLoc: Acc@3 p<0,001 (McNemar). Bỏ thưởng ẩn: −{_p(float(rq2['semloc']['acc1_mean']) - float(rq2['semloc_no_prior']['acc1_mean']))} điểm Acc@1."))
+    bip = {(r["subset"], r["method"]): r for r in _csv("rq3_bugsinpy.csv")}
+    ren = {r["method"]: r for r in _csv("rq3_renamed.csv") if r["gt"] == "repaired"}
+    fam = [r for r in _csv("rq3_families.csv") if r["gt"] == "repaired"]
+    rng = lambda m: (f"{_p(min(float(r['acc1_mean']) for r in fam if r['method'] == m))}–"
+                     f"{_p(max(float(r['acc1_mean']) for r in fam if r['method'] == m))}")
+    a = lambda m: bip[("all", m)]
+    append(SVG / "ket_qua_rq3.svg", table("bang-rq3", 84, 128, [250, 140, 140, 140, 138], [
+        ["Thí nghiệm", "SemLoc", "Chỉ dòng\nLLM đoán", "Chỉ phổ\nngữ nghĩa", "SBFL"],
+        [f"BugsInPy: {a('semloc_prior')['n']} lỗi thật\n(Acc@1)", _p(a("semloc_prior")["acc1_mean"]),
+         _p(a("llm_guess")["acc1_mean"]), _p(a("semloc_spectrum")["acc1_mean"]), _p(a("sbfl_ochiai")["acc1_mean"])],
+        [f"Đổi tên biến, {ren['semloc']['n']} CT\n(Acc@3: gốc → đổi tên)",
+         f"{_p(ren['semloc']['orig_acc3_mean'])} → {_p(ren['semloc']['renamed_acc3_mean'])}",
+         f"{_p(ren['llm_guess']['orig_acc3_mean'])} → {_p(ren['llm_guess']['renamed_acc3_mean'])}",
+         f"{_p(ren['semloc_no_prior']['orig_acc3_mean'])} → {_p(ren['semloc_no_prior']['renamed_acc3_mean'])}", "—"],
+        [f"{len({r['family'] for r in fam})} họ model, 50 CT\n(Acc@1, khoảng)", rng("semloc"), "—", rng("semloc_no_prior"), "—"],
+    ], highlight_col=2, head_h=52, row_h=62, fs=16,
+        note="Lỗi thật: mọi lần SemLoc đúng ở hạng 1 đều là dòng LLM tự đoán. Đổi tên: dòng đoán gần như giữ nguyên,\n"
+             "phổ ngữ nghĩa giảm mạnh (p<0,001). Họ model: model càng yếu càng phụ thuộc vào điểm thưởng cho dòng đoán."))
+    semloc_runs = [r for r in cost if r["run_id"].startswith("semloc_test_gemini_r")]
+    cf_share = round(100 * sum(int(r["calls_t0"]) for r in semloc_runs) / sum(int(r["calls"]) for r in semloc_runs))
+    png = WS / "images" / "pareto_rq.png"
+    import subprocess
+    subprocess.run(["pdftoppm", "-png", "-r", "300", "-singlefile", str(ROOT / "docs" / "report" / "generated" / "pareto.pdf"),
+                    str(png.with_suffix(""))], check=True)
+    append(SVG / "pareto.svg",
+           f'<g id="hinh-pareto" data-pptx-bounds="84 120 480 371"><image x="84" y="120" width="480" height="371" '
+           f'href="../images/pareto_rq.png" preserveAspectRatio="xMidYMid meet"/></g>'
+           + _para("ket-luan-pareto", 590, 150, 300, 300, [
+               (20, NAVY, "bold", ["Một prompt có độ phủ", "thắng cả pipeline"]),
+               (16, INK, "normal", ["Cùng 50 chương trình, ở cả 5 họ", "model: LLM + độ phủ có Acc@3",
+                                    "cao hơn SemLoc và tốn ít token hơn."]),
+               (16, INK, "normal", [f"Bước vá thử (CF) chiếm {cf_share}% lượt", "gọi LLM nhưng không cải thiện có",
+                                    "ý nghĩa thống kê."])]))
+
+
+def _para(gid, x, y, w, h, paras) -> str:
+    """One <text> per paragraph: first line direct, later lines as positioned tspans (editable text frame)."""
+    out, cy = [f'<g id="{gid}" data-pptx-bounds="{x} {y} {w} {h}" font-family="{BODY}">'], y + 30
+    for size, color, weight, lines in paras:
+        lh = round(size * 1.3, 1)
+        rest = "".join(f'<tspan x="{x}" dy="{lh}">{escape(l)}</tspan>' for l in lines[1:])
+        out.append(f'<text x="{x}" y="{cy}" font-size="{size}" font-weight="{weight}" fill="{color}">{escape(lines[0])}{rest}</text>')
+        cy += lh * len(lines) + size * 0.9
+    return "".join(out) + "</g>"
+
+
 def build() -> None:
     fresh()
     edit(SVG / "slide_01.svg", {
-        "Introduction to Coding Workshop": ["Tái hiện &", "mở rộng SemLoc"],
-        "Here is where your presentation begins": ["Định vị lỗi ngữ nghĩa với ràng buộc từ LLM",
+        "Introduction to Coding Workshop": ["Grounded or", "Guessed?"],
+        "Here is where your presentation begins": ["Kiểm chứng bằng thực thi: định vị lỗi bằng LLM",
                                                    "Đề tài 2KH · IT5440 · Báo cáo tiến độ lần 1"],
     })
     edit(SVG / "slide_03.svg", [
         ("Table of contents", "Mục lục"),
         ("Theory lesson", "Bối cảnh"), ("Features of the topic", "Phương pháp"),
-        ("Tips", "Kết quả bước đầu"), ("Practical exercise", "Kế hoạch"),
+        ("Tips", "Kết quả RQ1–RQ3"), ("Practical exercise", "Kế hoạch"),
         (("You can describe the topic", 0), ["Vấn đề, nghiên cứu liên quan,", "SemLoc"]),
         (("You can describe the topic", 0), ["3 câu hỏi, CovGate,", "thiết kế thực nghiệm"]),
-        (("You can describe the topic", 0), ["Tái hiện, kiểm tra benchmark,", "chạy thử, BugsInPy"]),
+        (("You can describe the topic", 0), ["Tái hiện, CovGate,", "độ bền, chi phí"]),
         (("You can describe the topic", 0), ["Tiến độ và việc đến lần 2"]),
     ])
     for name, num, title, sub in (("slide_04.svg", "01", "Bối cảnh", "Vấn đề, nghiên cứu liên quan và SemLoc"),
                                   ("chuong02.svg", "02", "Phương pháp", "Câu hỏi nghiên cứu, CovGate, thiết kế thực nghiệm"),
-                                  ("chuong03.svg", "03", "Kết quả", "Tái hiện, kiểm tra benchmark, chạy thử, BugsInPy")):
+                                  ("chuong03.svg", "03", "Kết quả", "RQ1 tái hiện · RQ2 CovGate · RQ3 độ bền")):
         edit(SVG / name, {"01": num, "Theory lesson": title, "You can enter a subtitle": sub})
     edit(SVG / "slide_05.svg", {
         "Introduction": "Vấn đề: lỗi ngữ nghĩa",
@@ -121,21 +195,22 @@ def build() -> None:
     ])
     edit(SVG / "slide_09.svg", [
         ("Features of the topic", "Khoảng trống của SemLoc"),
-        ("Mars", "Lỗi thật ít"), ("Despite being red", ["Chỉ 7 lỗi BugsInPy", "có kết quả cấp dòng"]),
-        ("Neptune", "Bỏ độ phủ"), ("It’s the farthest", ["Không dùng tín hiệu", "SBFL nào"]),
-        ("Jupiter", "Chạy 1 lần"), ("Jupiter is the biggest", ["Không lặp, không", "kiểm định thống kê"]),
-        ("Saturn", "Cách chấm"), ("Saturn is a gas giant", ["Hòa điểm, DD, bỏ", "chương trình lỗi"]),
+        ("Mars", "Thưởng ẩn"), ("Despite being red", ["+1,2 cho dòng LLM", "đoán; paper không nói"]),
+        ("Neptune", "CF vô hiệu"), ("It’s the farthest", ["Vá thử không đổi", "thứ hạng nào (0/250)"]),
+        ("Jupiter", "GT sai"), ("Jupiter is the biggest", ["56 dòng trống, 65 dòng", "test fail không tới"]),
+        ("Saturn", "Cách chấm"), ("Saturn is a gas giant", ["Hòa điểm, DD, chạy", "1 lần, không kiểm định"]),
     ])
-    for name, title in (("slide_22.svg", "Khác biệt so với các nghiên cứu"), ("ket_qua_thu.svg", "Chạy thử: 50 chương trình dev")):
+    for name, title in (("slide_22.svg", "Khác biệt so với các nghiên cứu"), ("ket_qua_thu.svg", "RQ2: 200 chương trình × 3 lần"),
+                        ("ket_qua_rq3.svg", "RQ3: lỗi thật, đổi tên, họ model"), ("pareto.svg", "Chi phí – độ chính xác")):
         edit(SVG / name, {"Classification": title})
         drop_group(SVG / name, "shape-2194")
     append(SVG / "slide_22.svg", table("bang-so-sanh", 84, 135, [176, 158, 158, 158, 158], [
         ["Tiêu chí", "SemLoc", "EffiHolmes", "Crash+LLM", "Nhóm mình"],
         ["Loại lỗi", "ngữ nghĩa", "hiệu năng", "crash (Java)", "ngữ nghĩa"],
-        ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "profiling\n2 mức tải", "stack trace\n+ xếp hạng", "độ phủ\n+ ràng buộc"],
-        ["Lỗi thật", "7 có kết quả\ncấp dòng", "140 issue", "38 (công nghiệp)", "31 dựng được\n(youtube-dl)"],
-        ["Kiểm tra\nbenchmark", "không", "—", "—", "có: 22% GT\nlà dòng trống"],
-        ["Lặp + kiểm\nđịnh", "1 lần", "—", "—", "3 lần +\nkiểm định"],
+        ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "profiling\n2 mức tải", "stack trace\n+ xếp hạng", "độ phủ + ràng\nbuộc + Shapley"],
+        ["Lỗi thật", "7 có kết quả\ncấp dòng", "140 issue", "38 (công nghiệp)", "31 lỗi thật\n× 3 lần chạy"],
+        ["Kiểm tra\nbenchmark", "không", "—", "—", "sửa 46 GT\nbằng thực thi"],
+        ["Lặp + kiểm\nđịnh", "1 lần", "—", "—", "3 lần + McNemar\n/ Wilcoxon"],
     ], highlight_col=4))
     edit(SVG / "slide_11.svg", [
         ("Recommendations", "Học được & áp dụng"),
@@ -148,10 +223,10 @@ def build() -> None:
     ])
     edit(SVG / "thiet_ke.svg", [
         ("Recommendations", "Thiết kế thực nghiệm"),
-        ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250 (dev 50,", "test 200) + 31 BugsInPy"]),
+        ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250 + kiểm", "chứng; 31 BugsInPy"]),
         ("Venus", "Biến thể"), ("Venus is the second", ["Đổi tên, xóa docstring", "→ chống thuộc bài"]),
         ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, LLM hỏi thẳng,", "SemLoc, CovGate"]),
-        ("Mercury", "Mô hình"), ("Mercury is the closest", ["Gemini 3.8 Flash; phụ:", "Claude, GPT-6, gpt-oss"]),
+        ("Mercury", "Mô hình"), ("Mercury is the closest", ["Gemini 3.8 Flash", "+ 4 họ model khác"]),
         ("Saturn", "Chỉ số"), ("Saturn is a gas giant", ["Acc@1/3/5, thứ hạng,", "%Susp, lượt gọi, token"]),
         ("Jupiter", "Thống kê"), ("Jupiter is the biggest", ["Lặp 3 lần, McNemar /", "Wilcoxon, effect size"]),
     ])
@@ -165,23 +240,28 @@ def build() -> None:
     edit(SVG / "slide_19.svg", [
         ("Main topic and details", "CovGate: thêm độ phủ vào SemLoc"),
         ("Mars", "Cổng độ phủ"), ("Despite being red", ["Bỏ dòng mà", "test fail", "không đi qua"]),
-        ("Neptune", "Kết hợp điểm"), ("It’s the farthest", ["Điểm ràng buộc", "+ điểm SBFL"]),
-        ("Jupiter", "Vá thử gọn"), ("Jupiter is the biggest", ["Chỉ kiểm chứng", "top-K qua cổng"]),
-        ("Saturn", "Mục tiêu"), ("It’s a gas giant", ["Đúng hơn và", "ít gọi LLM hơn"]),
+        ("Neptune", "λ·Ochiai"), ("It’s the farthest", ["Cộng điểm SBFL,", "λ chọn trên dev"]),
+        ("Jupiter", "CF xếp lại"), ("Jupiter is the biggest", ["Dùng kết quả", "vá thử để xếp"]),
+        ("Saturn", "Thưởng có cứ"), ("It’s a gas giant", ["Chỉ thưởng khi", "có bằng chứng"]),
     ])
+    dec = next(r for r in _csv("rq_decomposition.csv") if r["game"] == "semloc" and r["gt"] == "repaired"
+               and r["subset"] == "all" and r["metric"] == "acc1")
+    vgt = json.loads((ROOT / "data" / "semfault_verified_gt.json").read_text())
+    n_corr = sum(1 for v in (vgt.values() if isinstance(vgt, dict) else vgt) if v.get("status") == "corrected")
     edit(SVG / "slide_14.svg", {
         "9h 55m 23s": "13/13", "Jupiter’s rotation period": "cấu hình SemLoc tái hiện khớp từng số",
-        "333,000": "22%", "The Sun’s mass compared": "ground truth SemFault-250 trỏ vào dòng trống",
-        "386,000 km": "31 lỗi", "Distance between the Earth": "BugsInPy thật dựng được (youtube-dl)",
+        "333,000": f"{round(100 * float(dec['phi_guess']) / float(dec['full']))}%",
+        "The Sun’s mass compared": "Acc@1 của SemLoc đến từ dòng LLM tự đoán",
+        "386,000 km": str(n_corr), "Distance between the Earth": "ground truth sai được sửa bằng thực thi",
     })
     edit(SVG / "slide_21.svg", [
         ("Sequences", "Tiến độ"),
         ("First", "08/11"), ("Saturn is composed", "Tài liệu, hạ tầng"),
-        (("Next", 0), "12/11"), ("Mercury is the closest", ["Tái hiện, gắn", "nhãn, chạy thử"]),
-        (("Next", 0), "18/11"), ("Jupiter was named", ["Báo cáo lần 1:", "xong nội dung 1–2"]),
-        (("Next", 0), "19/11"), ("Despite being red", ["CovGate, chạy đủ", "thí nghiệm"]),
-        (("Next", 0), "23/11"), ("Earth is the third", ["Thống kê, đóng", "góp, báo cáo lần 2"]),
-        ("Last", "26/11"), ("Venus has extremely", ["Bài báo, báo cáo,", "bảo vệ (≤12/12)"]),
+        (("Next", 0), "09/11"), ("Mercury is the closest", ["RQ1–RQ3 xong,", "review độc lập"]),
+        (("Next", 0), "18/11"), ("Jupiter was named", ["Báo cáo lần 1:", "nội dung 1–2"]),
+        (("Next", 0), "22/11"), ("Despite being red", ["Phân tích lỗi,", "đóng góp"]),
+        (("Next", 0), "25/11"), ("Earth is the third", ["Báo cáo lần 2:", "nội dung 1–3"]),
+        ("Last", "12/12"), ("Venus has extremely", ["Bài báo arXiv,", "bảo vệ"]),
     ])
     t = (SVG / "slide_21.svg").read_text()  # one-line first column: align it with the other top captions
     t = t.replace('x="190.65" y="65.9832021"', 'x="190.65" y="99.1032021"', 1)
@@ -191,24 +271,7 @@ def build() -> None:
         "Do you have any questions?": ["Câu hỏi?", "Góp ý?"],
         "Please keep this slide for attribution": "Báo cáo tiến độ lần 1 · 18/11/2026",
     })
-    pilot = ROOT / "data" / "pilot_dev_gemini_default.csv"
-    if pilot.exists():
-        import csv
-        rows = {(r["source"], r["subset"]): r for r in csv.DictReader(open(pilot))}
-        pct = lambda v: f"{round(100 * float(v))}%"
-        def row(label, src):
-            a, s = rows[(src, "all")], rows[(src, "semantic")]
-            return [label, pct(a["acc1"]), pct(a["acc3"]), pct(a["acc5"]), pct(s["acc1"])]
-        cost = rows[("cost (ours)", "all")]
-        append(SVG / "ket_qua_thu.svg", table("bang-chay-thu", 84, 140, [300, 125, 125, 125, 125], [
-            ["Phương pháp", "Acc@1", "Acc@3", "Acc@5", "Ngữ nghĩa\nAcc@1"],
-            row("SBFL Ochiai (log)", "published: SBFL Ochiai"),
-            row("SemLoc + Gemini 2.5 Pro\n(log tác giả)", "published: SemLoc gemini-2.5-pro T0.8"),
-            row("SemLoc + Claude 4.6\n(log tác giả)", "published: SemLoc claude-sonnet-4-6 T0.8"),
-            row("SemLoc + Gemini 3.8 Flash\n(nhóm chạy lại)", next(k[0] for k in rows if k[0].startswith("ours"))),
-        ], highlight_col=None, head_h=52, row_h=56, fs=16,
-            note=f"Cùng 50 chương trình dev, mức suy luận mặc định; nhóm: {cost['n_ran'].replace('calls=', '').split()[0]} lượt gọi LLM.\n"
-                 "“Ngữ nghĩa” = 33 chương trình có dòng lỗi được cả test pass lẫn fail chạy qua."))
+    results_pages()
     json.dump({"schema": "ppt-master.roundtrip-page-plan.v1",
                "pages": [{"source_slide": s, **({} if n == f"slide_{s:02d}.svg" else {"svg": n})} for s, n in PAGES]},
               open(WS / "page_plan.json", "w"), indent=2)
