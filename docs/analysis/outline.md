@@ -1,97 +1,129 @@
-# Dàn ý báo cáo và bài báo (Phase 4, Task 2) — chờ chủ dự án duyệt
+# Dàn ý báo cáo và bài báo — bản Phase 5 (chờ chủ dự án duyệt)
 
-Khung theo hướng dẫn của thầy (`HuongDanTieuLuan 2026.pdf`):
-- **Báo cáo đầy đủ** (§III.1): bìa, cam kết, mục lục, danh sách bảng/hình/viết tắt, nội dung chính, phụ lục, tài liệu tham khảo. Thuật ngữ nước ngoài Việt hóa; chỉ giữ tiếng Anh khi không có từ tương ứng, kèm bảng thuật ngữ ở danh mục viết tắt.
-- **Báo cáo tóm tắt = bài báo** (§III.2): Giới thiệu → Tổng quan và định hướng giải pháp → Cơ sở lý thuyết → Giải pháp đề xuất → Cài đặt, thực nghiệm, đánh giá → Kết luận.
-- 4 nội dung chấm điểm (§I): (1) tài liệu và từ khóa, (2) ≥3 RQ và thực nghiệm, (3) đóng góp khoa học và triết lý, (4) bài báo đủ chuẩn arXiv.
+Thay dàn ý Phase 4 (đã duyệt 09/11). Giữ khung của thầy (`HuongDanTieuLuan 2026.pdf`, §I, §III.1, §III.2), giữ
+công tắc phiên bản: **[1]** có từ `lan1`, **[2]** từ `lan2`, **[F]** chỉ bản `full`. Mọi con số là macro
+(`numbers-vi.tex` / `numbers.tex`); bảng từ `docs/report/generated/`.
 
-Ký hiệu phiên bản: **[1]** có từ bản `lan1`, **[2]** từ `lan2`, **[F]** chỉ bản `full`. Nguồn số liệu: macro trong `numbers-vi.tex` / `numbers.tex`; bảng: `docs/report/generated/*.tex`.
+## Câu chuyện (một đoạn)
+
+Trong thực tế, lập trình viên viết kiểm thử (nhất là khi làm TDD), CI báo kiểm thử fail, và họ đưa kết quả đó cho
+LLM để tìm chỗ sai. SemLoc đề xuất một quy trình nhiều bước phức tạp hơn nhiều và tuyên bố nó "neo lập luận của LLM
+vào thực thi". Bài này kiểm tra lời tuyên bố đó: (i) dòng hạng 1 của SemLoc luôn là dòng LLM tự đoán, do một điểm
+thưởng không được mô tả; (ii) gần một nửa nhãn của SemFault-250 không trỏ đúng dòng lỗi, và nhãn sai vô tình có lợi
+cho SemLoc; (iii) một prompt duy nhất có kiểm thử thất bại — đúng cách lập trình viên vẫn làm — chính xác hơn và rẻ
+hơn khoảng sáu lần; (iv) mọi thứ phức tạp hơn mà nhóm thử (độ phủ từng dòng, gắn thêm vào SemLoc, kiểm chứng bằng bản
+sửa, biểu quyết) và công cụ phân tích tĩnh (ruff, pyrefly) đều không thêm được gì, kèm giải thích cơ chế.
+
+**Thông điệp một câu:** *Quy trình phức tạp của SemLoc thực chất dựa vào phỏng đoán của LLM và được đánh giá trên bộ
+nhãn lệch gần một nửa; đưa kiểm thử thất bại cho LLM — cách lập trình viên vẫn làm — chính xác hơn và rẻ hơn khoảng
+sáu lần, và các thành phần phức tạp hơn không thêm được gì.*
+
+## Ba câu hỏi nghiên cứu (đổi so với Phase 4)
+
+- **RQ1 — Tái hiện và kiểm tra cách đánh giá:** kết quả SemLoc có tái hiện được không; điểm thưởng ẩn, bước vá thử
+  (CF), cách chấm, và **chất lượng nhãn** (bộ gốc → đã sửa → đã rà soát) ảnh hưởng thế nào.
+- **RQ2 — LLM thật sự cần gì?** So SemLoc với một prompt có kiểm thử thất bại; ablation tách độ phủ khỏi kiểm thử
+  thất bại; các cách bổ sung (CovGate, đề xuất rồi kiểm chứng, biểu quyết); phân tích tĩnh (ruff, pyrefly); chi phí.
+- **RQ3 — Độ bền:** lỗi thật (BugsInPy, 31 lỗi), mã đổi tên định danh, nhiều họ mô hình; kết luận có giữ trên cả ba
+  bộ nhãn không.
+
+## Ba bộ nhãn (trình bày song song ở mọi bảng chính)
+
+| Bộ nhãn | Ai quyết định | Vai trò |
+|---|---|---|
+| Gốc (tác giả) | Tác giả SemLoc | So với bài gốc |
+| **Đã sửa** | Chỉ kiểm thử (bộ kiểm chứng sửa tối thiểu) | **Kết quả chính** — không có ý kiến LLM |
+| Đã rà soát | Fable rà trước 250 nhãn → 6 thành viên duyệt 111 nhãn (có xem gợi ý; đồng ý cả 111) → trưởng nhóm sửa 5 ca có bằng chứng chạy kiểm thử | Góc nhìn độ nhạy; nêu nguy cơ vòng tròn |
 
 ---
 
-## A. Báo cáo đầy đủ (tiếng Việt), ~45–55 trang nội dung
+## A. Báo cáo đầy đủ (tiếng Việt)
 
-**Tiền nội dung [1]:** bìa (ĐHBK Hà Nội, IT5440, học kỳ 20261, đề tài 02-KH, nhóm M9, 7 tên + MSHV theo thứ tự đã chốt, GVHD), cam kết trung thực (ghi rõ phần dùng từ SemLoc và việc dùng công cụ AI), mục lục, danh sách bảng, danh sách hình, danh mục viết tắt và thuật ngữ (SBFL, LLM, RQ, CF, GT, Acc@k…).
+**Tiền nội dung [1]:** bìa (tên mới: "TÁI HIỆN VÀ ĐÁNH GIÁ VIỆC ĐỊNH VỊ LỖI NGỮ NGHĨA BẰNG MÔ HÌNH NGÔN NGỮ LỚN"),
+cam kết (thêm: dùng LLM rà nhãn, thành viên duyệt nhãn), mục lục, danh sách bảng/hình, thuật ngữ (thêm: TDD, CI,
+phân tích tĩnh/động, bản sửa "lách" kiểm thử, đề xuất rồi kiểm chứng, biểu quyết, bộ nhãn đã rà soát).
 
-### Chương 1. Mở đầu [1] (~4 trang)
-- 1.1 Đặt vấn đề: định vị lỗi; lỗi ngữ nghĩa làm SBFL mất tín hiệu; LLM hiểu ý đồ nhưng khó kiểm chứng; SemLoc tuyên bố "neo lập luận vào thực thi".
-- 1.2 Câu hỏi "grounded hay guessed?" và 3 câu hỏi nghiên cứu (RQ1 tái hiện + kiểm tra cách đánh giá; RQ2 cải tiến và đối chứng; RQ3 độ bền).
-- 1.3 Đóng góp chính (tóm tắt C1–C7 của `contributions.md`, mỗi đóng góp một câu có số) — [1] ghi C1–C4 và C6 dưới dạng kết quả; [2] thêm C5, C7 và phần triết lý.
+### Chương 1. Mở đầu [1]
+- 1.1 Đặt vấn đề **từ thực tế**: TDD → CI báo fail → tìm dòng lỗi; ruff/pyrefly không bắt lỗi logic; lập trình viên
+  đưa kiểm thử thất bại cho LLM. Nghiên cứu đề xuất quy trình phức tạp hơn (SemLoc) — có cần không?
+- 1.2 Câu hỏi "grounded hay guessed?" và 3 RQ.
+- 1.3 Đóng góp (mỗi cái một câu có số): C1 hạng 1 là dòng đoán; C2 nhãn lệch gần một nửa → hai bộ nhãn mới; C3 một
+  prompt có kiểm thử thất bại thắng SemLoc, rẻ hơn ~6 lần; C4 các thành phần phức tạp hơn không thêm gì (ablation độ
+  phủ, CovGate, kiểm chứng bằng bản sửa, biểu quyết, phân tích tĩnh) + cơ chế; C5 bảng kiểm 7 mục + gói tái hiện.
 - 1.4 Cấu trúc báo cáo.
 
-### Chương 2. Tổng quan tài liệu và từ khóa [1] — *nội dung 1* (~8 trang)
-- 2.1 Phương pháp tìm và chọn tài liệu: từ khóa (bảng song ngữ `docs/literature/keywords.md`), nguồn, tiêu chí; 3 bài thầy giao + 23 tài liệu.
-- 2.2 Ba bài báo được giao: 2.2.1 SemLoc, 2.2.2 EffiHolmes, 2.2.3 Crash report + LLM — mỗi bài: vấn đề, phương pháp, đánh giá, điểm mạnh/yếu (nguồn: `docs/literature/notes-*.md`).
-- 2.3 Các hướng nghiên cứu liên quan: 2.3.1 SBFL kinh điển, 2.3.2 định vị lỗi bằng LLM (AutoFL, AgentFL, FlexFL…), 2.3.3 benchmark và tính hợp lệ của benchmark, 2.3.4 nhiễm dữ liệu / ghi nhớ của LLM.
-- 2.4 Bảng so sánh và khoảng trống nghiên cứu (bảng so sánh của slide lần 1, mở rộng); học được gì và áp dụng ra sao.
+### Chương 2. Tổng quan tài liệu và từ khóa [1] — nội dung 1
+- Giữ 2.1–2.4. Thêm vào 2.3: nhãn sai trong benchmark (Northcutt và cộng sự 2021); bản sửa "plausible" vượt kiểm thử
+  yếu trong sửa lỗi tự động (Qi và cộng sự 2015, Kali); phân tích tĩnh và lỗi logic.
 
-### Chương 3. Cơ sở lý thuyết [1] (~6 trang)
-- 3.1 Định vị lỗi dựa trên phổ: ma trận độ phủ, công thức Ochiai, Tarantula, DStar (có đánh số phương trình); chỉ số Acc@k, hạng, cách xử lý hòa điểm.
-- 3.2 Lỗi ngữ nghĩa: định nghĩa khách quan bằng độ phủ (semantic / coverage-revealed / not-executed).
-- 3.3 SemLoc: ràng buộc do LLM suy ra, chèn mã kiểm tra, phổ vi phạm, kiểm chứng phản thực tế (counterfactual); hình pipeline (ghi nguồn SemLoc).
-- 3.4 Công cụ thống kê: McNemar, Wilcoxon và hệ số tương quan hạng hai chuỗi, bootstrap theo cụm, giá trị Shapley.
+### Chương 3. Cơ sở lý thuyết [1]
+- Giữ 3.1–3.4. Thêm 3.5: phân tích tĩnh (lint, kiểm tra kiểu) và phân tích động (kiểm thử, độ phủ) — mỗi loại thấy được
+  gì; vì sao lỗi ngữ nghĩa cần thông tin thực thi.
 
-### Chương 4. Phương pháp và thiết kế thực nghiệm [1] — *nội dung 2* (~8 trang)
-- 4.1 Ba câu hỏi nghiên cứu và giả thuyết.
-- 4.2 Dữ liệu: SemFault-250 (chia dev 50 / test 200, cụm template), SemFault-250-verified (oracle sửa tối thiểu, trạng thái, loại vị trí ở dòng trống), BugsInPy (31 lỗi youtube-dl, chọn hàm đích), biến thể đổi tên.
-- 4.3 Phương pháp so sánh: SBFL, LLM hỏi thẳng, SemLoc, **CovGate** (4 thành phần, chọn tham số trên dev), **LLM + độ phủ** (prompt một lượt).
-- 4.4 Kiểm tra cách đánh giá của SemLoc (audit): cách chấm của tác giả và cách chấm công bằng.
-- 4.5 Phân rã "grounded vs guessed" (trò chơi Shapley hai người chơi).
-- 4.6 Mô hình, mức suy luận, hạ tầng (proxy, cache, `run_health`), lặp 3 lần, chi phí.
+### Chương 4. Phương pháp và thiết kế thực nghiệm [1] — nội dung 2
+- 4.1 Ba RQ và giả thuyết (mới).
+- 4.2 Dữ liệu: SemFault-250 (dev/test), **ba bộ nhãn** (bảng trên; quy trình rà soát mô tả đúng sự thật), BugsInPy,
+  biến thể đổi tên.
+- 4.3 Phương pháp so sánh: SBFL; ruff/pyrefly; LLM hỏi thẳng; SemLoc; **LLM + kiểm thử thất bại** (giải pháp chính);
+  LLM + kiểm thử thất bại + độ phủ (ablation); CovGate; đề xuất rồi kiểm chứng (thiết kế, tham số, quy tắc chọn trên dev);
+  biểu quyết.
+- 4.4 Kiểm tra cách đánh giá (audit). 4.5 Phân rã Shapley. 4.6 Mô hình, lặp 3 lần, thống kê, chi phí.
 
-### Chương 5. Kết quả thực nghiệm [1] (~10 trang)
-- 5.1 RQ1 — Tái hiện và kiểm tra cách đánh giá: bảng `rq1_audit`, thưởng ẩn +1,2, CF không đổi thứ hạng, DD/SBFL dưới hai cách chấm, lỗi của artifact; ảnh hưởng của ground truth (gốc → đã sửa).
-- 5.2 RQ2 — Cải tiến và đối chứng: bảng `rq2_ours` (Δ + CI), `rq2_by_label`, ablation CovGate, phân rã Shapley (`rq_decomposition_*`), chi phí + hình Pareto.
-- 5.3 RQ3 — Độ bền: 5.3.1 lỗi thật BugsInPy (`rq3_bugsinpy`), 5.3.2 đổi tên (`rq3_renamed`), 5.3.3 họ mô hình (`rq3_families`).
-- 5.4 Tóm tắt trả lời 3 RQ (bảng một dòng mỗi RQ).
+### Chương 5. Kết quả thực nghiệm [1]
+- 5.1 RQ1: tái hiện 13/13; điểm thưởng ẩn; CF; cách chấm; **chất lượng nhãn** (phân loại nhãn lệch; nhãn sai có lợi cho
+  SemLoc so với LLM hỏi thẳng).
+- 5.2 RQ2: bảng chính (ba bộ nhãn); ablation độ phủ; **ruff/pyrefly (một đoạn + bảng nhỏ, kèm mức trúng ngẫu nhiên)**;
+  CovGate; đề xuất rồi kiểm chứng + biểu quyết (trên dev, kết quả âm tính, tỉ lệ sửa được ở dòng đúng / dòng sai);
+  chi phí + hình Pareto; phân rã Shapley.
+- 5.3 RQ3: BugsInPy (thêm LLM + kiểm thử thất bại), đổi tên, họ mô hình.
+- 5.4 Tóm tắt trả lời 3 RQ.
 
-### Chương 6. Phân tích thất bại và thảo luận [2] — *nội dung 3* (~6 trang)
-- 6.1 Phân nhóm tự động 179 chương trình (`failure_signals`).
-- 6.2 Mơ hồ dòng kề cạnh: phân bố độ lệch, quan hệ đầu khối–thân khối, Acc@1 chặt / chấp nhận (`failure_tolerance`).
-- 6.3 Năm mẫu nguyên nhân (P1–P5) với ví dụ mã ngắn.
-- 6.4 Thảo luận: "guessed" đọc thế nào cho đúng; khi nào bằng chứng thực thi có ích.
+### Chương 6. Phân tích thất bại và thảo luận [2] — nội dung 3
+- 6.1–6.3 giữ (phân nhóm, mơ hồ dòng kề cạnh, năm mẫu nguyên nhân).
+- 6.4 **Vì sao kiểm thử không làm trọng tài tốt**: bản sửa "lách" kiểm thử yếu — cùng một cơ chế giải thích CF vô dụng,
+  bộ kiểm chứng nhận nhầm 8 ca, và đề xuất rồi kiểm chứng không cải thiện.
+- 6.5 **Bộ dữ liệu bão hòa khi nhãn đúng**; vì sao (hàm ngắn, lỗi một token, tên kiểm thử mô tả ý định) → cần lỗi thật.
+- 6.6 Hàm ý cho thực tế: AI agent sửa lỗi trong CI — bản sửa làm kiểm thử đạt chưa chắc sửa đúng chỗ.
 
-### Chương 7. Đóng góp, triết lý khoa học và các mối đe dọa [2] — *nội dung 3* (~5 trang)
-- 7.1 Đóng góp C1–C7 (khẳng định, bằng chứng, điều kiện bác bỏ, giới hạn).
-- 7.2 Triết lý khoa học (6 nguyên tắc).
-- 7.3 Các mối đe dọa đến tính hợp lệ (nội tại, ngoại tại, cấu trúc, kết luận).
+### Chương 7. Đóng góp, triết lý khoa học và các mối đe dọa [2] — nội dung 3
+- 7.1 Đóng góp C1–C5 (khẳng định, bằng chứng, điều kiện bác bỏ, giới hạn).
+- 7.2 Triết lý: kiểm thử là trọng tài *khi kiểm thử đủ chặt*; cái đơn giản phải là mốc so sánh bắt buộc; kết quả âm tính
+  cũng được báo cáo.
+- 7.3 Mối đe dọa: vòng tròn của bộ nhãn rà soát; người duyệt xem gợi ý LLM; tên kiểm thử "nói hộ" lỗi; một hàm mỗi lần
+  (lỗi thật được cho sẵn hàm đích); 31 lỗi một dự án; một mô hình chính; đề xuất rồi kiểm chứng chỉ đánh giá trên dev.
 
-### Chương 8. Kết luận và hướng phát triển [1] (~2 trang)
-- 8.1 Kết luận (bản [1]: trả lời 3 RQ; bản [2]/[F]: thêm đóng góp).
-- 8.2 Hướng phát triển: oracle nhiều vị trí và chống sửa bù trừ, thêm lỗi thật nhiều dự án, chuẩn đánh giá cho định vị lỗi bằng LLM.
+### Chương 8. Kết luận và hướng phát triển [1]
+- 8.1 Kết luận theo thông điệp một câu. 8.2 Hướng phát triển: định vị cấp dự án (thu hẹp từ dự án xuống hàm); ablation
+  giấu tên kiểm thử; kiểm thử chặt hơn để kiểm chứng có ý nghĩa; benchmark lỗi thật nhiều dự án.
 
 ### Phụ lục [F]
-- A. Hướng dẫn tái hiện (4 mức, `REPRODUCE.md`), Docker, link GitHub.
-- B. Bảng đầy đủ: kết quả theo ground truth gốc, theo từng họ mô hình, checklist đánh giá.
-- C. Prompt baseline LLM + độ phủ và mẫu prompt đã dùng.
-
-**Tài liệu tham khảo [1]:** IEEE theo mẫu của thầy, chỉ những tài liệu được trích dẫn.
+- A. Tái hiện (4 mức, Docker). B. Bảng đầy đủ (theo từng bộ nhãn, họ mô hình, lưới tham số đề xuất rồi kiểm chứng).
+- C. Các prompt (LLM + kiểm thử thất bại, bản có độ phủ, prompt viết bản sửa). D. Quy trình rà soát nhãn (mẫu tệp duyệt).
 
 ---
 
-## B. Bài báo tiếng Anh (arXiv, IEEEtran hai cột), ~10–12 trang + tài liệu
+## B. Bài báo tiếng Anh (arXiv, IEEEtran)
 
-Tiêu đề: *Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization*. Tác giả: 7 tên, HUST. Bản `lan2` có dòng "Draft".
+Tên: *Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization*.
 
-1. **Abstract** (~200 từ): bối cảnh → câu hỏi → phương pháp (audit, SemFault-250-verified, phân rã, baseline) → 4 kết quả có số → hàm ý.
-2. **Introduction**: lỗi ngữ nghĩa và lời hứa "grounding"; câu hỏi; tóm tắt phát hiện; danh sách đóng góp đánh số (mỗi cái có số); link artifact.
-3. **Related Work and Research Direction**: SBFL; LLM-based FL; benchmark validity & reproducibility; memorization. Đoạn cuối: khoảng trống → hướng của bài.
-4. **Background**: SBFL và Ochiai; SemLoc pipeline (hình); định nghĩa lỗi ngữ nghĩa; Acc@k và hòa điểm.
-5. **Approach** (giải pháp đề xuất): A. evaluation audit; B. SemFault-250-verified (oracle, giới hạn); C. grounded-vs-guessed decomposition; D. CovGate; E. LLM + coverage baseline.
-6. **Evaluation** (cài đặt, thực nghiệm, đánh giá): setup (models, repeats, stats); RQ1; RQ2 (bảng chính, Pareto); RQ3 (BugsInPy, renamed, families); failure analysis (ambiguity + patterns).
-7. **Threats to Validity**.
-8. **Conclusion and Future Work**; **Data Availability** (GitHub, Docker, offline replay).
+1. **Abstract:** thực tế (kiểm thử fail → LLM) → SemLoc tuyên bố → 4 kết quả có số → hàm ý (mốc đơn giản bắt buộc).
+2. **Introduction:** động lực từ TDD/CI; câu hỏi; phát hiện; đóng góp C1–C5; artifact.
+3. **Related Work:** SBFL; LLM-based FL; benchmark label errors; plausible patches / test overfitting; static analysis.
+4. **Background:** SBFL, SemLoc (hình), lỗi ngữ nghĩa, Acc@k.
+5. **Approach:** audit; ba bộ nhãn; phân rã; LLM + failing tests và ablation; CovGate; propose-and-verify; vote; static tools.
+6. **Evaluation:** setup; RQ1; RQ2 (bảng chính ba bộ nhãn, ablation, static, negative results); RQ3; failure analysis.
+7. **Discussion:** why tests make poor arbiters; benchmark saturation; implications for CI agents.
+8. **Threats**; 9. **Conclusion**; **Data Availability**.
 
-Hình/bảng dự kiến: Fig. 1 pipeline SemLoc + điểm can thiệp của nhóm; Table I audit; Table II RQ2; Fig. 2 Pareto; Table III decomposition; Table IV RQ3 (gộp BugsInPy + renamed); Table V failure categories / tolerance.
+Bảng/hình: Fig. 1 SemLoc + điểm kiểm tra; Table I audit; **Table II kết quả chính (ba bộ nhãn)**; Table III ablation +
+các cách bổ sung (độ phủ, CovGate, kiểm chứng, biểu quyết, ruff, pyrefly); Fig. 2 Pareto; Table IV RQ3; Table V nhãn lệch.
 
----
-
-## C. Slide (Task 7)
-- **Lần 1** (dựng lại bộ hiện tại, 20 trang): số liệu ground truth mới, bìa có tên nhóm.
-- **Lần 2** (~22 trang): tóm tắt lần 1 (4 trang) + phân tích thất bại (mơ hồ dòng kề cạnh, 5 mẫu), đóng góp, triết lý khoa học, Threats, bản nháp bài báo, kế hoạch nộp.
-- **Bảo vệ** (~25 trang, ≤20 phút): toàn bộ câu chuyện theo cấu trúc bài báo.
+## C. Slide
+- Lần 1 / lần 2 / bảo vệ: thay trang "cải tiến" bằng "LLM thật sự cần gì?" (bảng ablation + các cách bổ sung), thêm trang
+  "nhãn lệch gần một nửa", trang mở đầu từ TDD/CI; giữ số trang tương đương.
 
 ## D. Điểm cần chủ dự án quyết
-1. Tên giảng viên hướng dẫn và mã lớp trên bìa.
-2. Hướng dẫn ghi "tiêu đề mục có kích thước **24**, chữ hoa in đậm" — có vẻ là lỗi đánh máy (chương chỉ 16). Đề xuất dùng **14 chữ hoa đậm** (như khung hiện tại).
-3. Báo cáo đầy đủ viết tiếng Việt, bài báo tiếng Anh (hướng dẫn cho phép cả hai) — giữ như spec.
+1. Duyệt câu chuyện và thông điệp một câu ở trên.
+2. Giữ CovGate trong bài như **một trong các cách bổ sung** (không còn là "cải tiến chính") — đề xuất: giữ.
+3. Kinh nghiệm dùng cách đơn giản ở công ty chủ dự án: chỉ dùng làm động lực ở phần mở đầu (không nêu tên công ty,
+   không dùng làm bằng chứng) — đề xuất: viết chung "trong thực tế phát triển phần mềm".
