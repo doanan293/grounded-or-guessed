@@ -1,0 +1,4870 @@
+[
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/batch_tally.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/batchnorm_running_mean.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 35,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/batchnorm_running_mean.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Union` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 9
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/bump_click.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 9
+          },
+          "location": {
+            "column": 1,
+            "row": 9
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 9
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 9,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 54,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/bump_conversion.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Hashable, Optional",
+          "end_location": {
+            "column": 54,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 46,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/bump_job.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 54,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/bump_refund.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Hashable, Optional",
+          "end_location": {
+            "column": 54,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 46,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cache_entry_ttl.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 29,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cached_inventory.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Mapping, Optional, Tuple",
+          "end_location": {
+            "column": 65,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 25,
+      "row": 4
+    },
+    "message": "`typing.Dict` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 58,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cached_inventory.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Mapping, Optional, Tuple",
+          "end_location": {
+            "column": 65,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 50,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cached_manifest.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional, Tuple, Any",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cached_metric.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cached_preference.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cached_route.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional, Tuple",
+          "end_location": {
+            "column": 51,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cacheline_expiry.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cacheline_refresh.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional, Tuple",
+          "end_location": {
+            "column": 51,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calendar_slot_insert.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 13,
+      "row": 70
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calendar_slot_insert.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 71
+          },
+          "location": {
+            "column": 1,
+            "row": 70
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `boundary`"
+    },
+    "location": {
+      "column": 5,
+      "row": 70
+    },
+    "message": "Local variable `boundary` is assigned to but never used",
+    "noqa_row": 70,
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_latency.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_latency.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_lift.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_lift.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_loss.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_loss.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_pressure.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_pressure.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_quality.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_quality.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_score.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_score.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_trend.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/calibrate_trend.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/catalog_cache.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/confidence_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/confidence_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 45,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/confidence_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 40,
+      "row": 4
+    },
+    "message": "`typing.Tuple` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/config_expiry.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/config_interpolate.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/config_interpolate.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cost_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple",
+          "end_location": {
+            "column": 45,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/cost_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple",
+          "end_location": {
+            "column": 45,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 12,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/coupons_apportion.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `math`"
+    },
+    "location": {
+      "column": 8,
+      "row": 4
+    },
+    "message": "`math` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/coverage_interp.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/coverage_interp.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/credit_share.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Sequence, List",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Optional`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/demand_curve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/demand_curve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/demand_forecast_curve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple",
+          "end_location": {
+            "column": 45,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/demand_forecast_curve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple",
+          "end_location": {
+            "column": 45,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/draft_cache.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional, Tuple",
+          "end_location": {
+            "column": 51,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/embedding_lookup_cache.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/error_meter.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/estimate_reliability.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/estimate_reliability.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 45,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/estimate_reliability.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 40,
+      "row": 4
+    },
+    "message": "`typing.Tuple` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/estimate_supply.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/estimate_supply.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/estimate_temperature.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/estimate_temperature.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 19,
+      "row": 64
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/estimate_temperature.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 22,
+            "row": 64
+          },
+          "location": {
+            "column": 5,
+            "row": 64
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `segment_length`"
+    },
+    "location": {
+      "column": 5,
+      "row": 64
+    },
+    "message": "Local variable `segment_length` is assigned to but never used",
+    "noqa_row": 64,
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/feature_cache.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/feature_flag_rollout.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Union",
+          "end_location": {
+            "column": 35,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 18,
+      "row": 75
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/file_chunk_stitch.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 21,
+            "row": 75
+          },
+          "location": {
+            "column": 5,
+            "row": 75
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `header_offset`"
+    },
+    "location": {
+      "column": 5,
+      "row": 75
+    },
+    "message": "Local variable `header_offset` is assigned to but never used",
+    "noqa_row": 75,
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/gain_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/gain_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/growth_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/growth_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/invoice_meter.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/log_sampling_decider.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 11
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/login_tally.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/lr_warmup_schedule.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/lr_warmup_schedule.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/lru_evictor.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Any",
+          "end_location": {
+            "column": 39,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/machine_booking.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/maintenance_booking.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/message_counter.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/metric_rolling_avg.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Optional, List",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/model_confidence_clamp.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 35,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/model_confidence_clamp.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Tuple` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 29,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/offer_expiry.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Mapping, Optional, Tuple",
+          "end_location": {
+            "column": 65,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 25,
+      "row": 4
+    },
+    "message": "`typing.Dict` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 58,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/offer_expiry.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Mapping, Optional, Tuple",
+          "end_location": {
+            "column": 65,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 50,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 12,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/optimizer_step_guard.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `math`"
+    },
+    "location": {
+      "column": 8,
+      "row": 4
+    },
+    "message": "`math` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 5
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/optimizer_step_guard.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 6
+          },
+          "location": {
+            "column": 1,
+            "row": 5
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 5
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 5,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 24,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/percentile_estimator.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Sequence",
+          "end_location": {
+            "column": 34,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.List`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.List` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/plan_appointment_slot.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/plan_delivery_slot.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/plan_desk_slot.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 12,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/plan_jobs_share.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `math`"
+    },
+    "location": {
+      "column": 8,
+      "row": 4
+    },
+    "message": "`math` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/plan_memo.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional, Tuple, Any",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 12,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/plan_tickets_share.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `math`"
+    },
+    "location": {
+      "column": 8,
+      "row": 4
+    },
+    "message": "`math` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/plan_upgrade_slot.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 29,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/prediction_cache.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Mapping, Optional, Tuple",
+          "end_location": {
+            "column": 65,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 25,
+      "row": 4
+    },
+    "message": "`typing.Dict` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 58,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/prediction_cache.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Mapping, Optional, Tuple",
+          "end_location": {
+            "column": 65,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 50,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/price_cache.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/probability_curve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/probability_curve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 11
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/profile_expiry.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 11
+          },
+          "location": {
+            "column": 1,
+            "row": 11
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 11
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 11,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 12,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/quota_for_capacity.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `math`"
+    },
+    "location": {
+      "column": 8,
+      "row": 4
+    },
+    "message": "`math` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 5
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/quota_for_capacity.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Sequence, List, Union",
+          "end_location": {
+            "column": 51,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 5
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Optional`"
+    },
+    "location": {
+      "column": 36,
+      "row": 5
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 5,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/quote_memo.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/rating_curve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/rating_curve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/redis_like_expiry.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/replica_sync_offsets.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List",
+          "end_location": {
+            "column": 34,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 39,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/request_token_bucket.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict",
+          "end_location": {
+            "column": 49,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 31,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/request_token_bucket.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict",
+          "end_location": {
+            "column": 49,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/reservation_booking.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 11,
+      "row": 64
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/reservation_booking.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 65
+          },
+          "location": {
+            "column": 1,
+            "row": 64
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `buffer`"
+    },
+    "location": {
+      "column": 5,
+      "row": 64
+    },
+    "message": "Local variable `buffer` is assigned to but never used",
+    "noqa_row": 64,
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 41,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/reservation_overlap_check.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Sequence, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.List`"
+    },
+    "location": {
+      "column": 37,
+      "row": 4
+    },
+    "message": "`typing.List` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/reserve_band.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/reserve_lane.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/retry_backoff_window.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/retry_backoff_window.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/retry_tally.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "E701",
+    "end_location": {
+      "column": 48,
+      "row": 55
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/retry_tally.py",
+    "fix": null,
+    "location": {
+      "column": 47,
+      "row": 55
+    },
+    "message": "Multiple statements on one line (colon)",
+    "noqa_row": 55,
+    "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 24,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/rolling_usage.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Optional, Sequence",
+          "end_location": {
+            "column": 44,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.List`"
+    },
+    "location": {
+      "column": 20,
+      "row": 10
+    },
+    "message": "`typing.List` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/room_reservation.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/schedule_call.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/schedule_car.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/schedule_demo.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/schedule_pickup.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Tuple, List",
+          "end_location": {
+            "column": 41,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/schedule_training.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/schedule_window.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/search_result_pager.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Sequence, TypeVar",
+          "end_location": {
+            "column": 43,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.List`"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.List` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/session_memo.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/speed_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/speed_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 45,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/speed_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 40,
+      "row": 4
+    },
+    "message": "`typing.Tuple` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/summary_memo.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 54,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/task_tally.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Hashable, Optional",
+          "end_location": {
+            "column": 54,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 46,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/tensor_slice_pad.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List",
+          "end_location": {
+            "column": 34,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/throughput_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 38,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/throughput_trendline.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 30,
+      "row": 4
+    },
+    "message": "`typing.Optional` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/token_cache.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/token_expiry_check.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional, Tuple",
+          "end_location": {
+            "column": 51,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/track_api.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/track_build.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/track_delivery.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/track_deployment.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/track_logout.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/track_release.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/ttl_snapshot_store.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 54,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/view_tally.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Hashable, Optional",
+          "end_location": {
+            "column": 54,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 46,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/votes_apportion.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 49,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/warm_cache_loader.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Any, Dict, Optional, Tuple",
+          "end_location": {
+            "column": 56,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 41,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/warning_meter.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import Dict, Optional",
+          "end_location": {
+            "column": 44,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 36,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 4
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/water_allocator.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 20,
+      "row": 4
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 10
+    },
+    "filename": "/home/andv/personal/HUST/principle-technique-program-analysis/third_party/semloc/benchmark/programs/windowed_error_rate.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from typing import List, Tuple",
+          "end_location": {
+            "column": 41,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        }
+      ],
+      "message": "Remove unused import: `typing.Sequence`"
+    },
+    "location": {
+      "column": 26,
+      "row": 10
+    },
+    "message": "`typing.Sequence` imported but unused",
+    "noqa_row": 10,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  }
+]

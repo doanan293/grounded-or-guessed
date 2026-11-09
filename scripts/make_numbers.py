@@ -31,7 +31,7 @@ def macro_name(*parts: str) -> str:
 def fmt(value: str, kind: str, comma: bool = False) -> str:
     v = float(value)
     s = {"pct": f"{100 * v:.1f}", "pp": f"{100 * v:+.1f}", "int": f"{int(round(v))}", "p": f"{v:.3f}",
-         "dec2": f"{v:.2f}", "k": f"{v / 1000:.1f}"}[kind]
+         "dec1": f"{v:.1f}", "dec2": f"{v:.2f}", "k": f"{v / 1000:.1f}"}[kind]
     if kind == "p" and v < 0.001:
         s = "$<$0.001"
     return s.replace(".", ",").replace("-", "−") if comma else s  # Vietnamese: decimal comma, true minus sign
@@ -98,6 +98,10 @@ def all_specs() -> list[Spec]:
     if (DATA / "ablation_coverage.csv").exists():
         specs += table_specs("abl", DATA / "ablation_coverage.csv", ["gt", "subset", "contrast"],
                              {"a_acc1": "pct", "b_acc1": "pct", "a_acc3": "pct", "b_acc3": "pct", **diff})
+    if (DATA / "static_tools.csv").exists():
+        specs += table_specs("stat", DATA / "static_tools.csv", ["gt", "tool"],
+                             {c: "int" for c in ("programs", "diagnostics", "flagged", "on_fault_line", "within_2_lines")}
+                             | {"on_fault_line_by_chance": "dec1"})
     specs += table_specs("pareto", DATA / "pareto.csv", ["method", "model"],
                          {"acc1": "pct", "acc3": "pct", "tokens_per_program": "k", "n": "int"})
     return specs

@@ -1,0 +1,10 @@
+gt,tool,programs,diagnostics,flagged,on_fault_line,within_2_lines,mean_per_program,on_fault_line_by_chance
+original,ruff_default,250,148,109,1,2,0.59,2.2
+original,ruff_all,250,4172,250,24,94,16.69,47.2
+original,pyrefly,250,21,21,0,5,0.08,0.4
+repaired,ruff_default,226,141,103,1,2,0.62,2.1
+repaired,ruff_all,226,3795,226,31,92,16.79,43.2
+repaired,pyrefly,226,19,19,0,3,0.08,0.3
+reviewed,ruff_default,250,148,109,1,1,0.59,2.4
+reviewed,ruff_all,250,4172,250,25,94,16.69,56.3
+reviewed,pyrefly,250,21,21,0,3,0.08,0.6
