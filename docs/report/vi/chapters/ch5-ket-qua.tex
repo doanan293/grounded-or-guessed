@@ -65,6 +65,18 @@ nhưng không kiểm chứng được giả thuyết này khi không có mã sin
 \input{../generated/vi/rq_label_audit}
 \end{table}
 
+\textbf{Duyệt mù.} Trong \BlindBlindAllPairs{} cặp câu trả lời đều mù, hai người duyệt chọn trùng dòng ở
+\BlindBlindAllPairsAgree{} cặp. Trong \BlindBlindAllNReviewed{} câu trả lời mù, \BlindBlindAllMatchReviewed{} trùng nhãn đã
+rà soát và chỉ \BlindBlindAllMatchOriginal{} trùng nhãn gốc. Với các nhãn đã bị dời hoặc bị LLM cho là sai, mọi câu trả lời
+mù đều trùng nhãn đã rà soát (\BlindBlindFlaggedMatchReviewed{}/\BlindBlindFlaggedNReviewed{} và
+\BlindBlindRelocatedMatchReviewed{}/\BlindBlindRelocatedNReviewed) và không câu nào chọn nhãn gốc; với nhãn hai dòng là
+\BlindBlindTwoLineMatchReviewed{}/\BlindBlindTwoLineNReviewed. Nhóm khó nhất là các nhãn LLM giữ nguyên
+(\BlindBlindKeptMatchReviewed{}/\BlindBlindKeptNReviewed): mọi câu không trùng đều kèm ghi chú ``không thấy lỗi rõ'' --- đó
+là các lỗi thiếu câu lệnh (thiếu bước chuẩn hóa, thiếu phân bổ phần dư), không có từ tố nào ``trông sai'', nên người duyệt
+đoán một dòng thay vì chỉ ra một lỗi khác. Duyệt mù vì vậy ủng hộ các lần dời nhãn, nhưng cho thấy lỗi thiếu mã là chỗ nhãn
+cấp dòng vốn mơ hồ. Số câu mù ở nhóm nhãn bị dời ít (\BlindBlindRelocatedNReviewed), vì phần lớn câu trả lời ở nhóm này dẫn
+lại tệp duyệt cũ.
+
 Nhãn lệch làm mọi con số tuyệt đối thấp đi và có thể đã có lợi cho SemLoc. Trên nhãn gốc, SemLoc hơn LLM
 hỏi thẳng \RqTwoOriginalAllSemlocAccThreeMean\% so với \RqTwoOriginalAllLlmDirectAccThreeMean\% ở Acc@3; trên nhãn đã rà soát,
 hai phương pháp ngang nhau (\RqTwoReviewedAllSemlocAccThreeMean\% so với \RqTwoReviewedAllLlmDirectAccThreeMean\%;

@@ -3,8 +3,10 @@
 
 \textbf{Internal and construct validity.} The minimal-fix oracle can accept compensating fixes and never searches
 alternatives for reachable labels; the review overturned \ReviewCorrectedOverturnedN{} of its relocations. The reviewed
-labels are LLM-suggested, and reviewers saw the suggestion and agreed in \ReviewAgreeN{} of \ReviewHumanN{} cases, so they
-are not independent of LLM judgment and may favor LLM-based methods; we therefore state main results on the original and
+labels are LLM-suggested; in the first round reviewers saw the suggestion and agreed in \ReviewAgreeN{} of \ReviewHumanN{}
+cases. The blind re-review supports them, but on a sample of \BlindBlindAllPrograms{} programs, with
+\BlindAnswersExcluded{} non-blind answers excluded and choices limited to the listed candidates, so the reviewed labels are
+still not fully independent of LLM judgment and may favor LLM-based methods; we therefore state main results on the original and
 repaired labels, which involve no LLM judgment of location. Two-line labels (\LabaudAllTwoLine{} programs) make the reviewed
 Acc@$k$ slightly easier. Line-level Acc@1 depends on whether a guard or the guarded statement is labeled; we report tolerant
 variants. The single prompt is ours, fixed before seeing test results. Propose-and-verify and voting were evaluated on the

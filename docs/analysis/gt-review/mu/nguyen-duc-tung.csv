@@ -1,21 +1,21 @@
 ﻿id,program,candidates,answer,note
-1,credits_allocator,A B C D,,
-2,task_tally,A B C D,,
-3,limit_message,A B C D,,
-4,divide_refund,A B C D,,
-5,combine_depths,A B C D,,
-6,plan_upgrade_slot,A B C D,,
-7,traffic_shaping_gate,A B C D,,
-8,temperature_window_avg,A B C D,,
-9,blend_supplies,A B C D,,
-10,quota_for_memory,A B C D,,
-11,prediction_cache,A B C D,,
-12,demand_curve,A B C D,,
-13,allocate_prize_cut,A B C D,,
-14,smooth_pressure,A B C D,,
-15,ttl_snapshot_store,A B C D,,
-16,schedule_pickup,A B C D,,
-17,room_reservation,A B C D,,
-18,reservation_booking,A B C D,,
-19,limit_job,A B C D,,
-20,notification_gate,A B C D,,
+1,credits_allocator,A B C D,D,if _INTEGER_ALLOCATION: int else giữ nguyên — OK
+2,task_tally,A B C D,D,new_value = max_value - 1 sau khi vượt max — phải là max_value
+3,limit_message,A B C D,D,thanh-vien xác nhận lỗi > thay vì >= ở dòng 73 (ứng viên D — if len(recent) > limit)
+4,divide_refund,A B C D,C,payouts = [b - fee for b in base] không apply_floor. Trông OK nhưng không chắc
+5,combine_depths,A B C D,A,pop nếu merged[-1] == left[-1] == right[-1] — sai logic merge sort
+6,plan_upgrade_slot,A B C D,A,if any(not (b <= s or a >= e)) conflict check — thanh-vien nói lỗi chạm biên
+7,traffic_shaping_gate,A B C D,C,thanh-vien nói lỗi > thay vì >= ở dòng 71 (ứng viên C — if len(active) > limit)
+8,temperature_window_avg,A B C D,A,mean = total / window mà tail = values[-window:] có thể ngắn hơn — phải chia len(tail)
+9,blend_supplies,A B C D,C,điều kiện pop kỳ lạ sau merge — merge sort chuẩn không làm thế này
+10,quota_for_memory,A B C D,C,thanh-vien nói lỗi ép kiểu int ở dòng 72 — ứng viên C (allocations = [int(x) for x in planned]) — ép int làm mất tổng quota
+11,prediction_cache,A B C D,A,now > deadline → return default — đúng
+12,demand_curve,A B C D,D,if not clamp rồi clamp — sai điều kiện rõ ràng
+13,allocate_prize_cut,A B C D,C,result = [s - fee for s in shares] — OK không rõ lỗi
+14,smooth_pressure,A B C D,C,mean = total / window — recent từ _select_recent có thể ngắn hơn window
+15,ttl_snapshot_store,A B C D,C,thanh-vien nói lỗi > thay vì >= ở dòng 68 (ứng viên C — if now > effective)
+16,schedule_pickup,A B C D,D,thanh-vien nói lỗi chạm biên ở dòng 62 (ứng viên D — if any(not (b <= s or a >= e)))
+17,room_reservation,A B C D,B,thanh-vien nói lỗi chạm biên ở dòng 70 (ứng viên B — if not (end <= s or start >= e))
+18,reservation_booking,A B C D,C,điều kiện overlap — không dùng buffer nên có thể lỗi biên. Để C
+19,limit_job,A B C D,B,thanh-vien nói lỗi > thay vì >= ở dòng 75 (ứng viên B — if len(recent) > limit)
+20,notification_gate,A B C D,B,len(recent) > limit → pattern > vs >= — ứng viên B

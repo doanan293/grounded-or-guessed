@@ -28,9 +28,10 @@ trong bài báo; bằng chứng thực thi của SemLoc chỉ có tác dụng t�
 sửa} (chỉ kiểm thử quyết định, \GtConfirmedN{} xác nhận, \GtCorrectedN{} dời vị trí) và \emph{đã rà soát} (LLM rà trước,
 \ReviewReviewersN{} thành viên duyệt \ReviewHumanN{} nhãn, \ReviewOverrideN{} ca sửa có bằng chứng chạy kiểm thử).
 \textbf{Bằng chứng:} \texttt{data/label\_audit.csv}, \texttt{data/semfault\_verified\_gt.json},
-\texttt{data/semfault\_reviewed\_gt.json}, \texttt{docs/analysis/gt-review/}. \textbf{Giới hạn:} người duyệt có xem gợi ý
-của LLM và đồng ý ở \ReviewAgreeN{}/\ReviewHumanN{} ca, nên bộ đã rà soát không độc lập với LLM; mọi kết quả chính được
-báo cáo trên cả bộ gốc và bộ đã sửa.
+\texttt{data/semfault\_reviewed\_gt.json}, \texttt{docs/analysis/gt-review/}. \textbf{Giới hạn:} ở vòng đầu, người duyệt có xem gợi ý
+của LLM và đồng ý ở \ReviewAgreeN{}/\ReviewHumanN{} ca; vòng duyệt mù sau đó (\BlindBlindAllMatchReviewed{}/\BlindBlindAllNReviewed{}
+câu trả lời mù trùng nhãn đã rà soát) ủng hộ bộ nhãn nhưng có \BlindAnswersExcluded{}/\BlindAnswersTotal{} câu không còn mù
+và bị loại; mọi kết quả chính được báo cáo trên cả bộ gốc và bộ đã sửa.
 
 \subsection{C3. Một prompt có kiểm thử thất bại thắng quy trình nhiều bước}
 
@@ -92,8 +93,10 @@ dòng sửa; so sánh giữa SemLoc, các phương pháp đối chứng dùng LL
 thì không; ở Acc@5, SemLoc hơn LLM + độ phủ trên bộ gốc nhưng kém trên bộ đã sửa.
 \item \textbf{Mơ hồ dòng kề cạnh}: Acc@1 chặt phụ thuộc quy ước gán nhãn; nhóm báo cáo cả Acc@1 chấp nhận đầu khối/thân khối.
 \item \textbf{Prompt của phương pháp một prompt} do nhóm viết trước khi xem kết quả và không tinh chỉnh; prompt khác có thể cho kết quả khác.
-\item \textbf{Vòng tròn của bộ nhãn đã rà soát}: nhãn do một LLM đề xuất và người duyệt có xem gợi ý, nên các phương pháp
-dùng LLM có thể ``nghĩ giống'' người ra đáp án; kết quả chính vì vậy được báo cáo trên bộ gốc và bộ đã sửa (LLM không phán đoán vị trí lỗi).
+\item \textbf{Vòng tròn của bộ nhãn đã rà soát}: nhãn do một LLM đề xuất và ở vòng đầu người duyệt có xem gợi ý, nên các phương pháp
+dùng LLM có thể ``nghĩ giống'' người ra đáp án. Vòng duyệt mù giảm nhưng không loại hết nguy cơ này: mẫu nhỏ
+(\BlindBlindAllPrograms{} chương trình), \BlindAnswersExcluded{} câu trả lời không còn mù đã bị loại, và người duyệt chỉ
+chọn trong các dòng ứng viên cho sẵn; kết quả chính vì vậy được báo cáo trên bộ gốc và bộ đã sửa (LLM không phán đoán vị trí lỗi).
 \item \textbf{Nhãn hai dòng} (\LabaudAllTwoLine{} chương trình) làm Acc@$k$ trên bộ đã rà soát dễ hơn một chút.
 \item \textbf{Tên kiểm thử ``nói hộ'' lỗi}: kiểm thử của SemFault-250 mô tả rất rõ ý định; trên dự án có kiểm thử đặt tên
 chung chung, lợi thế của phương pháp một prompt có thể nhỏ hơn. Nhóm chưa chạy thí nghiệm giấu tên kiểm thử.

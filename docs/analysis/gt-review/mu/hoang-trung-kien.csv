@@ -1,21 +1,21 @@
 ﻿id,program,candidates,answer,note
-1,token_expiry_check,A B C D,,
-2,api_rate_guard,A B C D,,
-3,attention_mask_merge,A B C D,,
-4,smooth_cpu,A B C D,,
-5,energy_window_avg,A B C D,,
-6,lru_evictor,A B C D,,
-7,water_allocator,A B C D,,
-8,quota_allocator_service,A B C D,,
-9,grant_share,A B C D,,
-10,schedule_pickup,A B C D,,
-11,priority_mix,A B C D,,
-12,calibrate_pressure,A B C D,,
-13,storage_quota_split,A B C D,,
-14,replica_sync_offsets,A B C D,,
-15,bump_refund,A B C D,,
-16,fee_splitter,A B C D,,
-17,limit_query,A B C D,,
-18,payment_split_rebate,A B C D,,
-19,guard_email,A B C D,,
-20,ttl_snapshot_store,A B C D,,
+1,token_expiry_check,A B C D,A,if now > adjusted_expiry trả None — đúng. không thấy lỗi trong snippet
+2,api_rate_guard,A B C D,D,len(recent) > limit — thanh-vien xác nhận > vs >= là lỗi phổ biến trong các hàm này
+3,attention_mask_merge,A B C D,A,merged.append(a or b) — attention mask merge phải là AND mới đúng. OR thì mask bị rộng ra không cần thiết
+4,smooth_cpu,A B C D,A,mean = total / window — nếu tail chỉ có vài sample mà window lớn hơn thì mean bị underestimate. Phải chia len(tail)
+5,energy_window_avg,A B C D,C,mean = total / window — recent = values[-effective_window:] có thể khác window. Phải dùng effective_window hoặc len(recent)
+6,lru_evictor,A B C D,B,vòng outer while len(order) > capacity — doc nói evict until below capacity — đây đúng. Không lỗi rõ
+7,water_allocator,A B C D,D,portion > minimum rồi dùng minimum — logic min-guarantee OK. Không rõ lỗi
+8,quota_allocator_service,A B C D,C,return [int(x) for x in raw] nằm ngoài if block — luôn trả int bất kể _INTEGER_ALLOCATION. Đây là lỗi
+9,grant_share,A B C D,D,chia theo ratio rồi clamp payout trừ fee — OK
+10,schedule_pickup,A B C D,D,thanh-vien nói lỗi toán tử <= vs >= chạm biên ở dòng 62 (ứng viên D — if any(not (b <= s or a >= e)))
+11,priority_mix,A B C D,A,for idx in range — kết quả tương đương zip nhưng không phải lỗi
+12,calibrate_pressure,A B C D,D,if not clamp thì vào block clamp — đảo ngược điều kiện
+13,storage_quota_split,A B C D,A,thanh-vien nói lỗi ở dòng 66 — chia theo total thay vì total - fee. Nhưng ứng viên A ở dòng 66 là shares = [(r/total_ratio)*total] — không thấy liên quan fee
+14,replica_sync_offsets,A B C D,A,if missing and replica and missing[-1] == replica[-1]: pop — vô lý vì phần tử trong missing không nên có trong replica
+15,bump_refund,A B C D,C,new_value = max_value - 1 khi clamp — sai. Phải clamp về max_value không phải max_value - 1
+16,fee_splitter,A B C D,B,thanh-vien nói lỗi ở dòng 59 (ứng viên B — base = list(map(lambda r: (r/total_ratio)*amount))) — chia ratio xong mới trừ fee sau, nhưng nên trừ trước? Không chắc
+17,limit_query,A B C D,C,thanh-vien xác nhận > thay vì >= là lỗi — ứng viên C (if len(active) > limit)
+18,payment_split_rebate,A B C D,D,thanh-vien nói lỗi ở dòng 66 — trừ rebate từng phần thay vì trừ tổng. Dòng 66 = ứng viên D (return [s - rebate])
+19,guard_email,A B C D,C,len(recent) > limit → đây cũng có thể là > vs >= — không chắc
+20,ttl_snapshot_store,A B C D,C,thanh-vien nói lỗi toán tử > thay vì >= ở dòng 68 (ứng viên C — if now > effective)

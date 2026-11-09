@@ -1,21 +1,21 @@
 ﻿id,program,candidates,answer,note
-1,guard_search,A B C D,,
-2,combine_depths,A B C D,,
-3,cost_trendline,A B C D,,
-4,calibrate_trend,A B C D,,
-5,divide_refund,A B C D,,
-6,fee_splitter,A B C D,,
-7,demand_curve,A B C D,,
-8,quota_allocator_service,A B C D,,
-9,notification_gate,A B C D,,
-10,metric_rolling_avg,A B C D,,
-11,throughput_trendline,A B C D,,
-12,realign_replica,A B C D,,
-13,prediction_cache,A B C D,,
-14,calibrate_score,A B C D,,
-15,smooth_pressure,A B C D,,
-16,checkout_rate,A B C D,,
-17,track_build,A B C D,,
-18,bump_refund,A B C D,,
-19,attention_mask_merge,A B C D,,
-20,cacheline_expiry,A B C D,,
+1,guard_search,A B C D,A,thanh-vien nói lỗi > thay vì >= ở dòng 74 (ứng viên A — if len(active) > limit)
+2,combine_depths,A B C D,A,pop khi merged[-1] == left[-1] == right[-1] — không có lý do xóa phần tử trùng cuối trong merge sort
+3,cost_trendline,A B C D,D,if not clamp nhưng lại đi clamp y — điều kiện bị đảo
+4,calibrate_trend,A B C D,B,if not clamp — phải là if clamp
+5,divide_refund,A B C D,C,payouts = [b - fee for b in base] — không clamp ở đây. Có thể payout âm? nhưng không rõ
+6,fee_splitter,A B C D,B,thanh-vien xác nhận lỗi ở dòng 59 (ứng viên B — base = list(map(r/total*amount))) vị trí tính share trước fee
+7,demand_curve,A B C D,D,if not clamp rồi vào block clamp — sai điều kiện
+8,quota_allocator_service,A B C D,C,return int luôn không check flag — lỗi rõ
+9,notification_gate,A B C D,B,len(recent) > limit → đây cũng là > vs >= pattern. Ứng viên B (if len(recent) > limit)
+10,metric_rolling_avg,A B C D,D,avg = total/window — tail có thể ngắn hơn window — sai
+11,throughput_trendline,A B C D,B,if not clamp — đảo ngược
+12,realign_replica,A B C D,C,blended = c + (t - c) * damping rồi clamp — đúng. Không rõ lỗi
+13,prediction_cache,A B C D,A,now > deadline → return default — đúng logic cache expiry
+14,calibrate_score,A B C D,D,if not clamp — sai điều kiện
+15,smooth_pressure,A B C D,C,mean = total / window — recent từ _select_recent(values, window) có thể ngắn hơn window
+16,checkout_rate,A B C D,A,len(recent) > limit → đây là > vs >= pattern — ứng viên A
+17,track_build,A B C D,A,counters[key] = cap - 1 khi vượt cap — đáng ra set bằng cap
+18,bump_refund,A B C D,C,new_value = max_value - 1 — sai phải là max_value
+19,attention_mask_merge,A B C D,A,a or b — phải là a and b cho attention mask
+20,cacheline_expiry,A B C D,C,now > adjusted_ttl → đây là pattern > thay vì >= — ứng viên C (if now > adjusted_ttl)

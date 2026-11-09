@@ -36,7 +36,15 @@ and one mis-numbered LLM citation). The result covers all \LabaudAllN{} programs
 \LabaudAllTwoLine{} two-line labels.
 
 The \LabaudAllExtended{} two-line extensions and the labels the LLM judged right rest on the LLM pre-review alone; no human
-reviewed them.
+reviewed them in the first round.
+
+\textbf{Blind re-review.} To check the reviewed labels without the LLM's influence, \BlindBlindAllPrograms{} programs were
+sampled with a fixed seed (15 relocated by the oracle, 15 the LLM judged wrong, 20 it kept, 10 two-line) and each was
+judged independently by two members who had not seen it before. Candidate lines---the union of the original, oracle, LLM
+and reviewed lines, padded with neighbouring code lines to at least four---were lettered in random order, with no source and
+no LLM text. Sample and assignment were fixed in code before any answer. \BlindAnswersExcluded{} of \BlindAnswersTotal{}
+answers cite the earlier, non-blind review files in their notes; they are excluded from the blind statistics by a rule
+recorded in code before computing agreement.
 
 \textbf{Use.} The repaired labels involve no LLM judgment of location (an LLM proposes edits, the tests decide) and carry
 the main results; the reviewed labels are complete but
