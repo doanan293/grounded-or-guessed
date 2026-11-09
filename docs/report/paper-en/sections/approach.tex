@@ -8,7 +8,9 @@ fail to run dropped from the denominator) and our \emph{fair scoring} (average-r
 remove the undocumented guess bonus, check whether the counterfactual step changes any ranking, and re-execute SemLoc
 with the paper's own model (Claude Sonnet~4.6) on the dev split.
 
-\subsection{SemFault-250-repaired}
+\subsection{Three label sets}
+
+\textbf{Repaired (tests decide).}
 \GtBlankN{} of the 250 ground-truth lines are blank and \GtNotExecutedN{} programs have no failing test reaching the
 fault line. We re-derive fault locations with a \emph{minimal-fix oracle}: a line is a fault location if replacing it (or
 filling a blank line, for omissions) with a small edit makes every test pass. An edit is small if its token-level edit
@@ -21,8 +23,21 @@ the smallest passing edit replaces it (\emph{corrected}); (4) otherwise the line
 confirms \GtConfirmedN{} locations and corrects \GtCorrectedN; \GtUnverifiedN{} reachable lines keep their original labels
 (no proposed edit passed), and \GtUnverifiableN{} programs cannot be verified and are dropped. Fixes written onto blank
 lines name no rankable statement and are also dropped, leaving \GtRepairedN{} programs. Because executed labels are never
-searched for alternatives, the oracle cannot detect two equivalent fix locations (Section~\ref{sec:eval}). We report every
-result on both the original and the repaired labels.
+searched for alternatives, the oracle cannot detect two equivalent fix locations.
+
+\textbf{Reviewed (LLM pre-review, team review).} To check \emph{every} label, an LLM (Claude Fable 5.1, high reasoning)
+read each program, its tests and its label, and judged the label right, wrong (proposing a line) or one of two lines of
+a two-line fault; it ran the tests on its own fixes for many cases. Then \ReviewReviewersN{} team members reviewed
+\ReviewHumanN{} labels---the \GtCorrectedN{} the oracle had moved and every label the LLM judged wrong---with links to the
+code and tests, the candidate lines and the LLM's verdict as a suggestion; they agreed with the suggestion in
+\ReviewAgreeN{} of \ReviewHumanN{} cases. The first author overrode \ReviewOverrideN{} cases on test evidence (two-line
+faults that one-line fixes cannot repair, omission faults placed on the \texttt{return} statement as in sibling programs,
+and one mis-numbered LLM citation). The result covers all \LabaudAllN{} programs, none on a blank line, with
+\LabaudAllTwoLine{} two-line labels.
+
+\textbf{Use.} The repaired labels involve no LLM judgment and carry the main results; the reviewed labels are complete but
+LLM-suggested, which may favor LLM-based methods, so we use them as a sensitivity check. Every main result is also given on
+the original labels.
 
 \subsection{Grounded-vs-guessed decomposition}
 SemLoc's line score is the spectrum score plus a bonus of \ConstPriorWeight{} on the LLM's guessed line. We define a
@@ -34,26 +49,37 @@ aggregate Shapley value is the mean of per-program values, which lets us bootstr
 template cluster. An extended game adds raw Ochiai (added with weight one) and counterfactual re-ranking as two more
 players; its grand coalition is a different system from SemLoc.
 
-\subsection{CovGate}
-CovGate post-processes SemLoc's line scores with coverage. Writing $\sigma(s)$ for the spectrum score, $g$ for the
-guessed line and $F$ for the lines executed by some failing test,
+\subsection{Methods compared}
+\textbf{LLM + failing tests (ours).} One call at $T=\ConstTemperature$ whose prompt gives the line-numbered program, the
+numbers of failing and passing tests, the statement that the program has exactly one faulty line, and each failing
+test's name with its first error line; the model returns its five most suspicious lines as JSON. This is the developers'
+practice made reproducible. The prompt was fixed before looking at test results.
+
+\textbf{Coverage ablation.} \emph{LLM + failing tests + coverage} is the same prompt with every line annotated
+\texttt{[f=$e_f$/p=$e_p$]} (and one sentence explaining the annotation). Against \emph{LLM direct}---SemLoc's own
+direct-prediction mode, which sees the program only---the two paired contrasts separate the effect of the failing tests
+from that of coverage.
+
+\textbf{CovGate} post-processes SemLoc's line scores with coverage. Writing $\sigma(s)$ for the spectrum score, $g$ for
+the guessed line and $F$ for the lines executed by some failing test,
 \begin{equation}
 c(s) = \mathbb{1}[s\in F]^{\gamma}\,\bigl(\sigma(s) + \beta\,\mathbb{1}[s=g] + \lambda\,\mathrm{Ochiai}(s)\bigr),
 \label{eq:covgate}
 \end{equation}
-where $\gamma\in\{0, 1\}$ switches a \emph{coverage gate}, $\lambda\in\{\ConstLambdaGrid\}$ weights Ochiai, and the bonus
-$\beta$ is either always \ConstPriorWeight{} or, in the \emph{grounded} variant, kept only if a failing test executes $g$
-and a constraint violated in some failing test is attributed to $g$. A fourth switch, \emph{counterfactual re-ranking},
-promotes the lines of constraints that the counterfactual patches confirm (computed but unused in the released code).
-Parameters are chosen on the 50-program dev split only, by Acc@3 then Acc@1, pooled over five published configurations.
-The selected configuration has no gate and the original bonus, with $\lambda$ = \ConstLambdaOriginal{} on the original and \ConstLambdaRepaired{} on the
-repaired labels; CovGate as evaluated is thus an Ochiai tie-breaker.
+where $\gamma\in\{0, 1\}$ switches a coverage gate, $\lambda\in\{\ConstLambdaGrid\}$ weights Ochiai, and the bonus $\beta$
+is either always \ConstPriorWeight{} or kept only when execution supports $g$; a fourth switch promotes lines confirmed by
+the counterfactual patches. Selected on the dev split, CovGate has no gate and the original bonus, with $\lambda$ =
+\ConstLambdaOriginal{} (original) or \ConstLambdaRepaired{} (repaired labels): an Ochiai tie-breaker.
 
-\subsection{Baselines}
-\emph{LLM direct} is SemLoc's own direct-prediction mode: one call with the program only, asking for the faulty lines.
-\emph{LLM + coverage} is ours: one call at $T=\ConstTemperature$ whose prompt lists the program with every line annotated
-\texttt{[f=$e_f$/p=$e_p$]}, states the numbers of failing and passing tests, names each failing test with its first error
-line, and asks for the five most suspicious lines as JSON. Compared with LLM direct it adds test outcomes and error
-messages as well as coverage, so the comparison measures a single prompt with execution evidence against the pipeline,
-not coverage in isolation. The prompt follows the finding that mined rankings help LLMs~\cite{medeiros2026crash} and
-FlexFL's SBFL hints~\cite{xu2025flexfl}; it was fixed before looking at test results.
+\textbf{Propose-and-verify} uses the tests as arbiter: LLM + failing tests proposes lines; for the first $k$, the LLM
+writes a small fix at that line (the oracle's proposer and size criterion), the patched program runs against the tests,
+and lines with a passing fix move to the front. A \PavGridSize-point grid ($k$, attempts per line, order among verified
+lines, maximum fix size) is evaluated offline from one widest run on the dev split, three repeats; the selection rule
+(mean dev Acc@1 over the original and reviewed labels; the repaired labels are excluded because they were built by the
+same fix-and-test mechanism) was fixed in code before running.
+
+\textbf{Voting} merges three answers of LLM + failing tests by summed reciprocal rank (dev split).
+
+\textbf{Static analysis.} Pinned versions of ruff (default and all rules) and pyrefly (type checking) run on all 250
+programs; a program counts as hit when a diagnostic sits on a labeled line, compared with the hits expected if the
+flagged lines were spread at random over the program's code lines.

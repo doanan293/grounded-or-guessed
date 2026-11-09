@@ -2,15 +2,17 @@
 \label{sec:conclusion}
 
 SemLoc's published numbers recompute exactly from its logs, but its top-1 answer is, by an undocumented design choice,
-the LLM's own guess; its execution evidence earns its keep at top three. On faults that a failing test reaches, handing
-execution evidence to the model directly---one prompt with the failing tests and per-line coverage---is more accurate,
-about five times cheaper and shows no detectable change under renaming; it cannot find faults no test reaches. These
-results come from one main model, one benchmark with repaired labels and 31 real bugs from one project. Evaluation choices
-and benchmark labels move the numbers as much as methods do, so we suggest that every evaluation of LLM-based fault
-localization apply the seven checks of Table~\ref{tab:checklist}. Future work includes a multi-location oracle that
-rejects compensating fixes, an ablation separating coverage from test outcomes in the prompt, real bugs from more
-projects, and function-level localization.
+the LLM's own guess, and nearly half of its benchmark's labels do not point at the faulty line, in a way that favored it.
+Handing the failing tests to the model in one prompt---what developers already do---is more accurate at Acc@1 on all three
+label sets and about seven times cheaper; the failing tests carry the signal, per-line coverage does not, and every more
+elaborate addition we tried, as well as static analysis, adds nothing, because the tests can suggest a fault's location
+but cannot prove it. These results come from one main model, single-function programs with intent-revealing tests, and
+31 real bugs from one project. We suggest that every evaluation of LLM-based fault localization apply the seven checks of
+Table~\ref{tab:checklist}, with the plain failing-tests prompt as a mandatory baseline. Future work includes
+project-level localization (narrowing a repository to a function before asking the model), a hidden-test-name ablation,
+stronger test suites that make execution a usable arbiter of location, and real bugs from more projects.
 
 \section*{Data Availability}
-Code, derived data, run outputs, LLM call logs, a replayable LLM response cache and an offline Docker image are at
-\url{https://github.com/doanan293/grounded-or-guessed}; \texttt{REPRODUCE.md} maps every table to its script.
+Code, derived data, run outputs, LLM call logs, a replayable LLM response cache, every reviewer's answers and an offline
+Docker image are at \url{https://github.com/doanan293/grounded-or-guessed}; \texttt{REPRODUCE.md} maps every table to its
+script.

@@ -13,13 +13,28 @@ AgentFL~\cite{qin2025agentfl} scales this to projects with agents; FlexFL~\cite{
 open-source LLMs, the closest idea to our coverage baseline but at method level on Java. An industrial study of crash
 reports~\cite{medeiros2026crash} finds that mined rankings in the prompt help LLMs localize, and EffiHolmes~\cite{yang2026effiholmes}
 contrasts two executions (normal vs.\ scaled workload) before LLM reasoning for performance faults. SemLoc~\cite{yang2026semloc}
-is the first to rank lines by violations of LLM-inferred executable constraints. None of these works measures how much
-of the accuracy comes from execution evidence rather than from the model's own guess.
+is the first to rank lines by violations of LLM-inferred executable constraints. Wu et al.~\cite{wu2023llmfl} find that
+error logs markedly improve ChatGPT's localization, which works at function level but degrades at class level. None of
+these works measures how much of the accuracy comes from execution evidence rather than from the model's own guess, or
+compares with the plain practice of handing the failing tests to the model. For repository-level repair,
+Agentless~\cite{xia2024agentless} shows that a simple two-phase process beats more elaborate agents at lower cost.
+
+\textbf{Practice.} Surveys report broad use of AI assistants by developers~\cite{stackoverflow2025,jetbrains2025} and
+DevGPT~\cite{xiao2024devgpt} collects real developer--ChatGPT conversations, debugging among them. Parnin and
+Orso~\cite{parnin2011} showed that automated debugging rests on assumptions that do not match how developers debug, and
+Kochhar et al.~\cite{kochhar2016} surveyed practitioners' expectations of fault localization tools.
 
 \textbf{Benchmarks and validity.} Defects4J~\cite{just2014}, BugsInPy~\cite{widyasari2020} and QuixBugs~\cite{lin2017quixbugs}
 provide faults with triggering tests. Pearson et al.~\cite{pearson2017} show that results on artificial faults do not
 transfer to real ones and that tie and omission handling can reorder techniques. For LLMs, threats include closed-model
 drift and benchmark contamination~\cite{sallou2024,ramos2024memorize,xu2024contam}, mitigated by rewriting or renaming.
+Label errors are common even in flagship benchmarks and can reorder models~\cite{northcutt2021labels}; Agentless also
+filters problematic SWE-bench tasks~\cite{xia2024agentless}.
 
-\textbf{Direction.} We combine these threads: we audit scoring as Pearson et al.\ recommend, verify the benchmark by
-execution, test memorization by renaming, and add the missing measurement---the share of accuracy that is grounded.
+\textbf{Plausible patches.} In program repair, a patch that passes all tests is only \emph{plausible}: most reported
+patches of early generate-and-validate systems were incorrect~\cite{qi2015kali}, and repair overfits weak test
+suites~\cite{smith2015cure}. We meet the same effect from the localization side.
+
+\textbf{Direction.} We combine these threads: we audit scoring as Pearson et al.\ recommend, check the benchmark's labels,
+test memorization by renaming, measure the share of accuracy that is grounded, and make the developers' plain practice
+the baseline every pipeline must beat.
