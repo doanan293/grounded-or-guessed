@@ -1,17 +1,18 @@
 \begin{abstract}
 LLM-based fault localizers increasingly claim to ground the model's reasoning in program execution. We test that
-claim on SemLoc, a recent localizer that turns LLM-inferred semantic constraints into a violation spectrum. Using the
-authors' released code and logs, we reproduce all published configurations exactly, then audit the evaluation, re-derive
-the benchmark's fault locations by execution, rerun every LLM configuration three times, and decompose accuracy into
-the part due to execution evidence and the part due to the LLM's own guess. Four findings stand out. First, top-1
-accuracy is mostly guessed: of SemLoc's \DecSemlocRepairedAllAccOneFull\% Acc@1, \DecSemlocRepairedAllAccOnePhiGuess{}
-points come from an undocumented bonus on the LLM's own fault-line guess and \DecSemlocRepairedAllAccOnePhiSpectrum{}
-from the constraint spectrum, while top-3 accuracy is mostly grounded; on real BugsInPy bugs every top-1 hit is the
-guess. Second, a single prompt that shows the LLM per-line test coverage beats the whole pipeline, reaching
-\RqTwoRepairedAllLlmCoverageAccThreeMean\% Acc@3 against \RqTwoRepairedAllSemlocAccThreeMean\% at about a fifth of the
-tokens, and it is unaffected by identifier renaming. Third, published numbers depend on scoring choices and on
-ground-truth errors: \GtBlankN{} of 250 fault lines are blank, and the released counterfactual step never changes a
-ranking. Fourth, line-level accuracy is ambiguous for faults spanning a guard and the statement it guards, which moves
-Acc@1 by over twenty points without changing the ranking of methods. We release code, data, LLM logs and a replayable
-cache.
+claim on SemLoc, a recent localizer that turns LLM-inferred semantic constraints into a violation spectrum. We recompute
+every published configuration from the authors' released logs, audit the evaluation, re-derive the benchmark's fault
+locations by execution, rerun the pipeline three times with a current model, and measure how much of the accuracy is
+due to execution evidence and how much to the LLM's own guess. Four findings stand out. First, top-1 accuracy is
+guessed by design: the released code adds an undocumented bonus that always places the LLM's own fault-line guess
+first, so SemLoc's Acc@1 (\DecSemlocRepairedAllAccOneFull\%) is the guess's; the constraint spectrum alone would reach
+\RqTwoRepairedAllSemlocNoPriorAccOneMean\%, and its value lies at top three, where it lifts accuracy from
+\RqTwoRepairedAllSemlocAccOneMean\% to \RqTwoRepairedAllSemlocAccThreeMean\%. Second, on faults that a failing test
+reaches, a single prompt showing the LLM the failing tests and per-line coverage beats the whole pipeline by
+\RqTwoOriginalExecutableLlmCoverageDAccThree{} Acc@3 points at about a fifth of the tokens, with no detectable change
+under identifier renaming; over all original labels, which include faults no test reaches, the gain shrinks to
+\RqTwoOriginalAllLlmCoverageDAccThree{} points. Third, published numbers depend on scoring choices and benchmark labels:
+\GtBlankN{} of 250 fault lines are blank, and the released counterfactual step never changes a ranking. Fourth, line-level
+accuracy is ambiguous for faults spanning a guard and the statement it guards, which moves Acc@1 by over twenty points
+without changing the order of methods. Code, data, LLM logs and a replayable cache are public.
 \end{abstract}

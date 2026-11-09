@@ -5,25 +5,27 @@
 \label{sec:ket-luan}
 
 Tiểu luận đặt câu hỏi ``grounded hay guessed'' cho SemLoc~\cite{yang2026semloc}, phương pháp định vị lỗi ngữ nghĩa neo
-lập luận của LLM vào ràng buộc thực thi được. Bằng cách tái hiện từ mã nguồn và dữ liệu của tác giả, kiểm chứng lại bộ
-dữ liệu bằng thực thi, lặp lại thực nghiệm ba lần với kiểm định thống kê và phân rã đóng góp của từng tín hiệu, nhóm rút
-ra ba kết luận.
+lập luận của LLM vào ràng buộc thực thi được. Bằng cách tính lại từ nhật ký và chạy lại từ mã nguồn của tác giả, kiểm
+chứng lại bộ dữ liệu bằng thực thi, lặp lại thực nghiệm ba lần với kiểm định thống kê và đo đóng góp của từng tín hiệu,
+nhóm rút ra ba kết luận.
 
-Thứ nhất, kết quả công bố tái hiện được, nhưng ở hạng 1 phần lớn độ chính xác của SemLoc đến từ dòng lỗi mà LLM tự đoán
-và được cộng điểm thưởng --- một thành phần không có trong bài báo: dòng đoán đóng góp
-\DecSemlocRepairedAllAccOnePhiGuess{} trên \DecSemlocRepairedAllAccOneFull{} điểm Acc@1, và trên lỗi thật thì mọi lần
-đúng ở hạng 1 đều là dòng đoán. Bằng chứng thực thi có ích thật, nhưng chủ yếu ở top-3.
+Thứ nhất, kết quả công bố tính lại được từ nhật ký, nhưng dòng đầu tiên của SemLoc --- theo một lựa chọn thiết kế không có
+trong bài báo --- luôn là dòng LLM tự đoán: Acc@1 của SemLoc (\RqTwoRepairedAllSemlocAccOneMean\%) là của dòng đoán, còn
+riêng phổ vi phạm ràng buộc chỉ đạt \RqTwoRepairedAllSemlocNoPriorAccOneMean\%. Bằng chứng thực thi có tác dụng thật,
+nhưng ở top-3.
 
-Thứ hai, bằng chứng thực thi phát huy tốt nhất khi được đưa thẳng cho LLM: một prompt duy nhất có số kiểm thử đạt/không
-đạt chạy qua mỗi dòng vượt cả pipeline nhiều bước ở cả Acc@1 và Acc@3, tốn ít token hơn khoảng năm lần, ổn định qua năm
-mô hình và gần như không bị ảnh hưởng khi đổi tên định danh. Cải tiến CovGate gắn độ phủ vào pipeline chỉ giúp ít.
+Thứ hai, với các lỗi được kiểm thử thất bại chạy tới, đưa thẳng bằng chứng thực thi cho LLM --- một prompt có kiểm thử
+thất bại và độ phủ từng dòng --- chính xác hơn quy trình nhiều bước ở Acc@3, rẻ hơn khoảng năm lần và không thay đổi
+đáng kể khi đổi tên định danh; cách này không tìm được lỗi mà không kiểm thử nào chạy tới. Các kết luận này đến từ một mô
+hình chính, một bộ dữ liệu có nhãn đã sửa và 31 lỗi thật của một dự án.
 
 Thứ ba, đánh giá định vị lỗi bằng LLM nhạy với cách chấm và với bộ dữ liệu: cách phá hòa, cách tính mẫu số và các dòng
 lỗi chuẩn sai đều làm thay đổi con số đáng kể.
 \IfAtLeast{lan2}{Phân tích thất bại cho thấy thêm rằng độ chính xác cấp dòng phụ thuộc vào việc dòng lỗi được gán ở dòng
 điều kiện hay ở câu lệnh mà điều kiện bảo vệ.}
-Vì vậy, nhóm đề xuất mọi đánh giá như vậy kèm bảng kiểm tra sáu mục: phá hòa bằng hạng trung bình, mẫu số cố định, dòng
-lỗi chuẩn được kiểm chứng, loại bỏ từng thành phần kể cả thành phần ẩn, lặp và kiểm định, báo cáo chi phí.
+Vì vậy, nhóm đề xuất mọi đánh giá như vậy áp dụng bảng kiểm tra bảy mục: phá hòa bằng hạng trung bình; mẫu số cố định;
+dòng lỗi chuẩn được kiểm chứng bằng thực thi; loại bỏ từng thành phần, kể cả thành phần không được mô tả; lặp lại và báo
+khoảng tin cậy ghép cặp; báo cáo chi phí; và so với một prompt duy nhất có cùng bằng chứng.
 
 \section{Hướng phát triển}
 \label{sec:huong-phat-trien}
@@ -34,7 +36,8 @@ giảng viên sau hai lần báo cáo và chuẩn bị slide bảo vệ.}{Phân 
 danh sách đóng góp và quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ (báo cáo lần 2), sau đó hoàn thiện bài báo
 tiếng Anh theo chuẩn arXiv.}
 
-}Về nghiên cứu, ba hướng mở ra từ kết quả: (i) oracle kiểm chứng dòng lỗi cho phép nhiều vị trí và chống các bản sửa
-``bù trừ'' (làm kiểm thử đạt mà không sửa đúng chỗ lỗi), kèm phân xử thủ công các ca tranh chấp; (ii) đánh giá trên lỗi
-thật của nhiều dự án hơn và ở định vị cấp hàm trước khi xuống cấp dòng; (iii) một chuẩn đánh giá chung cho định vị lỗi
-bằng LLM, trong đó baseline ``một prompt có bằng chứng thực thi'' là mốc bắt buộc.
+}Về nghiên cứu, bốn hướng mở ra từ kết quả: (i) bộ phán định dòng lỗi cho phép nhiều vị trí và chống các bản sửa
+``bù trừ'' (làm kiểm thử đạt mà không sửa đúng chỗ lỗi), kèm phân xử thủ công các ca tranh chấp; (ii) một thí nghiệm loại
+bỏ tách riêng độ phủ khỏi kết quả kiểm thử trong prompt; (iii) đánh giá trên lỗi thật của nhiều dự án hơn và ở định vị
+cấp hàm trước khi xuống cấp dòng; (iv) một chuẩn đánh giá chung cho định vị lỗi bằng LLM, trong đó ``một prompt có bằng
+chứng thực thi'' là mốc so sánh bắt buộc.

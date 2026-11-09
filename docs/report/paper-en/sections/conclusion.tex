@@ -1,14 +1,15 @@
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-SemLoc's results reproduce, but its top-1 accuracy is mostly the LLM's own guess, boosted by an undocumented bonus;
-execution evidence earns its keep at top three. Handing that evidence to the model directly---one prompt with per-line
-coverage---is more accurate, about five times cheaper and robust to renaming. Evaluation choices and benchmark labels
-move the numbers as much as methods do. We suggest that every evaluation of LLM-based fault localization (i) breaks ties
-by average rank with a fixed denominator, (ii) verifies its fault locations by execution, (iii) ablates every component,
-including undocumented ones, (iv) repeats runs and reports confidence intervals, (v) reports cost, and (vi) compares
-against a single prompt with the same evidence. Future work includes a multi-location oracle that rejects compensating
-fixes, real bugs from more projects, and function-level localization.
+SemLoc's published numbers recompute exactly from its logs, but its top-1 answer is, by an undocumented design choice,
+the LLM's own guess; its execution evidence earns its keep at top three. On faults that a failing test reaches, handing
+execution evidence to the model directly---one prompt with the failing tests and per-line coverage---is more accurate,
+about five times cheaper and shows no detectable change under renaming; it cannot find faults no test reaches. These
+results come from one main model, one benchmark with repaired labels and 31 real bugs from one project. Evaluation choices
+and benchmark labels move the numbers as much as methods do, so we suggest that every evaluation of LLM-based fault
+localization apply the seven checks of Table~\ref{tab:checklist}. Future work includes a multi-location oracle that
+rejects compensating fixes, an ablation separating coverage from test outcomes in the prompt, real bugs from more
+projects, and function-level localization.
 
 \section*{Data Availability}
 Code, derived data, run outputs, LLM call logs, a replayable LLM response cache and an offline Docker image are at

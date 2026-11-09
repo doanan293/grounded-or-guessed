@@ -12,7 +12,7 @@ báo, (c) dùng dòng lỗi chuẩn đã được kiểm chứng bằng thực t
 
 \textbf{RQ2 (cải tiến và đối chứng):} trên cùng các chương trình và cùng mô hình, (a) cải tiến CovGate có làm SemLoc tốt
 hơn không và thành phần nào của nó có tác dụng; (b) một prompt duy nhất có bằng chứng độ phủ (LLM + độ phủ) so với toàn
-bộ pipeline SemLoc thế nào về độ chính xác và chi phí; (c) bao nhiêu phần độ chính xác của SemLoc đến từ bằng chứng
+bộ quy trình nhiều bước SemLoc thế nào về độ chính xác và chi phí; (c) bao nhiêu phần độ chính xác của SemLoc đến từ bằng chứng
 thực thi, bao nhiêu từ dòng LLM tự đoán?
 
 \textbf{RQ3 (độ bền):} các kết luận của RQ2 có còn đúng (a) trên lỗi thật của BugsInPy, (b) khi đổi tên mọi định danh
@@ -21,9 +21,9 @@ và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên nă
 \subsection{Giả thuyết và tiêu chí bác bỏ}
 
 Giả thuyết chính của tiểu luận là: \emph{ở hạng 1, độ chính xác của SemLoc chủ yếu đến từ dòng LLM tự đoán; bằng chứng
-thực thi đóng góp chủ yếu ở top-3}. Giả thuyết bị bác bỏ nếu bỏ điểm thưởng cho dòng đoán mà Acc@1 không giảm, hoặc nếu
-giá trị Shapley của phổ vi phạm ở Acc@1 lớn hơn của dòng đoán. Giả thuyết phụ: \emph{một prompt có bằng chứng độ phủ
-không kém pipeline}; bị bác bỏ nếu khoảng tin cậy của chênh lệch Acc@3 nằm hẳn dưới 0.
+thực thi đóng góp chủ yếu ở top-3}. Giả thuyết bị bác bỏ nếu riêng phổ vi phạm đạt Acc@1 không thấp hơn riêng dòng đoán, hoặc nếu
+ở top-3 phổ không làm tăng độ chính xác so với riêng dòng đoán. Giả thuyết phụ: \emph{một prompt có bằng chứng độ phủ
+không kém quy trình nhiều bước}; bị bác bỏ nếu khoảng tin cậy của chênh lệch Acc@3 nằm hẳn dưới 0.
 
 \section{Dữ liệu}
 \label{sec:du-lieu}
@@ -34,18 +34,21 @@ SemFault-250~\cite{yang2026semloc} gồm 250 chương trình Python một hàm, 
 khoảng mười kiểm thử. Nhóm chia cố định 50 chương trình làm tập phát triển (dev) --- chỉ dùng để chọn tham số --- và 200
 chương trình làm tập kiểm tra (test) để báo cáo, phân tầng theo nhãn lỗi (mục~\ref{sec:loi-ngu-nghia}) với hạt giống cố
 định. Vì nhiều chương trình được sinh từ cùng một khuôn mẫu, nhóm gom các chương trình có cấu trúc giống nhau thành cụm
-(độ tương đồng 4-gram Jaccard trên dạng chuẩn hóa của mã) để dùng trong bootstrap theo cụm.
+(độ tương đồng 4-gram Jaccard từ bốn phần năm trở lên, trên dạng chuẩn hóa của mã) để dùng trong bootstrap theo cụm.
 
-\subsection{SemFault-250-verified: kiểm chứng dòng lỗi chuẩn bằng thực thi}
+\subsection{SemFault-250 đã sửa: kiểm chứng dòng lỗi chuẩn bằng thực thi}
 
 Kiểm tra dòng lỗi chuẩn cho thấy \GtBlankN{} dòng là dòng trống và \GtNotExecutedN{} chương trình không có kiểm thử thất
-bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{oracle sửa tối thiểu}: một dòng được coi là vị trí lỗi nếu thay nó
+bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{bộ phán định sửa tối thiểu}: một dòng được coi là vị trí lỗi nếu thay nó
 bằng một dòng khác (hoặc chèn một dòng vào dòng trống, với lỗi thiếu mã) với \emph{thay đổi nhỏ} làm \emph{mọi} kiểm thử
-đạt. LLM chỉ đề xuất các bản sửa ứng viên; kiểm thử quyết định. Bản sửa được coi là nhỏ khi khác dòng gốc tối đa hai
-từ tố hoặc tối đa một phần ba số từ tố của dòng. Kết quả: \GtConfirmedN{} chương trình được \emph{xác nhận} (sửa được ngay
+đạt. LLM chỉ đề xuất các bản sửa ứng viên (GPT-6 luna, hai rồi bốn lần thử ở $T = \ConstTemperature$; lượt thứ hai với
+Claude Sonnet 5.5 cho các dòng còn chưa kiểm chứng); kiểm thử quyết định. Bản sửa được coi là nhỏ khi khoảng cách chỉnh
+sửa theo từ tố (định danh, số, từng ký tự dấu) so với dòng gốc tối đa là hai hoặc tối đa một phần ba số từ tố của dòng.
+Các dòng lân cận (trong phạm vi bốn dòng) chỉ được tìm khi không kiểm thử thất bại nào chạy tới dòng chuẩn gốc; vì vậy
+bộ phán định không phát hiện được trường hợp hai dòng cùng sửa được lỗi. Kết quả: \GtConfirmedN{} chương trình được \emph{xác nhận} (sửa được ngay
 tại dòng chuẩn), \GtCorrectedN{} được \emph{sửa vị trí} (dòng chuẩn không chạy tới được nhưng một dòng gần đó sửa được),
 \GtUnverifiedN{} \emph{chưa kiểm chứng được} (dòng chuẩn chạy tới được nhưng không bản sửa đề xuất nào đạt) và
-\GtUnverifiableN{} \emph{không kiểm chứng được}. Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
+\GtUnverifiableN{} \emph{không kiểm chứng được} (bị loại). Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
 nên bị loại; bộ dòng lỗi chuẩn đã sửa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã sửa.
 
 \subsection{Lỗi thật BugsInPy}
@@ -70,7 +73,8 @@ nguyên số dòng}, chỉ giữ các tên mà kiểm thử phụ thuộc. Mỗi
 
 \begin{itemize}
 \item \textbf{SBFL Ochiai, DStar} trên ma trận độ phủ do nhóm thu thập (mỗi kiểm thử một ngữ cảnh độ phủ).
-\item \textbf{LLM hỏi thẳng}: chế độ của SemLoc tắt chỉ mục ngữ nghĩa, LLM chỉ đọc mã và trả về các dòng nghi ngờ.
+\item \textbf{LLM hỏi thẳng}: chế độ dự đoán trực tiếp của SemLoc --- một lượt gọi chỉ có mã nguồn chương trình, LLM
+trả về các dòng nghi ngờ; không có thông tin kiểm thử nào.
 \item \textbf{SemLoc} như phát hành, chạy qua mã nguồn gốc của tác giả, chỉ thay lớp gọi LLM bằng cổng của nhóm
 (cùng prompt, cùng logic).
 \end{itemize}
@@ -83,13 +87,18 @@ của dòng, với $\lambda \in \{\ConstLambdaGrid\}$; (3) \emph{xếp lại b�
 của ràng buộc được bản vá xác nhận lên đầu, điều mà mã gốc tính ra nhưng không dùng; (4) \emph{chỉ thưởng khi có căn
 cứ} --- giữ điểm thưởng cho dòng LLM đoán chỉ khi dòng đó được kiểm thử thất bại chạy qua và có ràng buộc bị vi phạm
 quy về nó. Tổ hợp tham số được chọn \emph{chỉ trên tập dev}, theo Acc@3 rồi Acc@1, gộp qua năm cấu hình công bố; tập
-test không bao giờ được dùng để chọn.
+test không bao giờ được dùng để chọn. Cấu hình được chọn không bật cổng độ phủ, giữ nguyên điểm thưởng và dùng
+$\lambda = \ConstLambdaOriginal$ (bộ dòng lỗi chuẩn gốc) hoặc $\lambda = \ConstLambdaRepaired$ (bộ đã sửa); nói cách khác,
+CovGate được đánh giá là một bước \emph{phá hòa bằng Ochiai} cho SemLoc.
 
 \subsection{LLM + độ phủ: một prompt duy nhất}
 
-Để trả lời ``pipeline nhiều bước có cần không'', nhóm xây baseline đơn giản nhất có cùng thông tin: một lượt gọi LLM
-duy nhất với mã nguồn trong đó mỗi dòng được chú thích số kiểm thử thất bại và thành công chạy qua nó, cùng tên và dòng
-lỗi đầu tiên của các kiểm thử thất bại; LLM trả về năm dòng nghi ngờ nhất dưới dạng JSON. Ý tưởng đưa bằng chứng đã khai
+Để trả lời ``quy trình nhiều bước có cần không'', nhóm xây phương pháp đối chứng đơn giản nhất có cùng thông tin: một lượt gọi LLM
+duy nhất (nhiệt độ $T = \ConstTemperature$) với mã nguồn trong đó mỗi dòng được chú thích số kiểm thử thất bại và
+thành công chạy qua nó, số kiểm thử đạt/không đạt, cùng tên và dòng lỗi đầu tiên của các kiểm thử thất bại; LLM trả về
+năm dòng nghi ngờ nhất dưới dạng JSON \IfAtLeastElse{full}{(nội dung prompt ở Phụ lục~\ref{chap:phu-luc})}{(nội dung prompt có trong kho mã)}. So với LLM hỏi thẳng, prompt này thêm \emph{cả} kết
+quả kiểm thử, thông báo lỗi \emph{và} độ phủ, nên phép so sánh đo tác dụng của bằng chứng thực thi trong prompt nói
+chung, chưa tách riêng độ phủ. Ý tưởng đưa bằng chứng đã khai
 thác vào prompt lấy từ báo cáo công nghiệp~\cite{medeiros2026crash} và FlexFL~\cite{xu2025flexfl}. Prompt được thiết kế
 trước khi xem kết quả trên tập test và không được tinh chỉnh.
 

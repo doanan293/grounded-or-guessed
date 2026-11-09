@@ -98,7 +98,7 @@ nhất định vị được tới 71 trên 100 lỗi và sửa đúng 52 trên 
 lời nhắc tới phương thức đã được sửa.
 
 Bài học cho đề tài: (i) \emph{đưa bằng chứng chương trình đã khai thác (xếp hạng) vào prompt} giúp LLM định vị tốt hơn
---- đây chính là ý tưởng của baseline LLM + độ phủ mà nhóm xây dựng; (ii) đầu ra của LLM cần được kiểm tra vì hay bị
+--- đây chính là ý tưởng của phương pháp đối chứng LLM + độ phủ mà nhóm xây dựng; (ii) đầu ra của LLM cần được kiểm tra vì hay bị
 cắt cụt, lệch định dạng hoặc khẳng định không kiểm chứng. Bài cần dữ liệu công nghiệp nên không được dùng để thực nghiệm.
 
 \section{Các hướng nghiên cứu liên quan}
@@ -166,8 +166,8 @@ Lặp và kiểm định & 1 lần, không kiểm định & --- & --- & 3 lần,
 
 Ba khoảng trống định hướng toàn bộ tiểu luận. Thứ nhất, các hệ thống định vị lỗi bằng LLM tuyên bố ``neo vào thực thi''
 nhưng chưa ai đo phần độ chính xác thật sự đến từ bằng chứng thực thi. Thứ hai, kết quả được báo cáo từ một lần chạy
-với cách chấm lạc quan trên một bộ dữ liệu chưa được kiểm chứng. Thứ ba, chưa có so sánh với baseline đơn giản nhất
+với cách chấm lạc quan trên một bộ dữ liệu chưa được kiểm chứng. Thứ ba, chưa có so sánh với phương pháp đối chứng đơn giản nhất
 dùng cùng thông tin: một prompt duy nhất chứa bằng chứng độ phủ. Từ đó, nhóm học và áp dụng: từ SemLoc --- giả thuyết
 do LLM sinh nhưng kiểm thử phán xử, và dùng chính mã nguồn gốc để tái hiện; từ EffiHolmes --- đối chiếu hai lần thực thi
 để lọc nhiễu (ý tưởng của CovGate) và khuôn câu hỏi nghiên cứu; từ báo cáo công nghiệp --- đưa xếp hạng có sẵn vào prompt
-(baseline LLM + độ phủ); từ Pearson và cộng sự --- kiểm tra cách chấm khi hòa điểm và khi lỗi là thiếu mã.
+(phương pháp đối chứng LLM + độ phủ); từ Pearson và cộng sự --- kiểm tra cách chấm khi hòa điểm và khi lỗi là thiếu mã.

@@ -13,7 +13,7 @@ def test_to_vi_translates_labels_and_uses_decimal_commas():
           r"\cmidrule(lr){2-4} Method & Acc@1 & $\Delta$Acc@1 [95\% CI] \\")
     vi = mt.to_vi(en)
     assert "SemLoc (bản phát hành)" in vi and "52,3{\\scriptsize$\\pm$0,8}" in vi and "+16,6{\\scriptsize\\,[10,5; 22,8]}" in vi
-    assert "Ground truth đã sửa bằng thực thi, $n=179$, 3 lần lặp" in vi
+    assert "Dòng lỗi chuẩn đã sửa bằng thực thi, $n=179$, 3 lần lặp" in vi
     assert r"\cmidrule(lr){2-4}" in vi and "Phương pháp" in vi and "[CI 95\\%]" in vi
 
 

@@ -83,13 +83,13 @@ Ba ca có lỗi cài vào là cả một khối \texttt{if \ldots{} merged[-1] =
 nào của khối cũng sửa được lỗi. Nhãn chỉ nêu một dòng, LLM chỉ dòng kia --- và chính các ca này bị xếp vào
 \texttt{prior\_hurts}. Như vậy, phần lớn trường hợp ``điểm thưởng gây hại'' thật ra là hai dòng tương đương về mặt sửa lỗi.
 
-\subsection{Oracle chấp nhận bản sửa bù trừ}
+\subsection{Bộ phán định chấp nhận bản sửa bù trừ}
 
-Oracle sửa tối thiểu của nhóm (mục~\ref{sec:du-lieu}) chỉ yêu cầu mọi kiểm thử đạt, nên đôi khi chấp nhận một bản sửa
+Bộ phán định sửa tối thiểu của nhóm (mục~\ref{sec:du-lieu}) chỉ yêu cầu mọi kiểm thử đạt, nên đôi khi chấp nhận một bản sửa
 \emph{bù trừ}. Ở \texttt{gradient\_clip\_budget}, dòng chuẩn gốc là dòng trống và được ``sửa'' thành dòng tính chuẩn
 bằng \texttt{norm = \_compute\_global\_norm(gradients) - 1}, trong khi lỗi thật là \texttt{max\_norm / (norm + 1)} ở dòng
-mà LLM chỉ cả ba lần. Ở \texttt{energy\_window\_avg}, oracle ``xác nhận'' bằng cách thay một lời gọi ghi log bằng một phép gán.
-Ở các khối lỗi nhiều dòng, oracle ``xác nhận'' bằng cách làm điều kiện luôn sai. Các bản sửa đặt trên dòng trống đã bị
+mà LLM chỉ cả ba lần. Ở \texttt{energy\_window\_avg}, bộ phán định ``xác nhận'' bằng cách thay một lời gọi ghi log bằng một phép gán.
+Ở các khối lỗi nhiều dòng, bộ phán định ``xác nhận'' bằng cách làm điều kiện luôn sai. Các bản sửa đặt trên dòng trống đã bị
 loại khỏi bộ dòng lỗi chuẩn đã sửa (\GtBlankFixDroppedN{} chương trình); bản sửa bù trừ trên dòng có mã thì chưa phát
 hiện tự động được.
 
@@ -98,7 +98,7 @@ hiện tự động được.
 Bốn ca thuộc mẫu này: dòng lỗi chuẩn là nơi tính một giá trị, LLM chỉ nơi dùng giá trị đó, hoặc ngược lại
 (\texttt{allocate\_bounty\_cut}: trừ phí trên từng phần hay tính phần chia); hoặc lỗi là \emph{thiếu} một bước chuẩn hóa
 (\texttt{shift\_trust}, \texttt{shift\_risk}) hay thiếu một lệnh lưu (\texttt{warm\_cache\_loader}), không có ``dòng sai''
-duy nhất. Đọc mã không đủ để phân xử; cần oracle thực thi kiểm tra cả hai dòng.
+duy nhất. Đọc mã không đủ để phân xử; cần bộ phán định thực thi kiểm tra cả hai dòng.
 
 \subsection{Dòng lỗi chuẩn đáng ngờ}
 

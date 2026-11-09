@@ -38,7 +38,7 @@ hay từ việc LLM đoán (``guessed'')?} Câu hỏi này được tách thành
 đứng vững khi chấm điểm công bằng, khi bỏ các thành phần không được mô tả trong bài báo, khi sửa các dòng lỗi chuẩn
 (ground truth) sai của bộ dữ liệu?
 \item \textbf{RQ2 -- Cải tiến và đối chứng.} Bổ sung tín hiệu độ phủ vào SemLoc (cải tiến CovGate) có làm tốt hơn
-không, và một prompt duy nhất chứa bằng chứng độ phủ (LLM + độ phủ) so với toàn bộ pipeline của SemLoc thì sao, về cả
+không, và một prompt duy nhất chứa bằng chứng độ phủ (LLM + độ phủ) so với toàn bộ quy trình nhiều bước của SemLoc thì sao, về cả
 độ chính xác lẫn chi phí?
 \item \textbf{RQ3 -- Độ bền.} Các kết luận trên có giữ được trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã
 đổi tên định danh (kiểm tra việc LLM ghi nhớ bộ dữ liệu) và trên năm họ mô hình khác nhau không?
@@ -50,20 +50,25 @@ không, và một prompt duy nhất chứa bằng chứng độ phủ (LLM + đ�
 Tiểu luận có các đóng góp sau; mỗi đóng góp gắn với số liệu được sinh tự động từ mã nguồn công khai.
 
 \begin{enumerate}
-\item \textbf{Đo phần ``grounded'' và phần ``guessed''.} Bằng phân rã Shapley, Acc@1 \DecSemlocRepairedAllAccOneFull\%
-của SemLoc (lượt chạy của nhóm) gồm \DecSemlocRepairedAllAccOnePhiGuess{} điểm đến từ dòng LLM tự đoán và
-\DecSemlocRepairedAllAccOnePhiSpectrum{} điểm đến từ phổ vi phạm ràng buộc; trên lỗi thật, Acc@1 của SemLoc
-(\BipAllSemlocPriorAccOneMean\%) bằng đúng Acc@1 của riêng dòng đoán (\BipAllLlmGuessAccOneMean\%).
-\item \textbf{Một prompt có độ phủ vượt cả pipeline.} Baseline LLM + độ phủ do nhóm thiết kế đạt Acc@3
-\RqTwoRepairedAllLlmCoverageAccThreeMean\% so với \RqTwoRepairedAllSemlocAccThreeMean\% của SemLoc, tốn ít token hơn
-khoảng năm lần và gần như không bị ảnh hưởng khi đổi tên định danh.
-\item \textbf{Kiểm tra cách đánh giá.} Tái hiện khớp toàn bộ cấu hình công bố nhưng chỉ ra một điểm thưởng ẩn cho dòng
-LLM đoán, bước kiểm chứng phản thực tế không làm thay đổi thứ hạng nào, cách chấm lạc quan cho gỡ lỗi chia đôi và SBFL,
-và hai lỗi trong bộ chạy BugsInPy của SemLoc.
-\item \textbf{SemFault-250-verified.} Dòng lỗi chuẩn được kiểm chứng lại bằng thực thi:
-\GtConfirmedN{} được xác nhận, \GtCorrectedN{} được sửa vị trí; \GtBlankN{} dòng chuẩn gốc là dòng trống.
-\item \textbf{CovGate}, một cải tiến nhỏ nhưng có ý nghĩa thống kê ở top-3, cùng bảng kiểm tra (checklist) đánh giá
-sáu mục áp dụng cho mọi phương pháp.
+\item \textbf{Đo phần ``grounded'' và phần ``guessed''.} Mã nguồn công bố cộng cho dòng LLM tự đoán một điểm thưởng
+lớn hơn mọi điểm ràng buộc, nên dòng đầu tiên của SemLoc \emph{luôn} là dòng LLM đoán: Acc@1 của SemLoc
+(\RqTwoRepairedAllSemlocAccOneMean\%) chính là của dòng đoán, còn riêng phổ vi phạm ràng buộc chỉ đạt
+\RqTwoRepairedAllSemlocNoPriorAccOneMean\%. Bằng chứng thực thi phát huy ở top-3: nó nâng Acc@3 từ
+\RqTwoRepairedAllSemlocAccOneMean\% (chỉ dòng đoán) lên \RqTwoRepairedAllSemlocAccThreeMean\%.
+\item \textbf{Một prompt có bằng chứng thực thi vượt quy trình nhiều bước trên các lỗi được chạy tới.} Phương pháp đối
+chứng LLM + độ phủ do nhóm thiết kế (một lượt gọi, có tên kiểm thử thất bại, thông báo lỗi và độ phủ từng dòng) hơn
+SemLoc \RqTwoOriginalExecutableLlmCoverageDAccThree{} điểm Acc@3 trên các lỗi mà kiểm thử thất bại chạy tới (bộ dòng lỗi
+chuẩn gốc), tốn ít token hơn khoảng năm lần và không thay đổi đáng kể khi đổi tên định danh; trên toàn bộ nhãn gốc, gồm
+cả lỗi không kiểm thử nào chạy tới, mức hơn chỉ còn \RqTwoOriginalAllLlmCoverageDAccThree{} điểm và SemLoc tốt hơn ở Acc@5.
+\item \textbf{Kiểm tra cách đánh giá.} Tính lại khớp toàn bộ cấu hình từ nhật ký công bố, nhưng chỉ ra điểm thưởng ẩn
+cho dòng LLM đoán, bước kiểm chứng phản thực tế không làm thay đổi thứ hạng nào, mã chấm điểm cho gỡ lỗi chia đôi
+\RqOneDdAuthorAllAccOne\% trong khi bài báo ghi 0, hai lỗi trong bộ chạy BugsInPy, và chạy lại với chính mô hình của bài
+báo không đạt con số trong nhật ký.
+\item \textbf{SemFault-250 đã sửa.} Dòng lỗi chuẩn được kiểm chứng lại bằng thực thi: \GtConfirmedN{} được xác nhận,
+\GtCorrectedN{} được sửa vị trí, \GtUnverifiedN{} chưa kiểm chứng được và giữ nhãn gốc; \GtBlankN{} dòng chuẩn gốc là
+dòng trống.
+\item \textbf{CovGate}, một bước phá hòa bằng Ochiai cho SemLoc với mức tăng nhỏ ở top-3, cùng bảng kiểm tra đánh giá
+bảy mục áp dụng cho mọi phương pháp.
 \end{enumerate}
 
 \IfAtLeast{lan2}{Ngoài ra, phân tích thất bại (Chương~\ref{chap:that-bai}) cho thấy độ chính xác cấp dòng phụ thuộc
