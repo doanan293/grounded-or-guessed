@@ -83,12 +83,12 @@ is either always \ConstPriorWeight{} or kept only when execution supports $g$; a
 the counterfactual patches. Selected on the dev split, CovGate has no gate and the original bonus, with $\lambda$ =
 \ConstLambdaOriginal{} (original) or \ConstLambdaRepaired{} (repaired labels): an Ochiai tie-breaker.
 
-\textbf{Propose-and-verify} uses the tests as arbiter: LLM + failing tests proposes lines; for the first $k$, the LLM
+\IfAtLeast{full}{\textbf{Propose-and-verify} uses the tests as arbiter: LLM + failing tests proposes lines; for the first $k$, the LLM
 writes a small fix at that line (the oracle's proposer and size criterion), the patched program runs against the tests,
 and lines with a passing fix move to the front. A \PavGridSize-point grid ($k$, attempts per line, order among verified
 lines, maximum fix size) is evaluated offline from one widest run on the dev split, three repeats; the selection rule
 (mean dev Acc@1 over the original and reviewed labels; the repaired labels are excluded because they were built by the
-same fix-and-test mechanism) was fixed in code before running.
+same fix-and-test mechanism) was fixed in code before running.}
 
 \textbf{Voting} merges three answers of LLM + failing tests by summed reciprocal rank (dev split).
 

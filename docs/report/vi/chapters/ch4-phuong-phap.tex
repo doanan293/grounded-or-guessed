@@ -12,12 +12,12 @@ báo, (c) kiểm tra lại chính các dòng lỗi chuẩn của bộ dữ liệ
 
 \textbf{RQ2 (LLM thật sự cần gì?):} trên cùng các chương trình và cùng mô hình, (a) một prompt duy nhất có kiểm thử thất
 bại so với quy trình nhiều bước SemLoc thế nào về độ chính xác và chi phí; (b) trong prompt đó, thông tin nào tạo ra khác
-biệt --- kiểm thử thất bại hay độ phủ từng dòng; (c) các cách bổ sung (CovGate cho SemLoc; kiểm chứng dòng nghi ngờ bằng
-bản sửa; biểu quyết nhiều câu trả lời) và công cụ phân tích tĩnh có thêm được gì; (d) bao nhiêu phần độ chính xác của
+biệt --- kiểm thử thất bại hay độ phủ từng dòng; (c) các cách bổ sung (CovGate cho SemLoc;\IfAtLeast{full}{ kiểm chứng dòng nghi ngờ bằng
+bản sửa;} biểu quyết nhiều câu trả lời) và công cụ phân tích tĩnh có thêm được gì; (d) bao nhiêu phần độ chính xác của
 SemLoc đến từ bằng chứng thực thi, bao nhiêu từ dòng LLM tự đoán?
 
 \textbf{RQ3 (độ bền):} các kết luận của RQ2 có còn đúng (a) trên lỗi thật của BugsInPy, (b) khi đổi tên mọi định danh
-và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên năm mô hình thuộc các họ khác nhau, (d) trên cả ba bộ nhãn?
+và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên năm mô hình thuộc các họ khác nhau, (d) trên \IfAtLeastElse{lan2}{cả ba bộ nhãn}{các bộ nhãn khác nhau}?
 
 \subsection{Giả thuyết và tiêu chí bác bỏ}
 
@@ -54,6 +54,7 @@ tại dòng chuẩn), \GtCorrectedN{} được \emph{sửa vị trí} (dòng chu
 \GtUnverifiableN{} \emph{không kiểm chứng được} (bị loại). Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
 nên bị loại; bộ dòng lỗi chuẩn đã sửa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã sửa.
 
+\IfAtLeast{lan2}{%
 \subsection{SemFault-250 đã rà soát: LLM rà trước, nhóm duyệt}
 
 Bộ phán định sửa tối thiểu chỉ có thể xác nhận một dòng khi tìm được bản sửa nhỏ, và chỉ tìm dòng lân cận khi dòng gốc
@@ -97,6 +98,7 @@ Gốc & Tác giả SemLoc & So với bài báo gốc \\
 \bottomrule
 \end{tabularx}
 \end{table}
+}% lan2: reviewed labels, blind review, label-set table
 
 \subsection{Lỗi thật BugsInPy}
 
@@ -136,6 +138,7 @@ thiết kế trước khi xem kết quả trên tập test và không được t
 xây quy trình nhiều bước lấy từ báo cáo công nghiệp~\cite{medeiros2026crash} và các nghiên cứu cho thấy nhật ký lỗi
 giúp LLM định vị tốt hơn~\cite{wu2023llmfl}.
 
+\IfAtLeast{lan2}{%
 \subsection{Ablation: tách độ phủ khỏi kiểm thử thất bại}
 
 Biến thể \emph{LLM + kiểm thử thất bại + độ phủ} giữ nguyên prompt trên và chú thích thêm cho mỗi dòng số kiểm thử thất
@@ -153,14 +156,14 @@ chọn chỉ trên tập dev; cấu hình được chọn không bật cổng đ
 $\lambda = \ConstLambdaOriginal$ (bộ gốc) hoặc $\lambda = \ConstLambdaRepaired$ (bộ đã sửa) --- tức là một bước \emph{phá
 hòa bằng Ochiai} cho SemLoc.
 
-\textbf{Đề xuất rồi kiểm chứng} dùng kiểm thử làm trọng tài cho vị trí lỗi: (1) LLM + kiểm thử thất bại đề xuất các dòng
+\IfAtLeast{full}{\textbf{Đề xuất rồi kiểm chứng} dùng kiểm thử làm trọng tài cho vị trí lỗi: (1) LLM + kiểm thử thất bại đề xuất các dòng
 nghi ngờ; (2) với $k$ dòng đầu, LLM viết một bản sửa nhỏ tại đúng dòng đó (cùng bộ đề xuất bản sửa và cùng tiêu chí
 ``thay đổi nhỏ'' như bộ phán định nhãn), chương trình đã vá được chạy với bộ kiểm thử; dòng có bản sửa làm mọi kiểm thử
 đạt được đưa lên đầu. Tham số $k \in \{2, 3\}$, số lần thử mỗi dòng (1 hoặc 2), thứ tự giữa các dòng được xác nhận (theo
 LLM hoặc theo kích thước bản sửa) và giới hạn kích thước bản sửa (1, 2, 3 từ tố hoặc không giới hạn) tạo thành một lưới
 \PavGridSize{} cấu hình. Mọi lần thử được ghi lại, nên cả lưới được đánh giá offline từ một lượt chạy với cấu hình rộng
 nhất (3 dòng, 2 lần thử) trên \emph{tập dev}, 3 lần. Quy tắc chọn được cố định trong mã trước khi chạy: Acc@1 trung bình
-trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã sửa vì bộ đó được dựng bằng chính cơ chế sửa thử).
+trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã sửa vì bộ đó được dựng bằng chính cơ chế sửa thử).}
 
 \textbf{Biểu quyết}: gộp ba câu trả lời của LLM + kiểm thử thất bại bằng tổng nghịch đảo hạng, cũng trên tập dev.
 
@@ -169,6 +172,7 @@ trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã sửa vì
 Ruff (luật mặc định và mọi luật) và pyrefly (kiểm tra kiểu), phiên bản cố định, được chạy trên cả 250 chương trình. Một
 chương trình được tính là ``trúng'' khi có cảnh báo nằm đúng dòng lỗi chuẩn. Để biết con số trúng có ý nghĩa không, nhóm
 tính số trúng kỳ vọng nếu các dòng có cảnh báo được rải ngẫu nhiên trên các dòng mã của chương trình.
+}% lan2: ablation, additions, static analysis
 
 \section{Kiểm tra cách đánh giá và phân rã đóng góp}
 \label{sec:audit-phan-ra}

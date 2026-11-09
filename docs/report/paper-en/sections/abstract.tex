@@ -10,8 +10,8 @@ always ranks the LLM's own guess first, and the counterfactual step never change
 and on the reviewed labels SemLoc's Acc@3 lead over direct prompting vanishes. Third, a single prompt with the failing tests beats the pipeline at Acc@1 on all
 three label sets (\RqTwoRepairedAllLlmTestsDAccOne{} points on execution-repaired labels) at about a seventh of the
 tokens; ablation shows the failing tests, not per-line coverage, carry the signal. Fourth, nothing more elaborate
-closes the gap---adding coverage to SemLoc helps it only slightly, and verifying candidate lines with test-passing
-patches, voting, or static analysis with ruff and pyrefly do not help at all---because small patches pass all tests in
-\PavmechReviewedOtherLineFixable\% of fix attempts at non-faulty candidate lines (dev split): the tests suggest where the
+closes the gap---adding coverage to SemLoc helps it only slightly, and\IfAtLeast{full}{ verifying candidate lines with test-passing
+patches,} voting, or static analysis with ruff and pyrefly do not help at all---because small test-passing patches exist at
+non-faulty lines\IfAtLeast{full}{ (\PavmechReviewedOtherLineFixable\% of fix attempts at non-faulty candidate lines, dev split)}: the tests suggest where the
 bug is but cannot prove it. Code, data, LLM logs and a replayable cache are public.
 \end{abstract}

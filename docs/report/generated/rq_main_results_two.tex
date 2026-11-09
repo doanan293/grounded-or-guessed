@@ -1,0 +1,12 @@
+\begin{tabular}{lrrrrr}
+\toprule
+ & \multicolumn{2}{c}{Original ($n=200$)} & \multicolumn{2}{c}{Repaired ($n=179$)} & \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Method & Acc@1 & Acc@3 & Acc@1 & Acc@3 & k tokens \\
+\midrule
+SBFL Ochiai & 3.0 & 15.5 & 3.9 & 19.0 & 0 \\
+LLM direct (source only) & 40.0 & 43.0 & 56.8 & 62.8 & 2.5 \\
+SemLoc (multi-stage) & 36.8 & 60.3 & 52.3 & 75.4 & 14.0 \\
+LLM + failing tests (ours) & 44.5 & 67.5 & 62.6 & 89.9 & 2.0 \\
+\bottomrule
+\end{tabular}

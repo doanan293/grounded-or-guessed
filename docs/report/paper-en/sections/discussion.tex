@@ -7,22 +7,27 @@ our runs removing it changes Acc@1 by \RqTwoRepairedAllSemlocNoPriorDAccOne{} po
 grounded should state that its first answer is the model's, and that line-level labels need to accept equivalent fix
 locations before small differences between methods mean much.
 
-\textbf{Why tests make poor arbiters of location.} Three results share one cause. SemLoc's counterfactual step changes no
+\IfAtLeastElse{full}{\textbf{Why tests make poor arbiters of location.} Three results share one cause. SemLoc's counterfactual step changes no
 ranking; our minimal-fix oracle moved \ReviewCorrectedOverturnedN{} of its \GtCorrectedN{} relocated labels to lines the review
 rejected; and propose-and-verify does not improve on its proposer. All three accept a line when a small patch there makes
 every test pass. With about ten tests per program, that criterion holds in \PavmechReviewedOtherLineFixable\% of
 fix attempts at non-faulty candidate lines---usually by a compensating constant or subtraction---and in only
 \PavmechReviewedFaultLineFixable\% at faulty ones (dev split, the proposer's top candidates), which two-line faults, omissions and larger edits put out of reach. This is the plausible-patch
 problem~\cite{qi2015kali,smith2015cure} seen from localization: the tests suffice to \emph{suggest} where the bug is, not to
-\emph{prove} it.
+\emph{prove} it.}{\textbf{Why tests make poor arbiters of location.} Two results share one cause. SemLoc's counterfactual step changes no
+ranking, and our minimal-fix oracle moved \ReviewCorrectedOverturnedN{} of its \GtCorrectedN{} relocated labels to lines the
+review rejected. Both accept a line when a small patch there makes every test pass; with about ten tests per program, such a
+patch can exist at a non-faulty line (a compensating constant or subtraction) and be missing at the faulty one (two-line
+faults, omissions). This is the plausible-patch problem~\cite{qi2015kali,smith2015cure} seen from localization: the tests
+suffice to \emph{suggest} where the bug is, not to \emph{prove} it.}
 
 \textbf{Saturation and practice.} With the reviewed (LLM-suggested) labels one prompt reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3.
 SemFault-250's programs are single short functions, its faults are one-token mutations, and its test names state the
 violated intent (e.g., \texttt{test\_fee\_deducted\_once\_not\_per\_participant}); much of the difficulty the original paper
 measured came from mislabels. The benchmark can no longer show that an elaborate pipeline is needed; real bugs, where
 every method stays far from the ceiling, can. For practitioners, the strongest investment is tests that state intent, as
-test-driven development produces; and an AI agent that stops when the tests pass should have its patch reviewed, since
-about a quarter of fix attempts at plausible but non-faulty lines yield a test-passing patch on suites of this size.
+test-driven development produces; and an AI agent that stops when the tests pass should have its patch reviewed, since\IfAtLeastElse{full}{
+about a quarter of fix attempts at plausible but non-faulty lines yield a test-passing patch on suites of this size.}{ test-passing patches can sit at non-faulty lines on suites of this size.}
 
 \textbf{An evaluation checklist.} Table~\ref{tab:checklist} collects seven checks; each changed at least one number in
 this study.

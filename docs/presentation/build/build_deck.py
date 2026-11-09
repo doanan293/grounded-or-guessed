@@ -36,7 +36,8 @@ METHOD = ["chuong02.svg", "slide_20.svg", "slide_19.svg", "thiet_ke.svg"]
 RESULTS = ["slide_14.svg", "ket_qua_thu.svg", "ket_qua_rq3.svg", "pareto.svg"]
 ANALYSIS = ["chuong04.svg", "that_bai.svg", "mo_ho.svg", "mau_loi.svg", "dong_gop.svg", "triet_ly.svg", "de_doa.svg"]
 DECKS = {
-    "lan1": ["slide_01.svg", "slide_03.svg", *INTRO, *METHOD, "chuong03.svg", *RESULTS, "slide_21.svg", "slide_30.svg"],
+    "lan1": ["slide_01.svg", "slide_03.svg", *INTRO, *METHOD, "chuong03.svg", "slide_14.svg", "ket_qua_thu.svg",
+             "slide_21.svg", "slide_30.svg"],  # report 1: no RQ3 / cross-model cost yet
     "lan2": ["slide_01.svg", "slide_03.svg", "slide_20.svg", *RESULTS, *ANALYSIS, "slide_21.svg", "slide_30.svg"],
     "baove": ["slide_01.svg", "slide_03.svg", *INTRO, *METHOD, "chuong03.svg", *RESULTS, *ANALYSIS, "ket_luan.svg",
               "slide_30.svg"],
@@ -139,13 +140,24 @@ def results_pages() -> None:
              ("semloc_no_prior", "SemLoc bỏ thưởng ẩn", tok("semloc_test_gemini_r")),
              ("llm_tests", "1 prompt + test fail (nhóm)", tok("direct_tests_test_gemini_r")),
              ("llm_coverage", "  … + độ phủ từng dòng", tok("direct_cov_test_gemini_r"))]
-    A("ket_qua_thu.svg", table("bang-rq2", 84, 128, [330, 115, 115, 115, 133], [
-        ["Phương pháp", "Acc@1\nđã sửa", "Acc@3\nđã sửa", "Acc@1\nrà soát", "Token/CT"],
-        *[[label, _p(rq2[m]["acc1_mean"]), _p(rq2[m]["acc3_mean"]), _p(rev[m]["acc1_mean"]), t] for m, label, t in names],
-    ], highlight_col=None, head_h=48, row_h=38, fs=16,
-        note=f"Gemini 3.8 Flash, tập test, 3 lần chạy. 1 prompt + test fail vs SemLoc, Acc@1 (đã sửa): "
-             f"{_m('RqTwoRepairedAllLlmTestsDAccOne')} [{_m('RqTwoRepairedAllLlmTestsDAccOneLo')}; {_m('RqTwoRepairedAllLlmTestsDAccOneHi')}].\n"
-             f"Thêm độ phủ: Acc@1 {_m('AblRepairedAllCoverageEffectDAccOne')} điểm. Kiểm chứng bằng bản sửa, biểu quyết (dev), ruff, pyrefly: không giúp."))
+    orig = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "original" and r.get("subset", "all") == "all"}
+    head = f"Gemini 3.8 Flash, tập test, 3 lần chạy. 1 prompt + test fail vs SemLoc, Acc@1 (đã sửa): " \
+           f"{_m('RqTwoRepairedAllLlmTestsDAccOne')} [{_m('RqTwoRepairedAllLlmTestsDAccOneLo')}; {_m('RqTwoRepairedAllLlmTestsDAccOneHi')}].\n"
+    if DECK == "lan1":  # report 1: original + repaired labels, no ablation / additions yet
+        A("ket_qua_thu.svg", table("bang-rq2", 84, 128, [330, 115, 115, 115, 133], [
+            ["Phương pháp", "Acc@1\nđã sửa", "Acc@3\nđã sửa", "Acc@1\ngốc", "Token/CT"],
+            *[[label, _p(rq2[m]["acc1_mean"]), _p(rq2[m]["acc3_mean"]), _p(orig[m]["acc1_mean"]), t]
+              for m, label, t in names if m != "llm_coverage"],
+        ], highlight_col=None, head_h=48, row_h=40, fs=16,
+            note=head + "Đang làm: thông tin nào trong prompt tạo ra khác biệt, các cách bổ sung, rà soát nhãn."))
+    else:
+        tail = ("Kiểm chứng bằng bản sửa, biểu quyết (dev), ruff, pyrefly: không giúp." if DECK == "baove"
+                else "CovGate, biểu quyết (dev), ruff, pyrefly: không giúp.")
+        A("ket_qua_thu.svg", table("bang-rq2", 84, 128, [330, 115, 115, 115, 133], [
+            ["Phương pháp", "Acc@1\nđã sửa", "Acc@3\nđã sửa", "Acc@1\nrà soát", "Token/CT"],
+            *[[label, _p(rq2[m]["acc1_mean"]), _p(rq2[m]["acc3_mean"]), _p(rev[m]["acc1_mean"]), t] for m, label, t in names],
+        ], highlight_col=None, head_h=48, row_h=38, fs=16,
+            note=head + f"Thêm độ phủ: Acc@1 {_m('AblRepairedAllCoverageEffectDAccOne')} điểm. " + tail))
     bip = {(r["subset"], r["method"]): r for r in _csv("rq3_bugsinpy.csv")}
     ren = {r["method"]: r for r in _csv("rq3_renamed.csv") if r["gt"] == "repaired"}
     fam = [r for r in _csv("rq3_families.csv") if r["gt"] == "repaired"]
@@ -258,8 +270,9 @@ def build() -> None:
         ["Tiêu chí", "SemLoc", "EffiHolmes", "Crash+LLM", "Nhóm mình"],
         ["Loại lỗi", "ngữ nghĩa", "hiệu năng", "crash (Java)", "ngữ nghĩa"],
         ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "profiling\n2 mức tải", "stack trace\n+ xếp hạng", "test fail đưa\nthẳng cho LLM"],
-        ["Lỗi thật", "7 có kết quả\ncấp dòng", "140 issue", "38 (công nghiệp)", "31 lỗi thật\n× 3 lần chạy"],
-        ["Kiểm tra\nbenchmark", "không", "—", "—", "rà soát cả\n250 nhãn"],
+        ["Lỗi thật", "7 có kết quả\ncấp dòng", "140 issue", "38 (công nghiệp)",
+         "đang dựng\n(lần 2)" if DECK == "lan1" else "31 lỗi thật\n× 3 lần chạy"],
+        ["Kiểm tra\nbenchmark", "không", "—", "—", "kiểm chứng nhãn\nbằng thực thi" if DECK == "lan1" else "rà soát cả\n250 nhãn"],
         ["Lặp + kiểm\nđịnh", "1 lần", "—", "—", "3 lần + McNemar\n/ Wilcoxon"],
     ], highlight_col=4))
     E("slide_11.svg", [
@@ -273,9 +286,9 @@ def build() -> None:
     ])
     E("thiet_ke.svg", [
         ("Recommendations", "Thiết kế thực nghiệm"),
-        ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250, 3 bộ", "nhãn; 31 BugsInPy"]),
-        ("Venus", "Biến thể"), ("Venus is the second", ["Đổi tên, xóa docstring", "→ chống thuộc bài"]),
-        ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, ruff, SemLoc,", "1 prompt + test fail"]),
+        ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250, nhãn", "gốc + đã sửa"] if DECK == "lan1" else ["SemFault-250, 3 bộ", "nhãn; 31 BugsInPy"]),
+        ("Venus", "Biến thể"), ("Venus is the second", ["Đổi tên, BugsInPy:", "lần báo cáo 2"] if DECK == "lan1" else ["Đổi tên, xóa docstring", "→ chống thuộc bài"]),
+        ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, LLM hỏi thẳng,", "SemLoc, 1 prompt"] if DECK == "lan1" else ["SBFL, ruff, SemLoc,", "1 prompt + test fail"]),
         ("Mercury", "Mô hình"), ("Mercury is the closest", ["Gemini 3.8 Flash", "+ 4 họ model khác"]),
         ("Saturn", "Chỉ số"), ("Saturn is a gas giant", ["Acc@1/3/5, thứ hạng,", "%Susp, lượt gọi, token"]),
         ("Jupiter", "Thống kê"), ("Jupiter is the biggest", ["Lặp 3 lần, McNemar /", "Wilcoxon, effect size"]),
@@ -290,9 +303,13 @@ def build() -> None:
     E("slide_19.svg", [
         ("Main topic and details", "Đề xuất: 1 prompt có test fail"),
         ("Mars", "Đầu vào"), ("Despite being red", ["Mã nguồn,", "tên test fail,", "dòng lỗi đầu"]),
-        ("Neptune", "Ablation"), ("It’s the farthest", ["Có / không", "độ phủ từng dòng"]),
-        ("Jupiter", "Bổ sung"), ("Jupiter is the biggest", ["CovGate,", "kiểm chứng,", "biểu quyết"]),
-        ("Saturn", "Tĩnh"), ("It’s a gas giant", ["So với ruff,", "pyrefly"]),
+        *([("Neptune", "1 lượt gọi"), ("It’s the farthest", ["Không pipeline,", "không ràng buộc"]),
+           ("Jupiter", "So với"), ("Jupiter is the biggest", ["SemLoc, LLM", "hỏi thẳng, SBFL"]),
+           ("Saturn", "Tiếp theo"), ("It’s a gas giant", ["Ablation, bổ", "sung (lần 2)"])] if DECK == "lan1" else
+          [("Neptune", "Ablation"), ("It’s the farthest", ["Có / không", "độ phủ từng dòng"]),
+           ("Jupiter", "Bổ sung"), ("Jupiter is the biggest", ["CovGate,", "kiểm chứng,", "biểu quyết"] if DECK == "baove"
+                                                             else ["CovGate,", "biểu quyết"]),
+           ("Saturn", "Tĩnh"), ("It’s a gas giant", ["So với ruff,", "pyrefly"])]),
     ])
     dec = next(r for r in _csv("rq_decomposition.csv") if r["game"] == "semloc" and r["gt"] == "repaired"
                and r["subset"] == "all" and r["metric"] == "acc1")
@@ -300,16 +317,16 @@ def build() -> None:
     n_corr = sum(1 for v in (vgt.values() if isinstance(vgt, dict) else vgt) if v.get("status") == "corrected")
     E("slide_14.svg", {
         "9h 55m 23s": "13/13", "Jupiter’s rotation period": "cấu hình SemLoc tái hiện khớp từng số",
-        "333,000": f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')}",
-        "The Sun’s mass compared": "nhãn gốc bị dời khi rà soát",
+        "333,000": _m("GtBlankN") if DECK == "lan1" else f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')}",
+        "The Sun’s mass compared": "nhãn gốc nằm trên dòng trống" if DECK == "lan1" else "nhãn gốc bị dời khi rà soát",
         "386,000 km": _m("RqTwoRepairedAllLlmTestsDAccOne"), "Distance between the Earth": "Acc@1: 1 prompt có test fail so với SemLoc",
     })
     E("slide_21.svg", [
         ("Sequences", "Tiến độ"),
         ("First", "08/11"), ("Saturn is composed", "Tài liệu, hạ tầng"),
-        (("Next", 0), "09/11"), ("Mercury is the closest", ["RQ1–RQ3 xong,", "rà soát kết quả"]),
+        (("Next", 0), "09/11"), ("Mercury is the closest", ["RQ1, RQ2:", "kết quả chính"] if DECK == "lan1" else ["RQ1–RQ3 xong,", "rà soát kết quả"]),
         (("Next", 0), "18/11"), ("Jupiter was named", ["Báo cáo lần 1:", "nội dung 1–2"]),
-        (("Next", 0), "22/11"), ("Despite being red", ["Phân tích lỗi,", "đóng góp"]),
+        (("Next", 0), "22/11"), ("Despite being red", ["RQ3, nhãn,", "ablation"] if DECK == "lan1" else ["Phân tích lỗi,", "đóng góp"]),
         (("Next", 0), "25/11"), ("Earth is the third", ["Báo cáo lần 2:", "nội dung 1–3"]),
         ("Last", "12/12"), ("Venus has extremely", ["Bài báo arXiv,", "bảo vệ"]),
     ])
@@ -373,8 +390,10 @@ def analysis_pages() -> None:
         ("Mars", "C1 Đoán"), ("Despite being red, Mars", ["Hạng 1 = dòng đoán;", "CF không đổi hạng"]),
         ("Venus", "C2 Nhãn"), ("Venus is the second", [f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')} nhãn bị dời;", "2 bộ nhãn mới"]),
         ("Neptune", "C3 1 prompt"), ("Neptune is the farthest", [f"Acc@1 {_m('RqTwoRepairedAllLlmTestsDAccOne')} điểm,", "rẻ hơn ~7 lần"]),
-        ("Mercury", "C4 Âm tính"), ("Mercury is the closest", ["Độ phủ, kiểm chứng", "(dev), ruff: không giúp"]),
-        ("Saturn", "Cơ chế"), ("Saturn is a gas giant", [f"Sửa lách: {_m('PavmechReviewedOtherLineFixable')}% lần thử", "ở dòng ứng viên sai"]),
+        ("Mercury", "C4 Âm tính"), ("Mercury is the closest", ["Độ phủ, kiểm chứng", "(dev), ruff: không giúp"] if DECK == "baove"
+                                                             else ["Độ phủ, CovGate,", "ruff: không giúp"]),
+        ("Saturn", "Cơ chế"), ("Saturn is a gas giant", [f"Sửa lách: {_m('PavmechReviewedOtherLineFixable')}% lần thử", "ở dòng ứng viên sai"]
+                                                         if DECK == "baove" else ["Sửa lách kiểm thử", "ở dòng không lỗi"]),
         ("Jupiter", "C5 Tái hiện"), ("Jupiter is the biggest", ["Bảng kiểm 7 mục,", "Docker, số = macro"]),
     ])
     E("triet_ly.svg", [

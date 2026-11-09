@@ -54,3 +54,24 @@ def test_paper_draft_marker_only_below_full():
     r = subprocess.run(["make", "-C", str(ROOT / "docs" / "report"), "paper"], capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-2000:]
     assert "Draft for progress report" not in _pdf_text(ROOT / "docs" / "report" / "paper-en" / "main.pdf")
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(shutil.which("latexmk") is None, reason="needs TeX Live")
+def test_versions_stage_the_results():
+    """Report 1 shows RQ1 and the main comparison only; report 2 adds the rest except propose-and-verify; full has all."""
+    r = subprocess.run(["make", "-C", str(ROOT / "docs" / "report"), "vi-lan1", "vi-lan2", "vi-full"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-2000:] + r.stderr[-2000:]
+    t = {v: _pdf_text(ROOT / "docs" / "report" / "vi" / f"main-{v}.pdf") for v in ("lan1", "lan2", "full")}
+    lan2_only = ["Duyệt mù", "SemFault-250 đã rà soát", "Thông tin nào tạo ra khác biệt", "RQ3a:",
+                 "Các cách bổ sung không cải thiện được", "Phân tích tĩnh trên 250 chương trình"]
+    full_only = ["cấu hình mạnh tay nhất", "Đề xuất rồi kiểm chứng dùng kiểm thử làm trọng tài"]
+    for s in lan2_only + full_only:
+        assert s not in t["lan1"], s
+        assert s in t["full"], s
+    for s in lan2_only:
+        assert s in t["lan2"], s
+    for s in full_only:
+        assert s not in t["lan2"], s
+    assert "Kết quả đến thời điểm báo cáo" in t["lan1"] and "RQ3 đang được thực hiện" in t["lan1"]

@@ -147,7 +147,7 @@ def rq2_table() -> str:
     return "\n".join(lines) + "\n"
 
 
-def main_results_table() -> str:
+def main_results_table(sets: tuple = ("original", "repaired", "reviewed"), with_coverage: bool = True) -> str:
     """Table II: the headline comparison on the three ground truths (Acc@1 / Acc@3, mean of 3 repeats) and cost."""
     rows = {(r["gt"], r["method"]): r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"}
     cost = _rows("llm_cost.csv")
@@ -157,20 +157,23 @@ def main_results_table() -> str:
                ("semloc", "SemLoc (multi-stage)", "semloc_test_gemini_r"),
                ("llm_tests", "LLM + failing tests (ours)", "direct_tests_test_gemini_r"),
                ("llm_coverage", "\\quad + per-line coverage", "direct_cov_test_gemini_r")]
-    n = {g: rows[(g, "semloc")]["n"] for g in ("original", "repaired", "reviewed")}
-    lines = [r"\begin{tabular}{lrrrrrrr}", r"\toprule",
-             rf" & \multicolumn{{2}}{{c}}{{Original ($n={n['original']}$)}} & \multicolumn{{2}}{{c}}{{Repaired ($n={n['repaired']}$)}}"
-             rf" & \multicolumn{{2}}{{c}}{{Reviewed ($n={n['reviewed']}$)}} & \\",
-             r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}",
-             r"Method & Acc@1 & Acc@3 & Acc@1 & Acc@3 & Acc@1 & Acc@3 & k tokens \\", r"\midrule"]
+    n = {g: rows[(g, "semloc")]["n"] for g in sets}
+    title = {"original": "Original", "repaired": "Repaired", "reviewed": "Reviewed"}
+    k = len(sets)
+    lines = [r"\begin{tabular}{l" + "rr" * k + "r}", r"\toprule",
+             " & " + " & ".join(rf"\multicolumn{{2}}{{c}}{{{title[g]} ($n={n[g]}$)}}" for g in sets) + r" & \\",
+             "".join(rf"\cmidrule(lr){{{2 + 2 * i}-{3 + 2 * i}}}" for i in range(k)),
+             "Method & " + " & ".join(["Acc@1 & Acc@3"] * k) + r" & k tokens \\", r"\midrule"]
     for m, name, prefix in methods:
-        cells = [f"{pct(rows[(g, m)]['acc1_mean'])} & {pct(rows[(g, m)]['acc3_mean'])}" for g in ("original", "repaired", "reviewed")]
+        if m == "llm_coverage" and not with_coverage:
+            continue
+        cells = [f"{pct(rows[(g, m)]['acc1_mean'])} & {pct(rows[(g, m)]['acc3_mean'])}" for g in sets]
         lines.append(f"{name} & {' & '.join(cells)} & {tok(prefix) if prefix else '0'} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
 
 
-def addons_table() -> str:
+def addons_table(include_pav: bool = True) -> str:
     """Table III: additions that do not help — Δ against the method they extend, with 95% CIs where repeated."""
     abl = {(r["gt"], r["subset"], r["contrast"]): r for r in _rows("ablation_coverage.csv")}
     rq2 = {(r["gt"], r["method"]): r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"}
@@ -192,7 +195,7 @@ def addons_table() -> str:
     c = lambda g: rq2[(g, "covgate")]
     lines.append(f"CovGate (SemLoc) & test & {dci(c('repaired'), 'acc1')} & {dci(c('repaired'), 'acc3')} & "
                  f"{dci(c('reviewed'), 'acc1')} & {dci(c('reviewed'), 'acc3')} \\\\")
-    for name, r in (("Propose-and-verify, selected", chosen), ("Propose-and-verify, most aggressive", worst)):
+    for name, r in ((("Propose-and-verify, selected", chosen), ("Propose-and-verify, most aggressive", worst)) if include_pav else ()):
         lines.append(f"{name} (LLM + failing tests) & dev & {pp(r['repaired_acc1'], base['repaired_acc1'])} & "
                      f"{pp(r['repaired_acc3'], base['repaired_acc3'])} & {pp(r['reviewed_acc1'], base['reviewed_acc1'])} & "
                      f"{pp(r['reviewed_acc3'], base['reviewed_acc3'])} \\\\")
@@ -482,7 +485,9 @@ def main() -> None:
     (OUT / "rq3_bugsinpy.tex").write_text(rq3_bugsinpy_table())
     (OUT / "rq3_renamed.tex").write_text(rq3_renamed_table())
     (OUT / "rq_main_results.tex").write_text(main_results_table())
+    (OUT / "rq_main_results_two.tex").write_text(main_results_table(("original", "repaired"), with_coverage=False))
     (OUT / "rq_addons.tex").write_text(addons_table())
+    (OUT / "rq_addons_nopav.tex").write_text(addons_table(include_pav=False))
     (OUT / "rq_static.tex").write_text(static_table())
     (OUT / "rq_label_audit.tex").write_text(label_audit_table())
     pareto_figure(OUT / "pareto.pdf")
