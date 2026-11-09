@@ -1,2 +1,15 @@
-\section{Threats to Validity}\label{sec:threats}
-Ground-truth issues, contamination~\cite{ramos2024memorize}, model substitution behind the proxy, single benchmark family. \TODO{write}
+\section{Threats to Validity}
+\label{sec:threats}
+
+\textbf{Internal and construct validity.} Our minimal-fix oracle can accept compensating fixes, so the repaired ground
+truth is still noisy; we drop fixes written onto blank lines and report every result on the original ground truth as
+well. Because the oracle needs a failing test to reach the fixed line, the repaired ground truth may favor
+coverage-based methods; comparisons among SemLoc, the LLM baselines and CovGate keep their direction on the original
+ground truth, but the coverage gate alone does not. Line-level Acc@1 depends on whether a guard or the guarded statement
+is labeled; we report a tolerant variant. The coverage prompt is ours, fixed before seeing test results.
+
+\textbf{External validity.} Real bugs come from one project (31 youtube-dl bugs) and the target function is chosen from
+the developer fix, so function-level localization is not evaluated. Models run at provider-default reasoning, so the
+model-family comparison is ``at default'' rather than at equal reasoning effort; the main model is newer than those in
+the original paper, and Claude through our proxy produced weaker constraints than the published logs. Renaming changes
+identifiers and comments but not code structure, so memorization of templates is not fully excluded.

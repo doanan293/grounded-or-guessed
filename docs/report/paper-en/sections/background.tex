@@ -1,2 +1,39 @@
-\section{Background}\label{sec:background}
-SBFL~\cite{jones2002,abreu2009,wong2014dstar}, semantic faults, and the SemLoc pipeline. \TODO{write}
+\section{Background}
+\label{sec:background}
+
+\textbf{SBFL and metrics.} For a line $s$, let $e_f, e_p$ be the numbers of failing and passing tests that execute it and
+$n_f$ the failing tests that do not. Ochiai scores $s$ as $e_f/\sqrt{(e_f+n_f)(e_f+e_p)}$; lines with $e_f=0$ are
+unranked. The rank of a program's fault is the best rank of any ground-truth line, and Acc@$k$ is the fraction of
+programs whose fault ranks within $k$. We break ties by the \emph{average} rank of the tied group and keep the
+denominator fixed: a program a tool fails on counts as a miss.
+
+\textbf{Semantic faults.} We label a fault \emph{semantic} when some faulty line is executed by at least one failing and
+one passing test (coverage cannot separate it), \emph{coverage-revealed} when only failing tests reach it, and
+\emph{not executed} when no failing test reaches any ground-truth line. Labels are recomputed for each ground-truth variant.
+
+\textbf{SemLoc.} Fig.~\ref{fig:semloc} summarizes SemLoc~\cite{yang2026semloc}. One LLM call returns constraints in a
+closed intermediate language, each attached to a program point; instrumentation evaluates them while the tests run;
+each constraint gets an Ochiai score over the constraint-by-test violation matrix, and a line gets the maximum score of
+the constraints attributed to it. Counterfactual verification drops constraints violated on passing tests, asks the
+LLM for a one-line patch at each remaining constraint's line, and re-runs the tests. The released code also adds
+\ConstPriorWeight{} to the line the LLM names as its own fault-line guess---more than the maximum constraint score of
+one---which the paper does not describe.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=2.5mm and 3mm, font=\scriptsize,
+  box/.style={draw, rounded corners, align=center, minimum height=7mm, text width=13mm, fill=blue!4},
+  arr/.style={-{Stealth[length=1.5mm]}}]
+\node[box] (a) {program\\+ tests};
+\node[box, right=of a] (b) {LLM writes\\constraints};
+\node[box, right=of b] (c) {instrument,\\run tests};
+\node[box, right=of c] (d) {violation\\spectrum};
+\node[box, below=5mm of d] (e) {counter-\\factual};
+\node[box, left=of e] (f) {rank\\lines};
+\node[box, draw=orange!80!black, dashed, fill=orange!6, left=of f, text width=16mm] (g) {+\ConstPriorWeight{} on LLM's\\own guess};
+\draw[arr] (a)--(b); \draw[arr] (b)--(c); \draw[arr] (c)--(d); \draw[arr] (d)--(e); \draw[arr] (e)--(f);
+\draw[arr, dashed, orange!80!black] (b) -- (b |- g.north); \draw[arr, dashed, orange!80!black] (g)--(f);
+\end{tikzpicture}
+\caption{SemLoc's pipeline~\cite{yang2026semloc}; the dashed box is the undocumented guess bonus found in the code.}
+\label{fig:semloc}
+\end{figure}

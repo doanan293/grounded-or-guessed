@@ -1,2 +1,15 @@
-\section{Conclusion}\label{sec:conclusion}
-What holds, what does not, and what to release. \TODO{write}
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+SemLoc's results reproduce, but its top-1 accuracy is mostly the LLM's own guess, boosted by an undocumented bonus;
+execution evidence earns its keep at top three. Handing that evidence to the model directly---one prompt with per-line
+coverage---is more accurate, about five times cheaper and robust to renaming. Evaluation choices and benchmark labels
+move the numbers as much as methods do. We suggest that every evaluation of LLM-based fault localization (i) breaks ties
+by average rank with a fixed denominator, (ii) verifies its fault locations by execution, (iii) ablates every component,
+including undocumented ones, (iv) repeats runs and reports confidence intervals, (v) reports cost, and (vi) compares
+against a single prompt with the same evidence. Future work includes a multi-location oracle that rejects compensating
+fixes, real bugs from more projects, and function-level localization.
+
+\section*{Data Availability}
+Code, derived data, run outputs, LLM call logs, a replayable LLM response cache and an offline Docker image are at
+\url{https://github.com/doanan293/grounded-or-guessed}; \texttt{REPRODUCE.md} maps every table to its script.

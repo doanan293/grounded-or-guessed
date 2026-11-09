@@ -1,3 +1,17 @@
 \begin{abstract}
-\TODO{abstract: one claim per sentence, every number a macro from numbers.tex}
+LLM-based fault localizers increasingly claim to ground the model's reasoning in program execution. We test that
+claim on SemLoc, a recent localizer that turns LLM-inferred semantic constraints into a violation spectrum. Using the
+authors' released code and logs, we reproduce all published configurations exactly, then audit the evaluation, re-derive
+the benchmark's fault locations by execution, rerun every LLM configuration three times, and decompose accuracy into
+the part due to execution evidence and the part due to the LLM's own guess. Four findings stand out. First, top-1
+accuracy is mostly guessed: of SemLoc's \DecSemlocRepairedAllAccOneFull\% Acc@1, \DecSemlocRepairedAllAccOnePhiGuess{}
+points come from an undocumented bonus on the LLM's own fault-line guess and \DecSemlocRepairedAllAccOnePhiSpectrum{}
+from the constraint spectrum, while top-3 accuracy is mostly grounded; on real BugsInPy bugs every top-1 hit is the
+guess. Second, a single prompt that shows the LLM per-line test coverage beats the whole pipeline, reaching
+\RqTwoRepairedAllLlmCoverageAccThreeMean\% Acc@3 against \RqTwoRepairedAllSemlocAccThreeMean\% at about a fifth of the
+tokens, and it is unaffected by identifier renaming. Third, published numbers depend on scoring choices and on
+ground-truth errors: \GtBlankN{} of 250 fault lines are blank, and the released counterfactual step never changes a
+ranking. Fourth, line-level accuracy is ambiguous for faults spanning a guard and the statement it guards, which moves
+Acc@1 by over twenty points without changing the ranking of methods. We release code, data, LLM logs and a replayable
+cache.
 \end{abstract}

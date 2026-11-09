@@ -53,7 +53,9 @@
 \expandafter\def\csname VersionRank@full\endcsname{3}
 \expandafter\ifx\csname VersionRank@\Version\endcsname\relax
   \errmessage{Unknown \string\Version: \Version\space (use lan1, lan2 or full)}\fi
-\newcommand{\IfAtLeast}[2]{\ifnum\csname VersionRank@\Version\endcsname<\csname VersionRank@#1\endcsname\relax\else#2\fi}
+\newcommand{\IfAtLeastElse}[3]{\ifnum\csname VersionRank@\Version\endcsname<\csname VersionRank@#1\endcsname\relax#3\else#2\fi}
+\newcommand{\IfAtLeast}[2]{\IfAtLeastElse{#1}{#2}{}}   % only when version >= #1
+\newcommand{\IfBelow}[2]{\IfAtLeastElse{#1}{}{#2}}     % only when version <  #1
 \input{../generated/numbers-vi}
 
 \begin{document}

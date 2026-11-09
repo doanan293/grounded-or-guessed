@@ -1,2 +1,49 @@
-\section{Approach}\label{sec:approach}
-CovGate combines the coverage spectrum with SemLoc's semantic violation spectrum. \TODO{write}
+\section{Approach}
+\label{sec:approach}
+
+\subsection{Evaluation audit}
+From the authors' logs we recompute every published configuration under two scorings: the \emph{authors' scoring}
+(line-order tie breaking, any delta-debugging hit counted as rank one, programs that fail to run dropped from the
+denominator) and our \emph{fair scoring} (average-rank ties, fixed denominator). We then remove the undocumented guess
+bonus and check whether the counterfactual step changes any ranking.
+
+\subsection{SemFault-250-verified}
+\GtBlankN{} of the 250 ground-truth lines are blank and \GtNotExecutedN{} programs have no failing test reaching the
+fault line. We re-derive fault locations with a \emph{minimal-fix oracle}: a line is a fault location if replacing it
+(or filling a blank line, for omissions) with a small edit---at most two tokens or a third of the line---makes every
+test pass. The procedure for one program is:
+(1) for each ground-truth line, ask an LLM for one-line replacement (or insertion) candidates and keep those that are
+minimal and make all tests pass; (2) if a ground-truth line passes, it is \emph{confirmed} and the smallest passing
+edit is recorded; (3) if no failing test reaches the original line, search the target function within four lines of it
+and keep the line(s) with the smallest passing edit; (4) otherwise the line stays \emph{unverified}. The LLM only
+proposes; the tests decide. The oracle \emph{confirms} \GtConfirmedN{} locations,
+\emph{corrects} \GtCorrectedN{} (the original line is unreachable but a nearby one can be fixed), leaves \GtUnverifiedN{}
+unverified and \GtUnverifiableN{} unverifiable. Fixes written onto blank lines name no rankable statement and are
+dropped, leaving \GtRepairedN{} programs in the repaired ground truth. We report every result on both ground truths.
+
+\subsection{Grounded-vs-guessed decomposition}
+SemLoc's line score is the spectrum score plus the guess bonus. We define a two-player game \{guess, spectrum\} in which
+$v(S)$ is Acc@$k$ with only the signals in $S$; with both, the scores equal SemLoc as released. Shapley values split
+SemLoc's Acc@$k$ between the two. Because Acc@$k$ is a mean of per-program hits, the aggregate value is the mean of
+per-program Shapley values, which lets us bootstrap confidence intervals by program and by template cluster. An
+extended four-player game adds raw Ochiai and counterfactual re-ranking.
+
+\subsection{CovGate}
+CovGate post-processes SemLoc's line scores with coverage. Writing $\sigma(s)$ for SemLoc's spectrum score, $g$ for the
+LLM's guessed line and $F$ for the lines executed by some failing test, the CovGate score of line $s$ is
+\begin{equation}
+c(s) = \mathbb{1}[s\in F]^{\gamma}\,\bigl(\sigma(s) + \beta\,\mathbb{1}[s=g] + \lambda\,\mathrm{Ochiai}(s)\bigr),
+\label{eq:covgate}
+\end{equation}
+where $\gamma\in\{0, 1\}$ switches the gate and $\beta\in\{0,\ConstPriorWeight\}$ the bonus. It has four switchable parts: a \emph{coverage gate} that
+drops lines no failing test executes; adding $\lambda\cdot$Ochiai with $\lambda\in\{\ConstLambdaGrid\}$;
+\emph{counterfactual re-ranking}, which promotes lines of constraints the patches confirm (computed but unused in the
+released code); and a \emph{grounded bonus} kept only when execution supports the guess. Parameters are chosen on a
+50-program dev split only, by Acc@3 then Acc@1, pooled over five published configurations.
+
+\subsection{LLM + coverage baseline}
+To ask whether the multi-stage pipeline is needed, we build the simplest method with the same evidence: one LLM call
+whose prompt lists the program with every line annotated \texttt{[f=$e_f$/p=$e_p$]}, plus the failing tests' first error
+lines; the model returns its five most suspicious lines as JSON. The idea follows the industrial finding that mined
+rankings help LLMs~\cite{medeiros2026crash} and FlexFL's SBFL hints~\cite{xu2025flexfl}. The prompt was fixed before
+looking at test results.
