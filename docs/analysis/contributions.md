@@ -1,65 +1,54 @@
-# Đóng góp, triết lý khoa học và giới hạn (Phase 3.3)
+# Đóng góp, triết lý khoa học và giới hạn (cập nhật Phase 5)
 
 Mọi con số dưới đây là một macro trong `docs/report/generated/numbers-vi.tex` (sinh từ `data/` bởi `scripts/make_numbers.py`); tên macro ghi trong ngoặc vuông ngay sau số. Kiểm tra lại: `python scripts/check_claims.py docs/analysis/contributions.md`.
 
-**Câu đóng góp (spec §8, tiêu chí 1):** Nhóm tái hiện độc lập SemLoc và chỉ ra rằng, theo thiết kế, dòng hạng 1 của SemLoc luôn là dòng LLM tự đoán ("guessed") còn bằng chứng thực thi ("grounded") phát huy ở top-3; rằng kết quả phụ thuộc mạnh vào cách chấm điểm và vào ground truth của benchmark; nhóm sửa benchmark bằng bằng chứng thực thi, đề xuất CovGate, và cho thấy, với các lỗi mà một test fail chạy tới, một prompt duy nhất kèm bằng chứng thực thi chính xác hơn pipeline ở Acc@3, rẻ hơn và bền hơn khi đổi tên biến.
+**Câu đóng góp (spec §8, tiêu chí 1):** Nhóm tái hiện độc lập SemLoc và chỉ ra rằng hạng 1 của nó là dòng LLM tự đoán theo một lựa chọn thiết kế không được mô tả; gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi (nhóm công bố hai bộ nhãn mới); một prompt duy nhất có kiểm thử thất bại — cách lập trình viên vẫn làm — thắng quy trình nhiều bước và rẻ hơn khoảng bảy lần; và mọi cách thêm phức tạp mà nhóm thử, cùng phân tích tĩnh, không thêm được gì, vì kiểm thử đủ để gợi ý vị trí lỗi nhưng quá yếu để chứng minh nó.
 
 ## 1. Đóng góp
 
-### C1. "Grounded or guessed": đo phần đóng góp của bằng chứng thực thi
-- **Khẳng định.** Theo thiết kế, dòng hạng 1 của SemLoc luôn là dòng LLM tự đoán, nên Acc@1 của SemLoc là Acc@1 của dòng đoán; riêng phổ vi phạm ràng buộc đạt 43,2 [`\RqTwoRepairedAllSemlocNoPriorAccOneMean`]. Phân rã Shapley là thông tin bổ sung: trên lượt chạy của nhóm (ground truth đã sửa), Acc@1 52,3 [`\DecSemlocRepairedAllAccOneFull`] = dòng đoán 30,7 [`\DecSemlocRepairedAllAccOnePhiGuess`] + phổ ngữ nghĩa 21,6 [`\DecSemlocRepairedAllAccOnePhiSpectrum`] (giá trị Shapley, CI 95% bootstrap theo cụm template). Ở top-3 thì ngược lại: phổ 46,9 [`\DecSemlocRepairedAllAccThreePhiSpectrum`] so với dòng đoán 28,5 [`\DecSemlocRepairedAllAccThreePhiGuess`]. Trên log công bố của tác giả (Claude): 42,8 [`\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOneFull`] = 27,8 [`\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiGuess`] + 15,0 [`\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiSpectrum`].
-- **Trên lỗi thật (BugsInPy, 31 lỗi):** Acc@1 của SemLoc 46,2 [`\BipAllSemlocPriorAccOneMean`] bằng đúng Acc@1 của riêng dòng đoán 46,2 [`\BipAllLlmGuessAccOneMean`]; riêng phổ ngữ nghĩa chỉ 7,5 [`\BipAllSemlocSpectrumAccOneMean`].
-- **Bằng chứng.** `data/rq_decomposition.csv`, `data/rq_decomposition_published.csv`, `data/rq3_bugsinpy.csv`.
-- **Điều sẽ bác bỏ nó.** Một cấu hình SemLoc mà khi bỏ điểm thưởng cho dòng đoán, Acc@1 không giảm. Trên lượt chạy của nhóm, bỏ điểm thưởng làm Acc@1 giảm −9,1 [`\RqTwoRepairedAllSemlocNoPriorDAccOne`] điểm, CI [−16,7 [`\RqTwoRepairedAllSemlocNoPriorDAccOneLo`]; −1,9 [`\RqTwoRepairedAllSemlocNoPriorDAccOneHi`]].
-- **Giới hạn.** Phân rã là trò chơi hai người chơi có tổng đúng bằng SemLoc như phát hành; giá trị Shapley phụ thuộc cách định nghĩa "tắt" một thành phần. Xem C5 về sự mơ hồ dòng kề cạnh.
+### C1. Hạng 1 của SemLoc là dòng LLM đoán
+- **Khẳng định.** Điểm thưởng cho dòng LLM đoán lớn hơn mọi điểm ràng buộc, nên dòng đầu của SemLoc luôn là dòng đoán. Acc@1 của SemLoc 52,3 [`\RqTwoRepairedAllSemlocAccOneMean`] (bộ đã sửa); riêng phổ vi phạm 43,2 [`\RqTwoRepairedAllSemlocNoPriorAccOneMean`]. Trên lỗi thật, Acc@1 của SemLoc bằng đúng của riêng dòng đoán: 46,2 [`\BipAllLlmGuessAccOneMean`]. Bước vá thử chiếm 42 [`\CostCfSharePct`]% lượt gọi LLM nhưng không đổi thứ hạng nào.
+- **Bác bỏ nếu** bỏ điểm thưởng mà Acc@1 không đi xuống. Ở đây: −9,1 [`\RqTwoRepairedAllSemlocNoPriorDAccOne`] điểm, CI [−16,7 [`\RqTwoRepairedAllSemlocNoPriorDAccOneLo`]; −1,9 [`\RqTwoRepairedAllSemlocNoPriorDAccOneHi`]] (bộ đã sửa); −26,2 [`\RqTwoReviewedAllSemlocNoPriorDAccOne`] (bộ đã rà soát).
+- **Kèm theo (audit):** gỡ lỗi chia đôi 38,0 [`\RqOneDdAuthorAllAccOne`] theo mã chấm của tác giả, 0,0 [`\RqOneDdFairAllAccOne`] khi chấm công bằng; SBFL Acc@5 30,4 [`\RqOneSbflOchiaiAuthorAllAccFive`] so với 48,0 [`\RqOneSbflOchiaiFairAllAccFive`]; hai lỗi của bộ chạy BugsInPy.
+- **Bằng chứng.** `data/rq_decomposition.csv`, `data/rq1_audit.csv`, `data/rq1_cf_identity.json`, `data/rq3_bugsinpy.csv`.
 
-### C2. Với lỗi được test fail chạy tới, một prompt có bằng chứng thực thi vượt pipeline
-- **Khẳng định.** Baseline của nhóm — một lượt gọi LLM với mã nguồn đánh dấu số test fail/pass chạy qua mỗi dòng — có Acc@3 92,0 [`\RqTwoRepairedAllLlmCoverageAccThreeMean`] so với 75,4 [`\RqTwoRepairedAllSemlocAccThreeMean`] của SemLoc: Δ +16,6 [`\RqTwoRepairedAllLlmCoverageDAccThree`] điểm, CI [+10,5 [`\RqTwoRepairedAllLlmCoverageDAccThreeLo`]; +22,8 [`\RqTwoRepairedAllLlmCoverageDAccThreeHi`]]; Acc@1 cũng hơn: Δ +4,8 [`\RqTwoRepairedAllLlmCoverageDAccOne`], CI [+1,5 [`\RqTwoRepairedAllLlmCoverageDAccOneLo`]; +8,7 [`\RqTwoRepairedAllLlmCoverageDAccOneHi`]].
-- **Không chỉ nhờ lỗi lộ qua độ phủ:** trên lỗi ngữ nghĩa thuần, Acc@3 91,8 [`\RqTwoRepairedSemanticLlmCoverageAccThreeMean`] so với 77,6 [`\RqTwoRepairedSemanticSemlocAccThreeMean`].
-- **Rẻ hơn:** 2,6 [`\CostLlmCoverageTokensK`] nghìn token mỗi chương trình so với 14,0 [`\CostSemlocTokensK`] nghìn; trên cùng 44 chương trình, ở cả 5 model (2 trong số đó là Gemini), LLM + độ phủ có Acc@3 cao hơn và tốn ít token hơn SemLoc; Acc@1 thì không phải lúc nào cũng hơn (GPT-6 luna thấp hơn), và so sánh theo từng model chưa có CI (`data/pareto.csv`, `pareto.pdf`).
-- **Bền khi đổi tên biến:** Acc@3 đổi −0,9 [`\RenRepairedLlmCoverageDAccThree`] điểm, CI [−3,5 [`\RenRepairedLlmCoverageDAccThreeLo`]; +1,3 [`\RenRepairedLlmCoverageDAccThreeHi`]], trong khi SemLoc giảm −8,4 [`\RenRepairedSemlocDAccThree`] và riêng phổ ngữ nghĩa giảm −15,5 [`\RenRepairedSemlocNoPriorDAccThree`].
-- **Trên lỗi thật:** cùng hướng — Acc@3 69,9 [`\BipAllLlmCoverageAccThreeMean`] so với 53,8 [`\BipAllSemlocPriorAccThreeMean`], Δ +16,1 [`\BipAllLlmCoverageDAccThree`], nhưng CI [−3,2 [`\BipAllLlmCoverageDAccThreeLo`]; +34,4 [`\BipAllLlmCoverageDAccThreeHi`]] còn chạm 0 với 31 lỗi.
-- **Phạm vi (khả năng chạy tới).** Trên ground truth gốc, tập con chương trình có dòng lỗi được chạy tới: Δ +16,2 [`\RqTwoOriginalExecutableLlmCoverageDAccThree`], CI [+9,4 [`\RqTwoOriginalExecutableLlmCoverageDAccThreeLo`]; +22,8 [`\RqTwoOriginalExecutableLlmCoverageDAccThreeHi`]]; trên toàn bộ 200 nhãn gốc chỉ còn Δ +7,8 [`\RqTwoOriginalAllLlmCoverageDAccThree`], CI [+0,2 [`\RqTwoOriginalAllLlmCoverageDAccThreeLo`]; +15,2 [`\RqTwoOriginalAllLlmCoverageDAccThreeHi`]], và SemLoc tốt hơn ở Acc@5: 75,0 [`\RqTwoOriginalAllSemlocAccFiveMean`] so với 70,0 [`\RqTwoOriginalAllLlmCoverageAccFiveMean`].
-- **Nhiễu so sánh.** Prompt khác chế độ trực tiếp của SemLoc ở nhiều điểm cùng lúc (chú thích độ phủ, tên test fail và dòng lỗi đầu tiên, giả định "đúng một dòng lỗi"), nên chênh lệch không quy riêng cho độ phủ.
-- **Bằng chứng.** `data/rq2_ours.csv`, `data/rq3_renamed.csv`, `data/rq3_bugsinpy.csv`, `data/llm_cost.csv`.
-- **Giới hạn.** Prompt baseline do nhóm thiết kế, không tinh chỉnh trên test; chỉ đo với một mức suy luận mặc định của mỗi nhà cung cấp.
+### C2. Gần một nửa nhãn của SemFault-250 không trỏ đúng dòng lỗi
+- **Khẳng định.** 112 [`\LabaudAllMoved`] trên 250 [`\LabaudAllN`] nhãn gốc bị dời khi rà soát: 56 [`\LabaudAllBlank`] trên dòng trống, 7 [`\LabaudAllNonCode`] trên log/`def`/chú thích, 32 [`\LabaudAllOffByOne`] lệch một dòng, 17 [`\LabaudAllFarther`] xa hơn; 40 [`\LabaudAllExtended`] được giữ và thêm một dòng (lỗi hai dòng).
+- **Hai bộ nhãn mới.** *Đã sửa* (kiểm thử quyết định): 82 [`\GtConfirmedN`] xác nhận, 46 [`\GtCorrectedN`] dời vị trí, 226 [`\GtRepairedN`] chương trình. *Đã rà soát*: LLM rà trước cả 250 nhãn, 6 [`\ReviewReviewersN`] thành viên duyệt 111 [`\ReviewHumanN`] nhãn (có xem gợi ý LLM, đồng ý ở 111 [`\ReviewAgreeN`] ca), trưởng nhóm sửa 5 [`\ReviewOverrideN`] ca có bằng chứng chạy kiểm thử; vòng rà soát bác 8 [`\ReviewCorrectedOverturnedN`] lần bộ phán định dời nhãn.
+- **Nhãn lệch có lợi cho SemLoc.** Trên nhãn gốc SemLoc hơn LLM hỏi thẳng ở Acc@3 (60,3 [`\RqTwoOriginalAllSemlocAccThreeMean`] so với 43,0 [`\RqTwoOriginalAllLlmDirectAccThreeMean`]); trên nhãn đã rà soát hai bên ngang nhau (90,0 [`\RqTwoReviewedAllSemlocAccThreeMean`] so với 90,8 [`\RqTwoReviewedAllLlmDirectAccThreeMean`]).
+- **Bằng chứng.** `data/label_audit.csv`, `data/semfault_verified_gt.json`, `data/semfault_reviewed_gt.json`, `docs/analysis/gt-review/`.
+- **Giới hạn.** Bộ đã rà soát không độc lập với LLM (người duyệt xem gợi ý); kết quả chính báo trên bộ gốc và bộ đã sửa.
 
-### C3. Kết quả công bố phụ thuộc vào cách chấm điểm và thành phần không được mô tả
-- Tái hiện khớp 13/13 cấu hình từ log công bố, nhưng: (a) điểm thưởng +1,2 cho dòng LLM đoán không có trong bài báo, bỏ đi thì Acc@1 (Claude) từ 42,8 [`\RqOneSemlocClaudeTZeroEightAuthorAllAccOne`] còn 30,0 [`\RqOneSemlocClaudeTZeroEightNoPriorFairAllAccOne`]; (b) delta debugging đạt 38,0 [`\RqOneDdAuthorAllAccOne`] trong bộ chấm của tác giả nhưng 0,0 [`\RqOneDdFairAllAccOne`] khi chấm công bằng; (c) SBFL Acc@5 bị đánh giá thấp: 30,4 [`\RqOneSbflOchiaiAuthorAllAccFive`] so với 48,0 [`\RqOneSbflOchiaiFairAllAccFive`]; (d) bước counterfactual không đổi thứ hạng nào (0/250) dù chiếm 42 [`\CostCfSharePct`]% lượt gọi LLM của SemLoc.
-- Artifact còn có lỗi tái hiện: runner BugsInPy báo hạng của chính dòng LLM đoán thay vì dòng đã sửa, và để lại bytecode cũ sau bước vá thử (cùng kích thước, cùng giây) làm lỗi "biến mất" ở lượt chạy sau.
-- **Bằng chứng.** `data/rq1_audit.csv`, `data/rq1_cf_identity.json`, `src/flx/bip_run.py`, `src/flx/bip_score.py`.
+### C3. Một prompt có kiểm thử thất bại thắng quy trình nhiều bước
+- **Khẳng định.** LLM + kiểm thử thất bại hơn SemLoc ở Acc@1 trên cả ba bộ nhãn: +7,7 [`\RqTwoOriginalAllLlmTestsDAccOne`] (gốc), +10,2 [`\RqTwoRepairedAllLlmTestsDAccOne`] CI [+5,3 [`\RqTwoRepairedAllLlmTestsDAccOneLo`]; +16,0 [`\RqTwoRepairedAllLlmTestsDAccOneHi`]] (đã sửa), +12,5 [`\RqTwoReviewedAllLlmTestsDAccOne`] (đã rà soát); Acc@3 +14,5 [`\RqTwoRepairedAllLlmTestsDAccThree`] (đã sửa). Chi phí 2,0 [`\CostLlmTestsTokensK`] nghìn token mỗi chương trình so với 14,0 [`\CostSemlocTokensK`] nghìn.
+- **Trên lỗi thật:** Acc@3 71,0 [`\BipAllLlmTestsAccThreeMean`] so với 53,8 [`\BipAllSemlocPriorAccThreeMean`], CI [−3,2 [`\BipAllLlmTestsDAccThreeLo`]; +36,6 [`\BipAllLlmTestsDAccThreeHi`]] còn chứa 0.
+- **Bằng chứng.** `data/rq2_ours.csv`, `data/rq3_bugsinpy.csv`, `data/llm_cost.csv`.
+- **Giới hạn.** Một mô hình chính; một hàm mỗi lần; tên kiểm thử của bộ dữ liệu mô tả rất rõ ý định.
 
-### C4. SemFault-250 đã sửa (SemFault-250-repaired): ground truth kiểm chứng bằng thực thi
-- 56 [`\GtBlankN`] dòng ground truth là dòng trống và 65 [`\GtNotExecutedN`] chương trình không có test fail nào chạy tới dòng lỗi. Oracle "một bản sửa tối thiểu một dòng làm mọi test pass" (LLM chỉ đề xuất, test phân xử) cho: 82 [`\GtConfirmedN`] xác nhận, 46 [`\GtCorrectedN`] sửa vị trí, 111 [`\GtUnverifiedN`] chưa kiểm chứng, 11 [`\GtUnverifiableN`] không kiểm chứng được.
-- Sửa ground truth làm Acc@1 của SemLoc tăng từ 36,8 [`\RqTwoOriginalAllSemlocAccOneMean`] lên 52,3 [`\RqTwoRepairedAllSemlocAccOneMean`]. So sánh giữa SemLoc, các baseline LLM và CovGate ở Acc@1 và Acc@3 giữ nguyên chiều trên cả hai ground truth (ở Acc@5, SemLoc hơn LLM + độ phủ trên ground truth gốc, 75,0 [`\RqTwoOriginalAllSemlocAccFiveMean`] so với 70,0 [`\RqTwoOriginalAllLlmCoverageAccFiveMean`], nhưng kém trên bản đã sửa, 82,7 [`\RqTwoRepairedAllSemlocAccFiveMean`] so với 93,7 [`\RqTwoRepairedAllLlmCoverageAccFiveMean`]); riêng "chỉ cổng độ phủ" đổi chiều (Acc@3 thấp hơn SemLoc trên ground truth gốc, cao hơn trên bản đã sửa) vì cổng loại mọi dòng mà test fail không chạy tới.
-- **Giới hạn quan trọng (xem §3).** Oracle chấp nhận cả bản sửa bù trừ, kể cả "sửa" bằng cách chèn mã vào một dòng trống (ví dụ chèn `return merged` trước khối lỗi). Các vị trí như vậy không phải câu lệnh nào để xếp hạng nên bị loại khỏi ground truth đã sửa: 13 [`\GtBlankFixDroppedN`] chương trình, còn lại 226 [`\GtRepairedN`].
+### C4. Thêm phức tạp không thêm được gì — và vì sao
+- **Kiểm thử thất bại là tín hiệu chính:** Acc@3 +27,2 [`\AblRepairedAllTestsEffectDAccThree`] so với LLM hỏi thẳng. **Độ phủ không giúp:** Acc@3 +2,1 [`\AblRepairedAllCoverageEffectDAccThree`], Acc@1 −5,4 [`\AblRepairedAllCoverageEffectDAccOne`] CI [−9,4 [`\AblRepairedAllCoverageEffectDAccOneLo`]; −2,1 [`\AblRepairedAllCoverageEffectDAccOneHi`]].
+- **CovGate** (phá hòa Ochiai): Acc@3 +3,9 [`\RqTwoRepairedAllCovgateDAccThree`], Acc@1 không đổi.
+- **Đề xuất rồi kiểm chứng** (dev): cấu hình được chọn 90,7 [`\PavDevChosenReviewedAccOne`] so với bước đề xuất 90,7 [`\PavDevStageReviewedAccOne`]; cấu hình mạnh tay 79,3 [`\PavDevWorstReviewedAccOne`]. **Biểu quyết** (dev): 92,0 [`\VoteReviewedVoteAccOne`] so với 90,7 [`\VoteReviewedSingleAccOne`].
+- **Phân tích tĩnh:** ruff luật mặc định trúng 1 [`\StatReviewedRuffDefaultOnFaultLine`] chương trình; ruff mọi luật trúng 25 [`\StatReviewedRuffAllOnFaultLine`], thấp hơn mức ngẫu nhiên 56,3 [`\StatReviewedRuffAllOnFaultLineByChance`]; pyrefly 0 [`\StatReviewedPyreflyOnFaultLine`].
+- **Cơ chế:** bản sửa nhỏ làm mọi kiểm thử đạt ở 23,3 [`\PavmechReviewedOtherLineFixable`]% lần thử tại dòng không có lỗi, chỉ 42,5 [`\PavmechReviewedFaultLineFixable`]% tại dòng lỗi thật.
+- **Bằng chứng.** `data/ablation_coverage.csv`, `data/pav_dev_grid.csv`, `data/pav_mechanism.csv`, `data/vote_dev.csv`, `data/static_tools.csv`.
+- **Giới hạn.** Đề xuất rồi kiểm chứng và biểu quyết chỉ đánh giá trên dev.
 
-### C5. Định nghĩa Acc@1 cấp dòng không ổn định trên lỗi trải hai dòng
-- Trong 85 [`\FailWrongGuessN`] chương trình mà dòng đoán sai, 44 [`\FailRelationHeaderBodyN`] là cặp "đầu khối điều kiện – câu lệnh được bảo vệ". Chấp nhận cả hai, Acc@1 của SemLoc từ 52,3 [`\TolSemlocAccOneExact`] lên 73,9 [`\TolSemlocAccOneGuardStrict`] (chặt: chỉ dòng đầu khối và dòng đầu tiên của thân) đến 76,2 [`\TolSemlocAccOneGuardOrBody`] (cận trên: cả câu lệnh đầu tiên của thân, tối đa 3 dòng); của LLM + độ phủ từ 57,2 [`\TolLlmCoverageAccOneExact`] lên 79,3 [`\TolLlmCoverageAccOneGuardStrict`]–81,6 [`\TolLlmCoverageAccOneGuardOrBody`]. Thứ tự giữa các phương pháp giữ nguyên.
-- **Bằng chứng.** `data/failure_tolerance.csv`, `docs/analysis/failure-analysis.md`.
-
-### C6. CovGate và checklist đánh giá
-- CovGate (λ·Ochiai chọn trên dev) tăng Acc@3 +3,9 [`\RqTwoRepairedAllCovgateDAccThree`] điểm, CI [+1,6 [`\RqTwoRepairedAllCovgateDAccThreeLo`]; +6,8 [`\RqTwoRepairedAllCovgateDAccThreeHi`]], Acc@1 không đổi; trên ground truth đã sửa, riêng cổng độ phủ đã đạt Acc@3 79,1 [`\RqTwoRepairedAllGateOnlyAccThreeMean`] (trên ground truth gốc thì không, vì cổng không thể xếp hạng lỗi ở dòng không được thực thi). "Chỉ thưởng khi có căn cứ" làm Acc@1 giảm −4,1 [`\RqTwoRepairedAllGroundedPriorOnlyDAccOne`]; CF xếp lại làm Acc@1 giảm −2,4 [`\RqTwoRepairedAllCfRerankDAccOne`]. Với λ chọn trên dev, CovGate thực chất là bộ phá hòa bằng Ochiai. Gắn thêm bằng chứng vào pipeline chỉ giúp ít — đối chiếu với C2.
-- Checklist bảy mục (hòa điểm, mẫu số cố định, ground truth kiểm chứng, ablation thành phần ẩn, lặp + kiểm định, chi phí, so với một prompt có cùng bằng chứng) áp cho mọi phương pháp: `docs/literature/evaluation-checklist.md`.
-
-### C7. Gói tái hiện
-- Docker offline dựng lại mọi CSV dẫn xuất trong `data/` và mọi bảng `.tex` giống từng byte từ gói lượt chạy; mọi lượt gọi LLM phát lại được từ cache (`FLX_LLM_OFFLINE=1`); mọi con số trong bài là macro sinh tự động. `REPRODUCE.md`.
+### C5. Bảng kiểm tra bảy mục và gói tái hiện
+- Bảng kiểm (phá hòa, mẫu số cố định, nhãn kiểm chứng, loại bỏ thành phần ẩn, lặp + kiểm định, chi phí, so với một prompt có kiểm thử thất bại): `docs/literature/evaluation-checklist.md`.
+- Gói tái hiện: Docker offline, nhật ký và bộ đệm lượt gọi LLM (`FLX_LLM_OFFLINE=1`), tệp duyệt nhãn của từng thành viên, mọi con số là macro. `REPRODUCE.md`.
 
 ## 2. Triết lý khoa học
 
-1. **Chứng cứ thực thi là trọng tài, LLM chỉ đề xuất.** Ở mọi chỗ cần phán xử — dòng nào là lỗi, bản sửa nào đúng — nhóm để test quyết định; LLM chỉ sinh ứng viên. Đây cũng là câu hỏi của bài: SemLoc tuyên bố "neo lập luận vào thực thi", nhóm đo xem phần neo đó thực sự đóng góp bao nhiêu.
-2. **Tái hiện không phải là chép lại con số.** Khớp 13/13 số công bố là điều kiện cần; điều kiện đủ là hiểu *vì sao* ra số đó — cách chấm, thành phần ẩn, lỗi của artifact. Một kết quả chỉ đứng vững khi nó còn đúng sau khi đổi cách chấm hợp lý.
-3. **Đo đóng góp, không chỉ đo tổng.** Một con số Acc@1 không nói nó đến từ đâu. Phân rã Shapley và ablation từng thành phần biến câu hỏi "phương pháp có tốt không" thành "phần nào làm nó tốt".
-4. **So với baseline đơn giản nhất có cùng thông tin.** Một pipeline nhiều bước chỉ đáng giá khi thắng một prompt duy nhất có bằng chứng thực thi; ở đây, trên các lỗi được test fail chạy tới, nó thua.
-5. **Mỗi khẳng định kèm điều kiện bác bỏ và khoảng tin cậy.** Lặp 3 lần, bootstrap theo chương trình và theo cụm template (không coi lần lặp là mẫu độc lập), báo cáo cả khi CI chạm 0 (BugsInPy).
-6. **Benchmark cũng là giả thuyết.** Ground truth do người gán có thể sai hoặc mơ hồ; kiểm chứng nó bằng thực thi, báo cáo trên cả bản gốc và bản đã sửa, và nêu rõ giới hạn của chính oracle sửa lỗi.
+1. **Kiểm thử là trọng tài — khi đủ chặt.** LLM đề xuất, kiểm thử quyết định; khi kiểm thử không đủ (lỗi hai dòng, lỗi thiếu mã, bản sửa bù trừ), nêu rõ phần nào do người duyệt quyết định.
+2. **Đo đóng góp.** Phân rã và loại bỏ từng thành phần thay cho một con số tổng.
+3. **Cái đơn giản là mốc bắt buộc.** Một quy trình nhiều bước phải thắng cách lập trình viên vẫn làm.
+4. **Chịu bác bỏ.** Mỗi khẳng định có điều kiện bác bỏ và khoảng tin cậy; báo cáo cả kết quả âm tính.
+5. **Bộ dữ liệu cũng là giả thuyết.** Nhãn phải được kiểm tra trước khi tin con số.
 
-## 3. Threats to Validity
+## 3. Giới hạn chính
 
-- **Oracle sửa tối thiểu chấp nhận bản sửa bù trừ.** Ví dụ `gradient_clip_budget`: "sửa" ở dòng 62 bằng `norm = ... - 1` trong khi lỗi thật ở dòng 66; các khối lỗi nhiều dòng được "xác nhận" bằng cách tắt điều kiện. Các bản sửa ở dòng trống đã bị loại (C4), nhưng bản sửa bù trừ ở dòng có mã thì chưa phát hiện tự động được; SemFault-250 đã sửa vì vậy vẫn còn nhiễu; mọi kết quả được báo cáo trên cả ground truth gốc.
-- **Ground truth kiểm chứng có thể thiên về phương pháp dựa trên độ phủ** (oracle cần test fail chạy tới dòng sửa). So sánh SemLoc với các baseline LLM và CovGate ở Acc@1 và Acc@3 cùng chiều trên ground truth gốc; riêng cổng độ phủ thì không, và ở Acc@5 SemLoc hơn LLM + độ phủ trên ground truth gốc (C4).
-- **Mơ hồ dòng kề cạnh** (C5): Acc@1 chặt phụ thuộc quy ước gán nhãn; nhóm báo cáo cả Acc@1 chấp nhận đầu khối/thân khối.
-- **Lỗi thật ít và một dự án** (31 lỗi youtube-dl); hàm đích chọn từ diff của lập trình viên (lỗi của định vị cấp hàm không được đo). youtube-dl_33 còn 2 test fail do môi trường trong runner gốc của SemLoc.
-- **Model và mức suy luận.** Mô hình chính (Gemini 3.8 Flash) mới hơn mô hình trong bài gốc; mỗi nhà cung cấp chạy ở mức suy luận mặc định nên RQ3c so "ở mặc định", không cùng mức suy luận; Claude qua proxy sinh ràng buộc yếu hơn log công bố (RQ1b).
-- **Nhiễm dữ liệu.** Biến thể đổi tên chỉ đổi định danh và xóa chú thích; cấu trúc mã giữ nguyên nên không loại trừ hoàn toàn việc model đã thấy các template.
-- **Prompt baseline do nhóm viết**, thiết kế trước khi xem kết quả test, không tinh chỉnh; một prompt khác có thể cho kết quả khác.
+- **Vòng tròn của bộ nhãn rà soát:** nhãn do LLM gợi ý, người duyệt xem gợi ý; kết quả chính báo trên bộ gốc và bộ đã sửa.
+- **Tên kiểm thử "nói hộ" lỗi** và **một hàm mỗi lần**: lợi thế của prompt đơn giản có thể nhỏ hơn trên dự án thật; định vị cấp dự án chưa được đánh giá.
+- **Lỗi thật ít:** 31 lỗi một dự án, khoảng tin cậy còn chứa 0.
+- **Một mô hình chính**; so sánh nhiều họ mô hình chỉ trên tập con, chưa có khoảng tin cậy.

@@ -59,3 +59,19 @@ phản biện đối kháng được liệt kê ở cuối cùng trạng thái.
 | 14 | Nhỏ | Vị trí bảng/hình, độ dễ đọc | Đã sửa |
 | 15 | Nhỏ | Bảng kiểm 6 hay 7 mục | Đã thống nhất 7 mục |
 | 16 | Nhỏ | Thuật ngữ tiếng Việt | Đã sửa |
+
+## Phase 5 (09/11): tự phản biện sau khi đổi câu chuyện
+
+1. **Đóng góp.** Đóng góp chính chuyển từ "một cải tiến" (CovGate) sang "hiểu biết có bằng chứng": hạng 1 là dòng đoán,
+   nhãn lệch gần một nửa, prompt đơn giản có kiểm thử thất bại thắng, và các cách phức tạp hơn không thêm gì kèm cơ chế.
+   Rủi ro: giám khảo hỏi "cái mới là gì" — trả lời bằng ablation (tách kiểm thử thất bại và độ phủ), bộ nhãn rà soát, và
+   cơ chế bản sửa "lách" kiểm thử, ba thứ chưa có trong tài liệu về SemLoc.
+2. **Độ rõ.** Câu chuyện mở đầu từ thực tế (chạy kiểm thử, đưa lỗi cho LLM), có tài liệu chống lưng
+   (`docs/literature/practice-evidence.md`); kinh nghiệm riêng không dùng làm bằng chứng.
+3. **Sức mạnh thực nghiệm.** Ba bộ nhãn song song; kết luận chính giữ trên cả ba. Yếu: đề xuất rồi kiểm chứng và biểu
+   quyết chỉ trên dev; lỗi thật 31 lỗi, CI chứa 0; một mô hình chính.
+4. **Độ đầy đủ.** Đã có ablation độ phủ, phân tích tĩnh có mức ngẫu nhiên. Chưa có: thí nghiệm giấu tên kiểm thử, định vị
+   cấp dự án — ghi là hướng phát triển.
+5. **Tính hợp lý của thiết kế.** Bộ nhãn rà soát có nguy cơ vòng tròn và người duyệt xem gợi ý (đồng ý 111/111) — nêu thẳng
+   trong phần phương pháp và các mối đe dọa; kết quả chính dùng bộ gốc và bộ đã sửa. Quy tắc chọn tham số của đề xuất rồi
+   kiểm chứng được cố định trong mã trước khi chạy và không dùng bộ đã sửa.

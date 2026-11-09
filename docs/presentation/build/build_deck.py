@@ -133,18 +133,19 @@ def results_pages() -> None:
     rq2 = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "repaired" and r.get("subset", "all") == "all"}
     cost = _csv("llm_cost.csv")
     tok = lambda prefix: f"{round(sum(float(r['tokens_per_program']) for r in cost if r['run_id'].startswith(prefix)) / max(1, sum(r['run_id'].startswith(prefix) for r in cost)) / 1000, 1)}k".replace(".", ",")
-    names = [("sbfl_ochiai", "SBFL Ochiai", "0"), ("llm_direct", "LLM hỏi thẳng (1 prompt)", tok("direct_test_gemini_r")),
+    rev = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "reviewed" and r.get("subset", "all") == "all"}
+    names = [("sbfl_ochiai", "SBFL Ochiai", "0"), ("llm_direct", "LLM hỏi thẳng", tok("direct_test_gemini_r")),
              ("semloc", "SemLoc (bản gốc)", tok("semloc_test_gemini_r")),
              ("semloc_no_prior", "SemLoc bỏ thưởng ẩn", tok("semloc_test_gemini_r")),
-             ("covgate", "CovGate (nhóm)", tok("semloc_test_gemini_r")),
-             ("llm_coverage", "LLM + độ phủ (1 prompt, nhóm)", tok("direct_cov_test_gemini_r"))]
-    n = rq2["semloc"]["n"]
+             ("llm_tests", "1 prompt + test fail (nhóm)", tok("direct_tests_test_gemini_r")),
+             ("llm_coverage", "  … + độ phủ từng dòng", tok("direct_cov_test_gemini_r"))]
     A("ket_qua_thu.svg", table("bang-rq2", 84, 128, [330, 115, 115, 115, 133], [
-        ["Phương pháp", "Acc@1", "Acc@3", "Acc@5", "Token/CT"],
-        *[[label, _p(rq2[m]["acc1_mean"]), _p(rq2[m]["acc3_mean"]), _p(rq2[m]["acc5_mean"]), t] for m, label, t in names],
-    ], highlight_col=None, head_h=40, row_h=40, fs=16,
-        note=f"Gemini 3.8 Flash, {n} chương trình test, ground truth đã sửa bằng thực thi, trung bình 3 lần chạy.\n"
-             f"LLM + độ phủ vs SemLoc: Acc@3 p<0,001 (McNemar). Bỏ thưởng ẩn: −{_p(float(rq2['semloc']['acc1_mean']) - float(rq2['semloc_no_prior']['acc1_mean']))} điểm Acc@1."))
+        ["Phương pháp", "Acc@1\nđã sửa", "Acc@3\nđã sửa", "Acc@1\nrà soát", "Token/CT"],
+        *[[label, _p(rq2[m]["acc1_mean"]), _p(rq2[m]["acc3_mean"]), _p(rev[m]["acc1_mean"]), t] for m, label, t in names],
+    ], highlight_col=None, head_h=48, row_h=38, fs=16,
+        note=f"Gemini 3.8 Flash, tập test, 3 lần chạy. 1 prompt + test fail vs SemLoc, Acc@1 (đã sửa): "
+             f"{_m('RqTwoRepairedAllLlmTestsDAccOne')} [{_m('RqTwoRepairedAllLlmTestsDAccOneLo')}; {_m('RqTwoRepairedAllLlmTestsDAccOneHi')}].\n"
+             f"Thêm độ phủ: Acc@1 {_m('AblRepairedAllCoverageEffectDAccOne')} điểm. Kiểm chứng bằng bản sửa, biểu quyết, ruff, pyrefly: không giúp."))
     bip = {(r["subset"], r["method"]): r for r in _csv("rq3_bugsinpy.csv")}
     ren = {r["method"]: r for r in _csv("rq3_renamed.csv") if r["gt"] == "repaired"}
     fam = [r for r in _csv("rq3_families.csv") if r["gt"] == "repaired"]
@@ -173,8 +174,8 @@ def results_pages() -> None:
            f'<g id="hinh-pareto" data-pptx-bounds="84 120 480 371"><image x="84" y="120" width="480" height="371" '
            f'href="../images/pareto_rq.png" preserveAspectRatio="xMidYMid meet"/></g>'
            + _para("ket-luan-pareto", 590, 150, 300, 300, [
-               (20, NAVY, "bold", ["1 prompt có bằng chứng", "thực thi thắng ở top-3"]),
-               (16, INK, "normal", [f"Cùng {_csv('pareto.csv')[0]['n']} chương trình, ở cả 5 họ", "model: LLM + độ phủ có Acc@3",
+               (20, NAVY, "bold", ["1 prompt rẻ hơn ở", "mọi mô hình"]),
+               (16, INK, "normal", [f"Cùng {_csv('pareto.csv')[0]['n']} chương trình, ở cả 5 họ", "model: 1 prompt có Acc@3",
                                     "cao hơn SemLoc và tốn ít token hơn", "(với lỗi được test fail chạy tới)."]),
                (16, INK, "normal", [f"Bước vá thử (CF) chiếm {cf_share}% lượt", "gọi LLM nhưng không cải thiện có",
                                     "ý nghĩa thống kê."])]))
@@ -256,9 +257,9 @@ def build() -> None:
     A("slide_22.svg", table("bang-so-sanh", 84, 135, [176, 158, 158, 158, 158], [
         ["Tiêu chí", "SemLoc", "EffiHolmes", "Crash+LLM", "Nhóm mình"],
         ["Loại lỗi", "ngữ nghĩa", "hiệu năng", "crash (Java)", "ngữ nghĩa"],
-        ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "profiling\n2 mức tải", "stack trace\n+ xếp hạng", "độ phủ + ràng\nbuộc + Shapley"],
+        ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "profiling\n2 mức tải", "stack trace\n+ xếp hạng", "test fail đưa\nthẳng cho LLM"],
         ["Lỗi thật", "7 có kết quả\ncấp dòng", "140 issue", "38 (công nghiệp)", "31 lỗi thật\n× 3 lần chạy"],
-        ["Kiểm tra\nbenchmark", "không", "—", "—", "sửa 46 GT\nbằng thực thi"],
+        ["Kiểm tra\nbenchmark", "không", "—", "—", "rà soát cả\n250 nhãn"],
         ["Lặp + kiểm\nđịnh", "1 lần", "—", "—", "3 lần + McNemar\n/ Wilcoxon"],
     ], highlight_col=4))
     E("slide_11.svg", [
@@ -272,9 +273,9 @@ def build() -> None:
     ])
     E("thiet_ke.svg", [
         ("Recommendations", "Thiết kế thực nghiệm"),
-        ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250 + kiểm", "chứng; 31 BugsInPy"]),
+        ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250, 3 bộ", "nhãn; 31 BugsInPy"]),
         ("Venus", "Biến thể"), ("Venus is the second", ["Đổi tên, xóa docstring", "→ chống thuộc bài"]),
-        ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, LLM hỏi thẳng,", "SemLoc, CovGate"]),
+        ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, ruff, SemLoc,", "1 prompt + test fail"]),
         ("Mercury", "Mô hình"), ("Mercury is the closest", ["Gemini 3.8 Flash", "+ 4 họ model khác"]),
         ("Saturn", "Chỉ số"), ("Saturn is a gas giant", ["Acc@1/3/5, thứ hạng,", "%Susp, lượt gọi, token"]),
         ("Jupiter", "Thống kê"), ("Jupiter is the biggest", ["Lặp 3 lần, McNemar /", "Wilcoxon, effect size"]),
@@ -282,16 +283,16 @@ def build() -> None:
     E("slide_20.svg", [
         ("Popular programming languages", "Câu hỏi nghiên cứu"),
         ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: kết quả SemLoc còn đúng", "với log công bố và với Gemini?"]),
-        ("Venus", "RQ2"), ("Venus has a beautiful", ["CovGate, 1 prompt có bằng chứng", "thực thi: chính xác hơn SemLoc?"]),
+        ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM thật sự cần gì? 1 prompt có", "test fail so với SemLoc?"]),
         ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, code đổi tên,", "các họ model khác?"]),
-        ("Saturn", "Lõi"), ("Saturn is a gas giant", ["LLM đưa giả thuyết, bằng chứng", "thực thi mới là người phán xử."]),
+        ("Saturn", "Lõi"), ("Saturn is a gas giant", ["Cách lập trình viên vẫn làm", "có đủ tốt không?"]),
     ])
     E("slide_19.svg", [
-        ("Main topic and details", "CovGate: thêm độ phủ vào SemLoc"),
-        ("Mars", "Cổng độ phủ"), ("Despite being red", ["Bỏ dòng mà", "test fail", "không đi qua"]),
-        ("Neptune", "λ·Ochiai"), ("It’s the farthest", ["Phá hòa SBFL", "(dev chọn)"]),
-        ("Jupiter", "CF xếp lại"), ("Jupiter is the biggest", ["Dùng kết quả", "vá thử để xếp"]),
-        ("Saturn", "Thưởng có cứ"), ("It’s a gas giant", ["Chỉ thưởng khi", "có bằng chứng"]),
+        ("Main topic and details", "Đề xuất: 1 prompt có test fail"),
+        ("Mars", "Đầu vào"), ("Despite being red", ["Mã nguồn,", "tên test fail,", "dòng lỗi đầu"]),
+        ("Neptune", "Ablation"), ("It’s the farthest", ["Có / không", "độ phủ từng dòng"]),
+        ("Jupiter", "Bổ sung"), ("Jupiter is the biggest", ["CovGate,", "kiểm chứng,", "biểu quyết"]),
+        ("Saturn", "Tĩnh"), ("It’s a gas giant", ["So với ruff,", "pyrefly"]),
     ])
     dec = next(r for r in _csv("rq_decomposition.csv") if r["game"] == "semloc" and r["gt"] == "repaired"
                and r["subset"] == "all" and r["metric"] == "acc1")
@@ -299,9 +300,9 @@ def build() -> None:
     n_corr = sum(1 for v in (vgt.values() if isinstance(vgt, dict) else vgt) if v.get("status") == "corrected")
     E("slide_14.svg", {
         "9h 55m 23s": "13/13", "Jupiter’s rotation period": "cấu hình SemLoc tái hiện khớp từng số",
-        "333,000": _m("RqTwoRepairedAllSemlocNoPriorAccOneMean") + "%",
-        "The Sun’s mass compared": "Acc@1 khi bỏ thưởng cho dòng LLM đoán",
-        "386,000 km": str(n_corr), "Distance between the Earth": "ground truth sai được sửa bằng thực thi",
+        "333,000": f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')}",
+        "The Sun’s mass compared": "nhãn gốc bị dời khi rà soát",
+        "386,000 km": _m("RqTwoRepairedAllLlmTestsDAccOne"), "Distance between the Earth": "Acc@1: 1 prompt có test fail so với SemLoc",
     })
     E("slide_21.svg", [
         ("Sequences", "Tiến độ"),
@@ -369,35 +370,35 @@ def analysis_pages() -> None:
     ])
     E("dong_gop.svg", [
         ("Recommendations", "Đóng góp khoa học"),
-        ("Mars", "Đoán/phổ"), ("Despite being red, Mars", ["Hạng 1 = dòng đoán;", f"phổ riêng {_m('RqTwoRepairedAllSemlocNoPriorAccOneMean')}"]),
-        ("Venus", "1 prompt"), ("Venus is the second", [f"Acc@3 {_p(rq2['llm_coverage']['acc3_mean'])} so với", f"{_p(rq2['semloc']['acc3_mean'])} (lỗi chạy tới)"]),
-        ("Neptune", "Cách chấm"), ("Neptune is the farthest", ["Thưởng ẩn, CF không", "đổi hạng, DD, SBFL"]),
-        ("Mercury", "GT mới"), ("Mercury is the closest", [f"{st['confirmed']} xác nhận,", f"{st['corrected']} sửa vị trí"]),
-        ("Saturn", "Mơ hồ"), ("Saturn is a gas giant", [f"Acc@1 {_p(tol['semloc']['acc1_exact'])}→{_p(tol['semloc']['acc1_guard_strict'])}", "theo quy ước nhãn"]),
-        ("Jupiter", "Tái hiện"), ("Jupiter is the biggest", ["Docker offline, cache", "LLM, số = macro"]),
+        ("Mars", "C1 Đoán"), ("Despite being red, Mars", ["Hạng 1 = dòng đoán;", "CF không đổi hạng"]),
+        ("Venus", "C2 Nhãn"), ("Venus is the second", [f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')} nhãn bị dời;", "2 bộ nhãn mới"]),
+        ("Neptune", "C3 1 prompt"), ("Neptune is the farthest", [f"Acc@1 {_m('RqTwoRepairedAllLlmTestsDAccOne')} điểm,", "rẻ hơn ~7 lần"]),
+        ("Mercury", "C4 Âm tính"), ("Mercury is the closest", ["Độ phủ, kiểm chứng,", "ruff: không giúp"]),
+        ("Saturn", "Cơ chế"), ("Saturn is a gas giant", [f"Sửa lách ở {_m('PavmechReviewedOtherLineFixable')}%", "dòng không lỗi"]),
+        ("Jupiter", "C5 Tái hiện"), ("Jupiter is the biggest", ["Bảng kiểm 7 mục,", "Docker, số = macro"]),
     ])
     E("triet_ly.svg", [
         ("Main topic and details", "Triết lý khoa học"),
-        ("Mars", "Test phán xử"), ("Despite being red", ["LLM đề xuất,", "kiểm thử", "quyết định"]),
+        ("Mars", "Test phán xử"), ("Despite being red", ["…khi test đủ", "chặt; nêu rõ", "ai quyết định"]),
         ("Neptune", "Đo đóng góp"), ("It’s the farthest", ["Phân rã, bỏ", "từng thành phần"]),
-        ("Jupiter", "Baseline"), ("Jupiter is the biggest", ["Pipeline phải", "thắng 1 prompt"]),
+        ("Jupiter", "Mốc đơn giản"), ("Jupiter is the biggest", ["Pipeline phải", "thắng 1 prompt"]),
         ("Saturn", "Chịu bác bỏ"), ("It’s a gas giant", ["Lặp 3 lần, CI,", "nêu cả âm tính"]),
     ])
     E("de_doa.svg", [
         ("Features of the topic", "Các mối đe dọa"),
-        ("Mars", "Oracle nhiễu"), ("Despite being red", ["Nhận sửa bù trừ;", "báo cả GT gốc"]),
+        ("Mars", "Vòng tròn"), ("Despite being red", ["Nhãn rà soát do LLM", "gợi ý; báo cả 3 bộ"]),
         ("Neptune", "Lỗi thật ít"), ("It’s the farthest", ["31 lỗi, 1 dự án;", "CI còn chứa 0"]),
         ("Jupiter", "Mô hình"), ("Jupiter is the biggest", ["Suy luận mặc định,", "mô hình mới hơn"]),
-        ("Saturn", "Prompt nhóm"), ("Saturn is a gas giant", ["Viết trước khi xem", "test, không chỉnh"]),
+        ("Saturn", "Tên test"), ("Saturn is a gas giant", ["Tên test nói rõ ý", "định; 1 hàm/lần"]),
     ])
     E("ket_luan.svg", {
         "Introduction": "Kết luận",
         "Mercury is the closest planet to the Sun and the smallest": [
-            "**Grounded hay guessed?**", "Hạng 1 luôn là dòng LLM", "đoán (theo thiết kế);", f"riêng phổ: Acc@1 {_m('RqTwoRepairedAllSemlocNoPriorAccOneMean')}.",
-            "Top-3: bằng chứng thực", "thi có tác dụng thật.", "Lỗi thật: cũng vậy."],
+            "**Grounded hay guessed?**", "Hạng 1 luôn là dòng LLM", "đoán (theo thiết kế).", f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')} nhãn gốc bị",
+            "dời; nhãn lệch có lợi", "cho SemLoc."],
         "Mercury takes a little more than 58 days": [
-            "**Đề xuất**", "Đưa test fail + độ phủ", f"cho LLM: Acc@3 {_p(rq2['llm_coverage']['acc3_mean'])} so", f"với {_p(rq2['semloc']['acc3_mean'])} (lỗi chạy tới).",
-            f"Mọi nhãn: chỉ {_m('RqTwoOriginalAllLlmCoverageDAccThree')},", "SemLoc hơn ở Acc@5.", "Bảng kiểm 7 mục."],
+            "**Đề xuất**", "Đưa test fail cho LLM:", f"Acc@1 {_p(rq2['llm_tests']['acc1_mean'])} so với {_p(rq2['semloc']['acc1_mean'])},",
+            "rẻ hơn ~7 lần. Độ phủ,", "kiểm chứng, ruff: không", "giúp. Bảng kiểm 7 mục."],
     })
 
 
