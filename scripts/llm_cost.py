@@ -17,11 +17,15 @@ PREFIX_N = {"semloc_test_": 200, "direct_test_": 200, "direct_cov_test_": 200, "
             "semloc_renamed_": len(json.loads((ROOT / "data" / "renamed" / "test_programs.json").read_text()))}
 
 
+# Runs whose output is not used anywhere, with the reason (remove an entry when the run is redone under the same id).
+EXCLUDED = {"pav_test_gemini_r1": "aborted on 09/11: provider quota exhausted (429 on 143 of 216 calls); output set aside"}
+
+
 def main() -> None:
     rows = []
     for run, c in sorted(run_costs(ROOT / "runs" / "llm_log.jsonl").items(), key=lambda kv: str(kv[0])):
         n = next((v for p, v in PREFIX_N.items() if str(run).startswith(p)), None)
-        if n is None:
+        if n is None or str(run) in EXCLUDED:
             continue
         rows.append({"run_id": run, "programs": n, **{k: round(v, 1) if isinstance(v, float) else v for k, v in c.items()},
                      "calls_per_program": round(c["calls"] / n, 3),
