@@ -50,3 +50,26 @@ def test_paired_rank_biserial():
     # zero differences are dropped: one +0.5, rest ties → +1
     assert paired_rank_biserial([0.5, 1, 1], [0, 1, 1]) == 1.0
     assert paired_rank_biserial([1, 1], [1, 1]) == 0.0
+
+
+def test_paired_diff_ci_resamples_programs_not_repeats():
+    from flx.stats import paired_diff_ci
+    progs = [f"p{i}" for i in range(10)]
+    hit, miss = {p: True for p in progs}, {p: False for p in progs}
+    assert paired_diff_ci([hit] * 3, [miss] * 3, progs, None, k_boot=500) == (1.0, 1.0, 1.0)
+    a = {p: i % 2 == 0 for i, p in enumerate(progs)}
+    b = {p: i % 3 == 0 for i, p in enumerate(progs)}
+    one = paired_diff_ci([a], [b], progs, None, k_boot=2000)
+    three = paired_diff_ci([a, a, a], [b, b, b], progs, None, k_boot=2000)
+    assert one == three  # copying a repeat adds no information, so the interval must not shrink
+
+
+def test_paired_diff_ci_cluster_widens():
+    from flx.stats import paired_diff_ci
+    progs = [f"p{i}" for i in range(20)]
+    a = {p: i < 10 for i, p in enumerate(progs)}
+    b = {p: False for p in progs}
+    clusters = {p: i // 10 for i, p in enumerate(progs)}  # two clusters: all-hit and all-miss
+    d0, lo0, hi0 = paired_diff_ci([a], [b], progs, None, k_boot=2000)
+    d1, lo1, hi1 = paired_diff_ci([a], [b], progs, clusters, k_boot=2000)
+    assert d0 == d1 == 0.5 and (hi1 - lo1) > (hi0 - lo0)

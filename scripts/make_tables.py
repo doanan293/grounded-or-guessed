@@ -91,6 +91,14 @@ def decomposition_ours_table() -> str:
     return "\n".join(lines) + "\n"
 
 
+def dci(row: dict, k: str) -> str:
+    """Δ in percentage points with its cluster-bootstrap 95% CI, e.g. +15.4{\\scriptsize\\,[9.8, 21.3]}."""
+    if row.get(f"d_{k}") in (None, ""):
+        return "--"
+    return (f"{100 * float(row[f'd_{k}']):+.1f}{{\\scriptsize\\,[{100 * float(row[f'd_{k}_lo']):.1f}, "
+            f"{100 * float(row[f'd_{k}_hi']):.1f}]}}")
+
+
 def pm(row: dict, k: str) -> str:
     r"""mean ± sd in percent, e.g. 48.9{\scriptsize$\pm$0.7}."""
     m, sd = row.get(f"{k}_mean"), row.get(f"{k}_sd")
@@ -108,7 +116,8 @@ def pval(v) -> str:
 
 
 GT_LABEL = {"original": "Original ground truth", "repaired": "Execution-repaired ground truth"}
-RQ2_NAMES = {"semloc": "SemLoc (as released)", "semloc_no_prior": "\\quad w/o LLM-guess bonus",
+RQ2_NAMES = {"gate_only": "\\quad + coverage gate only", "lam_only": "\\quad + $\\lambda$·Ochiai only",
+             "grounded_prior_only": "\\quad bonus only when grounded", "semloc": "SemLoc (as released)", "semloc_no_prior": "\\quad w/o LLM-guess bonus",
              "cf_rerank": "\\quad + CF re-ranking", "covgate": "CovGate (ours)", "covgate_cf": "CovGate + CF re-ranking",
              "llm_direct": "LLM direct (1 prompt)", "llm_coverage": "LLM + coverage (1 prompt, ours)",
              "sbfl_ochiai": "SBFL Ochiai"}
@@ -116,9 +125,10 @@ RQ2_NAMES = {"semloc": "SemLoc (as released)", "semloc_no_prior": "\\quad w/o LL
 
 def rq2_table() -> str:
     rows = [r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"]
-    order = ["semloc", "semloc_no_prior", "cf_rerank", "covgate", "covgate_cf", "llm_direct", "llm_coverage", "sbfl_ochiai"]
+    order = ["semloc", "semloc_no_prior", "grounded_prior_only", "gate_only", "lam_only", "cf_rerank", "covgate", "covgate_cf",
+             "llm_direct", "llm_coverage", "sbfl_ochiai"]
     lines = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
-             r"Method & Acc@1 & Acc@3 & Acc@5 & $p_{\text{Acc@1}}$ & $p_{\text{Acc@3}}$ & $r_{\text{rb}}$ \\"]
+             r"Method & Acc@1 & Acc@3 & Acc@5 & $\Delta$Acc@1 [95\% CI] & $\Delta$Acc@3 [95\% CI] & $r_{\text{rb}}$ \\"]
     for g in ("original", "repaired"):
         rs = {r["method"]: r for r in rows if r["gt"] == g}
         any_r = next(iter(rs.values()))
@@ -128,8 +138,8 @@ def rq2_table() -> str:
             if not r:
                 continue
             d = r.get("rank_biserial_rr")
-            lines.append(f"{RQ2_NAMES[m]} & {pm(r, 'acc1')} & {pm(r, 'acc3')} & {pm(r, 'acc5')} & {pval(r.get('p_acc1_max'))} & "
-                         f"{pval(r.get('p_acc3_max'))} & {'--' if d in (None, '') else f'{float(d):+.2f}'} \\\\")
+            lines.append(f"{RQ2_NAMES[m]} & {pm(r, 'acc1')} & {pm(r, 'acc3')} & {pm(r, 'acc5')} & {dci(r, 'acc1')} & "
+                         f"{dci(r, 'acc3')} & {'--' if d in (None, '') else f'{float(d):+.2f}'} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
 
@@ -192,13 +202,14 @@ def rq3_bugsinpy_table() -> str:
 
 def rq3_renamed_table() -> str:
     rows = [r for r in _rows("rq3_renamed.csv") if r["gt"] == "repaired"]
-    names = {"semloc": "SemLoc", "semloc_no_prior": "\\quad w/o LLM-guess bonus", "llm_guess": "LLM guess alone"}
+    names = {"semloc": "SemLoc", "semloc_no_prior": "\\quad w/o LLM-guess bonus", "llm_guess": "LLM guess alone",
+             "llm_coverage": "LLM + coverage (1 prompt)"}
     lines = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
              r" & \multicolumn{3}{c}{Acc@1} & \multicolumn{3}{c}{Acc@3} \\", r"\cmidrule(lr){2-4}\cmidrule(lr){5-7}",
-             r"Method & Original & Renamed & $p$ & Original & Renamed & $p$ \\", r"\midrule"]
+             r"Method & Original & Renamed & $\Delta$ [95\% CI] & Original & Renamed & $\Delta$ [95\% CI] \\", r"\midrule"]
     for r in rows:
-        lines.append(f"{names[r['method']]} & {pm(r, 'orig_acc1')} & {pm(r, 'renamed_acc1')} & {pval(r['p_acc1_max'])} & "
-                     f"{pm(r, 'orig_acc3')} & {pm(r, 'renamed_acc3')} & {pval(r['p_acc3_max'])} \\\\")
+        lines.append(f"{names[r['method']]} & {pm(r, 'orig_acc1')} & {pm(r, 'renamed_acc1')} & {dci(r, 'acc1')} & "
+                     f"{pm(r, 'orig_acc3')} & {pm(r, 'renamed_acc3')} & {dci(r, 'acc3')} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
 

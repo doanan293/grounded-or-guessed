@@ -38,19 +38,20 @@ def cliffs_delta(x: list[float], y: list[float]) -> float:
 
 def cluster_bootstrap_ci(per_program: dict[str, float], clusters: dict[str, int], n: int = 10000,
                          seed: int = 20261108, alpha: float = 0.05) -> tuple[float, float]:
-    """Percentile CI of the mean, resampling whole clusters (structurally similar programs together)."""
-    import random
-    rng = random.Random(seed)
-    groups: dict[int, list[float]] = {}
+    """Percentile CI of the mean, resampling whole clusters (structurally similar programs together).
+    Each draw picks as many clusters as there are, with replacement; the statistic is the mean over the
+    programs of the drawn clusters (vectorized: per-cluster sums and sizes)."""
+    import numpy as np
+    groups: dict = {}
     for p, v in per_program.items():
-        groups.setdefault(clusters.get(p, hash(p)), []).append(v)
-    keys = list(groups)
-    stats = []
-    for _ in range(n):
-        vals = [v for k in (rng.choice(keys) for _ in keys) for v in groups[k]]
-        stats.append(sum(vals) / len(vals))
-    stats.sort()
-    return stats[int(alpha / 2 * n)], stats[int((1 - alpha / 2) * n) - 1]
+        g = groups.setdefault(clusters.get(p, ("solo", p)), [0.0, 0])
+        g[0] += v
+        g[1] += 1
+    sums = np.array([g[0] for g in groups.values()])
+    sizes = np.array([g[1] for g in groups.values()])
+    idx = np.random.default_rng(seed).integers(0, len(sums), size=(n, len(sums)))
+    stats = np.sort(sums[idx].sum(axis=1) / sizes[idx].sum(axis=1))
+    return float(stats[int(alpha / 2 * n)]), float(stats[int((1 - alpha / 2) * n) - 1])
 
 
 def paired_rank_biserial(x: list[float], y: list[float]) -> float:
@@ -64,3 +65,17 @@ def paired_rank_biserial(x: list[float], y: list[float]) -> float:
     pos = sum(r for r, v in zip(ranks, d) if v > 0)
     neg = sum(r for r, v in zip(ranks, d) if v < 0)
     return float((pos - neg) / (pos + neg))
+
+
+def paired_diff_ci(a: list[dict], b: list[dict], programs: list[str], clusters: dict | None,
+                   k_boot: int = 10000, seed: int = 20261108) -> tuple[float, float, float]:
+    """(Δ, lo, hi): Acc(a) − Acc(b) with a 95% bootstrap CI. `a` and `b` are repeats, each {program: hit}
+    (absent = miss). Each program's hits are averaged over repeats *before* resampling, so the unit of
+    resampling is the program (or its template cluster), never a repeat."""
+    def avg(reps, p):
+        return sum(bool(r.get(p, False)) for r in reps) / len(reps)
+    diff = {p: avg(a, p) - avg(b, p) for p in programs}
+    delta = sum(diff.values()) / len(diff)
+    lo, hi = cluster_bootstrap_ci(diff, clusters if clusters is not None else {p: i for i, p in enumerate(programs)},
+                                  n=k_boot, seed=seed)
+    return round(delta, 4), round(lo, 4), round(hi, 4)

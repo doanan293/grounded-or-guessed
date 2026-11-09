@@ -20,10 +20,11 @@ from flx.params import chosen_params
 from flx.labels import labels_for
 from flx.ranking import mean_rr, metrics, rank_of
 from flx.sbfl import sbfl_scores
-from flx.stats import mcnemar, paired_rank_biserial, wilcoxon_paired
+from flx.stats import mcnemar, paired_diff_ci, paired_rank_biserial, wilcoxon_paired
 
 ROOT = Path(__file__).resolve().parents[1]
 COV = ROOT / "data" / "coverage" / "semfault"
+CLUSTERS = {r["program"]: int(r["cluster_t0.8"]) for r in csv.DictReader(open(ROOT / "data" / "semfault_templates.csv"))}
 
 
 def ranks_from_list(preds: dict, gt: dict, progs: list[str]) -> dict:
@@ -101,6 +102,10 @@ def main() -> None:
                             b = [base.get(p) is not None and base[p] <= k for p in plist]
                             ps.append(mcnemar(a, b)[1])
                         row[f"p_acc{k}_max"] = round(max(ps), 4)
+                        row[f"p_acc{k}_all"] = ";".join(f"{x:.4f}" for x in ps)
+                        hits = lambda reps: [{p: r.get(p) is not None and r[p] <= k for p in plist} for _, r in reps]
+                        d, lo, hi = paired_diff_ci(hits(lst), hits(per["semloc"]), plist, CLUSTERS)
+                        row[f"d_acc{k}"], row[f"d_acc{k}_lo"], row[f"d_acc{k}_hi"] = d, lo, hi
                     # per-program reciprocal rank (mean over repeats), paired with SemLoc: Wilcoxon signed-rank and its
                     # effect size, the matched-pairs rank-biserial correlation
                     x, y = mean_rr([r for _, r in lst], plist), mean_rr([r for _, r in per["semloc"]], plist)
