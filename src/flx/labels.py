@@ -86,3 +86,9 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+def labels_for(gt: dict[str, list[int]], cov_dir: Path) -> dict[str, str]:
+    """Category of every program in `gt` against that ground truth (labels change when a GT line is repaired)."""
+    from flx.coverage import load
+    return {p: label_from_coverage(load(Path(cov_dir) / f"{p}.json"), lines).category for p, lines in gt.items()}

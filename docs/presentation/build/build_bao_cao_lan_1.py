@@ -83,7 +83,7 @@ def _p(v) -> str:
 
 def results_pages() -> None:
     """RQ2 table, RQ3 table and the cost/accuracy figure — all numbers read from data/ (repaired GT)."""
-    rq2 = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "repaired"}
+    rq2 = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "repaired" and r.get("subset", "all") == "all"}
     cost = _csv("llm_cost.csv")
     tok = lambda prefix: f"{round(sum(float(r['tokens_per_program']) for r in cost if r['run_id'].startswith(prefix)) / max(1, sum(r['run_id'].startswith(prefix) for r in cost)) / 1000, 1)}k".replace(".", ",")
     names = [("sbfl_ochiai", "SBFL Ochiai", "0"), ("llm_direct", "LLM hỏi thẳng (1 prompt)", tok("direct_test_gemini_r")),

@@ -115,7 +115,7 @@ RQ2_NAMES = {"semloc": "SemLoc (as released)", "semloc_no_prior": "\\quad w/o LL
 
 
 def rq2_table() -> str:
-    rows = _rows("rq2_ours.csv")
+    rows = [r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"]
     order = ["semloc", "semloc_no_prior", "cf_rerank", "covgate", "covgate_cf", "llm_direct", "llm_coverage", "sbfl_ochiai"]
     lines = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
              r"Method & Acc@1 & Acc@3 & Acc@5 & $p_{\text{Acc@1}}$ & $p_{\text{Acc@3}}$ & $r_{\text{rb}}$ \\"]
@@ -130,6 +130,25 @@ def rq2_table() -> str:
             d = r.get("rank_biserial_rr")
             lines.append(f"{RQ2_NAMES[m]} & {pm(r, 'acc1')} & {pm(r, 'acc3')} & {pm(r, 'acc5')} & {pval(r.get('p_acc1_max'))} & "
                          f"{pval(r.get('p_acc3_max'))} & {'--' if d in (None, '') else f'{float(d):+.2f}'} \\\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    return "\n".join(lines) + "\n"
+
+
+def rq2_by_label_table() -> str:
+    """Repaired ground truth: Acc@1 / Acc@3 per fault label (labels of the repaired GT)."""
+    rows = {(r["subset"], r["method"]): r for r in _rows("rq2_ours.csv") if r["gt"] == "repaired"}
+    subs = [("semantic", "Semantic"), ("coverage_revealed", "Coverage-revealed"), ("not_executed", "Not executed"),
+            ("executable", "Executable (all but not executed)")]
+    meths = [("sbfl_ochiai", "SBFL"), ("semloc", "SemLoc"), ("covgate", "CovGate"), ("llm_coverage", "LLM + cov.")]
+    lines = [r"\begin{tabular}{lr" + "rr" * len(meths) + "}", r"\toprule",
+             " & & " + " & ".join(rf"\multicolumn{{2}}{{c}}{{{n}}}" for _, n in meths) + r" \\",
+             "".join(rf"\cmidrule(lr){{{3 + 2 * i}-{4 + 2 * i}}}" for i in range(len(meths))),
+             "Fault label & $n$ & " + " & ".join("Acc@1 & Acc@3" for _ in meths) + r" \\", r"\midrule"]
+    for sub, name in subs:
+        if (sub, "semloc") not in rows:
+            continue
+        cells = " & ".join(f"{pct(rows[(sub, m)]['acc1_mean'])} & {pct(rows[(sub, m)]['acc3_mean'])}" for m, _ in meths)
+        lines.append(f"{name} & {rows[(sub, 'semloc')]['n']} & {cells} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
 
@@ -250,6 +269,7 @@ def main() -> None:
     (OUT / "rq1_audit.tex").write_text(rq1_table())
     (OUT / "rq_decomposition_published.tex").write_text(decomposition_table())
     (OUT / "rq2_ours.tex").write_text(rq2_table())
+    (OUT / "rq2_by_label.tex").write_text(rq2_by_label_table())
     (OUT / "rq_decomposition_ours.tex").write_text(decomposition_ours_table())
     (OUT / "rq3_families.tex").write_text(rq3_families_table())
     (OUT / "rq3_bugsinpy.tex").write_text(rq3_bugsinpy_table())

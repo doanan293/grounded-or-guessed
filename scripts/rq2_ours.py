@@ -16,6 +16,7 @@ from flx._semloc import SEMLOC_ROOT
 from flx.coverage import load
 from flx.covgate import covgate_scores, semloc_attribute
 from flx.gt import load_variants
+from flx.labels import labels_for
 from flx.ranking import mean_rr, metrics, rank_of
 from flx.sbfl import sbfl_scores
 from flx.stats import mcnemar, paired_rank_biserial, wilcoxon_paired
@@ -81,28 +82,34 @@ def main() -> None:
             methods["sbfl_ochiai"] = {p: rank_of(sbfl_scores(load(COV / f"{p}.json"), "ochiai"), gt[p]) for p in progs}
             for name, ranks in methods.items():
                 per.setdefault(name, []).append((i, ranks))
-        for name, lst in per.items():
-            ms = [metrics(r, progs) for _, r in lst]
-            row = {"gt": gname, "method": name, "n": len(progs), "repeats": len(lst)}
-            for k in ("acc1", "acc3", "acc5"):
-                row[f"{k}_mean"], row[f"{k}_sd"] = mean_sd([m[k] for m in ms])
-            # paired McNemar vs SemLoc on the same repeat (max p across repeats: conservative)
-            if name != "semloc":
-                for k in (1, 3):
-                    ps = []
-                    for (i, ranks), (_, base) in zip(lst, per["semloc"]):
-                        a = [ranks.get(p) is not None and ranks[p] <= k for p in progs]
-                        b = [base.get(p) is not None and base[p] <= k for p in progs]
-                        ps.append(mcnemar(a, b)[1])
-                    row[f"p_acc{k}_max"] = round(max(ps), 4)
-                # per-program reciprocal rank (mean over repeats), paired with SemLoc: Wilcoxon signed-rank and its
-                # effect size, the matched-pairs rank-biserial correlation
-                x, y = mean_rr([r for _, r in lst], progs), mean_rr([r for _, r in per["semloc"]], progs)
-                row["p_rr_wilcoxon"] = round(wilcoxon_paired([x[p] for p in progs], [y[p] for p in progs])[1], 4)
-                row["rank_biserial_rr"] = round(paired_rank_biserial([x[p] for p in progs], [y[p] for p in progs]), 4)
-            rows.append(row)
-            print(row)
-    fields = sorted({k for r in rows for k in r}, key=lambda k: (k not in ("gt", "method", "n", "repeats"), k))
+        labels = labels_for({p: gt[p] for p in progs}, COV)  # labels of *this* ground truth
+        subsets = {"all": progs, "executable": [p for p in progs if labels[p] != "not_executed"],
+                   **{c: [p for p in progs if labels[p] == c] for c in ("semantic", "coverage_revealed", "not_executed")}}
+        for sub, plist in subsets.items():
+            if not plist:
+                continue
+            for name, lst in per.items():
+                ms = [metrics(r, plist) for _, r in lst]
+                row = {"gt": gname, "subset": sub, "method": name, "n": len(plist), "repeats": len(lst)}
+                for k in ("acc1", "acc3", "acc5"):
+                    row[f"{k}_mean"], row[f"{k}_sd"] = mean_sd([m[k] for m in ms])
+                # paired McNemar vs SemLoc on the same repeat (max p across repeats: conservative)
+                if name != "semloc":
+                    for k in (1, 3):
+                        ps = []
+                        for (i, ranks), (_, base) in zip(lst, per["semloc"]):
+                            a = [ranks.get(p) is not None and ranks[p] <= k for p in plist]
+                            b = [base.get(p) is not None and base[p] <= k for p in plist]
+                            ps.append(mcnemar(a, b)[1])
+                        row[f"p_acc{k}_max"] = round(max(ps), 4)
+                    # per-program reciprocal rank (mean over repeats), paired with SemLoc: Wilcoxon signed-rank and its
+                    # effect size, the matched-pairs rank-biserial correlation
+                    x, y = mean_rr([r for _, r in lst], plist), mean_rr([r for _, r in per["semloc"]], plist)
+                    row["p_rr_wilcoxon"] = round(wilcoxon_paired([x[p] for p in plist], [y[p] for p in plist])[1], 4)
+                    row["rank_biserial_rr"] = round(paired_rank_biserial([x[p] for p in plist], [y[p] for p in plist]), 4)
+                rows.append(row)
+                print(row)
+    fields = sorted({k for r in rows for k in r}, key=lambda k: (k not in ("gt", "subset", "method", "n", "repeats"), k))
     with open(args.out, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
