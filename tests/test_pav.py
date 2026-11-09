@@ -43,3 +43,17 @@ def test_rank_max_size_ignores_large_fixes():
     checks = {67: [Check(False, None)], 65: [Check(True, 10)], 64: [Check(True, 2)]}
     assert rank([67, 65, 64], checks, k=3, attempts=1, order="llm", max_size=2) == [64, 67, 65]
     assert rank([67, 65, 64], checks, k=3, attempts=1, order="llm") == [65, 64, 67]
+
+
+def test_strict_proposer_raises_on_llm_errors(monkeypatch):
+    """A failed LLM call (e.g. quota exhausted) must not look like "no passing fix" in propose-and-verify."""
+    import pytest
+    import flx.llm_gateway as gw
+    from flx.verify_gt import llm_propose
+
+    def boom(*a, **k):
+        raise RuntimeError("429 quota")
+    monkeypatch.setattr(gw, "chat", boom)
+    assert llm_propose("m", attempts=1)("1: x = 1", 1, "") == []          # the label oracle keeps its old behaviour
+    with pytest.raises(RuntimeError):
+        llm_propose("m", attempts=1, strict=True)("1: x = 1", 1, "")

@@ -154,8 +154,11 @@ def verify(program: str, prog_path: Path, test_path: Path, fn: str, gt_lines: li
     return {"program": program, "status": "unverifiable", "lines": list(gt_lines)}
 
 
-def llm_propose(model: str, attempts: int = 2) -> Propose:
-    """LLM proposer through the flx gateway: one call per attempt; the reply must be JSON."""
+def llm_propose(model: str, attempts: int = 2, strict: bool = False) -> Propose:
+    """LLM proposer through the flx gateway: one call per attempt; the reply must be JSON.
+
+    strict=True re-raises failed calls (quota, network) instead of skipping the attempt, so a caller can retry the
+    program later rather than record "no passing fix"; the label oracle keeps the lenient default."""
     from flx.llm_gateway import chat
     system = ("You fix one-line bugs in Python. Reply with JSON only: "
               '{"kind": "replace" | "insert_after", "code": "<one line of Python, no indentation>"}')
@@ -171,6 +174,8 @@ def llm_propose(model: str, attempts: int = 2) -> Propose:
             try:
                 text = chat(model, system, user, temperature=0.8)
             except Exception:
+                if strict:
+                    raise
                 continue
             m = re.search(r"\{.*\}", text, re.S)
             try:
