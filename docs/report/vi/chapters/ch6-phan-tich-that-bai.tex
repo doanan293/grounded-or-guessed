@@ -1,9 +1,125 @@
 \chapter{Phân tích thất bại và thảo luận}
 \label{chap:that-bai}
-\TODO{Nguồn: docs/analysis/failure-analysis.md.}
 
-\section{Mục thứ nhất}
-\TODO{nội dung}
+Chương này trả lời câu hỏi: khi SemLoc (hoặc dòng LLM tự đoán) sai, nó sai thế nào và vì sao? Phân tích dùng ba lần chạy
+Gemini 3.8 Flash trên tập test với bộ dòng lỗi chuẩn đã sửa; tín hiệu nhị phân của mỗi chương trình lấy theo đa số ba lần.
 
-\section{Mục thứ hai}
-\TODO{nội dung}
+\section{Phân nhóm tự động}
+\label{sec:phan-nhom}
+
+\subsection{Sáu nhóm kết quả}
+
+Mỗi chương trình được xếp vào đúng một nhóm theo thứ tự ưu tiên của Bảng~\ref{tab:nhom-that-bai}. Trên
+\FailProgramsN{} chương trình, khoảng một nửa được giải quyết bởi chính dòng LLM tự đoán; \FailRescuedBySpectrumN{} chương
+trình là nơi bằng chứng thực thi thật sự ``cứu'' SemLoc khi dòng đoán sai --- đây là phiên bản theo từng chương trình
+của phân rã Shapley ở mục~\ref{sec:rq2}.
+
+\begin{table}[H]
+\centering
+\caption{Phân nhóm kết quả theo chương trình (dòng lỗi chuẩn đã sửa)}
+\label{tab:nhom-that-bai}
+\small
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}Xr@{}}
+\toprule
+Nhóm & Định nghĩa & Số chương trình \\
+\midrule
+\texttt{gt\_suspect} & dòng lỗi chuẩn chưa kiểm chứng được và mọi phương pháp trượt top-3 & \FailGtSuspectN \\
+\texttt{guess\_right} & dòng LLM tự đoán là dòng lỗi chuẩn & \FailGuessRightN \\
+\texttt{prior\_hurts} & phổ xếp dòng lỗi hạng 1 nhưng điểm thưởng đẩy dòng đoán sai lên trên & \FailPriorHurtsN \\
+\texttt{rescued\_by\_spectrum} & đoán sai nhưng SemLoc vẫn có dòng lỗi trong top-3 & \FailRescuedBySpectrumN \\
+\texttt{coverage\_only\_wins} & SemLoc trượt top-3, LLM + độ phủ trúng top-3 & \FailCoverageOnlyWinsN \\
+\texttt{all\_miss} & còn lại: mọi phương pháp trượt & \FailAllMissN \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Cách chọn ca để đọc}
+
+Trong mỗi nhóm trừ \texttt{guess\_right}, nhóm chọn tối đa bốn ca, ưu tiên các cụm khuôn mẫu khác nhau, với hạt giống
+cố định, để mẫu đọc trải rộng chứ không lặp lại một khuôn mẫu. Với mỗi ca, công cụ trích đoạn mã quanh dòng lỗi chuẩn
+và dòng đoán, dòng đoán của từng lần chạy, năm dòng đầu của SemLoc và của LLM + độ phủ, và ràng buộc có điểm cao nhất.
+
+\section{Mơ hồ dòng kề cạnh}
+\label{sec:mo-ho}
+
+\subsection{Dòng đoán lệch có hệ thống xuống dưới}
+
+Trên mọi lần đoán của ba lần chạy, dòng đoán trùng dòng lỗi chuẩn \OffLlmGuessZeroCount{} lần; lệch xuống một dòng
+\OffLlmGuessOneCount{} lần và hai dòng \OffLlmGuessTwoCount{} lần, nhưng lệch lên một dòng chỉ
+\OffLlmGuessMinusOneCount{} lần và hai dòng \OffLlmGuessMinusTwoCount{} lần. LLM + độ phủ lệch cùng chiều
+(\OffLlmCoverageOneCount{} lần xuống một dòng so với \OffLlmCoverageMinusOneCount{} lần lên một dòng). Phần lớn các lần
+``sai'' vì vậy không phải chỉ vào một chỗ khác, mà chỉ vào dòng ngay bên dưới.
+
+\subsection{Quan hệ đầu khối -- thân khối và độ nhạy của Acc@1}
+
+Phân tích cây cú pháp cho thấy, trong \FailWrongGuessN{} chương trình mà dòng đoán sai, \FailRelationHeaderBodyN{} ca có
+dòng đoán và dòng lỗi chuẩn là \emph{đầu một câu lệnh ghép} (\texttt{if}, \texttt{for}, \texttt{while}\ldots) \emph{và câu
+lệnh mà nó bảo vệ}. Nếu chấp nhận cả hai dòng của cặp này là đúng, Acc@1 của SemLoc tăng từ \TolSemlocAccOneExact\% lên
+\TolSemlocAccOneGuardStrict\% (biến thể chặt: chỉ dòng đầu khối và dòng đầu tiên của thân) đến
+\TolSemlocAccOneGuardOrBody\% (cận trên); của LLM + độ phủ từ \TolLlmCoverageAccOneExact\% lên
+\TolLlmCoverageAccOneGuardStrict\%--\TolLlmCoverageAccOneGuardOrBody\%. Hơn hai mươi điểm Acc@1 phụ thuộc vào quy ước gán
+nhãn --- lớn hơn mọi khác biệt giữa các phương pháp dùng LLM ở Chương~\ref{chap:ket-qua}; thứ tự giữa các phương pháp
+không đổi.
+
+\section{Năm mẫu nguyên nhân}
+\label{sec:mau-nguyen-nhan}
+
+\subsection{Dòng điều kiện và câu lệnh được bảo vệ}
+
+Mẫu phổ biến nhất (sáu trong mười chín ca đọc): dòng lỗi chuẩn là dòng điều kiện, còn lỗi cài vào nằm ở câu lệnh nó bảo
+vệ --- hoặc ngược lại. Ví dụ trong chương trình \texttt{bump\_click}:
+\begin{lstlisting}[firstnumber=63,escapeinside={(*}{*)}]
+    if cap is not None and counters[key] > cap:   (*\textrm{\itshape\# dòng lỗi chuẩn}*)
+        counters[key] = cap - 1                    (*\textrm{\itshape\# LLM chỉ dòng này}*)
+\end{lstlisting}
+Lỗi cài vào là \texttt{- 1}; LLM đúng về ngữ nghĩa nhưng sai một dòng so với nhãn. Các ca tương tự: \texttt{ledger\_balance\_rollup}
+(\texttt{elif kind == "debit":} và \texttt{balance += amount}), \texttt{quota\_for\_fuel} (\texttt{if \_INTEGER\_ALLOCATION:}
+và phép cắt \texttt{int(x)}), và chiều ngược lại ở \texttt{gain\_trendline}, \texttt{estimate\_supply}, nơi dòng lỗi chuẩn
+nằm trong thân khối còn LLM chỉ chính điều kiện bị đảo \texttt{if not clamp:}.
+
+\subsection{Khối lỗi nhiều dòng}
+
+Ba ca có lỗi cài vào là cả một khối \texttt{if \ldots{} merged[-1] == left[-1] == right[-1]: merged.pop()}; xóa bất kỳ dòng
+nào của khối cũng sửa được lỗi. Nhãn chỉ nêu một dòng, LLM chỉ dòng kia --- và chính các ca này bị xếp vào
+\texttt{prior\_hurts}. Như vậy, phần lớn trường hợp ``điểm thưởng gây hại'' thật ra là hai dòng tương đương về mặt sửa lỗi.
+
+\subsection{Oracle chấp nhận bản sửa bù trừ}
+
+Oracle sửa tối thiểu của nhóm (mục~\ref{sec:du-lieu}) chỉ yêu cầu mọi kiểm thử đạt, nên đôi khi chấp nhận một bản sửa
+\emph{bù trừ}. Ở \texttt{gradient\_clip\_budget}, dòng chuẩn gốc là dòng trống và được ``sửa'' thành dòng tính chuẩn
+bằng \texttt{norm = \_compute\_global\_norm(gradients) - 1}, trong khi lỗi thật là \texttt{max\_norm / (norm + 1)} ở dòng
+mà LLM chỉ cả ba lần. Ở \texttt{energy\_window\_avg}, oracle ``xác nhận'' bằng cách thay một lời gọi ghi log bằng một phép gán.
+Ở các khối lỗi nhiều dòng, oracle ``xác nhận'' bằng cách làm điều kiện luôn sai. Các bản sửa đặt trên dòng trống đã bị
+loại khỏi bộ dòng lỗi chuẩn đã sửa (\GtBlankFixDroppedN{} chương trình); bản sửa bù trừ trên dòng có mã thì chưa phát
+hiện tự động được.
+
+\subsection{Nguyên nhân và triệu chứng trên cùng luồng dữ liệu}
+
+Bốn ca thuộc mẫu này: dòng lỗi chuẩn là nơi tính một giá trị, LLM chỉ nơi dùng giá trị đó, hoặc ngược lại
+(\texttt{allocate\_bounty\_cut}: trừ phí trên từng phần hay tính phần chia); hoặc lỗi là \emph{thiếu} một bước chuẩn hóa
+(\texttt{shift\_trust}, \texttt{shift\_risk}) hay thiếu một lệnh lưu (\texttt{warm\_cache\_loader}), không có ``dòng sai''
+duy nhất. Đọc mã không đủ để phân xử; cần oracle thực thi kiểm tra cả hai dòng.
+
+\subsection{Dòng lỗi chuẩn đáng ngờ}
+
+Bốn ca còn lại có dòng lỗi chuẩn khó bảo vệ: \texttt{reserve\_slot} và \texttt{schedule\_call} gán lỗi cho dòng khai báo
+một hàm lồng (\texttt{def overlaps(\ldots)}); \texttt{file\_chunk\_stitch} gán cho \texttt{data += part} trong khi phép cắt
+\texttt{return data[:-1]} ngay dưới mới là lỗi rõ ràng; \texttt{room\_reservation} có các lần chạy không thống nhất.
+
+\section{Thảo luận}
+\label{sec:thao-luan}
+
+\subsection{Đọc ``guessed'' cho đúng}
+
+Kết luận ``hạng 1 chủ yếu đến từ dòng LLM đoán'' của Chương~\ref{chap:ket-qua} vẫn đúng, nhưng phân tích thất bại cho thấy
+dòng đoán thường \emph{đúng về ngữ nghĩa nhưng lệch một dòng} so với nhãn. Vì vậy không thể suy ra ``bỏ điểm thưởng thì
+tốt hơn'': các ca điểm thưởng ``gây hại'' gần như toàn là cặp đầu khối -- thân khối hoặc khối lỗi nhiều dòng. Điều thật sự
+thiếu là một cách đánh giá chấp nhận các vị trí sửa tương đương.
+
+\subsection{Khi nào bằng chứng thực thi có ích}
+
+Bằng chứng thực thi có ích rõ ràng ở top-3: phổ vi phạm đưa dòng lỗi vào ba dòng đầu ở \FailRescuedBySpectrumN{} chương
+trình mà dòng đoán sai, và bằng chứng độ phủ đưa thẳng cho LLM còn mạnh hơn (\FailCoverageOnlyWinsN{} chương trình SemLoc
+trượt top-3 nhưng LLM + độ phủ trúng). Nó không giúp phân biệt một dòng đoán đúng với một dòng đoán sai ở hạng 1
+(mục~\ref{sec:rq2}). Bài học cho thiết kế công cụ: dùng bằng chứng thực thi để \emph{thu hẹp} vùng nghi ngờ và đưa nó
+thẳng cho LLM, thay vì để LLM đoán rồi cộng điểm thưởng.
