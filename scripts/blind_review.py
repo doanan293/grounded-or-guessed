@@ -1,6 +1,6 @@
 """Blind, independent re-review of a sample of SemFault-250 labels.
 
-    python scripts/blind_review.py packet    # sample, assign, write docs/analysis/gt-review/mu/<member>.{md,csv}
+    python scripts/blind_review.py packet    # sample, assign, write docs/analysis/gt-review/duyet-doc-lap/<member>.{md,csv}
     python scripts/blind_review.py score     # after the members fill their CSVs → data/blind_review.csv + summary
 Design (fixed before anyone answers):
 - 60 programs, seed 20261110: 30 from the labels a member already reviewed with the LLM suggestion visible (15 relocated
@@ -23,7 +23,7 @@ from flx._semloc import SEMLOC_ROOT
 
 ROOT = Path(__file__).resolve().parents[1]
 REV = ROOT / "docs" / "analysis" / "gt-review"
-OUT = REV / "mu"
+OUT = REV / "duyet-doc-lap"
 SEED = 20261110
 MEMBERS = {"Tạ Công Nam": "ta-cong-nam", "Nguyễn Hoàng Hải": "nguyen-hoang-hai", "Đỗ Xuân Tráng": "do-xuan-trang",
            "Hoàng Trung Kiên": "hoang-trung-kien", "Mai Văn Tùng": "mai-van-tung", "Nguyễn Đức Tùng": "nguyen-duc-tung"}
@@ -94,7 +94,7 @@ def build() -> list[dict]:
             llm[v["program"]] = v
     seen = {}
     for name, slug in MEMBERS.items():
-        for r in csv.DictReader(open(REV / "thanh-vien" / f"{slug}.csv", encoding="utf-8-sig")):
+        for r in csv.DictReader(open(REV / "duyet-lan-1-co-goi-y" / f"{slug}.csv", encoding="utf-8-sig")):
             seen[r["program"]] = name
     relocated = sorted(p for p, o in oracle.items() if o["status"] == "corrected" and p in seen)
     flagged = sorted(p for p in seen if p not in relocated)

@@ -84,6 +84,6 @@
 
 ### Task 9 (09/11, chủ dự án duyệt — hướng tới công bố): duyệt mù và PAV trên test
 
-- [x] `scripts/blind_review.py packet`: 60 chương trình (seed 20261110; 15 bị dời + 15 bị LLM nghi sai đã có người duyệt, 20 LLM giữ nguyên + 10 lỗi hai dòng chưa ai duyệt), mỗi ca 2 thành viên chưa từng xem ca đó, mỗi người 20 ca; ứng viên đánh chữ ngẫu nhiên, không có gợi ý LLM; tệp `docs/analysis/gt-review/mu/`
+- [x] `scripts/blind_review.py packet`: 60 chương trình (seed 20261110; 15 bị dời + 15 bị LLM nghi sai đã có người duyệt, 20 LLM giữ nguyên + 10 lỗi hai dòng chưa ai duyệt), mỗi ca 2 thành viên chưa từng xem ca đó, mỗi người 20 ca; ứng viên đánh chữ ngẫu nhiên, không có gợi ý LLM; tệp `docs/analysis/gt-review/duyet-doc-lap/`
 - [ ] Thành viên điền CSV (độc lập, không dùng AI); `scripts/blind_review.py score` → `data/blind_review.csv`; đồng thuận người–người và người–nhãn rà soát; đưa vào bài (phương pháp, kết quả, mối đe dọa); nếu bất đồng nhiều, điều chỉnh bộ nhãn và báo cáo đúng như vậy
 - [ ] PAV trên test (tham số dev đã commit ở 64fdd2d0): `pav_test_gemini_r{1,2,3}` → `pav_eval.py apply test` → thêm `pav` vào `rq2_ours.py`, bảng bổ sung, bài

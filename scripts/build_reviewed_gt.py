@@ -3,7 +3,7 @@
     python scripts/build_reviewed_gt.py
 Every program gets a label, by precedence:
   override   — lead-author correction backed by running the tests (OVERRIDES, with the reason);
-  human      — a team member's answer in docs/analysis/gt-review/thanh-vien/*.csv (the 46 relocated labels and
+  human      — a team member's answer in docs/analysis/gt-review/duyet-lan-1-co-goi-y/*.csv (the 46 relocated labels and
                every label the LLM pre-review put on another line; reviewers saw the LLM suggestion);
   llm_either — the LLM judged the original label defensible but the fault also on another line: both lines count;
   llm_label  — the LLM judged the original label right: kept.
@@ -65,7 +65,7 @@ def main() -> None:
     orig = {g["file"][:-3]: g["faulty_lines"] for g in
             json.loads((SEMLOC_ROOT / "benchmark" / "ground_truth.json").read_text())["programs"]}
     human, reviewer = {}, {}
-    for f in sorted((REV / "thanh-vien").glob("*.csv")):
+    for f in sorted((REV / "duyet-lan-1-co-goi-y").glob("*.csv")):
         for r in csv.DictReader(open(f, encoding="utf-8-sig")):
             human[r["program"]] = answer_lines(r["answer"], r)
             reviewer[r["program"]] = f.stem

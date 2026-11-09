@@ -137,7 +137,7 @@ def members_packet() -> None:
             cases.append({"program": r["program"], "S": "", "F": r["llm_fault_line"], "fix": r["fix"], "kind": r["status"],
                           "llm": f"other ({r['llm_confidence']}): {r['llm_reason']}"})
     cases.sort(key=lambda c: c["program"])
-    dest = OUT / "thanh-vien"
+    dest = OUT / "duyet-lan-1-co-goi-y"
     dest.mkdir(exist_ok=True)
     for m, who in enumerate(REVIEWERS):
         mine = [c for i, c in enumerate(cases) if i % len(REVIEWERS) == m]
