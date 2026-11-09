@@ -1,4 +1,4 @@
-% Báo cáo đầy đủ tiểu luận IT5440 — biên dịch: make -C docs/report vi   (XeLaTeX + BibTeX)
+% Báo cáo tiểu luận IT5440 — biên dịch: make -C docs/report vi-full | vi-lan1 | vi-lan2   (XeLaTeX + BibTeX)
 % Quy cách theo "Hướng dẫn làm và nộp tiểu luận" (mục III.1.2).
 \documentclass[fontsize=13pt,a4paper,oneside,numbers=noenddot]{scrreprt}
 
@@ -37,6 +37,16 @@
 \pagestyle{scrheadings}
 
 \newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+% Phiên bản: lan1 (báo cáo lần 1) < lan2 (báo cáo lần 2) < full (bài nộp). Đặt bằng `make vi-lan1` …;
+% mặc định full. \IfAtLeast{lan2}{...} chỉ đưa nội dung vào khi phiên bản đang dựng >= lan2.
+\providecommand{\Version}{full}
+\expandafter\def\csname VersionRank@lan1\endcsname{1}
+\expandafter\def\csname VersionRank@lan2\endcsname{2}
+\expandafter\def\csname VersionRank@full\endcsname{3}
+\expandafter\ifx\csname VersionRank@\Version\endcsname\relax
+  \errmessage{Unknown \string\Version: \Version\space (use lan1, lan2 or full)}\fi
+\newcommand{\IfAtLeast}[2]{\ifnum\csname VersionRank@\Version\endcsname<\csname VersionRank@#1\endcsname\relax\else#2\fi}
+\input{../generated/numbers-vi}
 
 \begin{document}
 \input{frontmatter/bia}
@@ -50,11 +60,17 @@
 \clearpage
 \pagenumbering{arabic}
 \input{chapters/ch1-gioi-thieu}
-\input{chapters/ch2-tong-quan}
+\input{chapters/ch2-tong-quan}          % nội dung 1 của thầy: tài liệu, từ khóa
 \input{chapters/ch3-co-so-ly-thuyet}
-\input{chapters/ch4-giai-phap}
-\input{chapters/ch5-thuc-nghiem}
-\input{chapters/ch6-ket-luan}
+\input{chapters/ch4-phuong-phap}        % nội dung 2: RQ, thiết kế thực nghiệm
+\input{chapters/ch5-ket-qua}
+\IfAtLeast{lan2}{%
+  \input{chapters/ch6-phan-tich-that-bai}
+  \input{chapters/ch7-dong-gop}}        % nội dung 3: đóng góp, triết lý khoa học
+\input{chapters/ch8-ket-luan}
+\IfAtLeast{full}{%
+  \appendix
+  \input{chapters/phu-luc}}
 
 \bibliographystyle{../paper-en/IEEEtran}
 \bibliography{../references}
