@@ -29,3 +29,18 @@ repaired,gpt-oss-120b,gpt-oss-120b-medium,covgate,44,3,0.4545,0.0601,0.6818,0.02
 repaired,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,semloc,44,3,0.4242,0.0347,0.6515,0.0572,0.7803,0.0131
 repaired,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,semloc_no_prior,44,3,0.2045,0.0227,0.5152,0.0473,0.6439,0.0347
 repaired,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,covgate,44,3,0.4242,0.0347,0.7121,0.0131,0.7879,0.0262
+reviewed,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc,50,3,0.8333,0.0115,0.94,0.0,0.9467,0.0115
+reviewed,Gemini 3.8 Flash,gemini-3.8-flash-n,semloc_no_prior,50,3,0.6533,0.0503,0.92,0.02,0.92,0.02
+reviewed,Gemini 3.8 Flash,gemini-3.8-flash-n,covgate,50,3,0.8333,0.0115,0.9467,0.0115,0.9467,0.0115
+reviewed,GPT-6 luna,gpt-6-luna,semloc,50,3,0.8467,0.0115,0.9333,0.0115,0.96,0.0
+reviewed,GPT-6 luna,gpt-6-luna,semloc_no_prior,50,3,0.54,0.04,0.78,0.0,0.82,0.02
+reviewed,GPT-6 luna,gpt-6-luna,covgate,50,3,0.8467,0.0115,0.9333,0.0115,0.9533,0.0115
+reviewed,Claude Sonnet 5.5,claude-sonnet-5-5,semloc,50,3,0.74,0.02,0.8267,0.0231,0.86,0.02
+reviewed,Claude Sonnet 5.5,claude-sonnet-5-5,semloc_no_prior,50,3,0.4867,0.0306,0.7867,0.0115,0.8133,0.0115
+reviewed,Claude Sonnet 5.5,claude-sonnet-5-5,covgate,50,3,0.74,0.02,0.8467,0.0231,0.8533,0.0306
+reviewed,gpt-oss-120b,gpt-oss-120b-medium,semloc,50,3,0.7267,0.0757,0.7867,0.0416,0.7933,0.0503
+reviewed,gpt-oss-120b,gpt-oss-120b-medium,semloc_no_prior,50,3,0.4067,0.1007,0.6333,0.0503,0.6533,0.0503
+reviewed,gpt-oss-120b,gpt-oss-120b-medium,covgate,50,3,0.7267,0.0757,0.7867,0.0416,0.7933,0.0503
+reviewed,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,semloc,50,3,0.72,0.02,0.78,0.0346,0.8267,0.0115
+reviewed,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,semloc_no_prior,50,3,0.42,0.0346,0.62,0.0,0.6667,0.0462
+reviewed,Gemini 3.5 Flash-Lite,gemini-3.5-flash-lite,covgate,50,3,0.72,0.02,0.82,0.0,0.8267,0.0115

@@ -1,0 +1,2662 @@
+[
+ {
+  "program": "ad_mix",
+  "lines": [
+   65,
+   67
+  ],
+  "source": "llm_either",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "adjust_allocation",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "adjust_portfolio",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "adjust_queue",
+  "lines": [
+   66
+  ],
+  "source": "llm_label",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "adjust_supply",
+  "lines": [
+   64
+  ],
+  "source": "llm_label",
+  "original": [
+   64
+  ]
+ },
+ {
+  "program": "allocate_bonus_cut",
+  "lines": [
+   72
+  ],
+  "source": "llm_label",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "allocate_bounty_cut",
+  "lines": [
+   64
+  ],
+  "source": "llm_label",
+  "original": [
+   64
+  ]
+ },
+ {
+  "program": "allocate_budget_cut",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "allocate_pool_cut",
+  "lines": [
+   70
+  ],
+  "source": "llm_label",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "allocate_prize_cut",
+  "lines": [
+   74
+  ],
+  "source": "llm_label",
+  "original": [
+   74
+  ]
+ },
+ {
+  "program": "api_rate_guard",
+  "lines": [
+   72
+  ],
+  "source": "llm_label",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "attention_mask_merge",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "audit_window_filter",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "award_payout",
+  "lines": [
+   69
+  ],
+  "source": "llm_label",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "backlog_rolling_avg",
+  "lines": [
+   59
+  ],
+  "source": "llm_label",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "bandwidth_apportion",
+  "lines": [
+   69
+  ],
+  "source": "llm_label",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "bandwidth_budgeter",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "bandwidth_rebalance",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "batch_rate",
+  "lines": [
+   70
+  ],
+  "source": "llm_label",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "batch_tally",
+  "lines": [
+   62
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "batchnorm_running_mean",
+  "lines": [
+   70
+  ],
+  "source": "llm_label",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "bill_payout",
+  "lines": [
+   70
+  ],
+  "source": "llm_label",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "billing_gate",
+  "lines": [
+   72
+  ],
+  "source": "llm_label",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "blend_levels",
+  "lines": [
+   74,
+   75
+  ],
+  "source": "llm_either",
+  "original": [
+   74
+  ]
+ },
+ {
+  "program": "blend_margins",
+  "lines": [
+   73,
+   74
+  ],
+  "source": "llm_either",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "blend_orders",
+  "lines": [
+   72,
+   73
+  ],
+  "source": "llm_either",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "blend_supplies",
+  "lines": [
+   71,
+   72
+  ],
+  "source": "llm_either",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "budget_budgeter",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "budget_mix",
+  "lines": [
+   71
+  ],
+  "source": "llm_label",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "bump_click",
+  "lines": [
+   64
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "bump_conversion",
+  "lines": [
+   58
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   57
+  ]
+ },
+ {
+  "program": "bump_job",
+  "lines": [
+   57
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   56
+  ]
+ },
+ {
+  "program": "bump_purchase",
+  "lines": [
+   64
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "bump_refund",
+  "lines": [
+   59
+  ],
+  "source": "llm_label",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "cache_entry_ttl",
+  "lines": [
+   73
+  ],
+  "source": "llm_label",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "cached_inventory",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "cached_manifest",
+  "lines": [
+   65
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "cached_metric",
+  "lines": [
+   61
+  ],
+  "source": "llm_label",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "cached_preference",
+  "lines": [
+   85
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   83
+  ]
+ },
+ {
+  "program": "cached_route",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "cacheline_expiry",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "cacheline_refresh",
+  "lines": [
+   70
+  ],
+  "source": "llm_label",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "calendar_slot_insert",
+  "lines": [
+   73
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "calibrate_latency",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "calibrate_lift",
+  "lines": [
+   63
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   64
+  ]
+ },
+ {
+  "program": "calibrate_loss",
+  "lines": [
+   65
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "calibrate_pressure",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "calibrate_quality",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "calibrate_score",
+  "lines": [
+   65
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "calibrate_trend",
+  "lines": [
+   63
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   64
+  ]
+ },
+ {
+  "program": "catalog_cache",
+  "lines": [
+   64
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "checkout_rate",
+  "lines": [
+   66
+  ],
+  "source": "llm_label",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "cluster_rebalance_weights",
+  "lines": [
+   64
+  ],
+  "source": "llm_label",
+  "original": [
+   64
+  ]
+ },
+ {
+  "program": "combine_depths",
+  "lines": [
+   77,
+   78
+  ],
+  "source": "llm_either",
+  "original": [
+   77
+  ]
+ },
+ {
+  "program": "combine_offsets",
+  "lines": [
+   70,
+   71
+  ],
+  "source": "llm_either",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "combine_requests",
+  "lines": [
+   74,
+   75
+  ],
+  "source": "llm_either",
+  "original": [
+   75
+  ]
+ },
+ {
+  "program": "combine_responses",
+  "lines": [
+   71,
+   72
+  ],
+  "source": "llm_either",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "combine_scores",
+  "lines": [
+   68,
+   69
+  ],
+  "source": "llm_either",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "confidence_trendline",
+  "lines": [
+   77
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   79
+  ]
+ },
+ {
+  "program": "config_expiry",
+  "lines": [
+   77
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   78
+  ]
+ },
+ {
+  "program": "config_interpolate",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "cost_trendline",
+  "lines": [
+   65
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "coupons_apportion",
+  "lines": [
+   80,
+   81
+  ],
+  "source": "llm_either",
+  "original": [
+   80
+  ]
+ },
+ {
+  "program": "coverage_interp",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "cpu_allocator",
+  "lines": [
+   67,
+   68
+  ],
+  "source": "llm_either",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "credit_share",
+  "lines": [
+   68,
+   70
+  ],
+  "source": "llm_either",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "credits_allocator",
+  "lines": [
+   69,
+   70
+  ],
+  "source": "llm_either",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "dataloader_shard_merge",
+  "lines": [
+   73,
+   74
+  ],
+  "source": "llm_either",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "demand_curve",
+  "lines": [
+   60
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "demand_forecast_curve",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "demands_union",
+  "lines": [
+   66,
+   67
+  ],
+  "source": "llm_either",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "divide_coupon",
+  "lines": [
+   65,
+   67
+  ],
+  "source": "llm_either",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "divide_refund",
+  "lines": [
+   59,
+   61
+  ],
+  "source": "llm_either",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "donation_share",
+  "lines": [
+   58
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "download_rate",
+  "lines": [
+   75
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   74
+  ]
+ },
+ {
+  "program": "downtime_booking",
+  "lines": [
+   64
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "draft_cache",
+  "lines": [
+   73
+  ],
+  "source": "llm_label",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "email_send_quota",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "embedding_lookup_cache",
+  "lines": [
+   72
+  ],
+  "source": "llm_label",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "energy_window_avg",
+  "lines": [
+   74
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "error_meter",
+  "lines": [
+   56
+  ],
+  "source": "llm_label",
+  "original": [
+   56
+  ]
+ },
+ {
+  "program": "estimate_reliability",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "estimate_supply",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "estimate_temperature",
+  "lines": [
+   68
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "event_gate",
+  "lines": [
+   62
+  ],
+  "source": "llm_label",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "feature_cache",
+  "lines": [
+   30
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   31
+  ]
+ },
+ {
+  "program": "feature_flag_rollout",
+  "lines": [
+   63
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "fee_splitter",
+  "lines": [
+   59,
+   61
+  ],
+  "source": "override",
+  "note": "same two-line fee fault: the gross split (59) and the per-participant fee (61)",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "file_chunk_stitch",
+  "lines": [
+   80
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   78
+  ]
+ },
+ {
+  "program": "fuel_moving_mean",
+  "lines": [
+   65
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "gain_trendline",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "gpu_memory_pool",
+  "lines": [
+   75
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   74
+  ]
+ },
+ {
+  "program": "grades_union",
+  "lines": [
+   76,
+   77
+  ],
+  "source": "llm_either",
+  "original": [
+   76
+  ]
+ },
+ {
+  "program": "gradient_clip_budget",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   64
+  ]
+ },
+ {
+  "program": "grant_share",
+  "lines": [
+   63,
+   65
+  ],
+  "source": "llm_either",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "growth_trendline",
+  "lines": [
+   66
+  ],
+  "source": "llm_label",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "guard_email",
+  "lines": [
+   71
+  ],
+  "source": "llm_label",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "guard_search",
+  "lines": [
+   74
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "guard_write",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "heartbeat_throttle",
+  "lines": [
+   73
+  ],
+  "source": "llm_label",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "histogram_bucket_merge",
+  "lines": [
+   77,
+   78
+  ],
+  "source": "llm_either",
+  "original": [
+   77
+  ]
+ },
+ {
+  "program": "ids_merge",
+  "lines": [
+   67,
+   68
+  ],
+  "source": "llm_either",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "inspection_booking",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "invoice_merge_stream",
+  "lines": [
+   79,
+   83
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   82
+  ]
+ },
+ {
+  "program": "invoice_meter",
+  "lines": [
+   64
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "job_queue_priority",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "kv_snapshot_reader",
+  "lines": [
+   70,
+   71
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "latencies_merge",
+  "lines": [
+   86
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   83
+  ]
+ },
+ {
+  "program": "latency_rolling_avg",
+  "lines": [
+   69
+  ],
+  "source": "llm_label",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "ledger_balance_rollup",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "limit_api",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "limit_job",
+  "lines": [
+   75
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "limit_message",
+  "lines": [
+   73
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "limit_ping",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "limit_query",
+  "lines": [
+   69
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "limit_sensor",
+  "lines": [
+   64
+  ],
+  "source": "llm_label",
+  "original": [
+   64
+  ]
+ },
+ {
+  "program": "load_mix",
+  "lines": [
+   68
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "load_rolling_avg",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "log_sampling_decider",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "login_tally",
+  "lines": [
+   74
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "login_throttle",
+  "lines": [
+   69
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "lr_warmup_schedule",
+  "lines": [
+   59
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   57
+  ]
+ },
+ {
+  "program": "lru_evictor",
+  "lines": [
+   27,
+   56
+  ],
+  "source": "llm_either",
+  "original": [
+   27
+  ]
+ },
+ {
+  "program": "machine_booking",
+  "lines": [
+   61
+  ],
+  "source": "llm_label",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "maintenance_booking",
+  "lines": [
+   77
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   76
+  ]
+ },
+ {
+  "program": "memory_moving_mean",
+  "lines": [
+   65
+  ],
+  "source": "override",
+  "note": "the original label 66 is blank; the LLM pre-review kept it but quoted the statement on line 65 (`avg = total / window`, should divide by len(tail))",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "message_counter",
+  "lines": [
+   61
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   60
+  ]
+ },
+ {
+  "program": "metric_rolling_avg",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "model_confidence_clamp",
+  "lines": [
+   76
+  ],
+  "source": "llm_label",
+  "original": [
+   76
+  ]
+ },
+ {
+  "program": "notification_gate",
+  "lines": [
+   63
+  ],
+  "source": "llm_label",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "offer_expiry",
+  "lines": [
+   66
+  ],
+  "source": "llm_label",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "optimizer_step_guard",
+  "lines": [
+   62
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "packets_window_avg",
+  "lines": [
+   63
+  ],
+  "source": "llm_label",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "pages_union",
+  "lines": [
+   79
+  ],
+  "source": "llm_label",
+  "original": [
+   79
+  ]
+ },
+ {
+  "program": "payment_payout",
+  "lines": [
+   73
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "payment_split_rebate",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "percentile_estimator",
+  "lines": [
+   59
+  ],
+  "source": "llm_label",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "plan_appointment_slot",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "plan_conference_slot",
+  "lines": [
+   76
+  ],
+  "source": "llm_label",
+  "original": [
+   76
+  ]
+ },
+ {
+  "program": "plan_delivery_slot",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "plan_desk_slot",
+  "lines": [
+   76
+  ],
+  "source": "llm_label",
+  "original": [
+   76
+  ]
+ },
+ {
+  "program": "plan_jobs_share",
+  "lines": [
+   71,
+   72
+  ],
+  "source": "llm_either",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "plan_memo",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "plan_points_share",
+  "lines": [
+   73,
+   74
+  ],
+  "source": "llm_either",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "plan_seats_share",
+  "lines": [
+   81,
+   82
+  ],
+  "source": "llm_either",
+  "original": [
+   81
+  ]
+ },
+ {
+  "program": "plan_tickets_share",
+  "lines": [
+   80,
+   81
+  ],
+  "source": "llm_either",
+  "original": [
+   80
+  ]
+ },
+ {
+  "program": "plan_upgrade_slot",
+  "lines": [
+   63
+  ],
+  "source": "llm_label",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "prediction_cache",
+  "lines": [
+   73
+  ],
+  "source": "llm_label",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "price_cache",
+  "lines": [
+   61
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "prices_stream",
+  "lines": [
+   81
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   80
+  ]
+ },
+ {
+  "program": "priority_mix",
+  "lines": [
+   61
+  ],
+  "source": "llm_label",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "probability_curve",
+  "lines": [
+   73
+  ],
+  "source": "llm_label",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "probability_rebalance",
+  "lines": [
+   59
+  ],
+  "source": "llm_label",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "profile_expiry",
+  "lines": [
+   73
+  ],
+  "source": "llm_label",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "queue_window_avg",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "quota_allocator_service",
+  "lines": [
+   71
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "quota_for_capacity",
+  "lines": [
+   77,
+   78
+  ],
+  "source": "llm_either",
+  "original": [
+   77
+  ]
+ },
+ {
+  "program": "quota_for_fuel",
+  "lines": [
+   65,
+   66
+  ],
+  "source": "llm_either",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "quota_for_inventory",
+  "lines": [
+   66
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "quota_for_memory",
+  "lines": [
+   72
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "quota_for_storage",
+  "lines": [
+   65,
+   66
+  ],
+  "source": "llm_either",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "quote_memo",
+  "lines": [
+   61
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "rating_curve",
+  "lines": [
+   74
+  ],
+  "source": "llm_label",
+  "original": [
+   74
+  ]
+ },
+ {
+  "program": "read_throttle",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "realign_cache",
+  "lines": [
+   59
+  ],
+  "source": "llm_label",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "realign_power",
+  "lines": [
+   57,
+   59
+  ],
+  "source": "llm_either",
+  "original": [
+   57
+  ]
+ },
+ {
+  "program": "realign_replica",
+  "lines": [
+   58,
+   60
+  ],
+  "source": "llm_either",
+  "original": [
+   58
+  ]
+ },
+ {
+  "program": "rebate_splitter",
+  "lines": [
+   62
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "redis_like_expiry",
+  "lines": [
+   83
+  ],
+  "source": "llm_label",
+  "original": [
+   83
+  ]
+ },
+ {
+  "program": "rent_splitter",
+  "lines": [
+   63,
+   65
+  ],
+  "source": "llm_either",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "replica_sync_offsets",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "request_token_bucket",
+  "lines": [
+   62
+  ],
+  "source": "llm_label",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "reservation_booking",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "reservation_overlap_check",
+  "lines": [
+   69
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "reserve_band",
+  "lines": [
+   68
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "reserve_lane",
+  "lines": [
+   62
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   60
+  ]
+ },
+ {
+  "program": "reserve_slot",
+  "lines": [
+   61
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   60
+  ]
+ },
+ {
+  "program": "retry_backoff_window",
+  "lines": [
+   66
+  ],
+  "source": "llm_label",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "retry_tally",
+  "lines": [
+   55
+  ],
+  "source": "llm_label",
+  "original": [
+   55
+  ]
+ },
+ {
+  "program": "revenue_share",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "rolling_errors",
+  "lines": [
+   62
+  ],
+  "source": "llm_label",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "rolling_requests",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "rolling_retries",
+  "lines": [
+   62
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "rolling_usage",
+  "lines": [
+   67
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "room_reservation",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "royalty_payout",
+  "lines": [
+   67
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "sales_window_avg",
+  "lines": [
+   71
+  ],
+  "source": "llm_label",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "schedule_call",
+  "lines": [
+   72
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "schedule_car",
+  "lines": [
+   61
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "schedule_demo",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "schedule_pickup",
+  "lines": [
+   62
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "schedule_shift_allocator",
+  "lines": [
+   68
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "schedule_training",
+  "lines": [
+   67
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "schedule_window",
+  "lines": [
+   65
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "scores_apportion",
+  "lines": [
+   74,
+   75
+  ],
+  "source": "llm_either",
+  "original": [
+   74
+  ]
+ },
+ {
+  "program": "search_result_pager",
+  "lines": [
+   70,
+   72
+  ],
+  "source": "llm_either",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "sensor_window_avg",
+  "lines": [
+   73
+  ],
+  "source": "llm_label",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "session_memo",
+  "lines": [
+   71
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "shard_assignment",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "shares_apportion",
+  "lines": [
+   67,
+   68
+  ],
+  "source": "llm_either",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "shift_demand",
+  "lines": [
+   62
+  ],
+  "source": "llm_label",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "shift_feature",
+  "lines": [
+   59
+  ],
+  "source": "llm_label",
+  "original": [
+   59
+  ]
+ },
+ {
+  "program": "shift_risk",
+  "lines": [
+   65
+  ],
+  "source": "override",
+  "note": "omission fault (missing normalisation): the reviewer chose the insertion point, a blank line no method can rank; as in the sibling omission programs, the return statement is labelled",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "shift_traffic",
+  "lines": [
+   69
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "shift_trust",
+  "lines": [
+   58
+  ],
+  "source": "llm_label",
+  "original": [
+   58
+  ]
+ },
+ {
+  "program": "shift_weight",
+  "lines": [
+   64
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "signals_stream",
+  "lines": [
+   69
+  ],
+  "source": "llm_label",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "slots_apportion",
+  "lines": [
+   70
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "smooth_clicks",
+  "lines": [
+   58
+  ],
+  "source": "llm_label",
+  "original": [
+   58
+  ]
+ },
+ {
+  "program": "smooth_cpu",
+  "lines": [
+   68
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "smooth_pressure",
+  "lines": [
+   68
+  ],
+  "source": "llm_label",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "smooth_throughput",
+  "lines": [
+   61
+  ],
+  "source": "llm_label",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "speed_trendline",
+  "lines": [
+   71
+  ],
+  "source": "llm_label",
+  "original": [
+   71
+  ]
+ },
+ {
+  "program": "storage_mix",
+  "lines": [
+   64
+  ],
+  "source": "override",
+  "note": "omission fault (missing normalisation): the reviewer chose the insertion point, a blank line no method can rank; as in the sibling omission programs, the return statement is labelled",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "storage_quota_split",
+  "lines": [
+   66,
+   70
+  ],
+  "source": "override",
+  "note": "fee must leave the pool once: fixing line 66 alone still fails a test, fixing 66 and 70 passes every test",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "stream_joiner",
+  "lines": [
+   72
+  ],
+  "source": "llm_label",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "subsidy_payout",
+  "lines": [
+   69,
+   71
+  ],
+  "source": "llm_either",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "summary_memo",
+  "lines": [
+   73
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   72
+  ]
+ },
+ {
+  "program": "task_tally",
+  "lines": [
+   55
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   53
+  ]
+ },
+ {
+  "program": "task_throttle",
+  "lines": [
+   62
+  ],
+  "source": "llm_label",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "tasks_allocator",
+  "lines": [
+   69,
+   70
+  ],
+  "source": "llm_either",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "temperature_window_avg",
+  "lines": [
+   67
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   68
+  ]
+ },
+ {
+  "program": "tensor_slice_pad",
+  "lines": [
+   64
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   63
+  ]
+ },
+ {
+  "program": "throughput_trendline",
+  "lines": [
+   60
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "tiers_stream",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "time_range_filter",
+  "lines": [
+   75
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "timestamps_stream",
+  "lines": [
+   74
+  ],
+  "source": "llm_label",
+  "original": [
+   74
+  ]
+ },
+ {
+  "program": "tip_share",
+  "lines": [
+   60,
+   62
+  ],
+  "source": "llm_either",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "token_cache",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "token_expiry_check",
+  "lines": [
+   69
+  ],
+  "source": "llm_label",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "track_api",
+  "lines": [
+   67
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   66
+  ]
+ },
+ {
+  "program": "track_build",
+  "lines": [
+   53
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   52
+  ]
+ },
+ {
+  "program": "track_delivery",
+  "lines": [
+   72
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "track_deployment",
+  "lines": [
+   67
+  ],
+  "source": "llm_label",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "track_logout",
+  "lines": [
+   69
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "track_release",
+  "lines": [
+   60
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   58
+  ]
+ },
+ {
+  "program": "traffic_shaping_gate",
+  "lines": [
+   71
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   70
+  ]
+ },
+ {
+  "program": "ttl_snapshot_store",
+  "lines": [
+   68
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   69
+  ]
+ },
+ {
+  "program": "txn_dedup_merge",
+  "lines": [
+   76
+  ],
+  "source": "human",
+  "reviewer": "hoang-trung-kien",
+  "original": [
+   75
+  ]
+ },
+ {
+  "program": "upload_gate",
+  "lines": [
+   74
+  ],
+  "source": "human",
+  "reviewer": "mai-van-tung",
+  "original": [
+   73
+  ]
+ },
+ {
+  "program": "versions_stream",
+  "lines": [
+   80
+  ],
+  "source": "human",
+  "reviewer": "nguyen-duc-tung",
+  "original": [
+   79
+  ]
+ },
+ {
+  "program": "view_tally",
+  "lines": [
+   68
+  ],
+  "source": "human",
+  "reviewer": "ta-cong-nam",
+  "original": [
+   67
+  ]
+ },
+ {
+  "program": "views_moving_mean",
+  "lines": [
+   62
+  ],
+  "source": "llm_label",
+  "original": [
+   62
+  ]
+ },
+ {
+  "program": "volume_moving_mean",
+  "lines": [
+   60
+  ],
+  "source": "human",
+  "reviewer": "nguyen-hoang-hai",
+  "original": [
+   61
+  ]
+ },
+ {
+  "program": "votes_apportion",
+  "lines": [
+   29
+  ],
+  "source": "llm_label",
+  "original": [
+   29
+  ]
+ },
+ {
+  "program": "warm_cache_loader",
+  "lines": [
+   75
+  ],
+  "source": "human",
+  "reviewer": "do-xuan-trang",
+  "original": [
+   76
+  ]
+ },
+ {
+  "program": "warning_meter",
+  "lines": [
+   65
+  ],
+  "source": "llm_label",
+  "original": [
+   65
+  ]
+ },
+ {
+  "program": "water_allocator",
+  "lines": [
+   29
+  ],
+  "source": "llm_label",
+  "original": [
+   29
+  ]
+ },
+ {
+  "program": "weights_union",
+  "lines": [
+   74
+  ],
+  "source": "llm_label",
+  "original": [
+   74
+  ]
+ },
+ {
+  "program": "windowed_error_rate",
+  "lines": [
+   68,
+   69
+  ],
+  "source": "llm_either",
+  "original": [
+   68
+  ]
+ }
+]

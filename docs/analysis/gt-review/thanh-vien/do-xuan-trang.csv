@@ -1,20 +1,20 @@
 ﻿id,program,G,S,F,answer,note
-1,bump_conversion,57,,58,,
-2,calendar_slot_insert,72,,73,,
-3,calibrate_trend,64,,63,,
-4,demand_curve,61,,60,,
-5,energy_window_avg,72,,74,,
-6,file_chunk_stitch,78,,80,,
-7,guard_write,69,70,,,
-8,limit_api,65,66,,,
-9,login_tally,73,,74,,
-10,optimizer_step_guard,61,65,62,,
-11,quota_allocator_service,70,,71,,
-12,replica_sync_offsets,69,70,,,
-13,rolling_retries,63,,62,,
-14,schedule_pickup,61,62,,,
-15,shift_traffic,68,,69,,
-16,summary_memo,72,,73,,
-17,track_api,66,,67,,
-18,ttl_snapshot_store,69,68,,,
-19,warm_cache_loader,76,,75,,
+1,bump_conversion,57,,58,F,Lỗi -1 tiêm vào dòng 58 (cần gán updated = cap); G=57 là guard đúng.
+2,calendar_slot_insert,72,,73,F,Lỗi điều kiện chạm biên ở dòng 73; G=72 chỉ là vòng lặp for.
+3,calibrate_trend,64,,63,F,Lỗi đảo cờ 'if not clamp:' ở dòng 63; G=64 trong thân hàm đúng.
+4,demand_curve,61,,60,F,Lỗi đảo cờ 'if not clamp:' ở dòng 60; G=61 là thân gán đúng.
+5,energy_window_avg,72,,74,F,G=72 là dòng log debug; lỗi chia cho window thay vì len(recent) ở dòng 74.
+6,file_chunk_stitch,78,,80,F,G=78 nối chuỗi đúng; lỗi cắt bớt byte cuối [:-1] ở dòng 80.
+7,guard_write,69,70,,S,G=69 là dòng trống; lỗi toán tử so sánh > thay vì >= ở dòng 70 (S).
+8,limit_api,65,66,,S,G=65 là dòng trống; lỗi toán tử so sánh > thay vì >= ở dòng 66 (S).
+9,login_tally,73,,74,F,G=73 là guard đúng; lỗi -1 tiêm vào dòng 74 (F).
+10,optimizer_step_guard,61,65,62,F,Lỗi điều kiện NaN ở dòng 62 (F); G=61 và S=65 đều là dòng trống (S là patch bù trừ).
+11,quota_allocator_service,70,,71,F,G=70 là dòng trống; lỗi ép kiểu int không bảo toàn tổng ở dòng 71 (F).
+12,replica_sync_offsets,69,70,,S,G=69 là dòng trống; khối pop phần tử sai logic bắt đầu từ dòng 70 (S).
+13,rolling_retries,63,,62,F,G=63 là dòng trống; lỗi chia total/window thay vì len(tail) ở dòng 62 (F).
+14,schedule_pickup,61,62,,S,G=61 là dòng trống; lỗi toán tử <=/>= chạm biên ở dòng 62 (S).
+15,shift_traffic,68,,69,F,G=68 là dòng trống; dòng 69 (F) trả về updated chưa chuẩn hóa tổng 1.0.
+16,summary_memo,72,,73,F,G=72 là dòng trống; lỗi điều kiện hết hạn > thay vì >= ở dòng 73 (F).
+17,track_api,66,,67,F,G=66 là guard đúng; lỗi -1 tiêm vào dòng 67 (F).
+18,ttl_snapshot_store,69,68,,S,G=69 là return None; lỗi toán tử so sánh > thay vì >= ở dòng 68 (S).
+19,warm_cache_loader,76,,75,F,G=76 là return value; lỗi ở dòng 75 gán biến cục bộ thay vì cập nhật cache.

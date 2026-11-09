@@ -1,19 +1,19 @@
 ﻿id,program,G,S,F,answer,note
-1,bump_purchase,63,,64,,
-2,calibrate_lift,64,,63,,
-3,confidence_trendline,79,,77,,
-4,donation_share,59,58,,,
-5,estimate_temperature,69,68,,,
-6,gain_trendline,71,,70,,
-7,invoice_meter,63,,64,,
-8,limit_message,72,73,,,
-9,lr_warmup_schedule,57,,59,,
-10,payment_split_rebate,65,,66,,
-11,quota_for_memory,70,,72,,
-12,reserve_band,67,,68,,
-13,room_reservation,69,,70,,
-14,schedule_training,66,,67,,
-15,slots_apportion,69,,70,,
-16,temperature_window_avg,68,,67,,
-17,track_delivery,70,,72,,
-18,upload_gate,73,74,,,
+1,bump_purchase,63,,64,F,G=63 là guard đúng; lỗi -1 tiêm vào dòng 64 (F).
+2,calibrate_lift,64,,63,F,G=64 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 63 (F).
+3,confidence_trendline,79,,77,F,G=79 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 77 (F).
+4,donation_share,59,58,,S,G=59 là dòng trống; vị trí chia tỷ lệ chưa trừ phí ở dòng 58 (S).
+5,estimate_temperature,69,68,,S,G=69 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 68 (S).
+6,gain_trendline,71,,70,F,G=71 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 70 (F).
+7,invoice_meter,63,,64,F,G=63 là guard đúng; lỗi -1 tiêm vào dòng 64 (F).
+8,limit_message,72,73,,S,G=72 là dòng trống; lỗi toán tử > thay vì >= ở dòng 73 (S).
+9,lr_warmup_schedule,57,,59,F,G=57 là guard; lỗi +1 tiêm vào công thức ở dòng 59 (F) (phải là step/warmup_steps).
+10,payment_split_rebate,65,,66,F,G=65 là dòng trống; trừ rebate vào từng phần ở dòng 66 (F) thay vì trừ vào tổng.
+11,quota_for_memory,70,,72,F,G=70 là dòng trống; ép kiểu int ở dòng 72 (F) làm sai tổng quota.
+12,reserve_band,67,,68,F,G=67 là khai báo hàm overlaps; lỗi toán tử chạm biên ở dòng 68 (F).
+13,room_reservation,69,,70,F,G=69 là vòng lặp for; lỗi toán tử chạm biên ở dòng 70 (F).
+14,schedule_training,66,,67,F,G=66 là vòng lặp for; lỗi toán tử chạm biên ở dòng 67 (F).
+15,slots_apportion,69,,70,F,G=69 là dòng trống; ép kiểu int ở dòng 70 (F) làm sai tổng quota.
+16,temperature_window_avg,68,,67,F,G=68 là dòng trống; lỗi chia total/window thay vì len(tail) ở dòng 67 (F).
+17,track_delivery,70,,72,F,G=70 là guard; lỗi -1 tiêm vào dòng 72 (F).
+18,upload_gate,73,74,,S,G=73 là dòng trống; lỗi toán tử > thay vì >= ở dòng 74 (S).
