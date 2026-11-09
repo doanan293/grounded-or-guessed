@@ -30,6 +30,27 @@
 
 ---
 
+### Task 0 (P3-0): Baseline LLM + độ phủ trên lỗi thật (BugsInPy) và trên tập đổi tên — cần LLM
+
+Lý do (chủ dự án duyệt 09/11): baseline mạnh nhất của bài mới được thử trên SemFault; phải chịu cùng các phép thử độ bền như SemLoc (RQ3a, RQ3b). Ngoại lệ duy nhất của quy tắc "không gọi LLM" ở Global Constraints. Khoảng 700 lượt gọi Gemini.
+
+**Files:**
+- Modify: `src/flx/direct_cov.py` (`build_prompt(..., first_line: int = 1)`; `bip_failing_tests`; `run_bip`)
+- Create: `scripts/run_direct_cov_bip.py`
+- Modify: `scripts/rq3_bugsinpy.py` (method `llm_coverage`), `scripts/rq3_renamed.py` (method `llm_coverage`), `scripts/regenerate_all.sh` (chép lượt chạy hoàn chỉnh của BugsInPy và tập đổi tên)
+- Test: `tests/test_direct_cov.py`
+
+**Interfaces:**
+- Produces: `build_prompt(src, failing, cov, first_line=1)` — đánh số dòng bắt đầu từ `first_line` (hàm đích BugsInPy giữ số dòng tuyệt đối của file); với `first_line=1` prompt **giống hệt** bản cũ (cache SemFault không đổi).
+- Produces: `parse_failed(stdout: str, declared: set[str]) -> list[dict]` — `{"name", "error"}` từ dòng `FAILED path::Class::test - msg` của pytest, chỉ giữ test đã khai báo (định danh dạng JUnit qua `bip_run.junit_id`).
+- Produces: `runs/direct_cov_bip_gemini_r{1,2,3}.json` (`{bug: [lines]}`), `runs/direct_cov_renamed_gemini_r{1,2,3}.json` (`--bench data/renamed`, danh sách `data/renamed/test_programs.json`; độ phủ dùng chung vì đổi tên giữ số dòng và hành vi).
+
+- [ ] **Step 1: Viết test** `test_prompt_first_line_offsets_numbering` (với `first_line=40`, dòng đầu là `40: def f(x):` và chú thích độ phủ đọc theo số dòng tuyệt đối; với mặc định, prompt bằng đúng chuỗi của bản cũ) và `test_parse_failed_keeps_declared_only`.
+- [ ] **Step 2: Chạy** `.venv/bin/pytest tests/test_direct_cov.py -q` → FAIL.
+- [ ] **Step 3: Cài** `first_line`, `parse_failed`, `run_bip(tgt, cov, model)` (nguồn = dòng `fn_start..fn_end` của file đích trong checkout; test fail lấy từ một lần `pytest -q -rf --tb=no` trên test file, chỉ giữ test khai báo) và `scripts/run_direct_cov_bip.py --run-id --model --workers` (resumable như `run_direct_cov.py`).
+- [ ] **Step 4: Chạy** test → PASS; chạy nền 3 lặp BugsInPy và 3 lặp tập đổi tên (`.env` đã nạp, `FLX_LLM_TIMEOUT_RETRIES=2`); lượt nào thiếu chương trình thì chạy bù cùng run id.
+- [ ] **Step 5: Chấm**: thêm `llm_coverage` vào `rq3_bugsinpy.py` (so với `semloc_prior` như các phương pháp khác) và `rq3_renamed.py` (gốc = `direct_cov_test_gemini_r{i}`, đổi tên = `direct_cov_renamed_gemini_r{i}`); `regenerate_all.sh`; commit.
+
 ### Task 1 (P3-1): Tách kết quả theo nhãn và tập con executable, theo từng ground truth
 
 **Files:**
