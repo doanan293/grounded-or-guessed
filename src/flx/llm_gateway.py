@@ -73,6 +73,9 @@ def chat(model: str, system: str, user: str, temperature: float = 0.0,
         _log({**rec, "cache_hit": True, "prompt_tokens": cached.get("prompt_tokens"),
               "completion_tokens": cached.get("completion_tokens"), "served_model": cached.get("served_model")})
         return cached["content"]
+    if os.environ.get("FLX_LLM_OFFLINE") == "1":  # replay-only: never touch the network
+        _log({**rec, "error": f"offline cache miss: {key}"})
+        raise LLMUnavailable(f"offline cache miss: {key}")
 
     max_retries = int(os.environ.get("FLX_LLM_MAX_RETRIES", "6"))
     # a timed-out call already cost a full FLX_LLM_TIMEOUT; retry it less than a cheap 429
