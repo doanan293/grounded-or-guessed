@@ -42,13 +42,14 @@ def select(cases: list[dict], per_category: int, seed: int) -> list[dict]:
     return out
 
 
-def line_relation(src: str, gt_line: int, guess_line: int) -> str:
+def line_relation(src: str, gt_line: int, guess_line: int, strict: bool = False) -> str:
     """How a guessed line relates to a ground-truth line:
     same         the same line
     blank_gt     the ground-truth line is blank or a comment (no statement to blame)
     header_body  one is the header of a compound statement (if/for/while/with/try) and the other is the first
                  line of its body, or lies in that first statement when it spans at most 3 lines — a fault spanning a
-                 guard and the statement it guards (nested guards included)
+                 guard and the statement it guards (nested guards included). strict=True keeps only the header and
+                 the first line of its body (a lower bound of the ambiguity; the default is an upper bound)
     other        anything else"""
     import ast
     if gt_line == guess_line:
@@ -60,7 +61,7 @@ def line_relation(src: str, gt_line: int, guess_line: int) -> str:
     for node in ast.walk(ast.parse(src)):
         if isinstance(node, (ast.If, ast.For, ast.AsyncFor, ast.While, ast.With, ast.AsyncWith, ast.Try)) and node.body:
             first = node.body[0]
-            last = first.end_lineno if first.end_lineno - first.lineno <= 2 else first.lineno
+            last = first.end_lineno if (first.end_lineno - first.lineno <= 2 and not strict) else first.lineno
             for head, other in ((gt_line, guess_line), (guess_line, gt_line)):
                 if head == node.lineno and first.lineno <= other <= last:
                     return "header_body"

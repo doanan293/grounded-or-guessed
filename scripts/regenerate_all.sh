@@ -31,3 +31,4 @@ $PY scripts/pareto_data.py > /dev/null
 $PY scripts/checklist.py > /dev/null
 $PY scripts/make_tables.py
 $PY scripts/make_numbers.py > /dev/null
+$PY scripts/check_claims.py --fix docs/analysis/contributions.md docs/analysis/failure-analysis.md

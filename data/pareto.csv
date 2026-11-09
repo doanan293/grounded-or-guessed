@@ -1,18 +1,18 @@
 method,model,n,repeats,acc1,acc3,tokens_per_program
-SemLoc,Gemini 3.8 Flash,48,3,0.4792,0.8056,14005
-CovGate,Gemini 3.8 Flash,48,3,0.4792,0.8056,14005
-SemLoc,GPT-6 luna,48,3,0.4931,0.7778,3722
-CovGate,GPT-6 luna,48,3,0.4931,0.7778,3722
-SemLoc,Claude Sonnet 5.5,48,3,0.3958,0.6528,6702
-CovGate,Claude Sonnet 5.5,48,3,0.3958,0.6528,6702
-SemLoc,gpt-oss-120b,48,3,0.4167,0.625,4635
-CovGate,gpt-oss-120b,48,3,0.4167,0.625,4635
-SemLoc,Gemini 3.5 Flash-Lite,48,3,0.3889,0.6319,3634
-CovGate,Gemini 3.5 Flash-Lite,48,3,0.3889,0.6528,3634
-LLM direct,Gemini 3.8 Flash,48,3,0.5486,0.5903,2506
-LLM + coverage,Gemini 3.8 Flash,48,3,0.5139,0.875,2572
-LLM + coverage,GPT-6 luna,48,3,0.4653,0.8472,1463
-LLM + coverage,Claude Sonnet 5.5,48,3,0.5,0.875,2164
-LLM + coverage,gpt-oss-120b,48,3,0.4861,0.875,2179
-LLM + coverage,Gemini 3.5 Flash-Lite,48,3,0.4722,0.75,1692
-SBFL Ochiai,-,48,1,0.0208,0.1875,0
+SemLoc,Gemini 3.8 Flash,44,3,0.5227,0.8712,14005
+CovGate,Gemini 3.8 Flash,44,3,0.5227,0.8788,14005
+SemLoc,GPT-6 luna,44,3,0.5379,0.8409,3722
+CovGate,GPT-6 luna,44,3,0.5379,0.8485,3722
+SemLoc,Claude Sonnet 5.5,44,3,0.4318,0.7121,6702
+CovGate,Claude Sonnet 5.5,44,3,0.4318,0.7121,6702
+SemLoc,gpt-oss-120b,44,3,0.4545,0.6742,4635
+CovGate,gpt-oss-120b,44,3,0.4545,0.6818,4635
+SemLoc,Gemini 3.5 Flash-Lite,44,3,0.4242,0.6515,3634
+CovGate,Gemini 3.5 Flash-Lite,44,3,0.4242,0.7121,3634
+LLM direct,Gemini 3.8 Flash,44,3,0.5985,0.6439,2506
+LLM + coverage,Gemini 3.8 Flash,44,3,0.5606,0.9545,2572
+LLM + coverage,GPT-6 luna,44,3,0.5076,0.9242,1463
+LLM + coverage,Claude Sonnet 5.5,44,3,0.5455,0.9545,2164
+LLM + coverage,gpt-oss-120b,44,3,0.5303,0.9545,2179
+LLM + coverage,Gemini 3.5 Flash-Lite,44,3,0.5152,0.8182,1692
+SBFL Ochiai,-,44,1,0.0227,0.2045,0

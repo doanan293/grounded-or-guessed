@@ -9,21 +9,23 @@ LLM-based fault localization tools claim that grounding LLM reasoning in executi
 - **Robustness (RQ3).** We test on real bugs (BugsInPy), on identifier-renamed programs (memorization check), and across model families (Gemini, Claude, GPT, an open-weight model) at each provider's default reasoning level.
 - **SemFault-250-verified.** We re-derive the benchmark's ground truth by execution: a line is faulty only if a one-line patch there makes every test pass.
 
-## Findings so far (2026-11-08, milestone 2)
+## Findings (2026-11-09, after Phase 3)
 
-Numbers are Acc@k (%) on SemFault-250's 200-program test split, 3 repeats, Gemini 3.8 Flash at provider-default reasoning, scored with average-rank ties and a fixed denominator, on the execution-repaired ground truth unless noted.
+Acc@k (%) on SemFault-250's test split, 3 repeats, Gemini 3.8 Flash at provider-default reasoning, average-rank ties and a fixed denominator, on the execution-repaired ground truth (179 test programs) unless noted. Δ are percentage points with 95% template-cluster bootstrap CIs. Every number here is a macro in `docs/report/generated/numbers.tex`.
 
-| Finding | Evidence (in this repo) |
+| Finding | Evidence |
 |---|---|
 | All 13 published configurations reproduce exactly from the released logs; the released counterfactual step never changes a ranking (0/250 programs, 5 configurations) | `data/rq1a_table.csv`, `data/rq1_cf_identity.json` |
-| An undocumented +1.2 bonus on the LLM's own fault-line guess carries most of the top-1 accuracy: Shapley split of SemLoc's Acc@1 49.3 = guess 28.9 + semantic spectrum 20.3; Acc@3 71.2 = guess 26.8 + spectrum 44.4 | `data/rq_decomposition.csv` |
-| 56/250 ground-truth lines are blank and 65/250 are executed by no failing test; re-deriving the ground truth by execution (82 confirmed, 46 corrected) raises every LLM method by 11–19 pp | `data/semfault_verified_gt.json`, `data/rq_gt_sensitivity.csv` |
-| One prompt with per-line coverage counts beats the whole pipeline: Acc@3 86.7 vs 71.2 (p < .001), at about a fifth of the tokens | `data/rq2_ours.csv`, `data/llm_cost.csv`, `docs/report/generated/pareto.pdf` |
-| CovGate (dev-tuned λ·Ochiai tie-break) adds 3.5 pp Acc@3 (McNemar p = .039); counterfactual re-ranking does not help, yet costs 42 % of SemLoc's LLM calls | `data/rq2_ours.csv`, `data/llm_cost.csv` |
-| On 31 real youtube-dl bugs (BugsInPy), every SemLoc top-1 hit is the LLM's own guess (46.2 = 46.2); the semantic spectrum alone reaches 7.5. The artifact's BugsInPy metric ranks the LLM's guess, not the fixed lines | `data/rq3_bugsinpy.csv` |
-| Renaming identifiers (behaviour-preserving) leaves the guess intact but cuts the constraint-based ranking: spectrum-only Acc@3 66.7 → 51.9 (p < .001) | `data/rq3_renamed.csv` |
-| Across five model families the weaker the model, the more it leans on the guess bonus (Flash-Lite −20 pp Acc@1 without it, Gemini 3.8 ±1) | `data/rq3_families.csv` |
-| The released BugsInPy runner leaves stale bytecode after its counterfactual patch (same size, same second), which can hide the bug in the next run; fixed in our driver | `src/flx/bip_run.py` |
+| Top-1 is mostly *guessed*: Shapley split of SemLoc's Acc@1 52.3 = LLM's own fault-line guess (an undocumented +1.2 bonus) 30.7 + semantic spectrum 21.6; top-3 is mostly *grounded*: Acc@3 75.4 = 28.5 + 46.9 | `data/rq_decomposition.csv` |
+| One prompt with per-line coverage counts beats the whole pipeline: Acc@3 92.0 vs 75.4 (Δ +16.6 [+10.5, +22.8]), Acc@1 Δ +4.8 [+1.5, +8.7], at about a fifth of the tokens; it is also rename-robust (Acc@3 Δ −0.9 [−3.5, +1.3]) | `data/rq2_ours.csv`, `data/rq3_renamed.csv`, `data/llm_cost.csv` |
+| On 31 real youtube-dl bugs (BugsInPy) every SemLoc top-1 hit is the LLM's own guess (46.2 = 46.2); the semantic spectrum alone reaches 7.5. LLM + coverage points the same way (Acc@3 69.9 vs 53.8) but n = 31 leaves the CI across 0 | `data/rq3_bugsinpy.csv` |
+| Renaming identifiers cuts the constraint-based ranking (spectrum-only Acc@3 70.6 → 55.1) but not the guess | `data/rq3_renamed.csv` |
+| 56/250 ground-truth lines are blank and 65/250 are executed by no failing test; SemFault-250-verified re-derives them by execution (226 programs kept). Our minimal-fix oracle can still accept compensating fixes — see the failure analysis | `data/semfault_verified_gt.json`, `docs/analysis/failure-analysis.md` |
+| Line-level Acc@1 is ambiguous for faults spanning a guard and the statement it guards: accepting either raises SemLoc's Acc@1 from 52.3 to 73.9–76.2; method ordering is unchanged | `data/failure_tolerance.csv` |
+| CovGate (dev-tuned) adds +3.9 pp Acc@3; counterfactual re-ranking does not help yet costs 42% of SemLoc's LLM calls | `data/rq2_ours.csv`, `data/llm_cost.csv` |
+| The released BugsInPy runner ranks the LLM's guess instead of the fixed lines, and leaves stale bytecode after its counterfactual patch | `src/flx/bip_score.py`, `src/flx/bip_run.py` |
+
+Contributions, scientific stance and threats to validity: `docs/analysis/contributions.md`.
 
 `scripts/regenerate_all.sh` rebuilds every table and figure from the runs; `data/runs.csv` lists every run and its health.
 
