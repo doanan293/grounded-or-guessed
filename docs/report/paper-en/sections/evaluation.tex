@@ -49,7 +49,16 @@ unchanged, \LabaudAllExtended{} keep the line and gain a second one, and \Labaud
 blank line, \LabaudAllNonCode{} from a log call, \texttt{def} header or comment, \LabaudAllOffByOne{} by one line and
 \LabaudAllFarther{} by more. Moves follow patterns: a label on a guard whose guarded statement holds the fault (or vice
 versa), or an omission fault labeled at its insertion point, a blank line. We suspect a labeling tool rather than human
-annotators but cannot check without the generator. Mislabels lower every number, and they may favor SemLoc: on the original
+annotators but cannot check without the generator. In the blind re-review, the two reviewers chose the same line in
+\BlindBlindAllPairsAgree{} of \BlindBlindAllPairs{} fully blind pairs, and \BlindBlindAllMatchReviewed{} of
+\BlindBlindAllNReviewed{} blind answers match the reviewed label against \BlindBlindAllMatchOriginal{} for the original
+label. Every blind answer on relocated or LLM-rejected labels picks the reviewed line
+(\BlindBlindFlaggedMatchReviewed/\BlindBlindFlaggedNReviewed{} and \BlindBlindRelocatedMatchReviewed/\BlindBlindRelocatedNReviewed;
+few relocated answers stayed blind); two-line labels reach \BlindBlindTwoLineMatchReviewed/\BlindBlindTwoLineNReviewed. The
+hardest group is the labels the LLM kept (\BlindBlindKeptMatchReviewed/\BlindBlindKeptNReviewed): every mismatch comes with
+a note that no bug was visible---omission faults (a missing normalization or remainder step) with no wrong-looking token.
+The blind review thus supports the relocations and shows that omissions are where line labels are inherently ambiguous.
+Mislabels lower every number, and they may favor SemLoc: on the original
 labels SemLoc beats LLM direct at Acc@3 (\RqTwoOriginalAllSemlocAccThreeMean\% vs.\
 \RqTwoOriginalAllLlmDirectAccThreeMean\%); on the reviewed labels the two tie (\RqTwoReviewedAllSemlocAccThreeMean\% vs.\
 \RqTwoReviewedAllLlmDirectAccThreeMean\%) and LLM direct leads at Acc@1 (\RqTwoReviewedAllLlmDirectDAccOne{}

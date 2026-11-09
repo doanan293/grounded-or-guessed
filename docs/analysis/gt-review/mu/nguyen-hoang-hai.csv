@@ -1,21 +1,21 @@
 ﻿id,program,candidates,answer,note
-1,throughput_trendline,A B C D,,
-2,plan_conference_slot,A B C D,,
-3,lru_evictor,A B C D,,
-4,replica_sync_offsets,A B C D,,
-5,api_rate_guard,A B C D,,
-6,water_allocator,A B C D,,
-7,limit_query,A B C D,,
-8,quota_for_memory,A B C D,,
-9,token_expiry_check,A B C D,,
-10,priority_mix,A B C D,,
-11,shift_feature,A B C D,,
-12,schedule_window,A B C D,,
-13,smooth_cpu,A B C D,,
-14,temperature_window_avg,A B C D,,
-15,download_rate,A B C D,,
-16,checkout_rate,A B C D,,
-17,combine_scores,A B C D,,
-18,audit_window_filter,A B C D,,
-19,energy_window_avg,A B C D,,
-20,schedule_training,A B C D,,
+1,throughput_trendline,A B C D,B,if not clamp thì mới vào block clamp — điều kiện đảo ngược rõ ràng
+2,plan_conference_slot,A B C D,A,buffer = ... if _CONFLICT_STRICT else 0 — buffer tính xong rồi dùng. Trông OK
+3,lru_evictor,A B C D,A,inner loop: while len(order) > target_len — OK. outer loop: while > capacity — OK theo doc
+4,replica_sync_offsets,A B C D,A,pop khi missing[-1] == replica[-1] — vô lý vì missing chứa phần tử thiếu trong replica nên không thể trùng cuối replica
+5,api_rate_guard,A B C D,D,len(recent) > limit — thanh-vien nói pattern này là > thay vì >= là lỗi. Ứng viên D
+6,water_allocator,A B C D,D,portion > minimum — logic min-guarantee đúng thôi
+7,limit_query,A B C D,C,thanh-vien nói lỗi > thay vì >= — ứng viên C (if len(active) > limit)
+8,quota_for_memory,A B C D,C,thanh-vien nói lỗi ép kiểu int ở dòng 72 — ứng viên C (allocations = [int(x) for x in planned])
+9,token_expiry_check,A B C D,A,now > adjusted_expiry → đây là pattern > vs >= có thể. Ứng viên A
+10,priority_mix,A B C D,C,blended rồi clamp — đúng. Không rõ lỗi
+11,shift_feature,A B C D,C,adjusted = [c + (t-c)*damping] rồi _clamp_values — đúng
+12,schedule_window,A B C D,D,thanh-vien nói lỗi chạm biên ở dòng 65 (ứng viên D — if not (end <= s or start >= e))
+13,smooth_cpu,A B C D,A,mean = total / window — nếu có ít sample hơn window thì tính sai. Phải chia len(tail)
+14,temperature_window_avg,A B C D,A,cùng vấn đề — chia window không phải len(tail)
+15,download_rate,A B C D,C,thanh-vien nói lỗi > thay vì >= ở dòng 75 (ứng viên C — if len(active) > limit)
+16,checkout_rate,A B C D,A,len(recent) > limit — ứng viên A. Pattern > vs >=
+17,combine_scores,A B C D,C,if merged[-1] == left[-1] == right[-1]: pop — merge sort không pop phần tử trùng kiểu này
+18,audit_window_filter,A B C D,C,t >= cutoff — đúng logic audit window. Không rõ lỗi
+19,energy_window_avg,A B C D,C,mean = total / window — recent từ effective_window khác window — sai
+20,schedule_training,A B C D,C,thanh-vien nói lỗi chạm biên — ứng viên C (if not (end <= s or start >= e))

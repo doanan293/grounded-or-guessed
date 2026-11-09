@@ -1,21 +1,21 @@
 ﻿id,program,candidates,answer,note
-1,schedule_window,A B C D,,
-2,allocate_budget_cut,A B C D,,
-3,room_reservation,A B C D,,
-4,votes_apportion,A B C D,,
-5,audit_window_filter,A B C D,,
-6,blend_levels,A B C D,,
-7,metric_rolling_avg,A B C D,,
-8,blend_supplies,A B C D,,
-9,limit_message,A B C D,,
-10,calibrate_pressure,A B C D,,
-11,grant_share,A B C D,,
-12,calibrate_score,A B C D,,
-13,cost_trendline,A B C D,,
-14,cacheline_expiry,A B C D,,
-15,guard_search,A B C D,,
-16,shift_feature,A B C D,,
-17,limit_job,A B C D,,
-18,login_throttle,A B C D,,
-19,combine_responses,A B C D,,
-20,realign_replica,A B C D,,
+1,schedule_window,A B C D,D,hàm check overlap — thanh-vien nói lỗi chạm biên ở dòng 65 (ứng viên D). Điều kiện >= vs > bị sai
+2,allocate_budget_cut,A B C D,A,chia ratio * amount ở A trông bình thường. Không tìm ra lỗi rõ ràng
+3,room_reservation,A B C D,B,thanh-vien nói lỗi toán tử chạm biên ở dòng 70 (ứng viên B — if not (end <= s or start >= e))
+4,votes_apportion,A B C D,B,portion > minimum hợp lý nếu muốn áp sàn — không rõ lỗi
+5,audit_window_filter,A B C D,C,filter t >= cutoff — trông OK
+6,blend_levels,A B C D,B,cái if merged[-1] == left[-1] == right[-1] thì pop — merge sort không làm thế này bao giờ. Lỗi ở B
+7,metric_rolling_avg,A B C D,D,avg = total / window — nếu tail ngắn hơn window thì avg sẽ bé hơn thực tế. Phải dùng len(tail) thay window
+8,blend_supplies,A B C D,C,cùng pattern với blend_levels — điều kiện pop sau merge là sai
+9,limit_message,A B C D,D,thanh-vien nói lỗi toán tử > thay vì >= ở dòng 73 (ứng viên D — if len(recent) > limit)
+10,calibrate_pressure,A B C D,D,if not clamp rồi lại vào trong để clamp — logic ngược hoàn toàn
+11,grant_share,A B C D,D,trông ổn — tính base share rồi clamp_payout trừ fee
+12,calibrate_score,A B C D,D,if not clamp nhưng lại clamp — sai điều kiện
+13,cost_trendline,A B C D,D,giống calibrate — if not clamp sai
+14,cacheline_expiry,A B C D,C,logic đúng: hết hạn thì trả default
+15,guard_search,A B C D,A,thanh-vien nói lỗi > thay vì >= ở dòng 74 (ứng viên A — if len(active) > limit)
+16,shift_feature,A B C D,C,adjusted = [c + (t - c) * damping] rồi clamp — đúng
+17,limit_job,A B C D,B,thanh-vien nói lỗi > thay vì >= ở dòng 75 (ứng viên B — if len(recent) > limit)
+18,login_throttle,A B C D,A,thanh-vien nói lỗi > thay vì >= ở dòng 69 (ứng viên A — if len(recent) > limit)
+19,combine_responses,A B C D,A,if merged[-1]==left[-1]==right[-1] rồi pop — không hiểu dùng để làm gì trong merge sort
+20,realign_replica,A B C D,A,for c,t in zip rồi append clamp(blended) — trông đúng

@@ -65,6 +65,12 @@ def assign(cases: list[dict], members: list[str], per_case: int, rng: random.Ran
     raise RuntimeError("no balanced assignment found")
 
 
+# An answer whose note cites the earlier, non-blind review files (which show the LLM suggestion and the earlier
+# answers) is not blind; it is kept in the data but excluded from the blind statistics. Rule fixed after reading the
+# notes, before computing any agreement figure.
+NOT_BLIND = re.compile(r"thanh-vien|thanh vien|lần trước|LLM|Fable|gợi ý", re.I)
+
+
 def answer_lines(ans: str, letters: dict[str, int]) -> set[int] | None:
     parts = [p.strip().upper() for p in re.split(r"[+,;]", ans or "") if p.strip()]
     if not parts or "?" in parts:
@@ -152,16 +158,19 @@ def packet() -> None:
 def score() -> None:
     """Per program: both answers, whether they agree, and whether they match the original / reviewed / LLM lines."""
     cases = {c["program"]: c for c in build()}
-    answers = {}
+    answers, blind = {}, {}
     for name, slug in MEMBERS.items():
         for r in csv.DictReader(open(OUT / f"{slug}.csv", encoding="utf-8-sig")):
             answers.setdefault(r["program"], {})[name] = answer_lines(r["answer"], cases[r["program"]]["letters"])
+            blind.setdefault(r["program"], {})[name] = not NOT_BLIND.search(r["note"] or "")
     rows = []
     hit = lambda a, target: None if a is None or not target else bool(a & set(target))
     for p, c in cases.items():
         a1, a2 = (answers.get(p, {}).get(m) for m in c["reviewers"])
+        b1, b2 = (blind.get(p, {}).get(m, True) for m in c["reviewers"])
         both = a1 is not None and a2 is not None
         rows.append({"program": p, "group": c["group"], "answered": int(a1 is not None) + int(a2 is not None),
+                     "r1_blind": int(b1), "r2_blind": int(b2),
                      "agree": "" if not both else int(bool(a1 & a2)),
                      **{f"r{i}_{t}": "" if hit(a, tgt) is None else int(hit(a, tgt))
                         for i, a in ((1, a1), (2, a2)) for t, tgt in
@@ -170,11 +179,23 @@ def score() -> None:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
         w.writerows(rows)
-    for g in ("all", "relocated", "flagged", "kept", "two_line"):
-        rs = [r for r in rows if g == "all" or r["group"] == g]
-        ag = [r["agree"] for r in rs if r["agree"] != ""]
-        rv = [r[f"r{i}_reviewed"] for r in rs for i in (1, 2) if r[f"r{i}_reviewed"] != ""]
-        print(g, len(rs), "human-human agree", f"{sum(ag)}/{len(ag)}", "match reviewed", f"{sum(rv)}/{len(rv)}")
+    summary = []
+    for only_blind in (False, True):
+        for g in ("all", "relocated", "flagged", "kept", "two_line"):
+            rs = [r for r in rows if g == "all" or r["group"] == g]
+            ok = lambda r, i: r[f"r{i}_reviewed"] != "" and (not only_blind or r[f"r{i}_blind"])
+            ag = [r["agree"] for r in rs if r["agree"] != "" and (not only_blind or (r["r1_blind"] and r["r2_blind"]))]
+            row = {"answers": "blind" if only_blind else "all", "group": g, "programs": len(rs), "pairs": len(ag),
+                   "pairs_agree": sum(ag)}
+            for t in ("reviewed", "original", "llm"):
+                xs = [r[f"r{i}_{t}"] for r in rs for i in (1, 2) if r[f"r{i}_{t}"] != "" and (not only_blind or r[f"r{i}_blind"])]
+                row[f"n_{t}"], row[f"match_{t}"] = len(xs), sum(xs)
+            summary.append(row)
+            print(row)
+    with open(ROOT / "data" / "blind_review_summary.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(summary[0]))
+        w.writeheader()
+        w.writerows(summary)
 
 
 if __name__ == "__main__":

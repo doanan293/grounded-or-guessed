@@ -69,6 +69,16 @@ nhưng ghi nhầm số dòng). Các nhãn LLM cho là đúng và \LabaudAllExten
 nhận định của LLM, không qua người duyệt. Kết quả là bộ \emph{đã rà soát}: đủ \LabaudAllN{} chương trình, không nhãn nào trên dòng trống,
 \LabaudAllTwoLine{} nhãn hai dòng.
 
+\textbf{Duyệt mù.} Để kiểm tra lại bộ đã rà soát mà không bị gợi ý của LLM dẫn dắt, nhóm làm thêm một vòng duyệt mù trên
+\BlindBlindAllPrograms{} chương trình chọn ngẫu nhiên với hạt giống cố định: 15 nhãn bộ phán định đã dời, 15 nhãn LLM cho là
+sai (cả hai nhóm đã có người duyệt trước đó), 20 nhãn LLM giữ nguyên và 10 nhãn hai dòng (hai nhóm chưa ai duyệt). Mỗi
+chương trình do hai thành viên \emph{chưa từng xem} nó duyệt độc lập; các dòng ứng viên (hợp của nhãn gốc, dòng bộ phán
+định dời tới, dòng LLM đề xuất và nhãn đã rà soát, bổ sung dòng mã lân cận cho đủ bốn) được đánh chữ theo thứ tự ngẫu
+nhiên, không ghi dòng nào từ đâu, không có nhận định của LLM. Thiết kế mẫu và cách chia được cố định trong mã
+(\texttt{scripts/blind\_review.py}) trước khi có câu trả lời. Khi đọc câu trả lời, nhóm thấy
+\BlindAnswersExcluded{} trên \BlindAnswersTotal{} câu có ghi chú dẫn lại tệp duyệt lần trước (có gợi ý của LLM); các câu
+này không còn mù và bị loại khỏi thống kê duyệt mù (quy tắc loại ghi trong mã, đặt ra trước khi tính độ đồng thuận).
+
 Bảng~\ref{tab:ba-bo-nhan} tóm tắt ba bộ nhãn. Bộ \emph{đã sửa} chỉ do kiểm thử quyết định nên được dùng cho kết quả
 chính; bộ \emph{đã rà soát} đầy đủ hơn nhưng nhãn do một LLM đề xuất, nên các phương pháp dùng LLM có thể được lợi\IfAtLeast{lan2}{ (Chương~\ref{chap:dong-gop})} --- nó được dùng như một góc nhìn độ nhạy.
 

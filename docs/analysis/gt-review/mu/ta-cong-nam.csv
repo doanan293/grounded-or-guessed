@@ -1,21 +1,21 @@
 ﻿id,program,candidates,answer,note
-1,votes_apportion,A B C D,,
-2,storage_quota_split,A B C D,,
-3,track_build,A B C D,,
-4,traffic_shaping_gate,A B C D,,
-5,blend_levels,A B C D,,
-6,schedule_training,A B C D,,
-7,allocate_budget_cut,A B C D,,
-8,plan_conference_slot,A B C D,,
-9,payment_split_rebate,A B C D,,
-10,allocate_prize_cut,A B C D,,
-11,credits_allocator,A B C D,,
-12,task_tally,A B C D,,
-13,reservation_booking,A B C D,,
-14,login_throttle,A B C D,,
-15,calibrate_trend,A B C D,,
-16,combine_scores,A B C D,,
-17,plan_upgrade_slot,A B C D,,
-18,download_rate,A B C D,,
-19,guard_email,A B C D,,
-20,combine_responses,A B C D,,
+1,votes_apportion,A B C D,C,if floor_to_int thì return int — C là dòng if đó. Không thấy lỗi rõ
+2,storage_quota_split,A B C D,A,thanh-vien nói lỗi ở dòng 66 — chia theo total thay vì total - fee. Ứng viên A là shares = [...] — không rõ
+3,track_build,A B C D,A,counters[key] = cap - 1 khi clamp — phải set bằng cap chứ không phải cap-1
+4,traffic_shaping_gate,A B C D,C,thanh-vien nói lỗi > thay vì >= ở dòng 71 (ứng viên C — if len(active) > limit)
+5,blend_levels,A B C D,B,điều kiện pop khi merged[-1] == left[-1] == right[-1] — không có cơ sở trong merge sort thông thường
+6,schedule_training,A B C D,C,thanh-vien nói lỗi chạm biên — ứng viên C (if not (end <= s or start >= e))
+7,allocate_budget_cut,A B C D,A,chia ratio * amount — OK không rõ lỗi
+8,plan_conference_slot,A B C D,B,overlaps dùng not (b[1] <= a[0] or b[0] >= a[1]) — đây là điều kiện overlap đúng
+9,payment_split_rebate,A B C D,D,thanh-vien nói lỗi trừ rebate từng phần thay vì tổng. Ứng viên D (return [s - rebate for s in shares])
+10,allocate_prize_cut,A B C D,C,result = [s - fee] rồi apply_payout_floor — OK
+11,credits_allocator,A B C D,D,if INTEGER then int else giữ nguyên — đúng
+12,task_tally,A B C D,D,new_value = max_value - 1 sau khi vượt — phải là max_value
+13,reservation_booking,A B C D,C,overlap check — không rõ lỗi
+14,login_throttle,A B C D,A,thanh-vien nói lỗi > thay vì >= ở dòng 69 (ứng viên A — if len(recent) > limit)
+15,calibrate_trend,A B C D,B,if not clamp — điều kiện ngược
+16,combine_scores,A B C D,C,điều kiện pop bất thường sau merge
+17,plan_upgrade_slot,A B C D,A,conflict check — thanh-vien nói lỗi chạm biên. Ứng viên A (if any(not (b<=s or a>=e)))
+18,download_rate,A B C D,C,thanh-vien nói lỗi > thay vì >= ở dòng 75 (ứng viên C — if len(active) > limit)
+19,guard_email,A B C D,C,len(recent) > limit — pattern > vs >= — ứng viên C
+20,combine_responses,A B C D,A,pop khi 3 cuối bằng nhau — sai logic merge sort

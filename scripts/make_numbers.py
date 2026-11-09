@@ -106,6 +106,10 @@ def all_specs() -> list[Spec]:
         specs += table_specs("labaud", DATA / "label_audit.csv", ["subset"],
                              {c: "int" for c in ("n", "same", "extended", "blank", "non_code", "off_by_one", "farther",
                                                  "moved", "two_line")})
+    if (DATA / "blind_review_summary.csv").exists():
+        specs += table_specs("blind", DATA / "blind_review_summary.csv", ["answers", "group"],
+                             {c: "int" for c in ("programs", "pairs", "pairs_agree", "n_reviewed", "match_reviewed",
+                                                 "n_original", "match_original", "n_llm", "match_llm")})
     if (DATA / "pav_mechanism.csv").exists():
         specs += table_specs("pavmech", DATA / "pav_mechanism.csv", ["gt"],
                              {"fault_line_fixable": "pct", "other_line_fixable": "pct", "fault_line_checked": "int",
@@ -202,6 +206,11 @@ def computed() -> dict[str, str]:
         moved = [p for p, r in oracle.items() if r["status"] == "corrected"]
         out[macro_name("review", "corrected", "overturned", "n")] = str(
             sum(not set(byp[p]["lines"]) & set(oracle[p]["lines"]) for p in moved))
+    blind = DATA / "blind_review.csv"
+    if blind.exists():  # answers whose note cites the earlier non-blind review files
+        rows = _rows(blind)
+        out[macro_name("blind", "answers", "total")] = str(2 * len(rows))
+        out[macro_name("blind", "answers", "excluded")] = str(sum((r["r1_blind"] == "0") + (r["r2_blind"] == "0") for r in rows))
     grid = DATA / "pav_dev_grid.csv"
     if grid.exists():  # propose-and-verify on dev: stage 1 alone, the selected knobs, and the worst grid point
         rows = _rows(grid)
