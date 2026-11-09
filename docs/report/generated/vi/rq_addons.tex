@@ -1,0 +1,13 @@
+\begin{tabular}{llrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Đã sửa} & \multicolumn{2}{c}{Đã rà soát} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Phần bổ sung (so với) & Tập & $\Delta$Acc@1 & $\Delta$Acc@3 & $\Delta$Acc@1 & $\Delta$Acc@3 \\
+\midrule
+Độ phủ từng dòng (so với LLM + kiểm thử thất bại) & test & -5,4{\scriptsize\,[-9,4; -2,1]} & +2,1{\scriptsize\,[-0,2; 4,9]} & -3,3{\scriptsize\,[-5,9; -1,2]} & +0,0{\scriptsize\,[0,0; 0,0]} \\
+CovGate (so với SemLoc) & test & +0,0{\scriptsize\,[0,0; 0,0]} & +3,9{\scriptsize\,[1,6; 6,8]} & +0,0{\scriptsize\,[0,0; 0,0]} & +1,2{\scriptsize\,[0,0; 2,8]} \\
+Đề xuất rồi kiểm chứng, cấu hình được chọn (so với LLM + kiểm thử thất bại) & dev & +0,0 & +0,0 & +0,0 & +0,0 \\
+Đề xuất rồi kiểm chứng, cấu hình mạnh tay nhất (so với LLM + kiểm thử thất bại) & dev & -4,3 & +0,0 & -11,3 & +0,0 \\
+Biểu quyết 3 câu trả lời (so với LLM + kiểm thử thất bại) & dev & +0,0 & -4,3 & +1,3 & +0,7 \\
+\bottomrule
+\end{tabular}

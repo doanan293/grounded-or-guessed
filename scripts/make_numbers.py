@@ -102,6 +102,10 @@ def all_specs() -> list[Spec]:
         specs += table_specs("stat", DATA / "static_tools.csv", ["gt", "tool"],
                              {c: "int" for c in ("programs", "diagnostics", "flagged", "on_fault_line", "within_2_lines")}
                              | {"on_fault_line_by_chance": "dec1"})
+    if (DATA / "label_audit.csv").exists():
+        specs += table_specs("labaud", DATA / "label_audit.csv", ["subset"],
+                             {c: "int" for c in ("n", "same", "extended", "blank", "non_code", "off_by_one", "farther",
+                                                 "moved", "two_line")})
     if (DATA / "pav_mechanism.csv").exists():
         specs += table_specs("pavmech", DATA / "pav_mechanism.csv", ["gt"],
                              {"fault_line_fixable": "pct", "other_line_fixable": "pct", "fault_line_checked": "int",
