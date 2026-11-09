@@ -40,3 +40,14 @@ def test_parse_failed_keeps_declared_only():
            "FAILED test/test_utils.py::TestUtil::test_compat_getenv - KeyError: 'HOME'\n")
     got = parse_failed(out, {"test.test_utils.TestUtil.test_parse_iso8601"})
     assert got == [{"name": "test.test_utils.TestUtil.test_parse_iso8601", "error": "AssertionError: 1 != 2"}]
+
+
+def test_prompt_without_coverage_keeps_everything_else():
+    """Ablation: same prompt minus the per-line [f/p] annotations and the sentence that explains them."""
+    fails = [{"name": "test_c", "error": "assert 5 == 6"}]
+    full, abl = build_prompt(SRC, fails, COV), build_prompt(SRC, fails, COV, coverage=False)
+    assert "[f=" not in abl and "annotated" not in abl
+    assert "7:     return y - 1 if x == 3 else y\n" in abl
+    assert "exactly one faulty line. 2 tests fail and 2 pass." in abl
+    assert "test_c: assert 5 == 6" in abl and abl.endswith("most suspicious first.")
+    assert build_prompt(SRC, fails, COV, coverage=True) == full

@@ -76,7 +76,8 @@ def main() -> None:
         per = {}  # method -> list of (rep, ranks)
         for i in reps:
             methods = semloc_variants(ROOT / "runs" / f"semloc_test_gemini_r{i}", gt, progs, params)
-            for name, fname in (("llm_direct", f"direct_test_gemini_r{i}.json"), ("llm_coverage", f"direct_cov_test_gemini_r{i}.json")):
+            for name, fname in (("llm_direct", f"direct_test_gemini_r{i}.json"), ("llm_tests", f"direct_tests_test_gemini_r{i}.json"),
+                                ("llm_coverage", f"direct_cov_test_gemini_r{i}.json")):
                 f = ROOT / "data" / "rankings" / fname
                 if f.exists():
                     methods[name] = ranks_from_list(json.loads(f.read_text()), gt, progs)

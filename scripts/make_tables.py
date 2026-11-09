@@ -120,14 +120,14 @@ GT_LABEL = {"original": "Original ground truth", "repaired": "Execution-repaired
 RQ2_NAMES = {"gate_only": "\\quad + coverage gate only", "lam_only": "\\quad + $\\lambda$·Ochiai only",
              "grounded_prior_only": "\\quad bonus only when grounded", "semloc": "SemLoc (as released)", "semloc_no_prior": "\\quad w/o LLM-guess bonus",
              "cf_rerank": "\\quad + CF re-ranking", "covgate": "CovGate (ours)", "covgate_cf": "CovGate + CF re-ranking",
-             "llm_direct": "LLM direct (1 prompt)", "llm_coverage": "LLM + coverage (1 prompt, ours)",
-             "sbfl_ochiai": "SBFL Ochiai"}
+             "llm_direct": "LLM direct (1 prompt)", "llm_tests": "\\quad + failing tests, no coverage (ablation)",
+             "llm_coverage": "LLM + coverage (1 prompt, ours)", "sbfl_ochiai": "SBFL Ochiai"}
 
 
 def rq2_table() -> str:
     rows = [r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"]
     order = ["semloc", "semloc_no_prior", "grounded_prior_only", "gate_only", "lam_only", "cf_rerank", "covgate", "covgate_cf",
-             "llm_direct", "llm_coverage", "sbfl_ochiai"]
+             "llm_direct", "llm_tests", "llm_coverage", "sbfl_ochiai"]
     lines = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
              r"Method & Acc@1 & Acc@3 & Acc@5 & $\Delta$Acc@1 [95\% CI] & $\Delta$Acc@3 [95\% CI] & $r_{\text{rb}}$ \\"]
     for g in ("original", "repaired"):
@@ -303,6 +303,7 @@ VI = [
     ("+ coverage gate only", "+ chỉ cổng độ phủ"),
     ("+ CF re-ranking", "+ xếp lại bằng CF"),
     ("LLM direct (1 prompt)", "LLM hỏi thẳng (1 prompt)"),
+    ("+ failing tests, no coverage (ablation)", "+ kiểm thử thất bại, không độ phủ (loại bỏ)"),
     ("Original ground truth", "Dòng lỗi chuẩn gốc"),
     ("SemLoc (as released)", "SemLoc (bản phát hành)"),
     ("Configuration (all 250 programs)", "Cấu hình (cả 250 chương trình)"),

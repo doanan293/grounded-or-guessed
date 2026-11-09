@@ -1,0 +1,716 @@
+[
+ {
+  "program": "ad_mix",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 67,
+  "reason": "Omission fault: docstring/tests require the blended vector to be re-normalised to sum 1, but no normalisation exists. The label (65, the blend append) is defensible, yet the fix most naturally changes `return adjusted` (67) to `return [a/sum(adjusted) ...]`; sibling programs adjust_* label the return line."
+ },
+ {
+  "program": "adjust_allocation",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 67,
+  "reason": "Omission fault: docstring says 're-normalises so the resulting weights sum to 1' and tests assert sum==1, but `return updated` (67) returns the raw blend. Fix is a normalising return at 67 (or an inserted line before it)."
+ },
+ {
+  "program": "adjust_portfolio",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 68,
+  "reason": "Omission fault: docstring 'result is normalized so that the returned weights always sum to 1' vs `return adjusted` (68) returning the unnormalised blend. Fix naturally at the return line."
+ },
+ {
+  "program": "adjust_queue",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 66,
+  "reason": "Omission fault: docstring guarantees output 'normalised so its elements sum to 1'; `return adjusted` (66) returns the raw damped blend. Fix at the return line."
+ },
+ {
+  "program": "adjust_supply",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 64,
+  "reason": "Omission fault: docstring 'then the result is normalised so weights sum to 1.0' but `return updated` (64) skips normalisation. Fix at the return line."
+ },
+ {
+  "program": "allocate_bonus_cut",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 72,
+  "reason": "Docstring/tests: fee deducted once from the pool before splitting; line 72 subtracts `fee` per participant (`s - fee`). Fix removes `- fee` at 72 and uses `(amount - fee)` at 70, so the repair spans 70+72 but the deviating token is at 72."
+ },
+ {
+  "program": "allocate_bounty_cut",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 64,
+  "reason": "Fee should be deducted from the total before the proportional split; line 64 applies `share - fee` per recipient. Fix: drop `- fee` at 64 and use `(amount - fee)` at 62 (two-line repair, deviating token at label)."
+ },
+ {
+  "program": "allocate_budget_cut",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Per-participant `s - fee` at 67 contradicts 'total fee is deducted from the pool before distribution' and test_fee_applied_once_not_per_participant. Repair also touches 65 (`* (amount - fee)`)."
+ },
+ {
+  "program": "allocate_pool_cut",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 70,
+  "reason": "Line 70 `_clamp_payout(s - fee)` charges the fee per participant; docstring says fee is deducted from the pool before the split. Repair: remove `- fee` at 70 and use `(amount - fee)` at 68."
+ },
+ {
+  "program": "allocate_prize_cut",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "Line 74 `result = [s - fee for s in shares]` subtracts the fee per participant instead of from the pool (docstring, test_fee_deducted_from_total_pool). Repair also touches 72 (`* (amount - fee)`)."
+ },
+ {
+  "program": "api_rate_guard",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 72,
+  "reason": "Line 72 `if len(recent) > limit` lets a call through when the count equals the limit; tests (exactly_at_limit, limit_of_one) require denial at `>= limit`."
+ },
+ {
+  "program": "attention_mask_merge",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Docstring: element-wise conjunction, keep only when both masks keep; line 67 uses `a or b` instead of `a and b`."
+ },
+ {
+  "program": "audit_window_filter",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Module/docstring say events exactly on the boundary are outside the window ('strictly after the cutoff'); line 68 uses `t >= cutoff` instead of `t > cutoff`."
+ },
+ {
+  "program": "award_payout",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 69,
+  "reason": "Line 69 `_clamp_payout(s - fee)` deducts the fee per participant; docstring/tests require one deduction from the pool before splitting. Repair also touches 67 (`* (amount - fee)`), deviating token at label."
+ },
+ {
+  "program": "backlog_rolling_avg",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 59,
+  "reason": "Line 59 `mean = total / window` divides by the nominal window even when fewer samples exist; tests (fewer_values_than_window_average etc.) require `total / len(recent)`."
+ },
+ {
+  "program": "bandwidth_apportion",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 69,
+  "reason": "Omission fault: tests require the sum of allocations to equal `total` via largest-remainder distribution, but line 69 just truncates `int(x)`. The fix replaces/extends the return at 69 with a remainder-distribution step; no other line is wrong."
+ },
+ {
+  "program": "bandwidth_budgeter",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 65,
+  "reason": "Omission fault: tests require integer allocations that still sum to `total`, but line 65 `allocations = [int(x) for x in planned]` truncates and never redistributes the dropped remainder. The fix replaces/extends line 65 with a largest-remainder step."
+ },
+ {
+  "program": "bandwidth_rebalance",
+  "verdict": "label",
+  "confidence": "medium",
+  "fault_line": 65,
+  "reason": "Omission fault: docstring 'then normalises the result so the weights sum to 1' but `return updated` (65) returns the raw clamped blend. Fix is a normalising return at 65."
+ },
+ {
+  "program": "batch_rate",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 70,
+  "reason": "Line 70 `if len(recent) > limit` allows a request when the count equals the limit; tests (exactly_at_limit_should_deny, limit_of_one) require `>= limit`."
+ },
+ {
+  "program": "batch_tally",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 62,
+  "reason": "The guard at 61 `if new_value > max_value` is correct; the deviation is the guarded statement 62 `new_value = max_value - 1` (should be `max_value`, 'clamped so it never exceeds that ceiling'; tests expect saturation at max_value). Changing 62 to `new_value = max_value` passes all 10 tests."
+ },
+ {
+  "program": "batchnorm_running_mean",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 70,
+  "reason": "Docstring: momentum is the weight on the previous running mean; line 70 `(1 - momentum) * current_mean + momentum * batch_mean` has the weights swapped (tests expect 0.9*current + 0.1*batch)."
+ },
+ {
+  "program": "bill_payout",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 70,
+  "reason": "Line 70 `_clamp_share(s - fee)` subtracts the fee per participant; docstring/tests require deducting it once from the pool before splitting. Repair also touches 68 (`* (amount - fee)`), deviating token at label."
+ },
+ {
+  "program": "billing_gate",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 72,
+  "reason": "Line 72 `if len(active) > limit` permits an action when the active count equals the limit; tests (at_limit_should_deny, custom_window_and_limit_at_boundary, exact_cutoff with limit=1) require `>= limit`."
+ },
+ {
+  "program": "blend_levels",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 75,
+  "reason": "Injected two-line block 74-75: `if merged and left and right and merged[-1] == left[-1] == right[-1]: merged.pop()` drops one copy of a shared tail value, contradicting 'contains every element from both inputs' and test_shared_tail_value_not_removed. The guard (label) and the `merged.pop()` at 75 are the same fault; neutralising either line fixes it."
+ },
+ {
+  "program": "blend_margins",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "Injected two-line block 73-74 pops the last element when both streams share their final value, contradicting 'Duplicate values ... are preserved (both copies are emitted)'. Label is the guard; `merged.pop()` at 74 is the guarded statement of the same fault."
+ },
+ {
+  "program": "blend_orders",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Injected two-line block 72-73 removes one copy of a shared last value (`merged.pop()`), violating 'Duplicate values across streams are preserved' and test_matching_last_elements_preserved. Label is the guard line; the pop at 73 is the same fault."
+ },
+ {
+  "program": "blend_supplies",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 72,
+  "reason": "Docstring/tests require every element retained (e.g. [1,5]+[3,5] -> [1,3,5,5]); the injected block is the guard at 71 plus the spurious merged.pop() at 72, which drops one copy of a shared last element. Two-line fault: the label (guard) is defensible, the pop at 72 is the acting statement."
+ },
+ {
+  "program": "budget_budgeter",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Tests require sum(allocations) == total (e.g. 100/[1,1,1]); line 68 truncates with int(x) and never redistributes the remainder, so the sum falls short. Fix (rounding + largest-remainder redistribution) belongs at 68."
+ },
+ {
+  "program": "budget_mix",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 71,
+  "reason": "Docstring says the damped vector is re-normalised to sum to 1; the code clamps (69) and returns adjusted unnormalised at 71. Omission fault; the fix naturally replaces the return at 71 with a division by sum(adjusted)."
+ },
+ {
+  "program": "bump_click",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 64,
+  "reason": "Docstring: counter is clamped so it never exceeds cap, tests expect [1,2,3,3,3,3] for cap=3; line 64 sets counters[key] = cap - 1 instead of cap. The label (63) is the guard, which is correct; the deviating token is on 64."
+ },
+ {
+  "program": "bump_conversion",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 58,
+  "reason": "Counter should be clamped to cap (tests: stays at cap, never decreases); line 58 assigns updated = cap - 1. The label 57 is the correct guard `if updated > cap`; the fault token `- 1` is on line 58."
+ },
+ {
+  "program": "bump_job",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 57,
+  "reason": "Docstring: counter will never exceed cap and tests require it to saturate exactly at cap; line 57 writes counters[key] = cap - 1. Label 56 is the (correct) guard; the deviating token is on 57."
+ },
+ {
+  "program": "bump_purchase",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 64,
+  "reason": "Counter must be clamped to cap (test_counter_above_cap_is_clamped expects 5 for cap=5); line 64 sets updated = cap - 1. Label 63 is the correct guard `if updated > cap`; the fault is the `- 1` on line 64."
+ },
+ {
+  "program": "bump_refund",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 59,
+  "reason": "Ceiling semantics require clamping to max_value; line 59 sets new_value = max_value - 1. The label is on the deviating statement."
+ },
+ {
+  "program": "cache_entry_ttl",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Tests require an entry at now == expiry to be expired; line 73 uses `now > effective` instead of `>=`."
+ },
+ {
+  "program": "cached_manifest",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Docstring: valid only when now is strictly before effective expiry, tests expect None at now == expiry; the comparison `if now > effective` on line 65 should be `>=`. Label 63 (`effective = _effective_expiry(expires_at)`) is a correct helper call, one statement before the fault."
+ },
+ {
+  "program": "cached_metric",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 61,
+  "reason": "Entry at now == TTL must be expired per tests; line 61 `now > effective_expiry` should be `>=`."
+ },
+ {
+  "program": "cached_route",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Docstring: valid only when now is strictly before expiry; line 68 `now > effective` should be `>=`."
+ },
+ {
+  "program": "cacheline_expiry",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Docstring: payload returned only when now is strictly before the deadline; line 67 `now > adjusted_ttl` should be `>=`."
+ },
+ {
+  "program": "cacheline_refresh",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 70,
+  "reason": "Docstring: the stored expiration is updated to now + ttl; line 70 assigns to the local `expires_at` instead of writing `store[key] = (value, now + ttl)`, so the store is never updated (tests check store[key]). Fix needs a larger edit but sits at the labelled line."
+ },
+ {
+  "program": "calendar_slot_insert",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Tests require touching slots to conflict (e.g. existing (120,180), slot (60,120) -> rejected); the overlap test on line 73 `if not (end <= s or start >= e)` must use strict `<`/`>`. Label 72 is the `for s, e in existing:` loop header, which is correct."
+ },
+ {
+  "program": "calibrate_lift",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 63,
+  "reason": "Docstring: clamp=True restricts output to the segment's y-range; line 63 `if not clamp:` inverts the condition so clamping happens only when clamp=False. Label 64 (`low, high = sorted([y0, y1])`) is a correct statement inside the mis-guarded block."
+ },
+ {
+  "program": "calibrate_loss",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Clamping must apply when clamp=True (tests: beyond x1 with clamp=True returns y1); line 65 `if not clamp:` is inverted. Label 66 (`lo, hi = (min(y0, y1), max(y0, y1))`) is correct code inside the block."
+ },
+ {
+  "program": "calibrate_pressure",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 70,
+  "reason": "Docstring: when clamping is enabled the result is restricted to [min(y0,y1), max(y0,y1)]; line 70 `if not clamp:` inverts this. Label 72 (`y = min(max(y, low), high)`) is the correct clamp expression; the deviating token is `not` on line 70."
+ },
+ {
+  "program": "calibrate_quality",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Clamping must happen when clamp=True; line 68 `if not clamp:` is the inverted guard. Label is on the deviating token."
+ },
+ {
+  "program": "calibrate_score",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Docstring: clamp=True restricts output to [y0, y1]; line 65 `if not clamp:` is inverted so extrapolation is clamped only when clamp=False. Label 67 (`if y < lo:`) is a correct statement inside the block, two lines below the fault."
+ },
+ {
+  "program": "calibrate_trend",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 63,
+  "reason": "Docstring: clamp=True (default) restricts output to the segment range; line 63 `if not clamp:` inverts the guard. Label 64 (`low, high = sorted([y0, y1])`) is correct code inside the block."
+ },
+ {
+  "program": "checkout_rate",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Tests: when recent events equal the limit the checkout must be denied; line 66 `if len(recent) > limit` should be `>=`."
+ },
+ {
+  "program": "cluster_rebalance_weights",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 64,
+  "reason": "Docstring: the interpolated vector is normalized so weights sum to 1; the code returns `updated` unnormalised at line 64. Omission fault; the fix naturally replaces the return at 64 with a division by sum(updated)."
+ },
+ {
+  "program": "combine_depths",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 78,
+  "reason": "Docstring: duplicate levels in both streams are preserved; the injected block is the guard at 77 plus `merged.pop()` at 78, which drops one copy of a shared last element. Two-line fault: label (guard) defensible, line 78 is the acting statement."
+ },
+ {
+  "program": "combine_offsets",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 71,
+  "reason": "Docstring/tests: result contains all elements from both inputs ([1,3,5]+[2,4,5] -> six items); the spurious guard at 70 and `merged.pop()` at 71 remove a shared tail element. Two-line fault; label is the guard, 71 the acting statement."
+ },
+ {
+  "program": "combine_requests",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "Docstring: keep_both duplicates, tests expect [1,5]+[3,5] -> [1,3,5,5]; the injected block is the guard at 74 plus `merged.pop()` at 75. Label is on the pop (the acting statement); unlike siblings (blend_supplies, combine_depths, combine_offsets) which label the guard. Deleting 75 alone leaves an empty if-body, which is why no minimal edit was found."
+ },
+ {
+  "program": "combine_responses",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 71,
+  "reason": "Docstring/tests require all elements kept (duplicates at a shared tail preserved); lines 71-72 `if merged and left and right and merged[-1] == left[-1] == right[-1]: merged.pop()` spuriously drop one element. The fault is the two-line block; label is on the pop (72), the guard (71) is the other half."
+ },
+ {
+  "program": "combine_scores",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Same spurious shared-tail block: lines 68-69 `if ... merged[-1] == left[-1] == right[-1]: merged.pop()` remove a legitimate duplicate (tests require len == len(left)+len(right)). Label on pop (69); guard at 68 is the other half of the two-line fault."
+ },
+ {
+  "program": "confidence_trendline",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 77,
+  "reason": "Clamping must apply when clamp=True, but line 77 reads `if not clamp:` (inverted condition); label line 79 `if y < lo:` is correct code inside the inverted block."
+ },
+ {
+  "program": "config_interpolate",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Line 68 `if not clamp:` inverts the intended condition (clamp when clamp is True, per docstring and tests); the body is correct."
+ },
+ {
+  "program": "cost_trendline",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Line 65 `if not clamp:` is the inverted guard; label line 66 `lo, hi = _compute_bounds(y0, y1)` is a correct statement inside the inverted block."
+ },
+ {
+  "program": "coupons_apportion",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 81,
+  "reason": "Integer mode must keep sum(result) == total (tests), but line 81 `return [int(v) for v in shares]` truncates without redistributing the remainder (omission). Label 80 `if floor_to_int:` is the correct guard; the fix modifies line 81."
+ },
+ {
+  "program": "cpu_allocator",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 68,
+  "reason": "Omitted remainder redistribution: line 68 `allocations = [int(x) for x in planned]` truncates so sums fall short (tests need sum == total, e.g. 10 over [1,1,1]). Label 67 `if _INTEGER_ALLOCATION:` is a correct guard; fix goes on line 68."
+ },
+ {
+  "program": "credit_share",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 70,
+  "reason": "Docstring: fee is deducted from the pool before distribution; code splits the full `amount` at line 68 and subtracts `fee` from each share at line 70 (`s - fee`). Two-line fault: fix is `(amount - fee)` at 68 and dropping `- fee` at 70 (or a compensating edit at 68 alone, which is why the oracle confirmed)."
+ },
+ {
+  "program": "credits_allocator",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 70,
+  "reason": "Omitted remainder redistribution after truncation: line 70 `allocations = [int(x) for x in planned]` gives sum 9 for 10 over [1,1,1] (tests require 10 with values in (3,4)). Label 69 `if _INTEGER_ALLOCATION:` is the correct guard; fix modifies line 70."
+ },
+ {
+  "program": "dataloader_shard_merge",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "Spurious shared-tail block lines 73-74 (`if ... merged[-1] == left_ids[-1] == right_ids[-1]: merged.pop()`) removes an element the docstring says to preserve. Label is on the guard (73); the pop (74) is the other half of the two-line fault; deleting the block is the fix."
+ },
+ {
+  "program": "demand_curve",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 60,
+  "reason": "Line 60 `if not clamp:` inverts the condition (clamp when clamp=True); label line 61 `low, high = sorted([y0, y1])` is correct code in the body."
+ },
+ {
+  "program": "demands_union",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Spurious shared-tail block lines 66-67 (`if merged and left and right and merged[-1] == left[-1] == right[-1]: merged.pop()`) drops one element although docstring/tests require all elements kept. Label on the pop (67); the guard (66) is the other half of the two-line fault."
+ },
+ {
+  "program": "divide_coupon",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 65,
+  "reason": "Docstring: fee is deducted from the total before distribution; code splits full `amount` at line 65 and subtracts `fee` per participant at line 67 (`b - fee`). Two-line fault: deviating token `- fee` is on the label line, but the natural fix is `(amount - fee)` at line 65 plus removing `- fee` at 67."
+ },
+ {
+  "program": "divide_refund",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 59,
+  "reason": "Same fee-deduction pattern: line 59 splits full `amount`, label line 61 `payouts = [b - fee for b in base]` deducts the flat fee from every payout (tests expect (amount - fee) split proportionally). Two-line fault; fix is `(amount - fee)` at 59 and dropping `- fee` at 61."
+ },
+ {
+  "program": "downtime_booking",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 64,
+  "reason": "Tests require windows that touch at a boundary to count as overlapping; line 64 `return not (b[1] <= a[0] or b[0] >= a[1])` should use `<` / `>`. Label line 63 is the `def overlaps(...)` header, not the faulty expression."
+ },
+ {
+  "program": "draft_cache",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Docstring: entries whose expiration time has been reached are invalid; line 73 `if now > expires_at:` should be `>=` (boundary tests at now == expires_at fail)."
+ },
+ {
+  "program": "embedding_lookup_cache",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 72,
+  "reason": "Docstring: valid only while now is strictly before cached_at + ttl; line 72 `if now > cached_at + validated_ttl:` should be `>=`."
+ },
+ {
+  "program": "energy_window_avg",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "Label line 72 is a `_log.debug(...)` call. The fault is line 74 `mean = total / window`, which divides by the requested window instead of the number of samples actually averaged (`len(recent)` / `effective_window`); replacing the divisor makes all 10 tests pass (verified)."
+ },
+ {
+  "program": "error_meter",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 56,
+  "reason": "Counter must be clamped to the cap (tests: value pinned to exactly cap); line 56 `counters[key] = cap - 1` should be `= cap`."
+ },
+ {
+  "program": "estimate_reliability",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Line 68 `if not clamp:` inverts the intended condition (clamp when clamp=True per docstring and tests); body lines 69-73 are correct."
+ },
+ {
+  "program": "estimate_supply",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Line 66 `if not clamp:` is the inverted guard; label line 67 `lo, hi = (min(y0, y1), max(y0, y1))` is correct code inside the inverted block."
+ },
+ {
+  "program": "event_gate",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 62,
+  "reason": "Gate must close once recent events reach the limit (tests: 3 events with limit=3 -> blocked); line 62 `if len(recent) > limit:` should be `>=`."
+ },
+ {
+  "program": "feature_cache",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 30,
+  "reason": "Tests/docstring: entry is stale when now equals the ttl timestamp, so `_is_expired` line 30 `if effective_now > ttl:` should be `>=`. Label line 31 is the `return True` guarded by that condition (one line off); changing line 30 to `>=` makes all 10 tests pass (verified)."
+ },
+ {
+  "program": "feature_flag_rollout",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 63,
+  "reason": "Label line 62 is blank. The fault is line 63 `return bucket > percentage`: a user is enrolled when their bucket falls below the rollout fraction, so it should be `<` (with `>` 100% rollout enrolls nobody and 0% enrolls everyone)."
+ },
+ {
+  "program": "file_chunk_stitch",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 80,
+  "reason": "Label line 78 `data += part` is a correct concatenation. The fault is line 80 `return data[:-1]`, which drops the last byte of the stitched payload (tests: single chunk returned as-is, total length preserved); it should be `return data`."
+ },
+ {
+  "program": "fuel_moving_mean",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Label 63 `total = sum(recent)` is correct. The deviation is line 65 `mean = total / window`: with fewer samples than the window the docstring/tests require the mean over the available readings, i.e. `total / len(recent)`."
+ },
+ {
+  "program": "gain_trendline",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 70,
+  "reason": "Label 71 (`lo, hi = min/max(y0, y1)`) is correct. The fault is the inverted guard on line 70 `if not clamp:` which clamps only when clamp=False; the docstring says clamping happens when clamp is True."
+ },
+ {
+  "program": "grades_union",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 77,
+  "reason": "The injected fault is the spurious block 76-77 that pops the last element when both inputs share the final grade (tests/docstring require both copies kept). Line 76 is the guard, line 77 `merged.pop()` is the harmful statement; guard-vs-guarded-statement."
+ },
+ {
+  "program": "grant_share",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 63,
+  "reason": "Docstring: the fee is deducted from the pool before distribution. Code subtracts `fee` from each share (line 65) instead of using `(amount - fee)` in line 63. A test-passing fix needs both lines (63: `* (amount - fee)`, 65: drop `- fee`); label 65 holds the deviating token, 63 holds the missing deduction."
+ },
+ {
+  "program": "growth_trendline",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Line 66 `if not clamp:` is inverted; clamping to [min(y0,y1), max(y0,y1)] must run when clamp is True (docstring and clamp=True/False tests)."
+ },
+ {
+  "program": "guard_email",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 71,
+  "reason": "Line 71 `if len(recent) > limit` should be `>=`: tests require blocking when the recent-send count equals the limit (remaining would otherwise be 0 while still allowed)."
+ },
+ {
+  "program": "heartbeat_throttle",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 73,
+  "reason": "Line 73 `if len(active) > limit` should be `>=`; tests require denial when the active count equals the limit."
+ },
+ {
+  "program": "histogram_bucket_merge",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 78,
+  "reason": "Spurious block 77-78 pops the last merged edge when both inputs end with the same value, contradicting the docstring (both copies retained). Line 77 is the guard, line 78 `merged.pop()` the harmful statement."
+ },
+ {
+  "program": "ids_merge",
+  "verdict": "either",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Spurious block 67-68 drops one copy of a shared last ID; docstring/tests require every element from both inputs. Label 68 is the `merged.pop()`; line 67 is its guard (guard-vs-guarded-statement, mirror of grades_union/histogram_bucket_merge where the guard was labelled)."
+ },
+ {
+  "program": "inspection_booking",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 65,
+  "reason": "Line 65 `not (b[1] <= a[0] or b[0] >= a[1])` treats touching endpoints as non-overlapping; tests require adjacent windows sharing an endpoint to conflict (`<`/`>`). Note the docstring's _CONFLICT_STRICT sentence contradicts the tests; tests govern."
+ },
+ {
+  "program": "invoice_meter",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 64,
+  "reason": "Label 63 `if new_value > effective_max` is a correct guard. The deviation is line 64 `new_value = effective_max - 1`: the docstring says the counter is capped at max_value, so it should be `effective_max`. No edit of line 63 alone can satisfy test_cap_reached_exactly."
+ },
+ {
+  "program": "job_queue_priority",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Line 67 `if len(job_list) > max_jobs` should be `>=`: docstring says admission is denied when the batch 'meets or exceeds' max_jobs, and tests reject a batch equal to max_jobs."
+ },
+ {
+  "program": "latencies_merge",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 86,
+  "reason": "Label 83 `merged.extend(left[i:])` is the normal merge tail and is correct. The injected fault is the block 86-87 (`if ... merged[-1] == left[-1] == right[-1]: merged.pop()`) that drops one copy of a shared last latency; docstring says duplicates from both streams are preserved. Three tests fail because of that block."
+ },
+ {
+  "program": "latency_rolling_avg",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 69,
+  "reason": "Line 69 `avg = total / window` divides by the nominal window even when the tail is shorter; docstring/tests require the arithmetic mean of the tail, `total / len(tail)`."
+ },
+ {
+  "program": "ledger_balance_rollup",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Label 65 `elif kind == \"debit\":` is a correct guard. The deviation is line 66 `balance += amount` inside the debit branch; debits must decrease the balance (`-=`) per docstring and tests."
+ },
+ {
+  "program": "limit_sensor",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 64,
+  "reason": "Line 64 `if len(active) > limit` should be `>=`; tests require denial with zero remaining when the active count equals the limit."
+ },
+ {
+  "program": "load_mix",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Label 67 is a blank line. The fault is the omitted normalisation promised by the docstring ('normalised so that all allocations sum to 1.0'); the fix most naturally changes line 68 `return adjusted` to return `[a / sum(adjusted) for a in adjusted]` (verified: all 10 tests pass)."
+ },
+ {
+  "program": "load_rolling_avg",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 68,
+  "reason": "Line 68 `avg = total / window` should divide by `len(tail)`; tests with fewer samples than the window expect the mean over the available samples."
+ },
+ {
+  "program": "log_sampling_decider",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 67,
+  "reason": "Line 67 `return bucket > rate` is inverted: a bucket in [0,1) should be sampled when `bucket < rate` (rate 0 samples nothing, rate 1 samples everything, ~10% at 0.1)."
+ },
+ {
+  "program": "login_tally",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 74,
+  "reason": "Label 73 `if updated > cap` is a correct guard. The deviation is line 74 `updated = cap - 1`; docstring says the counter is clamped so it never exceeds the cap, i.e. `updated = cap`."
+ },
+ {
+  "program": "lr_warmup_schedule",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 59,
+  "reason": "Label 57 `if step >= warmup_steps: return base_lr` is correct (step 100 of 100 returns base_lr either way). The deviation is line 59 `base_lr * ((step + 1) / warmup_steps)`: tests require lr=0 at step 0 and 1% at step 1, i.e. `step / warmup_steps` without the `+ 1`."
+ },
+ {
+  "program": "lru_evictor",
+  "verdict": "either",
+  "confidence": "medium",
+  "fault_line": 56,
+  "reason": "Intent: evict until len(order) < capacity. Both the outer loop line 56 `while len(order) > capacity` and the helper line 27 `while len(order) > target_len` use `>` where `>=` is needed; verified that changing either line alone still fails 5 tests, while changing both (or 56 plus `capacity - 1` on line 57) passes all 9. Two-line fault; label 27 is one half, line 56 the other."
+ },
+ {
+  "program": "machine_booking",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 61,
+  "reason": "Line 61 `not (b <= s or a >= e)` lets windows that merely touch an existing booking through; tests require a shared boundary to be a conflict (`<` / `>`)."
+ },
+ {
+  "program": "memory_moving_mean",
+  "verdict": "label",
+  "confidence": "high",
+  "fault_line": 66,
+  "reason": "Line 66 `avg = total / window` should be `total / len(tail)`; tests with fewer samples than the window expect the mean of the available samples."
+ },
+ {
+  "program": "message_counter",
+  "verdict": "other",
+  "confidence": "high",
+  "fault_line": 61,
+  "reason": "Label 60 `if cap is not None and counters[key] > cap` is a correct guard. The deviation is line 61 `counters[key] = cap - 1`; the docstring says the counter never exceeds the cap, so it should be set to `cap`."
+ }
+]

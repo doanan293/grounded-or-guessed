@@ -95,6 +95,9 @@ def all_specs() -> list[Spec]:
     specs += table_specs("tol", DATA / "failure_tolerance.csv", ["method"],
                          {"acc1_exact": "pct", "acc1_guard_strict": "pct", "acc1_guard_or_body": "pct"})
     specs += table_specs("off", DATA / "failure_offsets.csv", ["method", "offset"], {"count": "int"})
+    if (DATA / "ablation_coverage.csv").exists():
+        specs += table_specs("abl", DATA / "ablation_coverage.csv", ["gt", "subset", "contrast"],
+                             {"a_acc1": "pct", "b_acc1": "pct", "a_acc3": "pct", "b_acc3": "pct", **diff})
     specs += table_specs("pareto", DATA / "pareto.csv", ["method", "model"],
                          {"acc1": "pct", "acc3": "pct", "tokens_per_program": "k", "n": "int"})
     return specs
@@ -161,7 +164,8 @@ def computed() -> dict[str, str]:
     sem = [r for r in cost if r["run_id"].startswith("semloc_test_gemini_r")]
     out[macro_name("cost", "cf", "share", "pct")] = f"{100 * sum(int(r['calls_t0']) for r in sem) / sum(int(r['calls']) for r in sem):.0f}"
     for prefix, name in (("semloc_test_gemini_r", "semloc"), ("direct_cov_test_gemini_r", "llm coverage"),
-                         ("direct_test_gemini_r", "llm direct")):
+                         ("direct_test_gemini_r", "llm direct"),
+                         ("direct_tests_test_gemini_r", "llm tests")):
         rs = [float(r["tokens_per_program"]) for r in cost if r["run_id"].startswith(prefix)]
         out[macro_name("cost", *name.split(), "tokens", "k")] = f"{sum(rs) / len(rs) / 1000:.1f}" if rs else ""
     return out
