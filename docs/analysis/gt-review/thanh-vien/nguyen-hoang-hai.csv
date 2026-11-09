@@ -1,20 +1,20 @@
 ﻿id,program,G,S,F,answer,note
-1,bump_click,63,,64,,
-2,cached_preference,83,85,,,
-3,calibrate_score,67,,65,,
-4,coverage_interp,65,66,,,
-5,email_send_quota,65,66,,,
-6,fee_splitter,62,59,,,
-7,guard_search,73,74,,,
-8,ledger_balance_rollup,65,,66,,
-9,load_mix,67,,68,,
-10,metric_rolling_avg,69,71;73,70,,
-11,queue_window_avg,65,,66,,
-12,rebate_splitter,63,62,,,
-13,revenue_share,71,70,,,
-14,schedule_car,62,61,,,
-15,shift_risk,62,61,,,
-16,storage_quota_split,67,64,66,,
-17,time_range_filter,73,,75,,
-18,traffic_shaping_gate,70,71,,,
-19,volume_moving_mean,61,,60,,
+1,bump_click,63,,64,F,G=63 là guard đúng; lỗi -1 tiêm vào dòng 64 (F).
+2,cached_preference,83,85,,S,G=83 là dòng log; lỗi toán tử > thay vì >= ở dòng 85 (S).
+3,calibrate_score,67,,65,F,G=67 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 65 (F).
+4,coverage_interp,65,66,,S,G=65 là dòng trống; lỗi đảo cờ 'if not clamp:' ở dòng 66 (S).
+5,email_send_quota,65,66,,S,G=65 là dòng trống; lỗi toán tử > thay vì >= ở dòng 66 (S).
+6,fee_splitter,62,59,,S,G=62 là dòng trống; vị trí chia tỷ lệ chưa trừ phí ở dòng 59 (S).
+7,guard_search,73,74,,S,G=73 là dòng trống; lỗi toán tử > thay vì >= ở dòng 74 (S).
+8,ledger_balance_rollup,65,,66,F,G=65 là nhánh elif đúng; lỗi cộng thay vì trừ (balance -= amount) ở dòng 66 (F).
+9,load_mix,67,,68,F,G=67 là dòng trống; dòng 68 (F) trả về adjusted chưa chuẩn hóa tổng 1.0.
+10,metric_rolling_avg,69,71;73,70,F,"G=69, S=71;73 là dòng trống; lỗi chia total/window thay vì len(tail) ở dòng 70 (F)."
+11,queue_window_avg,65,,66,F,G=65 là dòng trống; lỗi chia total/window thay vì len(tail) ở dòng 66 (F).
+12,rebate_splitter,63,62,,S,G=63 là dòng trống; vị trí chia tỷ lệ chưa trừ phí ở dòng 62 (S).
+13,revenue_share,71,70,,S,G=71 là dòng trống; vị trí chia tỷ lệ chưa trừ phí ở dòng 70 (S).
+14,schedule_car,62,61,,S,G=62 là return False; lỗi toán tử <=/>= chạm biên ở dòng 61 (S).
+15,shift_risk,62,61,,G,Thiếu bước chuẩn hóa (omission) tại dòng trống G=62; sửa ở dòng 61 (S) làm mất bước clamp.
+16,storage_quota_split,67,64,66,F,"G=67, S=64 là dòng trống; dòng 66 (F) chia theo total thay vì total - fee."
+17,time_range_filter,73,,75,F,"G=73 là dòng log; lỗi toán tử <= thay vì < (nửa mở [start, end)) ở dòng 75 (F)."
+18,traffic_shaping_gate,70,71,,S,G=70 là dòng trống; lỗi toán tử > thay vì >= ở dòng 71 (S).
+19,volume_moving_mean,61,,60,F,G=61 là dòng trống; lỗi chia cho window thay vì len(recent) ở dòng 60 (F).

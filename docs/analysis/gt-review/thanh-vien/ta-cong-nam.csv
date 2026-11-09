@@ -1,20 +1,20 @@
 ﻿id,program,G,S,F,answer,note
-1,batch_tally,61,,62,,
-2,cached_manifest,63,,65,,
-3,calibrate_pressure,72,,70,,
-4,cost_trendline,66,,65,,
-5,downtime_booking,63,,64,,
-6,feature_flag_rollout,62,,63,,
-7,gradient_clip_budget,64,62,66,,
-8,latencies_merge,83,,86,,
-9,limit_query,68,69,,,
-10,message_counter,60,,61,,
-11,prices_stream,80,81,,,
-12,read_throttle,69,70,,,
-13,reserve_slot,60,,61,,
-14,schedule_call,71,,72,,
-15,session_memo,70,71,,,
-16,storage_mix,63,60,,,
-17,throughput_trendline,61,,60,,
-18,track_release,58,,60,,
-19,view_tally,67,,68,,
+1,batch_tally,61,,62,F,G=61 là guard; lỗi -1 tiêm vào dòng 62 (F).
+2,cached_manifest,63,,65,F,G=63 là tính effective; lỗi toán tử > thay vì >= ở dòng 65 (F).
+3,calibrate_pressure,72,,70,F,G=72 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 70 (F).
+4,cost_trendline,66,,65,F,G=66 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 65 (F).
+5,downtime_booking,63,,64,F,G=63 là khai báo hàm overlaps; lỗi toán tử chạm biên ở dòng 64 (F).
+6,feature_flag_rollout,62,,63,F,G=62 là dòng trống; lỗi đảo điều kiện bucket > percentage (phải là <=) ở dòng 63 (F).
+7,gradient_clip_budget,64,62,66,F,"G=64, S=62 không chứa lỗi; lỗi +1 ở mẫu số công thức clip norm tại dòng 66 (F)."
+8,latencies_merge,83,,86,F,G=83 là nối danh sách còn lại; khối pop phần tử sai logic ở dòng 86 (F).
+9,limit_query,68,69,,S,G=68 là dòng trống; lỗi toán tử > thay vì >= ở dòng 69 (S).
+10,message_counter,60,,61,F,G=60 là guard đúng; lỗi -1 tiêm vào dòng 61 (F).
+11,prices_stream,80,81,,S,G=80 là dòng trống; khối pop phần tử sai logic bắt đầu từ dòng 81 (S).
+12,read_throttle,69,70,,S,G=69 là dòng trống; lỗi toán tử > thay vì >= ở dòng 70 (S).
+13,reserve_slot,60,,61,F,G=60 là khai báo hàm overlaps; lỗi toán tử chạm biên ở dòng 61 (F).
+14,schedule_call,71,,72,F,G=71 là khai báo hàm overlaps; lỗi toán tử chạm biên ở dòng 72 (F).
+15,session_memo,70,71,,S,G=70 là dòng trống; lỗi toán tử > thay vì >= ở dòng 71 (S).
+16,storage_mix,63,60,,G,Thiếu bước chuẩn hóa (omission) tại dòng trống G=63; bản sửa ở 60 (S) chỉ là patch bù trừ.
+17,throughput_trendline,61,,60,F,G=61 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 60 (F).
+18,track_release,58,,60,F,G=58 là guard; lỗi -1 tiêm vào dòng 60 (F).
+19,view_tally,67,,68,F,G=67 là guard; lỗi -1 tiêm vào dòng 68 (F).

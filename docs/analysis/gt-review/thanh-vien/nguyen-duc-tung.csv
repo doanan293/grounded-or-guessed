@@ -1,19 +1,19 @@
 ﻿id,program,G,S,F,answer,note
-1,cached_inventory,69,70,,,
-2,calibrate_loss,66,,65,,
-3,config_expiry,78,77,,,
-4,download_rate,74,75,,,
-5,feature_cache,31,,30,,
-6,gpu_memory_pool,74,75,,,
-7,kv_snapshot_reader,69,70;71,,,
-8,limit_ping,69,70,,,
-9,maintenance_booking,76,77,,,
-10,price_cache,59,,61,,
-11,quote_memo,59,,61,,
-12,reserve_lane,60,,62,,
-13,royalty_payout,68,67,,,
-14,schedule_window,67,65,,,
-15,smooth_cpu,67,69,68,,
-16,tensor_slice_pad,63,,64,,
-17,track_logout,67,,69,,
-18,versions_stream,79,80,,,
+1,cached_inventory,69,70,,S,G=69 là dòng trống; lỗi toán tử > thay vì >= ở dòng 70 (S).
+2,calibrate_loss,66,,65,F,G=66 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 65 (F).
+3,config_expiry,78,77,,S,G=78 là return None; lỗi toán tử > thay vì >= ở dòng 77 (S).
+4,download_rate,74,75,,S,G=74 là dòng trống; lỗi toán tử > thay vì >= ở dòng 75 (S).
+5,feature_cache,31,,30,F,G=31 là return True; lỗi toán tử > thay vì >= ở dòng 30 (F).
+6,gpu_memory_pool,74,75,,S,G=74 là dòng trống; lỗi toán tử > thay vì >= ở dòng 75 (S).
+7,kv_snapshot_reader,69,70;71,,S,G=69 là return v đúng; lỗi toán tử < thay vì > ở điều kiện dừng sớm dòng 70 (S).
+8,limit_ping,69,70,,S,G=69 là dòng trống; lỗi toán tử > thay vì >= ở dòng 70 (S).
+9,maintenance_booking,76,77,,S,G=76 là dòng trống; lỗi toán tử <=/>= chạm biên ở dòng 77 (S).
+10,price_cache,59,,61,F,G=59 là tính adjusted_now; lỗi toán tử > thay vì >= ở dòng 61 (F).
+11,quote_memo,59,,61,F,G=59 là tính effective; lỗi toán tử > thay vì >= ở dòng 61 (F).
+12,reserve_lane,60,,62,F,G=60 là guard strict; lỗi toán tử chạm biên ở dòng 62 (F).
+13,royalty_payout,68,67,,S,G=68 là dòng trống; vị trí chia tỷ lệ chưa trừ phí ở dòng 67 (S).
+14,schedule_window,67,65,,S,G=67 là dòng log; lỗi toán tử <=/>= chạm biên ở dòng 65 (S).
+15,smooth_cpu,67,69,68,F,"G=67, S=69 là dòng trống; lỗi chia total/window thay vì len(tail) ở dòng 68 (F)."
+16,tensor_slice_pad,63,,64,F,G=63 là guard; lỗi +1 thừa phần tử padding ở dòng 64 (F).
+17,track_logout,67,,69,F,G=67 là guard; lỗi -1 tiêm vào dòng 69 (F).
+18,versions_stream,79,80,,S,G=79 là dòng trống; khối pop phần tử sai logic bắt đầu từ dòng 80 (S).

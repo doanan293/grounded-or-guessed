@@ -19,6 +19,7 @@ for f in sorted(Path("runs").glob("direct*_r[0-9].json")):
 PY
 $PY scripts/llm_cost.py > /dev/null
 $PY scripts/runs_table.py > /dev/null
+$PY scripts/build_reviewed_gt.py > /dev/null
 $PY scripts/gt_sensitivity.py > /dev/null
 $PY scripts/rq2_ours.py > /dev/null
 $PY scripts/ablation_coverage.py > /dev/null

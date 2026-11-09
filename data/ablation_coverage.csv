@@ -7,3 +7,7 @@ repaired,all,coverage_effect,llm_coverage,llm_tests,179,3,0.5717,0.6257,-0.054,-
 repaired,all,tests_effect,llm_tests,llm_direct,179,3,0.6257,0.568,0.0577,0.017,0.1067,0.8994,0.6276,0.2719,0.186,0.3697,0.9199,0.6294
 repaired,executable,coverage_effect,llm_coverage,llm_tests,179,3,0.5717,0.6257,-0.054,-0.0936,-0.0214,0.9199,0.8994,0.0205,-0.0018,0.0492,0.9367,0.9199
 repaired,executable,tests_effect,llm_tests,llm_direct,179,3,0.6257,0.568,0.0577,0.017,0.1067,0.8994,0.6276,0.2719,0.186,0.3697,0.9199,0.6294
+reviewed,all,coverage_effect,llm_coverage,llm_tests,200,3,0.9217,0.955,-0.0333,-0.0591,-0.0123,1.0,1.0,0.0,0.0,0.0,1.0,1.0
+reviewed,all,tests_effect,llm_tests,llm_direct,200,3,0.955,0.8733,0.0817,0.0398,0.1295,1.0,0.9083,0.0917,0.0515,0.1395,1.0,0.91
+reviewed,executable,coverage_effect,llm_coverage,llm_tests,200,3,0.9217,0.955,-0.0333,-0.0591,-0.0123,1.0,1.0,0.0,0.0,0.0,1.0,1.0
+reviewed,executable,tests_effect,llm_tests,llm_direct,200,3,0.955,0.8733,0.0817,0.0398,0.1295,1.0,0.9083,0.0917,0.0515,0.1395,1.0,0.91

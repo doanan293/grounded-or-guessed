@@ -1,19 +1,19 @@
 ﻿id,program,G,S,F,answer,note
-1,bump_job,56,,57,,
-2,calibrate_latency,73,70,,,
-3,catalog_cache,63,64,,,
-4,demand_forecast_curve,65,66,,,
-5,estimate_supply,67,,66,,
-6,fuel_moving_mean,63,,65,,
-7,invoice_merge_stream,82,79;83,,,
-8,limit_job,73,75,,,
-9,login_throttle,68,69,,,
-10,payment_payout,72,,73,,
-11,quota_for_inventory,65,,66,,
-12,reservation_overlap_check,68,,69,,
-13,rolling_usage,66,68;70,67,,
-14,schedule_shift_allocator,67,,68,,
-15,shift_weight,63,,64,,
-16,task_tally,53,,55,,
-17,track_build,52,,53,,
-18,txn_dedup_merge,75,,76,,
+1,bump_job,56,,57,F,G=56 là guard đúng; lỗi -1 tiêm vào dòng 57 (F).
+2,calibrate_latency,73,70,,S,G=73 là dòng trống; lỗi đảo cờ 'if not clamp:' ở dòng 70 (S).
+3,catalog_cache,63,64,,S,G=63 là dòng trống; lỗi toán tử > thay vì >= ở dòng 64 (S).
+4,demand_forecast_curve,65,66,,S,G=65 là dòng trống; lỗi đảo cờ 'if not clamp:' ở dòng 66 (S).
+5,estimate_supply,67,,66,F,G=67 là thân hàm; lỗi đảo cờ 'if not clamp:' ở dòng 66 (F).
+6,fuel_moving_mean,63,,65,F,G=63 là total=sum(recent); lỗi chia cho window thay vì len(recent) ở dòng 65 (F).
+7,invoice_merge_stream,82,79;83,,S,G=82 là dòng trống; khối pop phần tử sai logic bắt đầu từ dòng 83 (trong S).
+8,limit_job,73,75,,S,G=73 là tham số log debug; lỗi toán tử > thay vì >= ở dòng 75 (S).
+9,login_throttle,68,69,,S,G=68 là dòng trống; lỗi toán tử > thay vì >= ở dòng 69 (S).
+10,payment_payout,72,,73,F,G=72 là dòng trống; trừ fee vào từng phần ở dòng 73 (F) thay vì trừ vào tổng pool.
+11,quota_for_inventory,65,,66,F,G=65 là dòng trống; ép kiểu int ở dòng 66 (F) làm mất phần dư của tổng quota.
+12,reservation_overlap_check,68,,69,F,G=68 là vòng lặp for; lỗi toán tử <=/>= không phát hiện chạm biên ở dòng 69 (F).
+13,rolling_usage,66,68;70,67,F,"G=66, S=68;70 là dòng trống; lỗi chia total/window thay vì len(tail) ở dòng 67 (F)."
+14,schedule_shift_allocator,67,,68,F,G=67 là dòng trống; ép kiểu int ở dòng 68 (F) làm mất phần dư của tổng quota.
+15,shift_weight,63,,64,F,G=63 là dòng trống; dòng 64 (F) trả về updated chưa chuẩn hóa tổng 1.0.
+16,task_tally,53,,55,F,G=53 là guard; lỗi trừ 1 tiêm vào dòng 55 (F).
+17,track_build,52,,53,F,G=52 là guard đúng; lỗi -1 tiêm vào dòng 53 (F).
+18,txn_dedup_merge,75,,76,F,G=75 là dòng trống; khối pop phần tử sai logic bắt đầu từ dòng 76 (F).

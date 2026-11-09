@@ -46,7 +46,7 @@ def main() -> None:
     preds = {m: [json.loads(f.read_text()) for f in sorted(RANK.glob(f"{pre}[0-9].json"))] for m, pre in PREFIX.items()}
     rows = []
     for gname, gt in load_variants().items():
-        if gname not in ("original", "repaired"):
+        if gname not in ("original", "repaired", "reviewed"):
             continue
         progs = [p for p in test if p in gt]
         labels = labels_for({p: gt[p] for p in progs}, COV)

@@ -62,3 +62,24 @@ verified_strict,semloc_gemini_T0.8,semloc,92,0.7826,0.9022,0.9348,"{""gate"": fa
 verified_strict,semloc_gemini_T0.8,covgate,92,0.7826,0.9348,0.9348,"{""gate"": false, ""lam"": 0.5, ""no_prior"": false, ""grounded_prior"": false}",1.0,0.25
 verified_strict,semloc_gemini_T0.8,no_prior,92,0.6304,0.7717,0.8043,"{""gate"": false, ""lam"": 0.0, ""no_prior"": true, ""grounded_prior"": false}",0.014,0.0005
 verified_strict,semloc_gemini_T0.8,gate_only,92,0.7826,0.9348,0.9348,"{""gate"": true, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,0.25
+reviewed,sbfl_ochiai,-,200,0.11,0.28,0.84,,,
+reviewed,semloc_claude_T0.3,semloc,200,0.94,0.97,0.985,"{""gate"": false, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0
+reviewed,semloc_claude_T0.3,covgate,200,0.94,0.98,0.985,"{""gate"": false, ""lam"": 0.5, ""no_prior"": false, ""grounded_prior"": false}",1.0,0.5
+reviewed,semloc_claude_T0.3,no_prior,200,0.605,0.73,0.75,"{""gate"": false, ""lam"": 0.0, ""no_prior"": true, ""grounded_prior"": false}",0.0,0.0
+reviewed,semloc_claude_T0.3,gate_only,200,0.94,0.98,0.985,"{""gate"": true, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,0.5
+reviewed,semloc_claude_T0.8,semloc,200,0.94,0.98,0.985,"{""gate"": false, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0
+reviewed,semloc_claude_T0.8,covgate,200,0.94,0.985,0.985,"{""gate"": false, ""lam"": 0.5, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0
+reviewed,semloc_claude_T0.8,no_prior,200,0.59,0.75,0.76,"{""gate"": false, ""lam"": 0.0, ""no_prior"": true, ""grounded_prior"": false}",0.0,0.0
+reviewed,semloc_claude_T0.8,gate_only,200,0.94,0.985,0.985,"{""gate"": true, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0
+reviewed,semloc_gemini_T0.0,semloc,200,0.925,0.97,0.985,"{""gate"": false, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0
+reviewed,semloc_gemini_T0.0,covgate,200,0.925,0.98,0.985,"{""gate"": false, ""lam"": 0.5, ""no_prior"": false, ""grounded_prior"": false}",1.0,0.5
+reviewed,semloc_gemini_T0.0,no_prior,200,0.565,0.735,0.77,"{""gate"": false, ""lam"": 0.0, ""no_prior"": true, ""grounded_prior"": false}",0.0,0.0
+reviewed,semloc_gemini_T0.0,gate_only,200,0.925,0.98,0.985,"{""gate"": true, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,0.5
+reviewed,semloc_gemini_T0.3,semloc,200,0.905,0.955,0.98,"{""gate"": false, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0
+reviewed,semloc_gemini_T0.3,covgate,200,0.905,0.97,0.98,"{""gate"": false, ""lam"": 0.5, ""no_prior"": false, ""grounded_prior"": false}",1.0,0.25
+reviewed,semloc_gemini_T0.3,no_prior,200,0.525,0.715,0.755,"{""gate"": false, ""lam"": 0.0, ""no_prior"": true, ""grounded_prior"": false}",0.0,0.0
+reviewed,semloc_gemini_T0.3,gate_only,200,0.905,0.97,0.98,"{""gate"": true, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,0.25
+reviewed,semloc_gemini_T0.8,semloc,200,0.925,0.965,0.98,"{""gate"": false, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0
+reviewed,semloc_gemini_T0.8,covgate,200,0.925,0.97,0.98,"{""gate"": false, ""lam"": 0.5, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0
+reviewed,semloc_gemini_T0.8,no_prior,200,0.57,0.73,0.75,"{""gate"": false, ""lam"": 0.0, ""no_prior"": true, ""grounded_prior"": false}",0.0,0.0
+reviewed,semloc_gemini_T0.8,gate_only,200,0.925,0.97,0.98,"{""gate"": true, ""lam"": 0.0, ""no_prior"": false, ""grounded_prior"": false}",1.0,1.0

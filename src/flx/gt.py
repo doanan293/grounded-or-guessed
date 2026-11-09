@@ -2,6 +2,7 @@
 
 repaired_gt: original lines, replaced by execution-verified lines where verification corrected them;
              programs whose suspect ground truth could not be verified are dropped.
+reviewed:    data/semfault_reviewed_gt.json — LLM pre-review + team review + execution-backed overrides.
 strict=True: only programs whose fault line was confirmed or corrected by a passing minimal fix.
 sources:     program → source lines; a verified location made only of blank/comment lines is dropped (a "fix"
              written onto a blank line names no statement any method can rank — in practice a compensating insert).
@@ -39,5 +40,9 @@ def load_variants() -> dict[str, dict[str, list[int]]]:
     original = load_ground_truth(SEMLOC_ROOT / "benchmark" / "ground_truth.json")
     verified = json.loads((ROOT / "data" / "semfault_verified_gt.json").read_text())
     sources = {p: (SEMLOC_ROOT / "benchmark" / "programs" / f"{p}.py").read_text().splitlines() for p in original}
-    return {"original": original, "repaired": repaired_gt(original, verified, sources=sources),
-            "verified_strict": repaired_gt(original, verified, strict=True, sources=sources)}
+    out = {"original": original, "repaired": repaired_gt(original, verified, sources=sources),
+           "verified_strict": repaired_gt(original, verified, strict=True, sources=sources)}
+    rev = ROOT / "data" / "semfault_reviewed_gt.json"
+    if rev.exists():  # SemFault-250-reviewed (scripts/build_reviewed_gt.py): every program, multi-line labels allowed
+        out["reviewed"] = {r["program"]: list(r["lines"]) for r in json.loads(rev.read_text())}
+    return out
