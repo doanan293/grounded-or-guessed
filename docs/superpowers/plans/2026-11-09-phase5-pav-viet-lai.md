@@ -55,7 +55,7 @@
 
 ### Task 4: Dàn ý câu chuyện mới (cổng duyệt của chủ dự án)
 
-- [ ] Cập nhật `docs/analysis/outline.md`: câu hỏi mở đầu (lập trình viên vẫn đưa test fail cho LLM, nhất là với TDD); RQ2 gồm ablation + PAV; bộ nhãn thứ ba; benchmark bão hòa khi nhãn đúng; giới hạn (hàm đơn lẻ, test mô tả rõ ý định, lỗi thật ít)
+- [ ] Cập nhật `docs/analysis/outline.md`: câu hỏi mở đầu đặt trong quy trình TDD → CI báo fail → tìm dòng lỗi (lập trình viên vẫn đưa test fail cho LLM); phân tích tĩnh (ruff, pyrefly) chỉ là một đoạn ngắn + bảng nhỏ trong kết quả, không thuộc đóng góp chính (chủ dự án duyệt 09/11); RQ2 gồm ablation + PAV; bộ nhãn thứ ba; benchmark bão hòa khi nhãn đúng; giới hạn (hàm đơn lẻ, test mô tả rõ ý định, lỗi thật ít)
 - [ ] Chủ dự án duyệt dàn ý
 
 ### Task 5: Viết lại báo cáo VI
