@@ -9,8 +9,9 @@ nó, và giới hạn.
 
 \subsection{Đo phần ``grounded'' và phần ``guessed''}
 
-\textbf{Khẳng định.} Ở hạng 1, phần lớn độ chính xác của SemLoc đến từ dòng LLM tự đoán, không từ phổ vi phạm ràng buộc.
-Trên lượt chạy của nhóm, Acc@1 \DecSemlocRepairedAllAccOneFull\% = \DecSemlocRepairedAllAccOnePhiGuess{} (dòng đoán) +
+\textbf{Khẳng định.} Theo thiết kế, dòng hạng 1 của SemLoc luôn là dòng LLM tự đoán, nên Acc@1 của SemLoc
+(\RqTwoRepairedAllSemlocAccOneMean\%) chính là Acc@1 của dòng đoán; riêng phổ vi phạm ràng buộc đạt
+\RqTwoRepairedAllSemlocNoPriorAccOneMean\%. Phân rã Shapley là thông tin bổ sung: trên lượt chạy của nhóm, Acc@1 \DecSemlocRepairedAllAccOneFull\% = \DecSemlocRepairedAllAccOnePhiGuess{} (dòng đoán) +
 \DecSemlocRepairedAllAccOnePhiSpectrum{} (phổ); trên nhật ký của tác giả,
 \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOneFull\% = \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiGuess{} +
 \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiSpectrum; trên lỗi thật, Acc@1 của SemLoc bằng đúng Acc@1 của riêng
@@ -93,7 +94,8 @@ cũng là một giả thuyết: nhãn do người gán có thể sai hoặc mơ 
 \item \textbf{Bộ phán định sửa tối thiểu} chấp nhận bản sửa bù trừ nên bộ dòng lỗi đã sửa còn nhiễu; mọi kết quả cũng được báo
 cáo trên bộ gốc.
 \item \textbf{Bộ dòng lỗi kiểm chứng có thể thiên về phương pháp dùng độ phủ}, vì bộ phán định cần kiểm thử thất bại chạy tới
-dòng sửa; so sánh giữa SemLoc, các phương pháp đối chứng dùng LLM và CovGate cùng chiều trên bộ gốc, riêng cổng độ phủ thì không.
+dòng sửa; so sánh giữa SemLoc, các phương pháp đối chứng dùng LLM và CovGate ở Acc@1 và Acc@3 cùng chiều trên bộ gốc, riêng cổng độ phủ
+thì không; ở Acc@5, SemLoc hơn LLM + độ phủ trên bộ gốc nhưng kém trên bộ đã sửa.
 \item \textbf{Mơ hồ dòng kề cạnh}: Acc@1 chặt phụ thuộc quy ước gán nhãn; nhóm báo cáo cả Acc@1 chấp nhận đầu khối/thân khối.
 \item \textbf{Prompt phương pháp đối chứng} do nhóm viết trước khi xem kết quả và không tinh chỉnh; prompt khác có thể cho kết quả khác.
 \end{itemize}

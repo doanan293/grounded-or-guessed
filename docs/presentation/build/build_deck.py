@@ -116,6 +116,13 @@ def _csv(name: str) -> list[dict]:
         return list(csv.DictReader(f))
 
 
+def _m(name: str) -> str:
+    """Value of a macro in the Vietnamese numbers file (same numbers as the report)."""
+    import re
+    text = (ROOT / "docs" / "report" / "generated" / "numbers-vi.tex").read_text()
+    return re.search(r"\\newcommand\{\\" + name + r"\}\{([^}]*)\}", text).group(1)
+
+
 def _p(v) -> str:
     """percent with a Vietnamese decimal comma, e.g. 0.4930 -> 49,3"""
     return f"{100 * float(v):.1f}".replace(".", ",")
@@ -155,7 +162,7 @@ def results_pages() -> None:
         [f"{len({r['family'] for r in fam})} họ model, {fam[0]['n']} CT\n(Acc@1, khoảng)", rng("semloc"), "—", rng("semloc_no_prior"), "—"],
     ], highlight_col=2, head_h=52, row_h=62, fs=16,
         note="Lỗi thật: mọi lần SemLoc đúng ở hạng 1 đều là dòng LLM tự đoán. Đổi tên: dòng đoán gần như giữ nguyên,\n"
-             "phổ ngữ nghĩa giảm mạnh (p<0,001). Họ model: model càng yếu càng phụ thuộc vào điểm thưởng cho dòng đoán."))
+             "phổ ngữ nghĩa giảm mạnh (p<0,001). Họ model: tập con nhỏ, chưa đủ để xếp hạng các model."))
     semloc_runs = [r for r in cost if r["run_id"].startswith("semloc_test_gemini_r")]
     cf_share = round(100 * sum(int(r["calls_t0"]) for r in semloc_runs) / sum(int(r["calls"]) for r in semloc_runs))
     png = WS / "images" / "pareto_rq.png"
@@ -166,7 +173,7 @@ def results_pages() -> None:
            f'<g id="hinh-pareto" data-pptx-bounds="84 120 480 371"><image x="84" y="120" width="480" height="371" '
            f'href="../images/pareto_rq.png" preserveAspectRatio="xMidYMid meet"/></g>'
            + _para("ket-luan-pareto", 590, 150, 300, 300, [
-               (20, NAVY, "bold", ["Một prompt có độ phủ", "thắng pipeline ở top-3"]),
+               (20, NAVY, "bold", ["1 prompt có bằng chứng", "thực thi thắng ở top-3"]),
                (16, INK, "normal", [f"Cùng {_csv('pareto.csv')[0]['n']} chương trình, ở cả 5 họ", "model: LLM + độ phủ có Acc@3",
                                     "cao hơn SemLoc và tốn ít token hơn", "(với lỗi được test fail chạy tới)."]),
                (16, INK, "normal", [f"Bước vá thử (CF) chiếm {cf_share}% lượt", "gọi LLM nhưng không cải thiện có",
@@ -211,7 +218,7 @@ def build() -> None:
         "Mercury is the closest planet to the Sun and the smallest": [
             "**Định vị lỗi dựa trên phổ**", "(SBFL) xếp hạng dòng code", "theo việc test fail và test",
             "pass có chạy qua nó không.", "Với **lỗi ngữ nghĩa**, test pass", "và test fail chạy qua cùng",
-            "các dòng → SBFL mất tín", "hiệu: Acc@1 chỉ 6,4%."],
+            "các dòng → SBFL mất tín", f"hiệu: Acc@1 chỉ {_m('RqOneSbflOchiaiFairAllAccOne')}%."],
         "Mercury takes a little more than 58 days": [
             "**LLM** hiểu ý đồ của code", "nhưng trả lời ngẫu nhiên,", "khó kiểm chứng.",
             "**SemLoc** (2026) bắt LLM viết", "ràng buộc chạy được, rồi để", "kết quả chạy test phán xử:",
@@ -275,14 +282,14 @@ def build() -> None:
     E("slide_20.svg", [
         ("Popular programming languages", "Câu hỏi nghiên cứu"),
         ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: kết quả SemLoc còn đúng", "với log công bố và với Gemini?"]),
-        ("Venus", "RQ2"), ("Venus has a beautiful", ["Cải tiến: CovGate có chính xác", "hơn và rẻ hơn SemLoc gốc?"]),
+        ("Venus", "RQ2"), ("Venus has a beautiful", ["CovGate, 1 prompt có bằng chứng", "thực thi: chính xác hơn SemLoc?"]),
         ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, code đổi tên,", "các họ model khác?"]),
         ("Saturn", "Lõi"), ("Saturn is a gas giant", ["LLM đưa giả thuyết, bằng chứng", "thực thi mới là người phán xử."]),
     ])
     E("slide_19.svg", [
         ("Main topic and details", "CovGate: thêm độ phủ vào SemLoc"),
         ("Mars", "Cổng độ phủ"), ("Despite being red", ["Bỏ dòng mà", "test fail", "không đi qua"]),
-        ("Neptune", "λ·Ochiai"), ("It’s the farthest", ["Cộng điểm SBFL,", "λ chọn trên dev"]),
+        ("Neptune", "λ·Ochiai"), ("It’s the farthest", ["Phá hòa SBFL", "(dev chọn)"]),
         ("Jupiter", "CF xếp lại"), ("Jupiter is the biggest", ["Dùng kết quả", "vá thử để xếp"]),
         ("Saturn", "Thưởng có cứ"), ("It’s a gas giant", ["Chỉ thưởng khi", "có bằng chứng"]),
     ])
@@ -292,8 +299,8 @@ def build() -> None:
     n_corr = sum(1 for v in (vgt.values() if isinstance(vgt, dict) else vgt) if v.get("status") == "corrected")
     E("slide_14.svg", {
         "9h 55m 23s": "13/13", "Jupiter’s rotation period": "cấu hình SemLoc tái hiện khớp từng số",
-        "333,000": f"{round(100 * float(dec['phi_guess']) / float(dec['full']))}%",
-        "The Sun’s mass compared": "Acc@1 của SemLoc đến từ dòng LLM tự đoán",
+        "333,000": _m("RqTwoRepairedAllSemlocNoPriorAccOneMean") + "%",
+        "The Sun’s mass compared": "Acc@1 khi bỏ thưởng cho dòng LLM đoán",
         "386,000 km": str(n_corr), "Distance between the Earth": "ground truth sai được sửa bằng thực thi",
     })
     E("slide_21.svg", [
@@ -362,7 +369,7 @@ def analysis_pages() -> None:
     ])
     E("dong_gop.svg", [
         ("Recommendations", "Đóng góp khoa học"),
-        ("Mars", "Đoán/phổ"), ("Despite being red, Mars", [f"Acc@1 {_p(dec['full'])}: đoán", f"{_p(dec['phi_guess'])} + phổ {_p(dec['phi_spectrum'])}"]),
+        ("Mars", "Đoán/phổ"), ("Despite being red, Mars", ["Hạng 1 = dòng đoán;", f"phổ riêng {_m('RqTwoRepairedAllSemlocNoPriorAccOneMean')}"]),
         ("Venus", "1 prompt"), ("Venus is the second", [f"Acc@3 {_p(rq2['llm_coverage']['acc3_mean'])} so với", f"{_p(rq2['semloc']['acc3_mean'])} (lỗi chạy tới)"]),
         ("Neptune", "Cách chấm"), ("Neptune is the farthest", ["Thưởng ẩn, CF không", "đổi hạng, DD, SBFL"]),
         ("Mercury", "GT mới"), ("Mercury is the closest", [f"{st['confirmed']} xác nhận,", f"{st['corrected']} sửa vị trí"]),
@@ -386,11 +393,11 @@ def analysis_pages() -> None:
     E("ket_luan.svg", {
         "Introduction": "Kết luận",
         "Mercury is the closest planet to the Sun and the smallest": [
-            "**Grounded hay guessed?**", "Hạng 1 chủ yếu là dòng", f"LLM đoán ({_p(dec['phi_guess'])}/{_p(dec['full'])} điểm",
-            "Acc@1); top-3 chủ yếu là", "bằng chứng thực thi.", "Lỗi thật: mọi lần đúng", "hạng 1 là dòng đoán."],
+            "**Grounded hay guessed?**", "Hạng 1 luôn là dòng LLM", "đoán (theo thiết kế);", f"riêng phổ: Acc@1 {_m('RqTwoRepairedAllSemlocNoPriorAccOneMean')}.",
+            "Top-3: bằng chứng thực", "thi có tác dụng thật.", "Lỗi thật: cũng vậy."],
         "Mercury takes a little more than 58 days": [
-            "**Đề xuất**", "Đưa thẳng độ phủ cho", f"LLM: Acc@3 {_p(rq2['llm_coverage']['acc3_mean'])} so với",
-            f"{_p(rq2['semloc']['acc3_mean'])} với lỗi được", "chạy tới, rẻ ~5 lần.", "Bảng kiểm 7 mục cho", "mọi đánh giá."],
+            "**Đề xuất**", "Đưa test fail + độ phủ", f"cho LLM: Acc@3 {_p(rq2['llm_coverage']['acc3_mean'])} so", f"với {_p(rq2['semloc']['acc3_mean'])} (lỗi chạy tới).",
+            f"Mọi nhãn: chỉ {_m('RqTwoOriginalAllLlmCoverageDAccThree')},", "SemLoc hơn ở Acc@5.", "Bảng kiểm 7 mục."],
     })
 
 

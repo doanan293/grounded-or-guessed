@@ -1,7 +1,7 @@
 \begin{abstract}
 LLM-based fault localizers increasingly claim to ground the model's reasoning in program execution. We test that
 claim on SemLoc, a recent localizer that turns LLM-inferred semantic constraints into a violation spectrum. We recompute
-every published configuration from the authors' released logs, audit the evaluation, re-derive the benchmark's fault
+every published configuration from the authors' released logs, audit the evaluation, re-check the benchmark's fault
 locations by execution, rerun the pipeline three times with a current model, and measure how much of the accuracy is
 due to execution evidence and how much to the LLM's own guess. Four findings stand out. First, top-1 accuracy is
 guessed by design: the released code adds an undocumented bonus that always places the LLM's own fault-line guess
