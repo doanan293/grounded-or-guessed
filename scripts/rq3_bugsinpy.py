@@ -14,6 +14,7 @@ from statistics import mean, stdev
 
 from flx.bip_score import METHODS, artifact_rank, bug_ranks
 from flx.coverage import load
+from flx.params import chosen_params
 from flx.ranking import metrics
 from flx.stats import mcnemar
 
@@ -21,10 +22,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def covgate_params() -> dict:
-    for r in csv.DictReader(open(ROOT / "data" / "rq_gt_sensitivity.csv")):
-        if r["gt"] == "repaired" and r["variant"] == "covgate" and r["config"] == "semloc_gemini_T0.8":
-            return {k: v for k, v in json.loads(r["params"]).items() if k in ("gate", "lam", "no_prior")}
-    raise KeyError("covgate params")
+    """SemFault dev choice for the repaired GT. grounded_prior needs SemLoc's per-constraint scores, which the
+    BugsInPy runner does not write — fail loudly instead of silently scoring a different CovGate."""
+    prm = chosen_params("repaired")
+    if prm["grounded_prior"]:
+        raise ValueError("grounded_prior was chosen on dev but cannot be evaluated on BugsInPy results")
+    return {k: prm[k] for k in ("gate", "lam", "no_prior")}
 
 
 def main() -> None:
