@@ -9,6 +9,10 @@ Viết tắt / thuật ngữ & Ý nghĩa \\
 Bộ phán định & Quy trình tự động quyết định một dòng có phải dòng lỗi hay không: một bản sửa nhỏ trên dòng đó làm mọi kiểm thử đạt (oracle) \\
 Bootstrap & Lấy mẫu lại có hoàn lại để ước lượng khoảng tin cậy; ở đây lấy mẫu theo chương trình, \ConstBootstrapDraws{} lần \\
 Grounded / guessed & Phần thứ hạng do bằng chứng thực thi quyết định / phần do LLM tự đoán \\
+Bản sửa hợp lệ bề ngoài & Bản sửa làm mọi kiểm thử đạt nhưng không sửa đúng chỗ lỗi (plausible patch) \\
+CI & Tích hợp liên tục: hệ thống tự chạy kiểm thử khi mã được đẩy lên kho \\
+Phân tích tĩnh / động & Phân tích mã không chạy chương trình / dựa trên việc chạy chương trình \\
+TDD & Phát triển hướng kiểm thử: viết kiểm thử trước khi viết mã \\
 Phương pháp đối chứng & Phương pháp đơn giản dùng để so sánh (baseline) \\
 Prompt (lời nhắc) & Văn bản đầu vào gửi cho LLM \\
 Quy trình nhiều bước & Chuỗi các bước LLM và thực thi nối tiếp nhau (pipeline), như SemLoc \\
@@ -16,13 +20,15 @@ Token & Đơn vị văn bản mà LLM xử lý và tính phí \\
 Acc@$k$ & Tỉ lệ chương trình có dòng lỗi nằm trong $k$ dòng bị nghi ngờ nhất (độ chính xác top-$k$) \\
 CF & Kiểm chứng phản thực tế (counterfactual verification): vá thử một dòng rồi chạy lại kiểm thử \\
 CI & Khoảng tin cậy (confidence interval), ở đây là khoảng \ConstCiLevel\% theo bootstrap \\
-CovGate & Cải tiến do nhóm đề xuất: kết hợp độ phủ với điểm của SemLoc \\
+CovGate & Cách bổ sung do nhóm thử: kết hợp độ phủ với điểm của SemLoc \\
+Đề xuất rồi kiểm chứng & Cách bổ sung do nhóm thử: LLM đề xuất dòng nghi ngờ, bản sửa nhỏ và kiểm thử xác nhận \\
 DD & Gỡ lỗi chia đôi (delta debugging) \\
 GT & Dòng lỗi chuẩn (ground truth) của bộ dữ liệu \\
 LLM & Mô hình ngôn ngữ lớn (large language model) \\
 RQ & Câu hỏi nghiên cứu (research question) \\
 SBFL & Định vị lỗi dựa trên phổ độ phủ (spectrum-based fault localization) \\
 SemFault-250 & Bộ dữ liệu 250 chương trình Python có lỗi ngữ nghĩa của SemLoc \\
+SemFault-250 đã rà soát & Bộ dữ liệu trên với nhãn được LLM rà trước và thành viên nhóm duyệt \\
 SemFault-250 đã sửa & Bộ dữ liệu trên với dòng lỗi chuẩn được nhóm kiểm chứng và sửa lại bằng thực thi (tiếng Anh: SemFault-250-repaired) \\
 Shapley & Giá trị Shapley: cách chia một tổng cho các thành phần theo đóng góp biên trung bình \\
 \bottomrule
