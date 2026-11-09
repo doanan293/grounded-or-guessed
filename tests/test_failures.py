@@ -63,3 +63,10 @@ def test_line_relation_nested_guard():
     from flx.failures import line_relation
     assert line_relation(NESTED, 2, 4) == "header_body"   # outer guard vs the statement its nested guard protects
     assert line_relation(NESTED, 5, 8) == "other"         # third statement of a loop body is not the guarded one
+
+
+def test_line_relation_strict_counts_only_header_and_first_body_line():
+    from flx.failures import line_relation
+    assert line_relation(NESTED, 2, 3, strict=True) == "header_body"   # outer guard ↔ its first body line
+    assert line_relation(NESTED, 2, 4, strict=True) == "other"         # nested statement: only the lenient form
+    assert line_relation(NESTED, 2, 4) == "header_body"

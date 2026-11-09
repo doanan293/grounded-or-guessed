@@ -67,7 +67,6 @@ estimate_reliability,semantic,confirmed,66,True,True,True,1.0,True,guess_right,s
 estimate_supply,coverage_revealed,unverified,77,False,False,True,2.5,True,rescued_by_spectrum,header_body
 estimate_temperature,semantic,corrected,67,True,True,True,1.0,True,guess_right,same
 event_gate,semantic,confirmed,179,True,True,True,1.0,True,guess_right,same
-feature_flag_rollout,not_executed,confirmed,69,False,False,False,,False,all_miss,blank_gt
 fee_splitter,semantic,corrected,70,False,False,False,6.0,True,coverage_only_wins,other
 file_chunk_stitch,coverage_revealed,unverified,71,False,False,False,,True,coverage_only_wins,other
 fuel_moving_mean,semantic,confirmed,72,False,False,False,6.5,True,coverage_only_wins,other
@@ -99,13 +98,10 @@ login_throttle,semantic,corrected,196,True,True,True,1.0,True,guess_right,same
 lr_warmup_schedule,semantic,unverified,91,False,False,False,6.0,True,coverage_only_wins,other
 lru_evictor,coverage_revealed,unverified,92,False,False,False,,True,coverage_only_wins,other
 machine_booking,semantic,confirmed,107,False,False,False,,True,coverage_only_wins,other
-memory_moving_mean,not_executed,confirmed,94,False,False,False,4.5,False,all_miss,blank_gt
 message_counter,semantic,unverified,95,False,False,True,1.0,True,prior_hurts,header_body
-metric_rolling_avg,not_executed,corrected,96,False,False,False,5.5,False,all_miss,blank_gt
 model_confidence_clamp,semantic,confirmed,97,True,True,True,1.0,True,guess_right,same
 notification_gate,semantic,confirmed,98,True,True,True,1.0,True,guess_right,same
 offer_expiry,semantic,confirmed,99,True,True,True,2.0,True,guess_right,same
-optimizer_step_guard,not_executed,corrected,100,False,False,False,,False,all_miss,blank_gt
 packets_window_avg,semantic,unverified,144,True,True,True,3.0,True,guess_right,same
 percentile_estimator,semantic,unverified,104,True,True,True,1.0,True,guess_right,same
 plan_appointment_slot,semantic,confirmed,105,True,True,True,,True,guess_right,same
@@ -120,7 +116,6 @@ prediction_cache,semantic,confirmed,115,True,True,True,1.0,True,guess_right,same
 prices_stream,semantic,corrected,117,False,False,True,1.0,True,prior_hurts,header_body
 priority_mix,semantic,unverified,118,True,True,True,3.0,True,guess_right,same
 probability_rebalance,semantic,unverified,120,True,True,True,1.0,True,guess_right,same
-queue_window_avg,not_executed,confirmed,122,False,False,False,4.5,False,all_miss,blank_gt
 quota_for_fuel,semantic,unverified,125,False,False,True,2.0,True,rescued_by_spectrum,header_body
 quota_for_storage,semantic,unverified,180,False,False,True,2.0,True,rescued_by_spectrum,header_body
 quote_memo,semantic,unverified,128,False,False,True,2.0,True,rescued_by_spectrum,other
@@ -139,7 +134,6 @@ retry_backoff_window,coverage_revealed,confirmed,140,True,True,True,1.0,True,gue
 revenue_share,semantic,corrected,142,False,False,True,2.5,True,rescued_by_spectrum,other
 rolling_errors,semantic,unverified,143,True,True,True,3.0,True,guess_right,same
 rolling_requests,semantic,unverified,144,True,True,True,3.0,True,guess_right,same
-rolling_usage,not_executed,corrected,146,False,False,False,4.5,False,all_miss,blank_gt
 room_reservation,semantic,unverified,147,False,False,False,,False,gt_suspect,other
 sales_window_avg,semantic,unverified,149,True,True,True,2.0,True,guess_right,same
 schedule_call,semantic,unverified,150,False,False,False,,False,gt_suspect,other
@@ -159,12 +153,9 @@ smooth_pressure,semantic,unverified,172,True,True,True,2.0,True,guess_right,same
 smooth_throughput,semantic,unverified,173,True,True,True,3.0,True,guess_right,same
 speed_trendline,semantic,confirmed,174,True,True,True,2.0,True,guess_right,same
 storage_mix,semantic,corrected,175,False,False,False,5.0,True,coverage_only_wins,other
-storage_quota_split,not_executed,corrected,176,False,False,False,,False,all_miss,blank_gt
 stream_joiner,semantic,confirmed,177,False,False,True,1.0,True,prior_hurts,header_body
-summary_memo,not_executed,confirmed,178,False,False,False,4.0,False,all_miss,blank_gt
 task_tally,semantic,unverified,192,False,False,False,4.5,True,coverage_only_wins,header_body
 task_throttle,semantic,confirmed,179,True,True,True,1.0,True,guess_right,same
-temperature_window_avg,not_executed,confirmed,181,False,False,False,5.5,False,all_miss,blank_gt
 tensor_slice_pad,coverage_revealed,unverified,182,False,False,True,3.0,True,rescued_by_spectrum,header_body
 throughput_trendline,coverage_revealed,unverified,183,False,False,False,3.5,True,coverage_only_wins,header_body
 time_range_filter,semantic,unverified,185,False,False,False,,False,gt_suspect,other
@@ -179,11 +170,9 @@ track_deployment,coverage_revealed,confirmed,191,True,True,True,1.0,True,guess_r
 track_logout,semantic,unverified,192,False,False,False,4.5,True,coverage_only_wins,header_body
 track_release,semantic,unverified,193,False,False,False,4.5,True,coverage_only_wins,header_body
 ttl_snapshot_store,semantic,corrected,194,True,True,True,1.0,True,guess_right,same
-txn_dedup_merge,not_executed,confirmed,195,False,False,False,4.5,False,all_miss,blank_gt
 upload_gate,semantic,corrected,196,True,True,True,1.0,True,guess_right,same
 versions_stream,semantic,corrected,197,False,False,True,1.0,True,prior_hurts,header_body
 view_tally,semantic,unverified,192,False,False,True,2.0,True,rescued_by_spectrum,header_body
-volume_moving_mean,not_executed,confirmed,198,False,False,False,4.5,False,all_miss,blank_gt
 votes_apportion,semantic,unverified,201,False,False,False,,True,coverage_only_wins,other
 warm_cache_loader,semantic,unverified,199,False,False,True,1.5,True,rescued_by_spectrum,other
 water_allocator,semantic,unverified,201,False,False,False,,True,coverage_only_wins,other

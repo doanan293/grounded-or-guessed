@@ -31,3 +31,8 @@ def test_render_fails_on_ambiguous_or_missing_row(tmp_path):
         mn.render([(("a",), f, {"gt": "repaired"}, "acc1_mean", "pct")])
     with pytest.raises(ValueError):
         mn.render([(("b",), f, {"gt": "none"}, "acc1_mean", "pct")])
+
+
+def test_macro_name_keeps_the_sign_of_negative_keys():
+    assert mn.macro_name("off", "semloc", "-1", "count") == r"\OffSemlocMinusOneCount"
+    assert mn.macro_name("off", "semloc", "1", "count") == r"\OffSemlocOneCount"

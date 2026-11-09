@@ -22,6 +22,7 @@ Spec = tuple  # (name parts, csv path, row filter {col: value}, column, format)
 def macro_name(*parts: str) -> str:
     words = []
     for part in parts:
+        part = re.sub(r"^-(?=\d)", "minus ", str(part))  # a negative key (e.g. offset −1) must not collide with +1
         for tok in re.findall(r"[A-Za-z]+|\d", str(part)):
             words.append(DIGITS[int(tok)] if tok.isdigit() else tok.capitalize())
     return "\\" + "".join(words)
@@ -92,7 +93,8 @@ def all_specs() -> list[Spec]:
                          {"source": ["semloc_claude_T0.8", "semloc_gemini_T0.8"], "game": ["semloc"],
                           "gt": ["original"], "subset": ["all"]})
     specs += table_specs("tol", DATA / "failure_tolerance.csv", ["method"],
-                         {"acc1_exact": "pct", "acc1_guard_or_body": "pct"})
+                         {"acc1_exact": "pct", "acc1_guard_strict": "pct", "acc1_guard_or_body": "pct"})
+    specs += table_specs("off", DATA / "failure_offsets.csv", ["method", "offset"], {"count": "int"})
     specs += table_specs("pareto", DATA / "pareto.csv", ["method", "model"], {"acc3": "pct", "tokens_per_program": "k"})
     return specs
 
@@ -103,6 +105,11 @@ def computed() -> dict[str, str]:
     verified = json.loads((DATA / "semfault_verified_gt.json").read_text())
     for status in ("confirmed", "corrected", "unverified", "unverifiable"):
         out[macro_name("gt", status, "n")] = str(sum(r["status"] == status for r in verified))
+    from flx.gt import load_variants
+    v = load_variants()
+    out[macro_name("gt", "repaired", "n")] = str(len(v["repaired"]))
+    verified_ok = {r["program"] for r in verified if r["status"] in ("confirmed", "corrected")}
+    out[macro_name("gt", "blank", "fix", "dropped", "n")] = str(sum(p not in v["repaired"] for p in verified_ok))
     labels = _rows(DATA / "semfault_labels.csv")
     out[macro_name("gt", "not", "executed", "n")] = str(sum(r["category"] == "not_executed" for r in labels))
     from flx.semloc_results import load_ground_truth
@@ -114,6 +121,8 @@ def computed() -> dict[str, str]:
     sig = _rows(DATA / "failure_signals.csv")
     for cat in sorted({r["category"] for r in sig}):
         out[macro_name("fail", cat, "n")] = str(sum(r["category"] == cat for r in sig))
+    out[macro_name("fail", "wrong", "guess", "n")] = str(sum(r["category"] != "guess_right" for r in sig))
+    out[macro_name("fail", "programs", "n")] = str(len(sig))
     for rel in sorted({r["guess_relation"] for r in sig}):
         out[macro_name("fail", "relation", rel, "n")] = str(sum(r["guess_relation"] == rel and r["category"] != "guess_right"
                                                                for r in sig))

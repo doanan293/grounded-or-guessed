@@ -56,8 +56,9 @@ def top_constraint(run: Path, p: str) -> str:
 
 
 def tolerance(gt: dict, test: list[str], runs: list[Path], llmcov: list[dict]) -> None:
-    """Sensitivity of Acc@1 to guard/body ambiguity: a top-1 line also counts when it and a ground-truth line are
-    the header and first body statement of one compound statement. Written to data/failure_tolerance.csv."""
+    """Sensitivity of Acc@1 to guard/body ambiguity: a top-1 line also counts when it and a ground-truth line are a
+    compound-statement header and the statement it guards — strict (first body line only, lower bound) and lenient
+    (first body statement up to 3 lines, upper bound). Writes data/failure_tolerance.csv and data/failure_offsets.csv."""
     srcs = {p: (ROOT / "third_party" / "semloc" / "benchmark" / "programs" / f"{p}.py").read_text() for p in test}
 
     def top1s(method):
@@ -77,18 +78,28 @@ def tolerance(gt: dict, test: list[str], runs: list[Path], llmcov: list[dict]) -
             out.append(d)
         return out
 
-    rows = []
+    rows, offsets = [], []
     for m in ("semloc", "llm_guess", "llm_coverage"):
         reps = top1s(m)
         exact = [sum(isinstance(r[p], int) and r[p] in gt[p] for p in test) / len(test) for r in reps]
-        block = [sum(isinstance(r[p], int) and any(line_relation(srcs[p], t, r[p]) in ("same", "header_body")
-                                                   for t in gt[p]) for p in test) / len(test) for r in reps]
+        def tol(strict):
+            return [sum(isinstance(r[p], int) and any(line_relation(srcs[p], t, r[p], strict) in ("same", "header_body")
+                                                      for t in gt[p]) for p in test) / len(test) for r in reps]
+        block, tight = tol(False), tol(True)
         rows.append({"method": m, "n": len(test), "repeats": len(reps), "acc1_exact": round(sum(exact) / len(exact), 4),
+                     "acc1_guard_strict": round(sum(tight) / len(tight), 4),
                      "acc1_guard_or_body": round(sum(block) / len(block), 4)})
+        offs = Counter(min((r[p] - t for t in gt[p]), key=abs) for r in reps for p in test if isinstance(r[p], int))
+        offsets += [{"method": m, "offset": d, "count": offs[d]} for d in range(-3, 4)]
+        offsets.append({"method": m, "offset": "far", "count": sum(c for d, c in offs.items() if abs(d) > 3)})
     with open(ROOT / "data" / "failure_tolerance.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
         w.writerows(rows)
+    with open(ROOT / "data" / "failure_offsets.csv", "w", newline="") as f:  # top-1 line − nearest GT line, all repeats
+        w = csv.DictWriter(f, fieldnames=["method", "offset", "count"])
+        w.writeheader()
+        w.writerows(offsets)
     print(rows)
 
 
