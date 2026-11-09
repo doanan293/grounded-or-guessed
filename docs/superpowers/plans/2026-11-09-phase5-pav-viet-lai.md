@@ -34,6 +34,7 @@
 - [x] `scripts/ablation_coverage.py` → `data/ablation_coverage.csv` (macro `Abl*`)
 - [x] `scripts/build_reviewed_gt.py` → `data/semfault_reviewed_gt.json`; `load_variants()["reviewed"]`
 - [x] `regenerate_all.sh` gọi cả hai; test `tests/test_ablation_coverage.py`, `tests/test_reviewed_gt.py`
+- [x] Phương pháp đối chứng phân tích tĩnh (chủ dự án duyệt 09/11): ruff (luật mặc định / mọi luật) và pyrefly, phiên bản ghim, kết quả thô `data/static/`, chấm theo ba bộ nhãn kèm mức trúng ngẫu nhiên → `data/static_tools.csv` (macro `Stat*`); viết trong bài là "trên bộ dữ liệu này, công cụ tĩnh thông dụng không chỉ ra dòng lỗi ngữ nghĩa", không khái quát cho mọi phân tích tĩnh
 
 ### Task 2: PAV trên dev, chọn tham số
 
