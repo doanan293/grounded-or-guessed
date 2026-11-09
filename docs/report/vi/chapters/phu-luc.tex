@@ -1,9 +1,54 @@
-\chapter{Hướng dẫn tái hiện}
+\chapter{Hướng dẫn tái hiện và bảng bổ sung}
 \label{chap:phu-luc}
-\TODO{Nguồn: REPRODUCE.md.}
 
-\section{Mục thứ nhất}
-\TODO{nội dung}
+\section{Bốn mức tái hiện}
+\label{sec:tai-hien}
 
-\section{Mục thứ hai}
-\TODO{nội dung}
+\subsection{Từ dữ liệu đến bảng}
+
+Toàn bộ mã nguồn, dữ liệu dẫn xuất và hướng dẫn nằm tại \url{https://github.com/doanan293/grounded-or-guessed}
+(tệp \texttt{REPRODUCE.md}). Bốn mức, từ rẻ đến đắt:
+\begin{enumerate}
+\item \textbf{Mức 0} --- sinh lại bảng, hình và macro số liệu từ các tệp CSV đã có: \texttt{python scripts/make\_tables.py}
+và \texttt{python scripts/make\_numbers.py}.
+\item \textbf{Mức 1} --- sinh lại mọi tệp CSV từ gói kết quả các lượt chạy: giải nén gói rồi chạy
+\texttt{scripts/regenerate\_all.sh}; trong Docker, các tệp CSV và bảng sinh ra trùng từng byte với bản đã công bố.
+\item \textbf{Mức 2} --- chạy lại chính SemLoc và các baseline, phát lại mọi câu trả lời LLM từ bộ đệm, không gọi mạng
+(\texttt{FLX\_LLM\_OFFLINE=1}).
+\item \textbf{Mức 3} --- chạy mới qua một điểm cuối LLM tương thích OpenAI, với mã lượt chạy mới.
+\end{enumerate}
+
+\subsection{Môi trường}
+
+Ảnh Docker (\texttt{docker build -t grounded-or-guessed .}) chứa Python 3.12 và toàn bộ phụ thuộc, đặt chế độ không mạng
+cho LLM; lệnh mặc định chạy bộ kiểm thử đơn vị. Gói kết quả các lượt chạy (đầu ra SemLoc, nhật ký và bộ đệm lượt gọi LLM,
+bảng băm kiểm tra) được tạo bằng \texttt{scripts/export\_artifact.py}; công cụ từ chối đóng gói nếu phát hiện khóa truy
+cập hay địa chỉ thư điện tử.
+
+\section{Bảng bổ sung}
+\label{sec:bang-bo-sung}
+
+\subsection{Phân rã trên nhật ký công bố}
+
+\begin{table}[H]
+\centering
+\caption{Phân rã Shapley trên nhật ký công bố của tác giả (dòng lỗi chuẩn gốc)}
+\label{tab:phan-ra-cong-bo}
+\resizebox{\linewidth}{!}{\input{../generated/vi/rq_decomposition_published}}
+\end{table}
+
+\subsection{Prompt của baseline LLM + độ phủ}
+
+Mỗi dòng mã được chú thích \texttt{[f=<số kiểm thử thất bại chạy qua>/p=<số kiểm thử thành công chạy qua>]}; thông điệp
+hệ thống yêu cầu trả lời đúng định dạng JSON:
+\begin{lstlisting}[numbers=none]
+You are a fault-localization assistant. Reply with JSON only:
+{"lines": [<line numbers, most suspicious first, at most 5>]}
+
+The program below has exactly one faulty line. <n_fail> tests fail and <n_pass> pass.
+Each line is annotated with [f=<number of failing tests that execute it>/p=<number of passing tests>].
+<numbered source with annotations>
+Failing tests:
+- <test name>: <first error line>
+Return the five most suspicious line numbers, most suspicious first.
+\end{lstlisting}
