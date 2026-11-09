@@ -197,10 +197,10 @@ def computed() -> dict[str, str]:
             for r in csv.DictReader(open(review_dir / name)):
                 v = r["llm_verdict"]
                 llm[r["program"]] = {"new": "S", "neither": "F", "original": "G", "other": "F"}.get(v, "")
-        answers = [r for f in sorted((review_dir / "thanh-vien").glob("*.csv"))
+        answers = [r for f in sorted((review_dir / "duyet-lan-1-co-goi-y").glob("*.csv"))
                    for r in csv.DictReader(open(f, encoding="utf-8-sig"))]
         out[macro_name("review", "agree", "n")] = str(sum(a["answer"].strip().upper() == llm.get(a["program"]) for a in answers))
-        out[macro_name("review", "reviewers", "n")] = str(len(list((review_dir / "thanh-vien").glob("*.csv"))))
+        out[macro_name("review", "reviewers", "n")] = str(len(list((review_dir / "duyet-lan-1-co-goi-y").glob("*.csv"))))
         oracle = {r["program"]: r for r in json.loads((DATA / "semfault_verified_gt.json").read_text())}
         byp = {r["program"]: r for r in recs}
         moved = [p for p, r in oracle.items() if r["status"] == "corrected"]
