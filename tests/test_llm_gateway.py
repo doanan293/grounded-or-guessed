@@ -154,3 +154,20 @@ def test_empty_choices_is_empty_response(env, monkeypatch):
     c.chat.completions.create = lambda **kw: SimpleNamespace(choices=[], usage=None, model="m")
     with pytest.raises(llm_gateway.LLMEmptyResponse):
         llm_gateway.chat("m", "s", "u")
+
+
+def test_offline_mode_never_calls_the_api(env, monkeypatch):
+    """FLX_LLM_OFFLINE=1 replays the cache only: a miss raises, the client is never built or called."""
+    def boom():
+        raise AssertionError("network client used in offline mode")
+    monkeypatch.setattr(llm_gateway, "_client", boom)
+    monkeypatch.setenv("FLX_LLM_OFFLINE", "1")
+    with pytest.raises(llm_gateway.LLMUnavailable, match="offline cache miss"):
+        llm_gateway.chat("m", "s", "u", 0.8)
+    assert _log(env)[-1]["error"].startswith("offline cache miss")
+    monkeypatch.delenv("FLX_LLM_OFFLINE")
+    _use(monkeypatch, FakeClient())
+    llm_gateway.chat("m", "s", "u", 0.8)                     # fills the cache online
+    monkeypatch.setenv("FLX_LLM_OFFLINE", "1")
+    monkeypatch.setattr(llm_gateway, "_client", boom)
+    assert llm_gateway.chat("m", "s", "u", 0.8) == "hello"   # replayed offline

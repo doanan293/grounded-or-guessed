@@ -27,3 +27,4 @@ infra/proxy/config.yaml
 # Not redistributed (course material, third-party template)
 docs/requirement/
 docs/presentation/template-vi.pptx
+dist/
