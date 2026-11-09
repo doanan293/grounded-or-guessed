@@ -24,6 +24,11 @@ _spec.loader.exec_module(fam)
 METHODS = ("semloc", "semloc_no_prior", "llm_guess")
 
 
+def ranks_from_file(f: Path, gt: dict, progs: list[str]) -> dict:
+    preds = json.loads(f.read_text())
+    return {p: next((k + 1.0 for k, ln in enumerate(preds.get(p, [])) if ln in gt[p]), None) for p in progs}
+
+
 def guesses(run: Path, progs: list[str]) -> dict:
     out = {}
     for p in progs:
@@ -46,8 +51,15 @@ def main() -> None:
         if gname == "verified_strict":
             continue
         progs = [p for p in names if p in gt]
-        for method in METHODS:
-            per = [(fam.run_ranks(o, gt, progs, method), fam.run_ranks(r, gt, progs, method)) for o, r in pairs]
+        methods = list(METHODS) + (["llm_coverage"] if all(
+            (ROOT / "data" / "rankings" / f"direct_cov_{s}_gemini_r{i}.json").exists()
+            for s in ("test", "renamed") for i in range(1, len(pairs) + 1)) else [])
+        for method in methods:
+            if method == "llm_coverage":  # baseline 2b: original = test-split run, renamed = renamed run, same repeat
+                per = [tuple(ranks_from_file(ROOT / "data" / "rankings" / f"direct_cov_{s}_gemini_r{i}.json", gt, progs)
+                             for s in ("test", "renamed")) for i in range(1, len(pairs) + 1)]
+            else:
+                per = [(fam.run_ranks(o, gt, progs, method), fam.run_ranks(r, gt, progs, method)) for o, r in pairs]
             row = {"gt": gname, "method": method, "n": len(progs), "repeats": len(per)}
             for side, idx in (("orig", 0), ("renamed", 1)):
                 for k in ("acc1", "acc3", "acc5"):

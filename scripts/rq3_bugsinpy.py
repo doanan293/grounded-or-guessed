@@ -49,6 +49,12 @@ def main() -> None:
             ranks["artifact_metric"][b] = artifact_rank(res)
         for m in per:
             per[m].append(ranks[m])
+    # baseline 2b (LLM + coverage), one ranking file per repeat; used only when every repeat covers every bug
+    files = [ROOT / "data" / "rankings" / f"direct_cov_bip_gemini_r{i}.json" for i in range(1, len(runs) + 1)]
+    preds = [json.loads(f.read_text()) for f in files if f.exists()]
+    if len(preds) == len(runs) and all(set(bugs) <= set(p) for p in preds):
+        per["llm_coverage"] = [{b: next((k + 1.0 for k, ln in enumerate(p[b]) if ln in targets[b]["faulty_lines"]), None)
+                                for b in bugs} for p in preds]
     rows = []
     for subset, progs in (("all", bugs), ("reached", reached)):
         for m, lst in per.items():
@@ -58,7 +64,7 @@ def main() -> None:
                 xs = [x[k] for x in ms]
                 row[f"{k}_mean"] = round(mean(xs), 4)
                 row[f"{k}_sd"] = round(stdev(xs), 4) if len(xs) > 1 else 0.0
-            if m not in ("semloc_prior", "artifact_metric"):
+            if m not in ("semloc_prior", "artifact_metric"):  # paired vs SemLoc on the same repeat index
                 for k in (1, 3):
                     ps = [mcnemar([r.get(p) is not None and r[p] <= k for p in progs],
                                   [b.get(p) is not None and b[p] <= k for p in progs])[1]

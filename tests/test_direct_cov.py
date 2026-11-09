@@ -22,3 +22,21 @@ def test_parse_ranking_tolerates_fences():
 def test_parse_ranking_bad_json_empty():
     assert parse_ranking("line 7 is wrong") == []
     assert parse_ranking('{"lines": "seven"}') == []
+
+
+def test_prompt_first_line_offsets_numbering():
+    """BugsInPy target functions keep their absolute line numbers; the default keeps SemFault prompts (and cache) intact."""
+    cov = {"program": "b", "tests": [{"id": "t.f", "passed": False, "lines": [41]},
+                                      {"id": "t.p", "passed": True, "lines": [40, 41]}]}
+    p = build_prompt("def f(x):\n    return x + 1\n", [{"name": "t.f", "error": ""}], cov, first_line=40)
+    assert "40: def f(x):   [f=0/p=1]" in p and "41:     return x + 1   [f=1/p=1]" in p
+    assert build_prompt(SRC, [], COV) == build_prompt(SRC, [], COV, first_line=1)
+    assert "1: def f(x):" in build_prompt(SRC, [], COV)
+
+
+def test_parse_failed_keeps_declared_only():
+    from flx.direct_cov import parse_failed
+    out = ("FAILED test/test_utils.py::TestUtil::test_parse_iso8601 - AssertionError: 1 != 2\n"
+           "FAILED test/test_utils.py::TestUtil::test_compat_getenv - KeyError: 'HOME'\n")
+    got = parse_failed(out, {"test.test_utils.TestUtil.test_parse_iso8601"})
+    assert got == [{"name": "test.test_utils.TestUtil.test_parse_iso8601", "error": "AssertionError: 1 != 2"}]
