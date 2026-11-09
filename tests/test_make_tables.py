@@ -23,3 +23,15 @@ def test_to_vi_leaves_no_known_english_label():
         vi = mt.to_vi(getattr(mt, name)())
         for word in ("ground truth,", "repeats", "Method", "Original", "Renamed", "w/o", "only", "alone", "All bugs"):
             assert word not in vi, (name, word)
+
+
+def test_pct_and_escape():
+    assert mt.pct(0.428) == "42.8"
+    assert mt.pct(None) == "--"
+    assert mt.tex("semloc_claude_T0.8") == r"semloc\_claude\_T0.8"
+
+
+def test_rq1_table_has_author_and_fair_columns():
+    tex = mt.rq1_table()
+    assert r"\begin{tabular}" in tex and "Author" in tex and "Fair" in tex
+    assert "42.8" in tex  # SemLoc Claude T=0.8, author scoring, all 250
