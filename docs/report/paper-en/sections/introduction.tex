@@ -52,7 +52,8 @@ Acc@5.
 \item An \emph{evaluation audit}: the undocumented guess bonus; a counterfactual step that never changes a ranking; a
 released scoring script that credits delta debugging with \RqOneDdAuthorAllAccOne\% where the paper reports zero; two bugs
 in the released BugsInPy runner; and a re-execution with the paper's own model that falls short of the logs.
-\item \emph{SemFault-250-repaired}: \GtConfirmedN{} fault locations confirmed and \GtCorrectedN{} corrected by execution,
+\item \emph{SemFault-250-repaired}: \GtConfirmedN{} fault locations confirmed and \GtCorrectedN{} corrected by execution
+(\GtUnverifiedN{} reachable lines keep their unverified original labels),
 and the finding that line-level Acc@1 shifts by more than twenty points under the guard/guarded-statement ambiguity.
 \item CovGate, a small coverage tie-breaker on top of SemLoc, an evaluation checklist, and a fully replayable artifact.
 \end{itemize}
