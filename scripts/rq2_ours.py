@@ -16,6 +16,7 @@ from flx._semloc import SEMLOC_ROOT
 from flx.coverage import load
 from flx.covgate import covgate_scores, semloc_attribute
 from flx.gt import load_variants
+from flx.params import chosen_params
 from flx.labels import labels_for
 from flx.ranking import mean_rr, metrics, rank_of
 from flx.sbfl import sbfl_scores
@@ -33,15 +34,9 @@ def mean_sd(xs: list[float]) -> tuple[float, float]:
     return (round(mean(xs), 4), round(stdev(xs), 4) if len(xs) > 1 else 0.0)
 
 
-def chosen_params(gname: str) -> dict:
-    for r in csv.DictReader(open(ROOT / "data" / "rq_gt_sensitivity.csv")):
-        if r["gt"] == gname and r["variant"] == "covgate":
-            return json.loads(r["params"])
-    raise KeyError(gname)
-
-
 def semloc_variants(run: Path, gt: dict, progs: list[str], params: dict) -> dict[str, dict]:
-    out = {k: {} for k in ("semloc", "semloc_no_prior", "covgate", "cf_rerank", "covgate_cf")}
+    out = {k: {} for k in ("semloc", "semloc_no_prior", "covgate", "cf_rerank", "covgate_cf",
+                           "gate_only", "lam_only", "grounded_prior_only")}
     for p in progs:
         f = run / "scores" / f"{p}.json"
         if not f.exists():
@@ -49,12 +44,16 @@ def semloc_variants(run: Path, gt: dict, progs: list[str], params: dict) -> dict
         sem, cov = json.loads(f.read_text()), load(COV / f"{p}.json")
         cfp = run / "refined_base_cf" / f"{p}.json"
         cf = json.loads(cfp.read_text()) if cfp.exists() else None
-        attr = semloc_attribute(run / "constraints" / f"{p}.json", SEMLOC_ROOT / "benchmark" / "programs" / f"{p}.py") if cf else None
+        attr = semloc_attribute(run / "constraints" / f"{p}.json", run / "programs" / f"{p}.py")
         base = {"gate": False, "lam": 0.0, "no_prior": False}
-        prm = {k: params[k] for k in ("gate", "lam", "no_prior")}
+        prm = dict(params)  # every dev-chosen knob, grounded_prior included
         out["semloc"][p] = rank_of(covgate_scores(sem, cov, **base), gt[p])
         out["semloc_no_prior"][p] = rank_of(covgate_scores(sem, cov, **{**base, "no_prior": True}), gt[p])
-        out["covgate"][p] = rank_of(covgate_scores(sem, cov, **prm), gt[p])
+        out["covgate"][p] = rank_of(covgate_scores(sem, cov, **prm, attribute=attr), gt[p])
+        # one-component ablations on top of SemLoc as released
+        out["gate_only"][p] = rank_of(covgate_scores(sem, cov, **{**base, "gate": True}), gt[p])
+        out["lam_only"][p] = rank_of(covgate_scores(sem, cov, **{**base, "lam": params["lam"] or 0.01}), gt[p])
+        out["grounded_prior_only"][p] = rank_of(covgate_scores(sem, cov, **base, grounded_prior=True, attribute=attr), gt[p])
         out["cf_rerank"][p] = rank_of(covgate_scores(sem, cov, **base, cf=cf, attribute=attr), gt[p])
         out["covgate_cf"][p] = rank_of(covgate_scores(sem, cov, **prm, cf=cf, attribute=attr), gt[p])
     return out

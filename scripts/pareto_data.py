@@ -13,6 +13,7 @@ from pathlib import Path
 from statistics import mean
 
 from flx.gt import load_variants
+from flx.params import chosen_params
 from flx.ranking import metrics
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,7 +49,7 @@ def complete_runs(rankings: Path, prefix: str, programs: list[str]) -> list[Path
 def main() -> None:
     gt = load_variants()["repaired"]
     progs = [p for p in json.loads((ROOT / "data" / "subset50.json").read_text())["programs"] if p in gt]
-    params = fam.chosen_params("repaired")
+    params = chosen_params("repaired")
     out = []
 
     def add(method, model, ms, tok):

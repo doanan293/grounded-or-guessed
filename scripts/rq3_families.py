@@ -10,8 +10,9 @@ from pathlib import Path
 from statistics import mean, stdev
 
 from flx.coverage import load as load_cov
-from flx.covgate import covgate_scores
+from flx.covgate import covgate_scores, semloc_attribute
 from flx.gt import load_variants
+from flx.params import chosen_params  # noqa: F401 (re-exported for pareto_data)
 from flx.ranking import metrics, rank_of
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,7 +42,7 @@ METHODS = ("semloc", "semloc_no_prior", "covgate")
 
 def run_ranks(run: Path, gt: dict, progs: list[str], method: str = "semloc", params: dict | None = None) -> dict:
     """semloc: SemLoc's scores as produced; semloc_no_prior: without the +1.2 on the LLM's guess;
-    covgate: CovGate with `params` (gate, lam, no_prior) chosen on dev; llm_guess: the LLM's fault_line alone."""
+    covgate: CovGate with every dev-chosen knob (flx.params); llm_guess: the LLM's fault_line alone."""
     opts = {"semloc": {"gate": False, "lam": 0.0, "no_prior": False},
             "semloc_no_prior": {"gate": False, "lam": 0.0, "no_prior": True}}.get(method, params)
     out = {}
@@ -53,15 +54,10 @@ def run_ranks(run: Path, gt: dict, progs: list[str], method: str = "semloc", par
                 fp = sem.get("fault_line_pred")
                 out[p] = rank_of({fp: 1.0} if isinstance(fp, int) else {}, gt[p])
                 continue
-            out[p] = rank_of(covgate_scores(sem, load_cov(COV / f"{p}.json"), **opts), gt[p])
+            attr = (semloc_attribute(run / "constraints" / f"{p}.json", run / "programs" / f"{p}.py")
+                    if opts.get("grounded_prior") else None)
+            out[p] = rank_of(covgate_scores(sem, load_cov(COV / f"{p}.json"), **opts, attribute=attr), gt[p])
     return out
-
-
-def chosen_params(gname: str) -> dict:
-    for r in csv.DictReader(open(ROOT / "data" / "rq_gt_sensitivity.csv")):
-        if r["gt"] == gname and r["variant"] == "covgate" and r["config"] == "semloc_gemini_T0.8":
-            return {k: v for k, v in json.loads(r["params"]).items() if k in ("gate", "lam", "no_prior")}
-    raise KeyError(gname)
 
 
 def main() -> None:
