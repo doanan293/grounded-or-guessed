@@ -7,13 +7,22 @@ our runs removing it changes Acc@1 by \RqTwoRepairedAllSemlocNoPriorDAccOne{} po
 grounded should state that its first answer is the model's, and that line-level labels need to accept equivalent fix
 locations before small differences between methods mean much.
 
-\textbf{Where execution evidence helps.} Evidence earns its keep in narrowing the search: the spectrum moves the fault
-into the top three for \FailRescuedBySpectrumN{} wrongly guessed programs, and execution evidence given directly to the
-model does so for \FailCoverageOnlyWinsN{} programs that SemLoc misses. It does not tell a right guess from a wrong one:
-neither a grounded bonus nor counterfactual re-ranking improves Acc@1. Its limit is reachability: when no failing test
-executes the faulty line, a coverage prompt cannot find it, which is why SemLoc keeps an edge at Acc@5 over all original
-labels. Tool designers should use execution to \emph{shrink} the candidate set and show it to the model, and keep a
-fallback for unreached faults.
+\textbf{Why tests make poor arbiters of location.} Three results share one cause. SemLoc's counterfactual step changes no
+ranking; our minimal-fix oracle moved \ReviewCorrectedOverturnedN{} of its \GtCorrectedN{} relocated labels to the wrong
+line; and propose-and-verify does not improve on its proposer. All three accept a line when a small patch there makes
+every test pass. With about ten tests per program, that criterion holds at \PavmechReviewedOtherLineFixable\% of
+non-faulty lines---usually by a compensating constant or subtraction---and at only \PavmechReviewedFaultLineFixable\% of
+faulty ones, which two-line faults, omissions and larger edits put out of reach. This is the plausible-patch
+problem~\cite{qi2015kali,smith2015cure} seen from localization: the tests suffice to \emph{suggest} where the bug is, not to
+\emph{prove} it.
+
+\textbf{Saturation and practice.} With correct labels one prompt reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3.
+SemFault-250's programs are single short functions, its faults are one-token mutations, and its test names state the
+violated intent (e.g., \texttt{test\_fee\_deducted\_once\_not\_per\_participant}); much of the difficulty the original paper
+measured came from mislabels. The benchmark can no longer show that an elaborate pipeline is needed; real bugs, where
+every method stays far from the ceiling, can. For practitioners, the strongest investment is tests that state intent, as
+test-driven development produces; and an AI agent that stops when the tests pass should have its patch reviewed, since
+about a quarter of non-faulty lines admit a test-passing patch on suites of this size.
 
 \textbf{An evaluation checklist.} Table~\ref{tab:checklist} collects seven checks; each changed at least one number in
 this study.
@@ -29,11 +38,11 @@ Check & Effect in this study \\
 \midrule
 Average-rank ties & SBFL Acc@5 \RqOneSbflOchiaiAuthorAllAccFive\% $\to$ \RqOneSbflOchiaiFairAllAccFive\% \\
 Fixed denominator, any-hit not rank one & delta debugging \RqOneDdAuthorAllAccOne\% $\to$ \RqOneDdFairAllAccOne\% in the released script \\
-Execution-verified labels & SemLoc Acc@1 \RqTwoOriginalAllSemlocAccOneMean\% $\to$ \RqTwoRepairedAllSemlocAccOneMean\% (partly a denominator change) \\
+Checked labels & \LabaudAllMoved{} of \LabaudAllN{} labels move; SemLoc's Acc@3 lead over LLM direct disappears \\
 Ablate every component, incl.\ undocumented & guess bonus: Acc@1 changes by \RqTwoRepairedAllSemlocNoPriorDAccOne{} without it \\
-Repeats with paired CIs & Acc@1 gain of LLM + coverage visible only when pooled over repeats \\
+Repeats with paired CIs & several single-repeat differences are not significant; pooled ones are \\
 Report cost & counterfactual step: \CostCfSharePct\% of calls, no ranking change \\
-Single prompt with execution evidence & beats the pipeline by \RqTwoOriginalExecutableLlmCoverageDAccThree{} Acc@3 on reached faults \\
+Single prompt with failing tests & beats the pipeline at Acc@1 on all label sets (\RqTwoRepairedAllLlmTestsDAccOne{} repaired) \\
 \bottomrule
 \end{tabularx}
 \end{table}

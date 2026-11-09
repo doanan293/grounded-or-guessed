@@ -1,18 +1,16 @@
 \begin{abstract}
-LLM-based fault localizers increasingly claim to ground the model's reasoning in program execution. We test that
-claim on SemLoc, a recent localizer that turns LLM-inferred semantic constraints into a violation spectrum. We recompute
-every published configuration from the authors' released logs, audit the evaluation, re-check the benchmark's fault
-locations by execution, rerun the pipeline three times with a current model, and measure how much of the accuracy is
-due to execution evidence and how much to the LLM's own guess. Four findings stand out. First, top-1 accuracy is
-guessed by design: the released code adds an undocumented bonus that always places the LLM's own fault-line guess
-first, so SemLoc's Acc@1 (\DecSemlocRepairedAllAccOneFull\%) is the guess's; the constraint spectrum alone would reach
-\RqTwoRepairedAllSemlocNoPriorAccOneMean\%, and its value lies at top three, where it lifts accuracy from
-\RqTwoRepairedAllSemlocAccOneMean\% to \RqTwoRepairedAllSemlocAccThreeMean\%. Second, on faults that a failing test
-reaches, a single prompt showing the LLM the failing tests and per-line coverage beats the whole pipeline by
-\RqTwoOriginalExecutableLlmCoverageDAccThree{} Acc@3 points at about a fifth of the tokens, with no detectable change
-under identifier renaming; over all original labels, which include faults no test reaches, the gain shrinks to
-\RqTwoOriginalAllLlmCoverageDAccThree{} points. Third, published numbers depend on scoring choices and benchmark labels:
-\GtBlankN{} of 250 fault lines are blank, and the released counterfactual step never changes a ranking. Fourth, line-level
-accuracy is ambiguous for faults spanning a guard and the statement it guards, which moves Acc@1 by over twenty points
-without changing the order of methods. Code, data, LLM logs and a replayable cache are public.
+When tests fail, developers increasingly hand the failure to an LLM and ask where the bug is. Research tools propose
+far more elaborate pipelines that claim to ground the model's reasoning in program execution. We test that claim on
+SemLoc, a recent localizer for semantic faults that turns LLM-inferred constraints into a violation spectrum, and
+compare it with the everyday practice. We recompute every published configuration from the authors' logs, audit the
+evaluation, check the benchmark's labels by execution and by review, rerun everything three times with a current model,
+and ablate each signal. Four findings stand out. First, SemLoc's top-1 answer is guessed by design: an undocumented bonus
+always ranks the LLM's own guess first, and the counterfactual step never changes a ranking. Second,
+\LabaudAllMoved{} of the benchmark's \LabaudAllN{} fault labels move under review (\LabaudAllBlank{} sit on blank lines),
+and the mislabels happen to favor SemLoc. Third, a single prompt with the failing tests beats the pipeline at Acc@1 on all
+three label sets (\RqTwoRepairedAllLlmTestsDAccOne{} points on execution-repaired labels) at about a seventh of the
+tokens; ablation shows the failing tests, not per-line coverage, carry the signal. Fourth, nothing more elaborate
+helps---adding coverage to SemLoc, verifying candidate lines with test-passing patches, voting, or static analysis with
+ruff and pyrefly---because a small patch passes all tests at \PavmechReviewedOtherLineFixable\% of non-faulty lines:
+the tests suggest where the bug is but cannot prove it. Code, data, LLM logs and a replayable cache are public.
 \end{abstract}

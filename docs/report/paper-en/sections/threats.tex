@@ -1,19 +1,20 @@
 \section{Threats to Validity}
 \label{sec:threats}
 
-\textbf{Internal and construct validity.} Our minimal-fix oracle can accept compensating fixes and never searches
-alternatives for reachable labels, so the repaired labels are still noisy; we drop fixes written onto blank lines and
-report every result on the original labels as well. Because the oracle needs a failing test to reach the fixed line, the
-repaired labels favor coverage-based methods; we therefore state the main comparison on reached faults of the original
-labels and give the all-label numbers next to it. The oracle's proposer (GPT-6 luna, then Claude Sonnet~5.5) is also an
-evaluated model; the tests, not the proposer, decide, but the proposer limits which locations can be confirmed.
-Line-level Acc@1 depends on whether a guard or the guarded statement is labeled; we report tolerant variants. The
-coverage prompt is ours, fixed before seeing test results, and adds test outcomes as well as coverage, so it does not
-isolate coverage.
+\textbf{Internal and construct validity.} The minimal-fix oracle can accept compensating fixes and never searches
+alternatives for reachable labels; the review overturned \ReviewCorrectedOverturnedN{} of its relocations. The reviewed
+labels are LLM-suggested, and reviewers saw the suggestion and agreed in \ReviewAgreeN{} of \ReviewHumanN{} cases, so they
+are not independent of LLM judgment and may favor LLM-based methods; we therefore state main results on the original and
+repaired labels, which involve no LLM judgment of location. Two-line labels (\LabaudAllTwoLine{} programs) make the reviewed
+Acc@$k$ slightly easier. Line-level Acc@1 depends on whether a guard or the guarded statement is labeled; we report tolerant
+variants. The single prompt is ours, fixed before seeing test results. Propose-and-verify and voting were evaluated on the
+dev split only; their negative result rests on a zero difference at the selected configuration and on the measured
+mechanism, not on the test split.
 
-\textbf{External validity.} Real bugs come from one project (31 youtube-dl bugs) and the target function is chosen from
-the developer fix, so function-level localization is not evaluated. RQ2, the decomposition and the renaming study use one
-model; the model-family subset has no CIs. Models run at provider-default reasoning, so the family comparison is ``at
-default'' rather than at equal effort; the main model is newer than those in the original paper, and our re-execution
-with the paper's model fell short of the published logs. Renaming changes identifiers and comments but not structure, so
-memorization of templates is not fully excluded.
+\textbf{External validity.} Test names in SemFault-250 state intent unusually clearly; on suites with generic names the
+single prompt's advantage may shrink, and we did not run a hidden-test-name ablation. Every program is one function, and
+for real bugs the target function is taken from the developer fix, so localizing the function within a project---the
+hard part on large code bases---is not evaluated. Real bugs come from one project (31 youtube-dl bugs). RQ2, the
+decomposition and the renaming study use one model; the model-family subset has no CIs; models run at provider-default
+reasoning. Renaming changes identifiers and comments but not structure or test names, so memorization of templates is
+not fully excluded.
