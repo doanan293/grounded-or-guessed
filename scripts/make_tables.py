@@ -4,6 +4,7 @@
 Each table is a standalone tabular fragment, \\input by both the Vietnamese report and the paper.
 """
 import csv
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -215,7 +216,7 @@ def rq3_renamed_table() -> str:
     return "\n".join(lines) + "\n"
 
 
-def pareto_figure(path: Path) -> None:
+def pareto_figure(path: Path, lang: str = "en") -> None:
     """Acc@3 vs LLM tokens per program (log x), one point per method × model; SBFL as a zero-cost reference line.
     Colour = method (validated categorical slots 1–3), shape = secondary encoding, every point direct-labelled."""
     import math
@@ -225,6 +226,11 @@ def pareto_figure(path: Path) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     rows = _rows("pareto.csv")
+    T = ({"direct": " (hỏi thẳng)", "sbfl": "SBFL Ochiai (không dùng LLM)", "x": "Số token LLM mỗi chương trình (thang log)",
+          "same": "cùng mô hình", "LLM + coverage": "LLM + độ phủ", "LLM direct": "LLM hỏi thẳng (Gemini 3.8)", "SemLoc": "SemLoc"}
+         if lang == "vi" else
+         {"direct": " (direct)", "sbfl": "SBFL Ochiai (no LLM)", "x": "LLM tokens per program (log scale)",
+          "same": "same model", "LLM + coverage": "LLM + coverage", "LLM direct": "LLM direct (Gemini 3.8)", "SemLoc": "SemLoc"})
     style = {"SemLoc": ("#2a78d6", "o"), "CovGate": ("#2a78d6", "o"), "LLM + coverage": ("#1baf7a", "s"),
              "LLM direct": ("#eb6834", "^")}
     short = {"Gemini 3.8 Flash": "Gemini 3.8", "GPT-6 luna": "luna", "Claude Sonnet 5.5": "Sonnet 5.5",
@@ -242,38 +248,109 @@ def pareto_figure(path: Path) -> None:
         ax.scatter([x], [y], s=28, c=c, marker=mk, edgecolors="white", linewidths=1.0, zorder=3)
     placed = []  # labels on SemLoc points (and the lone LLM-direct point), nudged away from earlier labels
     for (m, model), (x, y) in sorted(pts.items(), key=lambda kv: -kv[1][1]):
-        if m == "LLM + coverage":
+        if m in ("LLM + coverage", "LLM direct"):  # the single direct point is named in the legend instead
             continue
-        lab = short.get(model, model) + (" (direct)" if m == "LLM direct" else "")
+        lab = short.get(model, model) + (T["direct"] if m == "LLM direct" else "")
         free = lambda d: not any(abs(math.log10(x) - math.log10(px)) < 0.2 and abs(y + d / 3 - py) < 3.2
                                  for px, py in placed)
         dy = next(d for d in (2, -7, 9, -14, 16, -21) if free(d) or d == -21)
         placed.append((x, y + dy / 3))
-        below = m == "LLM direct"  # its label goes under the point: the right side is crowded with SemLoc points
-        ax.annotate(lab, (x, y), xytext=(0, -8) if below else (4, dy), textcoords="offset points", fontsize=6.5,
+        below = m == "LLM direct"  # its label goes above the point: the right side is crowded with SemLoc points
+        ax.annotate(lab, (x, y), xytext=(0, 8) if below else (4, dy), textcoords="offset points", fontsize=6.5,
                     color="#3b3b38", ha="center" if below else "left", va="center")
     xs = [x for x, _ in pts.values()]
     sb = next((r for r in rows if r["method"] == "SBFL Ochiai"), None)
     if sb:
         ax.axhline(100 * float(sb["acc3"]), color="#8a8984", lw=1, ls="--", zorder=1)
-        ax.text(min(xs) / 1.25, 100 * float(sb["acc3"]) + 1.5, "SBFL Ochiai (no LLM)", fontsize=6.5, color="#5e5d58")
+        ax.text(min(xs) / 1.25, 100 * float(sb["acc3"]) + 1.5, T["sbfl"], fontsize=6.5, color="#5e5d58")
     ax.set_xscale("log")
     ax.set_xlim(min(min(xs) / 1.35, 950), max(xs) * 2.2)
-    ax.set_ylim(10, 95)
+    ax.set_ylim(10, 100)
     ticks = [t for t in (1000, 2000, 4000, 8000, 16000, 32000) if min(min(xs) / 1.35, 950) <= t <= max(xs) * 2.2]
     ax.set_xticks(ticks, [f"{t // 1000}k" for t in ticks])
     ax.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
-    ax.set_xlabel("LLM tokens per program (log scale)")
+    ax.set_xlabel(T["x"])
     ax.set_ylabel("Acc@3 (%)")
     ax.grid(True, which="major", color="#e4e3df", lw=0.6, zorder=0)
     from matplotlib.lines import Line2D
-    handles = [Line2D([], [], marker=style[k][1], color=style[k][0], ls="", markersize=5, label=k)
+    handles = [Line2D([], [], marker=style[k][1], color=style[k][0], ls="", markersize=5, label=T[k])
                for k in ("SemLoc", "LLM + coverage", "LLM direct")]
-    handles.append(Line2D([], [], color="#c3c2b7", lw=0.8, label="same model"))
+    handles.append(Line2D([], [], color="#c3c2b7", lw=0.8, label=T["same"]))
     ax.legend(handles=handles, loc="lower right", bbox_to_anchor=(1.0, 0.16), fontsize=6.5, frameon=False)
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)
+
+
+# Vietnamese report: same tables, labels translated (guide: Việt hóa thuật ngữ) and decimal commas.
+VI = [
+    ("All signals (+ raw Ochiai, + CF re-ranking)", "Mọi tín hiệu (+ Ochiai thô, + xếp lại bằng CF)"),
+    ("Artifact's own metric (rank of the LLM guess)", "Chỉ số của artifact (hạng của dòng LLM đoán)"),
+    ("SemLoc w/o CF (separate run), Claude", "SemLoc không CF (lượt chạy riêng), Claude"),
+    ("SemLoc w/o CF (separate run), Gemini", "SemLoc không CF (lượt chạy riêng), Gemini"),
+    ("SemLoc as released (guess + spectrum)", "SemLoc như phát hành (dòng đoán + phổ)"),
+    ("SemLoc (spectrum + LLM-guess bonus)", "SemLoc (phổ + điểm thưởng dòng đoán)"),
+    ("Executable (all but not executed)", "Thực thi được (trừ nhóm không thực thi)"),
+    ("Execution-repaired ground truth", "Ground truth đã sửa bằng thực thi"),
+    ("LLM + coverage (1 prompt, ours)", "LLM + độ phủ (1 prompt, nhóm đề xuất)"),
+    ("LLM + coverage (1 prompt)", "LLM + độ phủ (1 prompt)"),
+    ("SemLoc semantic spectrum only", "Chỉ phổ ngữ nghĩa của SemLoc"),
+    ("bonus only when grounded", "chỉ thưởng khi có căn cứ"),
+    ("without LLM-guess bonus", "không có điểm thưởng dòng đoán"),
+    ("w/o LLM-guess bonus", "bỏ điểm thưởng dòng đoán"),
+    ("SBFL DStar (recomputed)", "SBFL DStar (tính lại)"),
+    ("CovGate + CF re-ranking", "CovGate + xếp lại bằng CF"),
+    ("+ coverage gate only", "+ chỉ cổng độ phủ"),
+    ("+ CF re-ranking", "+ xếp lại bằng CF"),
+    ("LLM direct (1 prompt)", "LLM hỏi thẳng (1 prompt)"),
+    ("Original ground truth", "Ground truth gốc"),
+    ("SemLoc (as released)", "SemLoc (bản phát hành)"),
+    ("Configuration (all 250 programs)", "Cấu hình (cả 250 chương trình)"),
+    ("LLM guess alone", "Chỉ dòng LLM đoán"),
+    ("LLM guess bonus", "Điểm thưởng dòng đoán"),
+    ("Coverage-revealed", "Lộ qua độ phủ"),
+    ("Semantic spectrum", "Phổ ngữ nghĩa"),
+    ("Delta debugging", "Gỡ lỗi chia đôi (DD)"),
+    ("LLM direct", "LLM hỏi thẳng"),
+    ("LLM + coverage", "LLM + độ phủ"),
+    ("LLM + cov.", "LLM + độ phủ"),
+    ("CovGate (ours)", "CovGate (nhóm đề xuất)"),
+    ("Author scoring", "Cách chấm của tác giả"),
+    ("Fair scoring", "Cách chấm công bằng"),
+    ("Fault reached", "Lỗi được chạy tới"),
+    ("Fault label", "Nhãn lỗi"),
+    ("All bugs", "Mọi lỗi"),
+    ("Not executed", "Không thực thi"),
+    ("Configuration", "Cấu hình"),
+    ("All signals", "Mọi tín hiệu"),
+    ("Ground truth", "Ground truth"),
+    ("$\\lambda$·Ochiai only", "chỉ $\\lambda$·Ochiai"),
+    ("Semantic", "Ngữ nghĩa"),
+    ("Original", "Bản gốc"),
+    ("Renamed", "Đổi tên"),
+    ("Repaired", "Đã sửa"),
+    ("Original (", "Gốc ("),
+    ("Repeats", "Số lần lặp"),
+    ("repeats", "lần lặp"),
+    ("Method", "Phương pháp"),
+    ("Metric", "Chỉ số"),
+    ("Subset", "Tập con"),
+    ("Model", "Mô hình"),
+    ("Total", "Tổng"),
+    ("Coverage", "Độ phủ"),
+    ("LLM guess", "Dòng LLM đoán"),
+    ("[95\\% CI]", "[CI 95\\%]"),
+    (" & all & ", " & tất cả & "),
+    (" & executable & ", " & thực thi được & "),
+]
+
+
+def to_vi(tex: str) -> str:
+    for en, vi in VI:
+        tex = tex.replace(en, vi)
+    tex = re.sub(r"(\d)\.(\d)", r"\1,\2", tex)                 # decimal comma
+    tex = re.sub(r"\[([+-]?\d+,\d), ([+-]?\d+,\d)\]", r"[\1; \2]", tex)  # CI separator after decimal commas
+    return tex
 
 
 def main() -> None:
@@ -287,6 +364,11 @@ def main() -> None:
     (OUT / "rq3_bugsinpy.tex").write_text(rq3_bugsinpy_table())
     (OUT / "rq3_renamed.tex").write_text(rq3_renamed_table())
     pareto_figure(OUT / "pareto.pdf")
+    (OUT / "vi").mkdir(exist_ok=True)
+    for f in sorted(OUT.glob("*.tex")):
+        if f.name.startswith(("rq", )):
+            (OUT / "vi" / f.name).write_text(to_vi(f.read_text()))
+    pareto_figure(OUT / "vi" / "pareto.pdf", lang="vi")
     print("wrote", sorted(p.name for p in OUT.glob("*.tex")))
 
 

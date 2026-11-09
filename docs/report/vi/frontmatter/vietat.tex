@@ -1,11 +1,22 @@
-\chapter*{Danh sách từ viết tắt}
-\addcontentsline{toc}{chapter}{Danh sách từ viết tắt}
-\begin{tabular}{ll}
+\chapter*{Danh mục từ viết tắt và thuật ngữ}
+\addcontentsline{toc}{chapter}{Danh mục từ viết tắt và thuật ngữ}
+\begin{center}
+\begin{tabular}{@{}p{0.2\linewidth}p{0.75\linewidth}@{}}
 \toprule
-Viết tắt & Ý nghĩa \\
+Viết tắt / thuật ngữ & Ý nghĩa \\
 \midrule
-LLM & Mô hình ngôn ngữ lớn (Large Language Model) \\
-SBFL & Định vị lỗi dựa trên phổ (Spectrum-Based Fault Localization) \\
-RQ & Câu hỏi nghiên cứu (Research Question) \\
+Acc@$k$ & Tỉ lệ chương trình có dòng lỗi nằm trong $k$ dòng bị nghi ngờ nhất (độ chính xác top-$k$) \\
+CF & Kiểm chứng phản thực tế (counterfactual verification): vá thử một dòng rồi chạy lại kiểm thử \\
+CI & Khoảng tin cậy (confidence interval), ở đây là khoảng 95\% theo bootstrap \\
+CovGate & Cải tiến do nhóm đề xuất: kết hợp độ phủ với điểm của SemLoc \\
+DD & Gỡ lỗi chia đôi (delta debugging) \\
+GT & Dòng lỗi chuẩn (ground truth) của bộ dữ liệu \\
+LLM & Mô hình ngôn ngữ lớn (large language model) \\
+RQ & Câu hỏi nghiên cứu (research question) \\
+SBFL & Định vị lỗi dựa trên phổ độ phủ (spectrum-based fault localization) \\
+SemFault-250 & Bộ dữ liệu 250 chương trình Python có lỗi ngữ nghĩa của SemLoc \\
+SemFault-250-verified & Bộ dữ liệu trên với dòng lỗi được nhóm kiểm chứng lại bằng thực thi \\
+Shapley & Giá trị Shapley: cách chia một tổng cho các thành phần theo đóng góp biên trung bình \\
 \bottomrule
 \end{tabular}
+\end{center}
