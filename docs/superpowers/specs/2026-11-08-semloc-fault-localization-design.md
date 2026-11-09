@@ -2,8 +2,9 @@
 
 - Môn: IT5440 – Nguyên lý và kỹ thuật phân tích chương trình, kỳ 2026.1, ĐH Bách khoa Hà Nội
 - Đề tài: **2KH** — Chương 10 "Phát hiện lỗi và định vị lỗi", hướng nghiên cứu khoa học
-- Ngày viết: 08/11/2026 · cập nhật 08/11/2026 (sau mốc 1: proxy, model, mức suy luận, audit SemLoc, CovGate, lộ trình)
-- Người thực hiện: chủ dự án (học viên) + Claude, làm trọn từ đầu đến cuối. Các thành viên khác trong nhóm 7 người không nhận phần việc nào (đã chốt 08/11). Danh sách tên nhóm cho trang bìa và lời cam kết sẽ do chủ dự án cung cấp khi làm báo cáo.
+- Ngày viết: 08/11/2026 · cập nhật 08/11/2026 (sau mốc 1: proxy, model, mức suy luận, audit SemLoc, CovGate, lộ trình) · cập nhật 09/11/2026 (Phase 2–3 xong; bỏ DOI; viết trọn bài trước rồi cắt 2 nhánh báo cáo tiến độ)
+- Người thực hiện: chủ dự án (học viên) + Claude, làm trọn từ đầu đến cuối. Các thành viên khác trong nhóm 7 người không nhận phần việc nào (đã chốt 08/11).
+- Nhóm **M9**, thứ tự tác giả trên bìa, bài báo, slide (chủ dự án chốt 09/11): Doãn Văn An – 20252778M (nhóm trưởng), Tạ Công Nam – 20252640M, Nguyễn Hoàng Hải – 20252583M, Đỗ Xuân Tráng – 20252774M, Hoàng Trung Kiên – 20251333M, Mai Văn Tùng – 20252788M, Nguyễn Đức Tùng – 20252772M.
 - Tài liệu gốc của thầy: `docs/requirement/HuongDanTieuLuan 2026.pdf`; 3 bài báo: `docs/requirement/dt2-chap10/` (cũng có trong `Detai2.Chapter10/`)
 
 ---
@@ -122,7 +123,15 @@ Mục tiêu đo được của cải tiến: Acc@1/Acc@3 cao hơn SemLoc gốc t
 | Bài báo (báo cáo tóm tắt) | Tiếng Anh | LaTeX dạng bài báo arXiv (Introduction, Related Work, Background, Approach, Evaluation, Threats, Conclusion) | `docs/report/` (thư mục con riêng) |
 | Slide báo cáo lần 1, lần 2, slide bảo vệ | Tiếng Việt | PPTX dựng từ `docs/presentation/template-vi.pptx` | `docs/presentation/` |
 | Mã nguồn + dữ liệu + log LLM | — | Repo này; SemLoc gốc được đưa vào như mã bên ngoài có ghi nguồn và giấy phép | thư mục mã nguồn ở gốc repo (tên do builder đặt) |
-| Gói artifact công khai | Tiếng Anh | Repo công khai + bản lưu trữ có DOI (Zenodo), Dockerfile chạy lại được, README tái hiện từng bảng; gồm SemFault-250-verified, ma trận độ phủ, log LLM (đã lọc khóa) | Phase 4 (cần chủ dự án tạo tài khoản/đồng ý công khai) |
+| Gói artifact công khai | Tiếng Anh | Repo GitHub công khai `doanan293/grounded-or-guessed` (không làm DOI/Zenodo — chủ dự án quyết 09/11; bài báo chỉ dẫn link GitHub), Dockerfile chạy offline, `REPRODUCE.md` tái hiện từng bảng; gói lượt chạy + log + cache LLM (đã quét bí mật) do `scripts/export_artifact.py` tạo, đính kèm GitHub Release khi nộp | đã xong ở Phase 3 |
+
+**Phiên bản và nhánh (chủ dự án quyết 09/11).** Viết trọn bài cuối cùng trước trên `main`; báo cáo VI và bài báo EN dùng **một nguồn LaTeX** với công tắc phiên bản `lan1` / `lan2` / `full` quyết định chương nào được đưa vào. Hai nhánh tiến độ được cắt từ `main` sau khi bài đầy đủ xong, chỉ khác công tắc và bộ slide; mã nguồn và dữ liệu giống nhau ở cả ba nhánh. Sửa theo góp ý của thầy luôn làm trên `main` rồi cắt lại nhánh.
+
+| Nhánh | Dùng cho | Nội dung (4 nội dung thầy chấm) |
+|---|---|---|
+| `bao-cao-lan-1` | 18–19/11 (cần ≥2/4) | báo cáo VI bản `lan1`: nội dung 1 (tài liệu, từ khóa, nghiên cứu liên quan) + nội dung 2 (3 RQ, thiết kế, kết quả RQ1–RQ3); slide lần 1 |
+| `bao-cao-lan-2` | 25–26/11 (cần ≥3/4) | báo cáo VI bản `lan2`: thêm nội dung 3 (phân tích thất bại, đóng góp, triết lý khoa học, Threats); bản nháp bài báo EN; slide lần 2 |
+| `main` | nộp cuối, bảo vệ (12/2026) | đủ 4/4: báo cáo VI `full`, bài báo EN arXiv đầy đủ, slide bảo vệ |
 
 Báo cáo đầy đủ và bài báo dùng chung số liệu, bảng, hình; nên sinh bảng/hình tự động từ kết quả thực nghiệm để hai bản luôn khớp.
 
@@ -130,12 +139,12 @@ Báo cáo đầy đủ và bài báo dùng chung số liệu, bảng, hình; nê
 
 Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội dung), **lần 2 ngày 25–26/11** (cần 3/4), **nộp và bảo vệ tháng 12** (ngày cụ thể chưa biết — tạm đặt xong mọi thứ trước 12/12).
 
-### Phase 1 — Tài liệu và nền tảng (08–14/11)
+### Phase 1 — Tài liệu và nền tảng (làm xong 08/11)
 - 1.1 Đọc sâu SemLoc (bài + mã nguồn) và 2 bài còn lại (EffiHolmes, Crash report + LLM)
 - 1.2 Tìm thêm ~20 tài liệu liên quan (SBFL, MBFL, định vị lỗi bằng LLM như AutoFL/AgentFL/FlexFL, benchmark Defects4J/BugsInPy, nhiễm dữ liệu huấn luyện của LLM); chốt bộ từ khóa; lập bảng so sánh
 - 1.3 Khung LaTeX cho báo cáo VI và bài báo EN, file `.bib` chung
 
-### Phase 2 — RQ và thực nghiệm (09–17/11, làm dồn trước báo cáo lần 1)
+### Phase 2 — RQ và thực nghiệm (làm xong 08–09/11)
 - 2.1 Dựng proxy cho dự án, gọi thử từng họ mô hình, đo quota
 - 2.2 Cài SemLoc, chạy `semloc report` tái hiện bảng từ log có sẵn (RQ1a)
 - 2.3 Nối SemLoc với proxy; chạy trên tập dev để kiểm tra pipeline, chi phí và mức suy luận (chạy kiểm tra, không phải số liệu báo cáo)
@@ -147,20 +156,23 @@ Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội
 
 **Báo cáo lần 1 (18–19/11)** mang lên: tổng quan tài liệu + từ khóa, 3 RQ, phương pháp, **kết quả RQ1 (tái hiện + audit) và RQ2 đầy đủ**, RQ3 sơ bộ — vượt mức 2/4 nội dung thầy yêu cầu.
 
-### Phase 3 — Phân tích và đóng góp (18–25/11)
+### Phase 3 — Phân tích và đóng góp (làm xong 09/11, plan `docs/superpowers/plans/2026-11-09-phase3-phan-tich-dong-gop.md`)
 - 3.1 Thống kê, kiểm định, ablation, chi phí
 - 3.2 Phân tích 15–20 ca thất bại, xếp nhóm nguyên nhân
 - 3.3 Chốt danh sách đóng góp và phần triết lý khoa học
-- 3.4 Sửa theo góp ý của thầy sau lần 1
+- 3.4 Sửa theo góp ý của thầy sau lần 1 (sau 18–19/11, làm trên `main`)
+- Đã thêm (chủ dự án duyệt 09/11): baseline LLM + độ phủ chạy trên BugsInPy và trên tập đổi tên (Task 0); loại khỏi ground truth đã sửa các vị trí "sửa" ở dòng trống (13 chương trình) sau final review; phát hiện mơ hồ "đầu khối – thân khối" của Acc@1 cấp dòng; mọi con số trong tài liệu là macro sinh từ `data/` (`numbers.tex`, `numbers-vi.tex`) và được `scripts/check_claims.py` đối chiếu.
 
 **Báo cáo lần 2 (25–26/11)** mang lên: RQ3 đầy đủ, phân tích thất bại, danh sách đóng góp và triết lý khoa học, bản nháp bài báo.
 
-### Phase 4 — Viết và nộp (27/11–12/12)
-- 4.1 Bài báo tiếng Anh
-- 4.2 Báo cáo đầy đủ tiếng Việt
-- 4.3 Tự phản biện theo 5 chiều (đóng góp, độ rõ, sức mạnh thực nghiệm, độ đầy đủ đánh giá, độ hợp lý của thiết kế); đối chiếu từng khẳng định với số liệu
-- 4.4 Đóng gói mã nguồn, dữ liệu, log; hướng dẫn chạy lại
-- 4.5 Slide bảo vệ; sửa theo góp ý sau lần 2
+### Phase 4 — Viết trọn bài, rồi cắt 2 nhánh báo cáo (bắt đầu 09/11, trước 18/11)
+- 4.0 Dàn ý chi tiết báo cáo VI + bài báo EN — chủ dự án duyệt trước khi viết
+- 4.1 Báo cáo đầy đủ tiếng Việt trên `main`, có công tắc phiên bản `lan1` / `lan2` / `full`
+- 4.2 Bài báo tiếng Anh (arXiv), cùng số liệu qua macro
+- 4.3 Tự phản biện theo 5 chiều (đóng góp, độ rõ, sức mạnh thực nghiệm, độ đầy đủ đánh giá, độ hợp lý của thiết kế); `check_claims.py` cho mọi con số
+- 4.4 Slide lần 1 (số liệu mới), slide lần 2, slide bảo vệ
+- 4.5 Cắt nhánh `bao-cao-lan-1`, `bao-cao-lan-2` từ `main`; push
+- 4.6 Sau mỗi buổi báo cáo: sửa theo góp ý trên `main`, cắt lại nhánh; nộp cuối tháng 12 (gói lượt chạy đính kèm GitHub Release)
 
 ## 8. Tiêu chí "đạt điểm A"
 
@@ -171,7 +183,7 @@ Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội
 5. Có ablation từng thành phần của CovGate.
 6. Có báo cáo chi phí và biểu đồ chi phí – độ chính xác.
 7. Có phân tích thất bại.
-8. Có mục Threats to Validity; gói artifact công khai có DOI, Docker và README tái hiện; người khác chạy lại được.
+8. Có mục Threats to Validity; repo công khai có Docker và `REPRODUCE.md` tái hiện từng bảng; người khác chạy lại được (không cần DOI — chủ dự án quyết 09/11).
 
 Thứ tự cắt khi thiếu quota/thời gian: bỏ GPT → giảm số lần lặp (không dưới 3) → thu hẹp BugsInPy. Không cắt mục 1–5.
 
@@ -211,8 +223,10 @@ Thứ tự cắt khi thiếu quota/thời gian: bỏ GPT → giảm số lần l
 - Báo cáo song song cách chấm của tác giả và cách chấm công bằng (mục 3.4)
 - Cấu hình proxy riêng; mọi model ở mức suy luận mặc định (chủ dự án quyết 08/11)
 - Kéo Phase 2 lên trước báo cáo lần 1; chạy mẫu nhỏ chỉ để kiểm tra (chủ dự án quyết 08/11)
-- Thêm SemFault-250-verified, baseline LLM + độ phủ, phân tích cấu trúc benchmark, biểu đồ chi phí – độ chính xác, gói artifact có DOI (chủ dự án duyệt 08/11)
+- Thêm SemFault-250-verified, baseline LLM + độ phủ, phân tích cấu trúc benchmark, biểu đồ chi phí – độ chính xác, gói artifact (chủ dự án duyệt 08/11; DOI bỏ 09/11)
 - Thêm CovGate thành phần 4 "grounded guess", phân rã độ chính xác theo thành phần (Shapley), checklist đánh giá (chủ dự án duyệt 08/11)
+- 09/11: bỏ DOI/Zenodo; viết trọn bài trước rồi cắt nhánh báo cáo; thêm baseline LLM + độ phủ trên BugsInPy và tập đổi tên; thứ tự tác giả (chủ dự án quyết)
+- 09/11: loại vị trí "sửa" ở dòng trống khỏi ground truth đã sửa (final review Phase 3); báo cáo thêm Acc@1 chấp nhận đầu khối/thân khối (Claude quyết, ghi trong ledger)
 - Tên bài: **Grounded or Guessed: An Execution-Verified Reproducibility Study of LLM-Based Semantic Fault Localization**; repo công khai `doanan293/grounded-or-guessed` (MIT cho mã của nhóm; SemLoc giữ Apache-2.0)
 
 ## 12. Để builder tự quyết

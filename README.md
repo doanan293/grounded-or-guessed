@@ -44,7 +44,7 @@ docs/               spec and plans (docs/superpowers), literature notes, LaTeX r
 
 ## Reproducing
 
-Full instructions, four reproduction levels and a result-to-script map: **[REPRODUCE.md](REPRODUCE.md)**. Run outputs, the LLM call log and the replayable LLM response cache are released as an archive (`scripts/export_artifact.py`); `docker build -t grounded-or-guessed .` gives an offline environment in which `scripts/regenerate_all.sh` rebuilds every CSV and table byte-identically.
+Full instructions, four reproduction levels and a result-to-script map: **[REPRODUCE.md](REPRODUCE.md)**. Run outputs, the LLM call log and the replayable LLM response cache are released as an archive attached to the GitHub release (`scripts/export_artifact.py`); `docker build -t grounded-or-guessed .` gives an offline environment in which `scripts/regenerate_all.sh` rebuilds every CSV and table byte-identically.
 
 ### Quick start
 
