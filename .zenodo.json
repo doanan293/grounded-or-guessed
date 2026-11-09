@@ -1,9 +1,0 @@
-{
-  "title": "Grounded or Guessed: An Execution-Verified Reproducibility Study of LLM-Based Semantic Fault Localization (replication package)",
-  "upload_type": "software",
-  "description": "Code, derived data, run outputs, LLM call log and replayable LLM response cache for a reproducibility study of SemLoc (arXiv:2603.29109): evaluation audit, execution-verified ground truth (SemFault-250-verified), CovGate, an LLM + coverage single-prompt baseline, and robustness on BugsInPy, identifier-renamed programs and five model families. See REPRODUCE.md.",
-  "creators": [{"name": "IT5440 2KH research group, Hanoi University of Science and Technology"}],
-  "license": "MIT",
-  "keywords": ["fault localization", "spectrum-based fault localization", "semantic fault", "large language model", "reproducibility", "counterfactual verification", "benchmark validity"],
-  "related_identifiers": [{"identifier": "arXiv:2603.29109", "relation": "isSupplementTo", "scheme": "arxiv"}]
-}

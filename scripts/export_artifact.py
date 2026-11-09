@@ -1,4 +1,4 @@
-"""Package the run outputs, LLM call log and LLM response cache for the archival release (Zenodo).
+"""Package the run outputs, LLM call log and LLM response cache for the GitHub release attached to the final submission.
 
     python scripts/export_artifact.py --out dist/
 Writes dist/grounded-or-guessed-runs-<YYYYMMDD>.tar.gz with, for every healthy run listed in data/runs.csv:
