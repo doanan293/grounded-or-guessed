@@ -44,8 +44,8 @@ on the reviewed labels SemLoc's Acc@3 lead over direct LLM prompting vanishes (i
 \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo, \RqTwoRepairedAllLlmTestsDAccOneHi] and at Acc@3
 by \RqTwoRepairedAllLlmTestsDAccThree{} points on repaired labels, at about a seventh of the cost.
 \item \textbf{C4, nothing more elaborate closes the gap, and why:} failing tests carry the signal and per-line coverage
-does not; CovGate (coverage added to SemLoc) helps SemLoc only slightly, and propose-and-verify (test-passing patches as
-arbiter), voting (both on the dev split) and static analysis do not improve on the simple prompt, because small patches
+does not; CovGate (coverage added to SemLoc) helps SemLoc only slightly, and\IfAtLeastElse{full}{ propose-and-verify (test-passing patches as
+arbiter), voting (both on the dev split)}{ voting (on the dev split)} and static analysis do not improve on the simple prompt, because small patches
 pass the tests at many non-faulty candidate lines.
 \item \textbf{C5:} a seven-item evaluation checklist and a fully replayable artifact, including every reviewer's answers.
 \end{itemize}

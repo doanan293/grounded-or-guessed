@@ -111,14 +111,14 @@ fails and how, not which lines ran.
 \textbf{More elaborate additions do not help} (Table~\ref{tab:addons}). CovGate, an Ochiai tie-breaker as selected,
 changes SemLoc's Acc@3 by \RqTwoRepairedAllCovgateDAccThree{} [\RqTwoRepairedAllCovgateDAccThreeLo,
 \RqTwoRepairedAllCovgateDAccThreeHi] and leaves Acc@1 unchanged; its other components lower Acc@1 (grounded bonus
-\RqTwoRepairedAllGroundedPriorOnlyDAccOne, counterfactual re-ranking \RqTwoRepairedAllCfRerankDAccOne). For
+\RqTwoRepairedAllGroundedPriorOnlyDAccOne, counterfactual re-ranking \RqTwoRepairedAllCfRerankDAccOne). \IfAtLeast{full}{For
 propose-and-verify, the selected configuration reproduces the proposer's ranking exactly (reviewed Acc@1
 \PavDevChosenReviewedAccOne\% vs.\ \PavDevStageReviewedAccOne\% on dev), and the most aggressive one drops it to
 \PavDevWorstReviewedAccOne\%. The tests are the reason: on the reviewed labels a small fix passes every test in
 \PavmechReviewedFaultLineFixable\% of attempts at the faulty line (two-line faults, omissions and larger edits resist
 one-line fixes) but also in \PavmechReviewedOtherLineFixable\% of attempts at other lines, typically by changing a
 constant to compensate for a wrong computation elsewhere. Since the dev result was clear, we did not run it on the test
-split. Voting over three answers (dev) gives Acc@1 \VoteReviewedVoteAccOne\% against \VoteReviewedSingleAccOne\% for one
+split.} Voting over three answers (dev) gives Acc@1 \VoteReviewedVoteAccOne\% against \VoteReviewedSingleAccOne\% for one
 answer on the reviewed labels, but lowers Acc@3 on the repaired (\VoteRepairedVoteAccThree\% vs.\
 \VoteRepairedSingleAccThree\%) and original labels (\VoteOriginalVoteAccThree\% vs.\ \VoteOriginalSingleAccThree\%).
 
@@ -127,7 +127,7 @@ answer on the reviewed labels, but lowers Acc@3 on the repaired (\VoteRepairedVo
 \caption{Additions compared with the method they extend: $\Delta$ in points (test rows: three repeats with
 \ConstCiLevel\% cluster-bootstrap CIs; dev rows: 50 programs, three repeats)}
 \label{tab:addons}
-\resizebox{0.85\textwidth}{!}{\input{../generated/rq_addons}}
+\IfAtLeastElse{full}{\resizebox{0.85\textwidth}{!}{\input{../generated/rq_addons}}}{\resizebox{0.85\textwidth}{!}{\input{../generated/rq_addons_nopav}}}
 \end{table*}
 
 \textbf{Static analysis} (Table~\ref{tab:static}). Ruff's default rules flag a labeled line in

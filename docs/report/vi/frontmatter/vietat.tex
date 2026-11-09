@@ -1,5 +1,7 @@
 \chapter*{Danh mục từ viết tắt và thuật ngữ}
 \addcontentsline{toc}{chapter}{Danh mục từ viết tắt và thuật ngữ}
+\IfAtLeastElse{full}{\def\GlossaryRowPav{Đề xuất rồi kiểm chứng & Cách bổ sung do nhóm thử: LLM đề xuất dòng nghi ngờ, bản sửa nhỏ và kiểm thử xác nhận \\}}{\def\GlossaryRowPav{}}
+\IfAtLeastElse{lan2}{\def\GlossaryRowReviewed{SemFault-250 đã rà soát & Bộ dữ liệu trên với nhãn được LLM rà trước và thành viên nhóm duyệt \\}}{\def\GlossaryRowReviewed{}}
 {\setstretch{1.2}
 \begin{longtable}{@{}p{0.22\linewidth}p{0.73\linewidth}@{}}
 \toprule
@@ -21,14 +23,14 @@ Acc@$k$ & Tỉ lệ chương trình có dòng lỗi nằm trong $k$ dòng bị n
 CF & Kiểm chứng phản thực tế (counterfactual verification): vá thử một dòng rồi chạy lại kiểm thử \\
 CI & Khoảng tin cậy (confidence interval), ở đây là khoảng \ConstCiLevel\% theo bootstrap \\
 CovGate & Cách bổ sung do nhóm thử: kết hợp độ phủ với điểm của SemLoc \\
-Đề xuất rồi kiểm chứng & Cách bổ sung do nhóm thử: LLM đề xuất dòng nghi ngờ, bản sửa nhỏ và kiểm thử xác nhận \\
+\GlossaryRowPav
 DD & Gỡ lỗi chia đôi (delta debugging) \\
 GT & Dòng lỗi chuẩn (ground truth) của bộ dữ liệu \\
 LLM & Mô hình ngôn ngữ lớn (large language model) \\
 RQ & Câu hỏi nghiên cứu (research question) \\
 SBFL & Định vị lỗi dựa trên phổ độ phủ (spectrum-based fault localization) \\
 SemFault-250 & Bộ dữ liệu 250 chương trình Python có lỗi ngữ nghĩa của SemLoc \\
-SemFault-250 đã rà soát & Bộ dữ liệu trên với nhãn được LLM rà trước và thành viên nhóm duyệt \\
+\GlossaryRowReviewed
 SemFault-250 đã sửa & Bộ dữ liệu trên với dòng lỗi chuẩn được nhóm kiểm chứng và sửa lại bằng thực thi (tiếng Anh: SemFault-250-repaired) \\
 Shapley & Giá trị Shapley: cách chia một tổng cho các thành phần theo đóng góp biên trung bình \\
 \bottomrule

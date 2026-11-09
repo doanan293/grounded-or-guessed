@@ -9,9 +9,9 @@ cases. The blind re-review supports them, but on a sample of \BlindBlindAllProgr
 still not fully independent of LLM judgment and may favor LLM-based methods; we therefore state main results on the original and
 repaired labels, which involve no LLM judgment of location. Two-line labels (\LabaudAllTwoLine{} programs) make the reviewed
 Acc@$k$ slightly easier. Line-level Acc@1 depends on whether a guard or the guarded statement is labeled; we report tolerant
-variants. The single prompt is ours, fixed before seeing test results. Propose-and-verify and voting were evaluated on the
+variants. The single prompt is ours, fixed before seeing test results. \IfAtLeastElse{full}{Propose-and-verify and voting were evaluated on the
 dev split only; their negative result rests on a zero difference at the selected configuration and on the measured
-mechanism, not on the test split.
+mechanism, not on the test split.}{Voting was evaluated on the dev split only.}
 
 \textbf{External validity.} Test names in SemFault-250 state intent unusually clearly; on suites with generic names the
 single prompt's advantage may shrink, and we did not run a hidden-test-name ablation. Every program is one function, and

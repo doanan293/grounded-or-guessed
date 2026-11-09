@@ -46,11 +46,12 @@ một hàm; trên 31 lỗi thật kết quả cùng chiều nhưng khoảng tin 
 
 \textbf{Khẳng định.} Trong prompt, kiểm thử thất bại là tín hiệu chính (Acc@3 \AblRepairedAllTestsEffectDAccThree{} so với
 LLM hỏi thẳng); độ phủ từng dòng không giúp ở Acc@3 và làm Acc@1 đi xuống. CovGate chỉ giúp SemLoc một chút
-(Acc@3 \RqTwoRepairedAllCovgateDAccThree{} điểm); đề xuất rồi kiểm chứng và biểu quyết không cải thiện được prompt đơn giản; ruff và pyrefly gần như không trúng dòng lỗi. Cơ chế chung: một bản sửa nhỏ
+(Acc@3 \RqTwoRepairedAllCovgateDAccThree{} điểm);\IfAtLeastElse{full}{ đề xuất rồi kiểm chứng và}{} biểu quyết không cải thiện được prompt đơn giản; ruff và pyrefly gần như không trúng dòng lỗi. \IfAtLeastElse{full}{Cơ chế chung: một bản sửa nhỏ
 làm mọi kiểm thử đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng viên không có lỗi (tập dev), nên kiểm thử không làm được trọng
-tài cho vị trí lỗi. \textbf{Bằng chứng:} \texttt{data/ablation\_coverage.csv}, \texttt{data/pav\_dev\_grid.csv},
-\texttt{data/pav\_mechanism.csv}, \texttt{data/vote\_dev.csv}, \texttt{data/static\_tools.csv}. \textbf{Giới hạn:} đề xuất
-rồi kiểm chứng và biểu quyết chỉ được đánh giá trên tập dev; kết quả âm tính nói về các cách đã thử trên bộ dữ liệu này,
+tài cho vị trí lỗi.}{Cơ chế chung: bản sửa nhỏ làm mọi kiểm thử đạt có thể nằm ở dòng không có lỗi, nên kiểm thử không làm được trọng
+tài cho vị trí lỗi.} \textbf{Bằng chứng:} \texttt{data/ablation\_coverage.csv}, \IfAtLeast{full}{\texttt{data/pav\_dev\_grid.csv},}
+\IfAtLeast{full}{\texttt{data/pav\_mechanism.csv}, }\texttt{data/vote\_dev.csv}, \texttt{data/static\_tools.csv}. \textbf{Giới hạn:} \IfAtLeastElse{full}{đề xuất
+rồi kiểm chứng và biểu quyết chỉ được}{biểu quyết chỉ được} đánh giá trên tập dev; kết quả âm tính nói về các cách đã thử trên bộ dữ liệu này,
 không chứng minh mọi cách bổ sung đều vô ích.
 
 \subsection{C5. Bảng kiểm tra đánh giá và gói tái hiện}
@@ -110,8 +111,8 @@ vị cấp hàm --- phần khó nhất trên dự án lớn --- không được 
 \item \textbf{Mô hình}: mô hình chính mới hơn mô hình trong bài gốc; mỗi nhà cung cấp chạy ở mức suy luận mặc định, nên
 so sánh giữa họ mô hình là ``ở mặc định'' chứ không cùng mức suy luận; Claude qua cổng trung gian sinh ràng buộc yếu hơn
 nhật ký công bố.
-\item \textbf{Đề xuất rồi kiểm chứng và biểu quyết} chỉ được đánh giá trên tập dev (50 chương trình); kết luận âm tính dựa
-trên mức chênh bằng 0 ở cấu hình được chọn và cơ chế đo được, không phải trên tập test.
+\IfAtLeastElse{full}{\item \textbf{Đề xuất rồi kiểm chứng và biểu quyết} chỉ được đánh giá trên tập dev (50 chương trình); kết luận âm tính dựa
+trên mức chênh bằng 0 ở cấu hình được chọn và cơ chế đo được, không phải trên tập test.}{\item \textbf{Biểu quyết} chỉ được đánh giá trên tập dev (50 chương trình).}
 \item \textbf{Nhiễm dữ liệu}: biến thể đổi tên chỉ đổi định danh và xóa chú thích, cấu trúc mã giữ nguyên, nên không loại
 trừ hoàn toàn việc mô hình đã thấy các khuôn mẫu.
 \end{itemize}
