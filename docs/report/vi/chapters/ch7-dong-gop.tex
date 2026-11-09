@@ -20,16 +20,19 @@ dòng đoán (\BipAllLlmGuessAccOneMean\%). \textbf{Bằng chứng:} \texttt{dat
 \RqTwoRepairedAllSemlocNoPriorDAccOneHi]. \textbf{Giới hạn:} giá trị Shapley phụ thuộc cách định nghĩa ``tắt'' một tín
 hiệu; dòng đoán thường lệch một dòng so với nhãn (Chương~\ref{chap:that-bai}).
 
-\subsection{Một prompt có bằng chứng độ phủ vượt cả pipeline}
+\subsection{Với lỗi được kiểm thử chạy tới, một prompt có bằng chứng thực thi vượt quy trình nhiều bước}
 
-\textbf{Khẳng định.} Baseline LLM + độ phủ có Acc@3 \RqTwoRepairedAllLlmCoverageAccThreeMean\% so với
+\textbf{Khẳng định.} Trên bộ dòng lỗi đã sửa (các lỗi mà một kiểm thử thất bại chạy tới), phương pháp đối chứng LLM + độ
+phủ có Acc@3 \RqTwoRepairedAllLlmCoverageAccThreeMean\% so với
 \RqTwoRepairedAllSemlocAccThreeMean\% của SemLoc ($\Delta$ \RqTwoRepairedAllLlmCoverageDAccThree{}
 [\RqTwoRepairedAllLlmCoverageDAccThreeLo; \RqTwoRepairedAllLlmCoverageDAccThreeHi]) và Acc@1 cao hơn
 ($\Delta$ \RqTwoRepairedAllLlmCoverageDAccOne{} [\RqTwoRepairedAllLlmCoverageDAccOneLo;
 \RqTwoRepairedAllLlmCoverageDAccOneHi]); vẫn hơn trên lỗi ngữ nghĩa thuần; tốn \CostLlmCoverageTokensK{} nghìn token mỗi
 chương trình so với \CostSemlocTokensK{} nghìn; gần như không đổi khi đổi tên định danh ($\Delta$Acc@3
 \RenRepairedLlmCoverageDAccThree). \textbf{Bằng chứng:} \texttt{data/rq2\_ours.csv}, \texttt{data/rq3\_renamed.csv},
-\texttt{data/llm\_cost.csv}. \textbf{Giới hạn:} trên 31 lỗi thật, chênh lệch cùng chiều nhưng khoảng tin cậy còn chứa 0;
+\texttt{data/llm\_cost.csv}. \textbf{Giới hạn:} prompt khác chế độ trực tiếp của SemLoc ở nhiều điểm cùng lúc (độ phủ,
+kết quả kiểm thử, giả định một dòng lỗi), nên chênh lệch không quy riêng cho độ phủ; trên toàn bộ nhãn gốc, kể cả lỗi
+không kiểm thử nào chạy tới, phần hơn nhỏ hơn nhiều và SemLoc tốt hơn ở Acc@5; trên 31 lỗi thật, chênh lệch cùng chiều nhưng khoảng tin cậy còn chứa 0;
 so sánh theo từng mô hình chưa có khoảng tin cậy; prompt do nhóm thiết kế.
 
 \subsection{Kết quả công bố phụ thuộc vào cách chấm và thành phần không được mô tả}
@@ -41,11 +44,11 @@ thực tế không đổi thứ hạng nào dù chiếm \CostCfSharePct\% lượ
 vì dòng đã sửa và để lại bản biên dịch cũ sau bước vá thử. \textbf{Bằng chứng:} \texttt{data/rq1\_audit.csv},
 \texttt{data/rq1\_cf\_identity.json}, \texttt{src/flx/bip\_run.py}.
 
-\subsection{SemFault-250-verified}
+\subsection{SemFault-250 đã sửa}
 
 \textbf{Khẳng định.} Bộ dòng lỗi chuẩn được kiểm chứng lại bằng thực thi (\GtConfirmedN{} xác nhận, \GtCorrectedN{} sửa vị
 trí); dùng nó làm Acc@1 của SemLoc tăng từ \RqTwoOriginalAllSemlocAccOneMean\% lên \RqTwoRepairedAllSemlocAccOneMean\%.
-\textbf{Giới hạn:} oracle chấp nhận cả bản sửa bù trừ; các vị trí trên dòng trống đã bị loại, còn bản sửa bù trừ trên dòng
+\textbf{Giới hạn:} bộ phán định chấp nhận cả bản sửa bù trừ; các vị trí trên dòng trống đã bị loại, còn bản sửa bù trừ trên dòng
 có mã chưa được phát hiện tự động.
 
 \subsection{Mơ hồ dòng kề cạnh của Acc@1 cấp dòng}
@@ -57,9 +60,10 @@ gán nhãn (SemLoc \TolSemlocAccOneExact\% $\to$ \TolSemlocAccOneGuardStrict\%);
 \subsection{CovGate, bảng kiểm tra đánh giá và gói tái hiện}
 
 CovGate tăng Acc@3 \RqTwoRepairedAllCovgateDAccThree{} điểm [\RqTwoRepairedAllCovgateDAccThreeLo;
-\RqTwoRepairedAllCovgateDAccThreeHi] và giữ nguyên Acc@1 --- gắn thêm bằng chứng vào pipeline chỉ giúp ít so với đưa thẳng
-bằng chứng cho LLM. Bảng kiểm tra sáu mục (phá hòa, mẫu số, dòng lỗi kiểm chứng, loại bỏ thành phần ẩn, lặp và kiểm
-định, chi phí) được áp cho mọi phương pháp. Gói tái hiện gồm Docker chạy không cần mạng, toàn bộ nhật ký và bộ đệm lượt
+\RqTwoRepairedAllCovgateDAccThreeHi] và giữ nguyên Acc@1 --- gắn thêm bằng chứng vào quy trình nhiều bước chỉ giúp ít so với đưa thẳng
+bằng chứng cho LLM; với $\lambda$ chọn trên tập dev, CovGate thực chất là một bộ phá hòa bằng Ochiai. Bảng kiểm tra bảy mục
+(phá hòa, mẫu số, dòng lỗi kiểm chứng, loại bỏ thành phần ẩn, lặp và kiểm định, chi phí, so với một prompt có cùng bằng
+chứng) được áp cho mọi phương pháp. Gói tái hiện gồm Docker chạy không cần mạng, toàn bộ nhật ký và bộ đệm lượt
 gọi LLM để phát lại, và macro sinh tự động cho mọi con số trong báo cáo.
 
 \section{Triết lý khoa học}
@@ -72,13 +76,13 @@ cũng chính là câu hỏi đặt cho SemLoc: nếu một phương pháp tuyên
 Tái hiện không phải là chép lại con số: khớp số công bố là điều kiện cần; điều kiện đủ là hiểu vì sao ra con số đó và kết
 quả còn đứng vững khi đổi cách chấm hợp lý.
 
-\subsection{Đo đóng góp, so với baseline đơn giản, và chấp nhận bị bác bỏ}
+\subsection{Đo đóng góp, so với phương pháp đối chứng đơn giản, và chấp nhận bị bác bỏ}
 
 Một con số Acc@1 không nói nó đến từ đâu; phân rã đóng góp và loại bỏ từng thành phần biến câu hỏi ``phương pháp có tốt
-không'' thành ``phần nào làm nó tốt''. Một pipeline nhiều bước chỉ đáng giá khi thắng baseline đơn giản nhất có cùng
+không'' thành ``phần nào làm nó tốt''. Một quy trình nhiều bước chỉ đáng giá khi thắng phương pháp đối chứng đơn giản nhất có cùng
 thông tin. Mỗi khẳng định đi kèm điều kiện bác bỏ và khoảng tin cậy; đơn vị lấy mẫu là chương trình (hoặc cụm khuôn
 mẫu), không coi các lần chạy là mẫu độc lập; kết quả được báo cáo cả khi khoảng tin cậy chứa 0. Cuối cùng, bộ dữ liệu
-cũng là một giả thuyết: nhãn do người gán có thể sai hoặc mơ hồ, và chính oracle sửa nhãn cũng có giới hạn cần nêu rõ.
+cũng là một giả thuyết: nhãn do người gán có thể sai hoặc mơ hồ, và chính bộ phán định sửa nhãn cũng có giới hạn cần nêu rõ.
 
 \section{Các mối đe dọa đến tính hợp lệ}
 \label{sec:moi-de-doa}
@@ -86,12 +90,12 @@ cũng là một giả thuyết: nhãn do người gán có thể sai hoặc mơ 
 \subsection{Tính hợp lệ nội tại và tính hợp lệ của cấu trúc}
 
 \begin{itemize}
-\item \textbf{Oracle sửa tối thiểu} chấp nhận bản sửa bù trừ nên bộ dòng lỗi đã sửa còn nhiễu; mọi kết quả cũng được báo
+\item \textbf{Bộ phán định sửa tối thiểu} chấp nhận bản sửa bù trừ nên bộ dòng lỗi đã sửa còn nhiễu; mọi kết quả cũng được báo
 cáo trên bộ gốc.
-\item \textbf{Bộ dòng lỗi kiểm chứng có thể thiên về phương pháp dùng độ phủ}, vì oracle cần kiểm thử thất bại chạy tới
-dòng sửa; so sánh giữa SemLoc, các baseline dùng LLM và CovGate cùng chiều trên bộ gốc, riêng cổng độ phủ thì không.
+\item \textbf{Bộ dòng lỗi kiểm chứng có thể thiên về phương pháp dùng độ phủ}, vì bộ phán định cần kiểm thử thất bại chạy tới
+dòng sửa; so sánh giữa SemLoc, các phương pháp đối chứng dùng LLM và CovGate cùng chiều trên bộ gốc, riêng cổng độ phủ thì không.
 \item \textbf{Mơ hồ dòng kề cạnh}: Acc@1 chặt phụ thuộc quy ước gán nhãn; nhóm báo cáo cả Acc@1 chấp nhận đầu khối/thân khối.
-\item \textbf{Prompt baseline} do nhóm viết trước khi xem kết quả và không tinh chỉnh; prompt khác có thể cho kết quả khác.
+\item \textbf{Prompt phương pháp đối chứng} do nhóm viết trước khi xem kết quả và không tinh chỉnh; prompt khác có thể cho kết quả khác.
 \end{itemize}
 
 \subsection{Tính hợp lệ ngoại tại}

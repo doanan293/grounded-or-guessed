@@ -1,35 +1,39 @@
 \section{Discussion}
 \label{sec:discussion}
 
-\textbf{Reading ``guessed'' correctly.} Top-1 accuracy is mostly the guess, but the failure analysis shows the guess is
-often semantically right and one line off the label. The lesson is therefore not that the bonus should go---removing it
-costs \RqTwoRepairedAllSemlocNoPriorDAccOne{} points of Acc@1---but that line-level labels need to accept equivalent fix
+\textbf{Reading ``guessed'' correctly.} SemLoc's top line is the LLM's guess by design, and the failure analysis shows the
+guess is often semantically right and one line off the label. The lesson is therefore not that the bonus should go---on
+our runs removing it changes Acc@1 by \RqTwoRepairedAllSemlocNoPriorDAccOne{} points---but that a tool which claims to be
+grounded should state that its first answer is the model's, and that line-level labels need to accept equivalent fix
 locations before small differences between methods mean much.
 
 \textbf{Where execution evidence helps.} Evidence earns its keep in narrowing the search: the spectrum moves the fault
-into the top three for \FailRescuedBySpectrumN{} wrongly guessed programs, and coverage given directly to the model does so
-for \FailCoverageOnlyWinsN{} programs SemLoc misses. It does not tell a right guess from a wrong one: neither a grounded
-bonus nor counterfactual re-ranking improves Acc@1. Tool designers should therefore use execution to \emph{shrink} the
-candidate set and show it to the model, rather than letting the model guess and then adjusting scores.
+into the top three for \FailRescuedBySpectrumN{} wrongly guessed programs, and execution evidence given directly to the
+model does so for \FailCoverageOnlyWinsN{} programs that SemLoc misses. It does not tell a right guess from a wrong one:
+neither a grounded bonus nor counterfactual re-ranking improves Acc@1. Its limit is reachability: when no failing test
+executes the faulty line, a coverage prompt cannot find it, which is why SemLoc keeps an edge at Acc@5 over all original
+labels. Tool designers should use execution to \emph{shrink} the candidate set and show it to the model, and keep a
+fallback for unreached faults.
 
-\textbf{An evaluation checklist.} Table~\ref{tab:checklist} collects the checks that changed numbers in this study; each
-one moved at least one published result.
+\textbf{An evaluation checklist.} Table~\ref{tab:checklist} collects seven checks; each changed at least one number in
+this study.
 
-\begin{table}[t]
+\begin{table}[!t]
 \centering
-\caption{Checklist for evaluating LLM-based fault localization}
+\caption{Checklist for evaluating LLM-based fault localization, with what each check changed here}
 \label{tab:checklist}
 \scriptsize
-\begin{tabularx}{\columnwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{0.38\columnwidth}>{\raggedright\arraybackslash}X@{}}
 \toprule
-Check & What it changed here \\
+Check & Effect in this study \\
 \midrule
-Average-rank ties, fixed denominator & DD \RqOneDdAuthorAllAccOne\% $\to$ \RqOneDdFairAllAccOne\%; SBFL Acc@5 \RqOneSbflOchiaiAuthorAllAccFive\% $\to$ \RqOneSbflOchiaiFairAllAccFive\% \\
-Execution-verified fault locations & SemLoc Acc@1 \RqTwoOriginalAllSemlocAccOneMean\% $\to$ \RqTwoRepairedAllSemlocAccOneMean\% \\
-Ablate every component, incl.\ undocumented & guess bonus worth \RqTwoRepairedAllSemlocNoPriorDAccOne{} points Acc@1 \\
-Repeats and paired CIs & LLM + coverage Acc@1 gain significant only when pooled over repeats \\
+Average-rank ties & SBFL Acc@5 \RqOneSbflOchiaiAuthorAllAccFive\% $\to$ \RqOneSbflOchiaiFairAllAccFive\% \\
+Fixed denominator, any-hit not rank one & delta debugging \RqOneDdAuthorAllAccOne\% $\to$ \RqOneDdFairAllAccOne\% in the released script \\
+Execution-verified labels & SemLoc Acc@1 \RqTwoOriginalAllSemlocAccOneMean\% $\to$ \RqTwoRepairedAllSemlocAccOneMean\% (partly a denominator change) \\
+Ablate every component, incl.\ undocumented & guess bonus: Acc@1 changes by \RqTwoRepairedAllSemlocNoPriorDAccOne{} without it \\
+Repeats with paired CIs & Acc@1 gain of LLM + coverage visible only when pooled over repeats \\
 Report cost & counterfactual step: \CostCfSharePct\% of calls, no ranking change \\
-Single-prompt baseline with same evidence & beats the pipeline by \RqTwoRepairedAllLlmCoverageDAccThree{} Acc@3 \\
+Single prompt with the same evidence & beats the pipeline by \RqTwoOriginalExecutableLlmCoverageDAccThree{} Acc@3 on reached faults \\
 \bottomrule
 \end{tabularx}
 \end{table}

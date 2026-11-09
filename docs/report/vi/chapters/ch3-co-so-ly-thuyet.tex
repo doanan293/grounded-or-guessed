@@ -93,7 +93,7 @@ vi phạm cả trong kiểm thử thành công, rồi cho LLM vá thử tại d�
 
 Khi đọc mã nguồn công khai, nhóm thấy một thành phần không được mô tả trong bài báo: ngoài các ràng buộc, LLM còn trả
 về một dòng lỗi mà nó tự đoán (trường \texttt{fault\_line}), và dòng này được cộng thêm \ConstPriorWeight{} điểm --- lớn hơn điểm tối đa
-1 của một ràng buộc. Vì vậy, trừ khi một ràng buộc khác đạt điểm tuyệt đối, dòng LLM tự đoán luôn đứng hạng 1. Thành
+1 của một ràng buộc. Vì vậy, dòng LLM tự đoán \emph{luôn} đứng hạng 1, bất kể phổ vi phạm ra sao. Thành
 phần này là trọng tâm của câu hỏi ``grounded hay guessed'' ở các chương sau.
 
 \section{Công cụ thống kê}

@@ -2,24 +2,30 @@
 \label{chap:ket-qua}
 
 Mọi con số trong chương là phần trăm (Acc@$k$) hoặc điểm phần trăm ($\Delta$), sinh tự động từ dữ liệu; khoảng trong
-ngoặc vuông là khoảng tin cậy \ConstCiLevel\% bootstrap theo cụm khuôn mẫu.
+ngoặc vuông là khoảng tin cậy \ConstCiLevel\% bootstrap theo cụm khuôn mẫu. Có khoảng hai mươi phép so sánh như vậy và
+nhóm không hiệu chỉnh đa so sánh, nên các khoảng sát 0 cần được đọc thận trọng.
 
 \section{RQ1 -- Tái hiện và kiểm tra cách đánh giá}
 \label{sec:rq1}
 
 \subsection{Tái hiện và hai cách chấm điểm}
 
-Từ nhật ký công bố, nhóm tái hiện khớp từng con số của cả 13 cấu hình trong bảng kết quả của SemLoc. Bảng~\ref{tab:rq1}
-so sánh cách chấm của tác giả với cách chấm công bằng. Ba điểm nổi bật:
+Tính lại từ nhật ký công bố khớp từng con số của cả 13 cấu hình trong bảng kết quả của SemLoc. \emph{Chạy lại} SemLoc với
+chính mô hình của bài báo (Claude Sonnet 4.6) trên tập dev thì không khớp: Acc@1 \RepClaudeDevRerunAccOne\% và Acc@3
+\RepClaudeDevRerunAccThree\% so với \RepClaudeDevPublishedAccOne\% và \RepClaudeDevPublishedAccThree\% trong nhật ký trên
+cùng các chương trình; ràng buộc sinh ra ít bị vi phạm trong kiểm thử thất bại hơn, và nhóm không tìm thấy nguyên nhân
+ở hạ tầng của mình.
+
+Bảng~\ref{tab:rq1} so sánh cách chấm của tác giả với cách chấm công bằng. Ba điểm nổi bật:
 \begin{itemize}
-\item \textbf{Gỡ lỗi chia đôi} đạt \RqOneDdAuthorAllAccOne\% theo mã chấm của tác giả (mọi lần trúng tính là hạng 1)
-nhưng \RqOneDdFairAllAccOne\% khi chấm công bằng, vì nó không xếp hạng dòng nào; bài báo lại ghi 0 cho phương pháp này.
+\item \textbf{Gỡ lỗi chia đôi}: mã chấm điểm công bố cho \RqOneDdAuthorAllAccOne\% (mọi lần trúng tính là hạng 1), trong
+khi bài báo ghi 0 và cách chấm công bằng cho \RqOneDdFairAllAccOne\%, vì phương pháp này không xếp hạng dòng nào.
 \item \textbf{SBFL bị đánh giá thấp ở top-5}: Acc@5 của Ochiai là \RqOneSbflOchiaiAuthorAllAccFive\% theo cách của tác giả
 và \RqOneSbflOchiaiFairAllAccFive\% khi dùng hạng trung bình.
-\item \textbf{SemLoc} gần như không đổi khi chấm công bằng (Acc@1 \RqOneSemlocClaudeTZeroEightFairAllAccOne\%), nhưng
-\textbf{bỏ điểm thưởng cho dòng LLM tự đoán} --- thành phần không có trong bài báo --- làm Acc@1 giảm từ
-\RqOneSemlocClaudeTZeroEightFairAllAccOne\% xuống \RqOneSemlocClaudeTZeroEightNoPriorFairAllAccOne\% (Claude) và từ
-\RqOneSemlocGeminiTZeroEightFairAllAccOne\% xuống \RqOneSemlocGeminiTZeroEightNoPriorFairAllAccOne\% (Gemini).
+\item \textbf{SemLoc} gần như không đổi khi chấm công bằng, nhưng \textbf{bỏ điểm thưởng cho dòng LLM tự đoán} --- thành
+phần không có trong bài báo --- làm Acc@1 giảm từ \RqOneSemlocClaudeTZeroEightFairAllAccOne\% xuống
+\RqOneSemlocClaudeTZeroEightNoPriorFairAllAccOne\% (Claude) và từ \RqOneSemlocGeminiTZeroEightFairAllAccOne\% xuống
+\RqOneSemlocGeminiTZeroEightNoPriorFairAllAccOne\% (Gemini).
 \end{itemize}
 
 \begin{table}[H]
@@ -29,42 +35,46 @@ và \RqOneSbflOchiaiFairAllAccFive\% khi dùng hạng trung bình.
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq1_audit}}
 \end{table}
 
-\subsection{Kiểm chứng phản thực tế và lỗi của artifact}
+\subsection{Kiểm chứng phản thực tế và lỗi của gói mã công bố}
 
 Trong mã nguồn công bố, kết quả của bước kiểm chứng phản thực tế được tính ra nhưng \emph{không dùng để xếp hạng}:
-thứ hạng có và không có bước này trùng nhau ở cả 250 chương trình của cả năm cấu hình có dữ liệu. Mức tăng mà bài báo
-quy cho bước này thực chất là chênh lệch giữa hai lượt chạy LLM độc lập (cấu hình ``không CF'' được chạy riêng, đạt
-Acc@1 \RqOneCfDisabledClaudeTZeroEightAuthorAllAccOne\%) --- tức là chênh lệch do ngẫu nhiên của LLM, xấp xỉ đúng bằng
-phần mất đi khi bỏ điểm thưởng dòng đoán. Bộ chạy BugsInPy của SemLoc có thêm hai lỗi: (i) chỉ số ``hạng tốt nhất'' nó
-báo cáo là hạng của \emph{chính dòng LLM đoán} trong danh sách của nó, không phải hạng của dòng lập trình viên đã sửa;
-(ii) bước vá thử sửa tệp nguồn rồi khôi phục trong cùng một giây với cùng kích thước tệp, để lại bản biên dịch Python
+thứ hạng có và không có bước này trùng nhau ở cả 250 chương trình của cả năm cấu hình có dữ liệu. Con số ``không có kiểm
+chứng phản thực tế'' trong bài báo đến từ một lượt chạy riêng không công bố điểm từng chương trình; Acc@1 của nó
+(\RqOneCfDisabledClaudeTZeroEightAuthorAllAccOne\%) gần bằng SemLoc khi bỏ điểm thưởng, gợi ý một khác biệt về cấu hình
+hơn là tác dụng của bước này, nhưng nhóm không xác định được. Bộ chạy BugsInPy của SemLoc có thêm hai lỗi: (i) chỉ số
+``hạng tốt nhất'' nó báo cáo là hạng của \emph{chính dòng LLM đoán}, không phải của dòng lập trình viên đã sửa; (ii) bước
+vá thử sửa tệp nguồn rồi khôi phục trong cùng một giây với cùng kích thước tệp, để lại bản biên dịch Python
 (\texttt{.pyc}) của phiên bản \emph{đã vá}, khiến lỗi ``biến mất'' ở lượt chạy sau. Nhóm đã sửa lỗi thứ hai trong bộ chạy
 của mình và chấm lại BugsInPy theo dòng đã sửa thật.
 
 \subsection{Ảnh hưởng của dòng lỗi chuẩn}
 
-Trên lượt chạy của nhóm, chuyển từ dòng lỗi chuẩn gốc sang dòng đã kiểm chứng làm Acc@1 của SemLoc tăng từ
-\RqTwoOriginalAllSemlocAccOneMean\% lên \RqTwoRepairedAllSemlocAccOneMean\% và Acc@3 từ
-\RqTwoOriginalAllSemlocAccThreeMean\% lên \RqTwoRepairedAllSemlocAccThreeMean\%; mọi phương pháp dùng LLM đều tăng tương
-tự, còn SBFL tăng ít hơn nhiều (Acc@3 từ \RqTwoOriginalAllSbflOchiaiAccThreeMean\% lên
-\RqTwoRepairedAllSbflOchiaiAccThreeMean\%). Nói cách khác, lỗi của bộ dữ liệu đánh giá thấp chính những phương pháp chỉ đúng vào câu
-lệnh lỗi thật. So sánh giữa SemLoc, các baseline dùng LLM và CovGate giữ nguyên chiều trên cả hai bộ dòng lỗi chuẩn.
+Trên lượt chạy của nhóm, chuyển từ dòng lỗi chuẩn gốc (200 chương trình) sang bộ đã sửa (179 chương trình) làm Acc@1 của
+SemLoc tăng từ \RqTwoOriginalAllSemlocAccOneMean\% lên \RqTwoRepairedAllSemlocAccOneMean\%. Một phần của mức tăng này là do
+mẫu số nhỏ hơn: bộ đã sửa bỏ các lỗi không kiểm chứng được. Chỉ tính các lỗi được kiểm thử thất bại chạy tới trên bộ
+gốc, SemLoc đã đạt \RqTwoOriginalExecutableSemlocAccOneMean\%. SBFL tăng ít hơn nhiều (Acc@3 từ
+\RqTwoOriginalAllSbflOchiaiAccThreeMean\% lên \RqTwoRepairedAllSbflOchiaiAccThreeMean\%).
 
 \section{RQ2 -- Cải tiến và đối chứng}
 \label{sec:rq2}
 
-\subsection{So sánh chính}
+\subsection{Một prompt và quy trình nhiều bước}
 
-Bảng~\ref{tab:rq2} là kết quả chính trên 200 chương trình của tập test, ba lần chạy Gemini 3.8 Flash.
-\textbf{LLM + độ phủ} --- một prompt duy nhất --- đạt Acc@3 \RqTwoRepairedAllLlmCoverageAccThreeMean\% so với
-\RqTwoRepairedAllSemlocAccThreeMean\% của SemLoc, $\Delta$ = \RqTwoRepairedAllLlmCoverageDAccThree{} điểm
-[\RqTwoRepairedAllLlmCoverageDAccThreeLo; \RqTwoRepairedAllLlmCoverageDAccThreeHi], và cả Acc@1:
-$\Delta$ = \RqTwoRepairedAllLlmCoverageDAccOne{} [\RqTwoRepairedAllLlmCoverageDAccOneLo;
-\RqTwoRepairedAllLlmCoverageDAccOneHi]. \textbf{LLM hỏi thẳng} (không có độ phủ) không kém SemLoc ở Acc@1 ($\Delta$ = \RqTwoRepairedAllLlmDirectDAccOne{}
-[\RqTwoRepairedAllLlmDirectDAccOneLo; \RqTwoRepairedAllLlmDirectDAccOneHi]) nhưng thua xa ở Acc@3
-($\Delta$ = \RqTwoRepairedAllLlmDirectDAccThree), cho thấy chính bằng chứng độ phủ --- không phải pipeline nhiều
-bước --- mang lại phần hơn ở top-3. \textbf{CovGate} tăng Acc@3 \RqTwoRepairedAllCovgateDAccThree{} điểm
-[\RqTwoRepairedAllCovgateDAccThreeLo; \RqTwoRepairedAllCovgateDAccThreeHi] và giữ nguyên Acc@1.
+Bảng~\ref{tab:rq2} là kết quả trên 200 chương trình của tập test, ba lần chạy Gemini 3.8 Flash. Kết quả phụ thuộc vào việc
+lỗi có được kiểm thử thất bại chạy tới hay không. \textbf{Trên các lỗi được chạy tới}, LLM + độ phủ hơn SemLoc ở Acc@3
+\RqTwoOriginalExecutableLlmCoverageDAccThree{} điểm [\RqTwoOriginalExecutableLlmCoverageDAccThreeLo;
+\RqTwoOriginalExecutableLlmCoverageDAccThreeHi] trên bộ dòng lỗi chuẩn gốc (148 chương trình) và
+\RqTwoRepairedAllLlmCoverageDAccThree{} điểm [\RqTwoRepairedAllLlmCoverageDAccThreeLo;
+\RqTwoRepairedAllLlmCoverageDAccThreeHi] trên bộ đã sửa. \textbf{Trên toàn bộ nhãn gốc}, gồm cả lỗi không kiểm thử nào
+chạy tới, mức hơn chỉ còn \RqTwoOriginalAllLlmCoverageDAccThree{} điểm [\RqTwoOriginalAllLlmCoverageDAccThreeLo;
+\RqTwoOriginalAllLlmCoverageDAccThreeHi] và SemLoc tốt hơn ở Acc@5 (\RqTwoOriginalAllSemlocAccFiveMean\% so với
+\RqTwoOriginalAllLlmCoverageAccFiveMean\%): một prompt dựa trên độ phủ không thể chỉ vào dòng mà không kiểm thử nào chạy
+qua. Ở Acc@1, mức hơn (\RqTwoRepairedAllLlmCoverageDAccOne{} [\RqTwoRepairedAllLlmCoverageDAccOneLo;
+\RqTwoRepairedAllLlmCoverageDAccOneHi]) chỉ thấy rõ khi gộp ba lần chạy; từng lần riêng chưa đạt ý nghĩa thống kê.
+\textbf{LLM hỏi thẳng} (chỉ có mã nguồn) không kém SemLoc ở Acc@1 ($\Delta$ = \RqTwoRepairedAllLlmDirectDAccOne{},
+khoảng tin cậy chứa 0) nhưng Acc@3 thay đổi \RqTwoRepairedAllLlmDirectDAccThree{} điểm. Vì LLM + độ phủ thêm cùng lúc kết
+quả kiểm thử, thông báo lỗi và độ phủ, khoảng cách này đo tác dụng của bằng chứng thực thi trong prompt nói chung, chưa
+tách riêng độ phủ.
 
 \begin{table}[H]
 \centering
@@ -75,9 +85,9 @@ bước --- mang lại phần hơn ở top-3. \textbf{CovGate} tăng Acc@3 \RqTw
 
 \subsection{Theo loại lỗi và từng thành phần của CovGate}
 
-Bảng~\ref{tab:rq2-nhan} tách kết quả theo nhãn lỗi của bộ dòng lỗi chuẩn đã sửa. Phần hơn của LLM + độ phủ \emph{không}
-chỉ đến từ các lỗi mà độ phủ tự làm lộ: trên lỗi ngữ nghĩa thuần --- nơi kiểm thử đạt và không đạt chạy qua cùng dòng
---- Acc@3 vẫn là \RqTwoRepairedSemanticLlmCoverageAccThreeMean\% so với \RqTwoRepairedSemanticSemlocAccThreeMean\%.
+Bảng~\ref{tab:rq2-nhan} tách kết quả theo nhãn lỗi của bộ đã sửa. Phần hơn của LLM + độ phủ không chỉ đến từ các lỗi mà độ
+phủ tự làm lộ: trên lỗi ngữ nghĩa thuần --- nơi kiểm thử đạt và không đạt chạy qua cùng dòng --- Acc@3 vẫn là
+\RqTwoRepairedSemanticLlmCoverageAccThreeMean\% so với \RqTwoRepairedSemanticSemlocAccThreeMean\%.
 
 \begin{table}[H]
 \centering
@@ -86,25 +96,27 @@ chỉ đến từ các lỗi mà độ phủ tự làm lộ: trên lỗi ngữ n
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq2_by_label}}
 \end{table}
 
-Trong các thành phần của CovGate (các dòng thụt đầu dòng ở Bảng~\ref{tab:rq2}), riêng cổng độ phủ đã cho gần hết mức
-tăng (Acc@3 \RqTwoRepairedAllGateOnlyAccThreeMean\%) --- nhưng chỉ trên bộ dòng lỗi chuẩn đã sửa: trên bộ gốc, cổng loại
-mọi dòng lỗi không được chạy tới nên Acc@3 giảm \RqTwoOriginalAllGateOnlyDAccThree{} điểm. ``Chỉ thưởng khi có căn cứ''
-làm Acc@1 \emph{giảm} \RqTwoRepairedAllGroundedPriorOnlyDAccOne{} điểm, và xếp lại bằng kiểm chứng phản thực tế cũng
-làm Acc@1 giảm \RqTwoRepairedAllCfRerankDAccOne{} điểm: bằng chứng thực thi không phân biệt được dòng đoán đúng với dòng
-đoán sai. Bỏ hẳn điểm thưởng làm Acc@1 giảm \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm
-[\RqTwoRepairedAllSemlocNoPriorDAccOneLo; \RqTwoRepairedAllSemlocNoPriorDAccOneHi].
+CovGate được chọn trên tập dev là một bước phá hòa bằng Ochiai (mục~\ref{sec:phuong-phap-so-sanh}); nó thay đổi Acc@3
+\RqTwoRepairedAllCovgateDAccThree{} điểm [\RqTwoRepairedAllCovgateDAccThreeLo; \RqTwoRepairedAllCovgateDAccThreeHi] trên bộ
+đã sửa và \RqTwoOriginalAllCovgateDAccThree{} điểm [\RqTwoOriginalAllCovgateDAccThreeLo;
+\RqTwoOriginalAllCovgateDAccThreeHi] trên bộ gốc, không đổi Acc@1. Riêng cổng độ phủ cho mức tăng tương tự trên bộ đã
+sửa nhưng thay đổi Acc@3 \RqTwoOriginalAllGateOnlyDAccThree{} điểm trên bộ gốc, vì nó loại mọi lỗi không được chạy tới.
+``Chỉ thưởng khi có căn cứ'' thay đổi Acc@1 \RqTwoRepairedAllGroundedPriorOnlyDAccOne{} điểm và xếp lại bằng kiểm chứng
+phản thực tế thay đổi \RqTwoRepairedAllCfRerankDAccOne{} điểm: bằng chứng thực thi không phân biệt được dòng đoán đúng với
+dòng đoán sai.
 
-\subsection{Grounded hay guessed: phân rã đóng góp}
+\subsection{Grounded hay guessed: giá trị biên và phân rã}
 
-Bảng~\ref{tab:phan-ra} chia độ chính xác của SemLoc cho hai tín hiệu. Ở hạng 1, dòng LLM tự đoán đóng góp
-\DecSemlocRepairedAllAccOnePhiGuess{} điểm [\DecSemlocRepairedAllAccOnePhiGuessCiClusterLo;
-\DecSemlocRepairedAllAccOnePhiGuessCiClusterHi], phổ vi phạm ràng buộc \DecSemlocRepairedAllAccOnePhiSpectrum{} điểm
-[\DecSemlocRepairedAllAccOnePhiSpectrumCiClusterLo; \DecSemlocRepairedAllAccOnePhiSpectrumCiClusterHi]
-trên tổng \DecSemlocRepairedAllAccOneFull\%. Ở top-3, thứ tự đảo lại: phổ \DecSemlocRepairedAllAccThreePhiSpectrum{}
-điểm so với dòng đoán \DecSemlocRepairedAllAccThreePhiGuess{} điểm. Kết luận: \textbf{hạng 1 chủ yếu là ``guessed'', top-3
-chủ yếu là ``grounded''}. Trên nhật ký công bố của tác giả (Claude), tỉ lệ tương tự:
-\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOneFull\% = \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiGuess{}
-(dòng đoán) + \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiSpectrum{} (phổ).
+Vì điểm thưởng lớn hơn mọi điểm ràng buộc, thêm phổ vào dòng đoán \emph{không thể} thay đổi dòng đầu tiên: riêng dòng đoán
+và SemLoc cùng đạt Acc@1 \RqTwoRepairedAllSemlocAccOneMean\%, còn riêng phổ đạt \RqTwoRepairedAllSemlocNoPriorAccOneMean\%.
+Giá trị Shapley của phổ ở Acc@1 (Bảng~\ref{tab:phan-ra}, \DecSemlocRepairedAllAccOnePhiSpectrum{} điểm) vì vậy là phần
+công cho điều phổ \emph{sẽ} đạt được nếu không có dòng đoán, không phải đóng góp vào dòng đầu của SemLoc. Ở top-3, phổ có
+tác dụng thật: dòng đoán chỉ nêu một dòng nên dừng ở \RqTwoRepairedAllSemlocAccOneMean\%, riêng phổ đạt
+\RqTwoRepairedAllSemlocNoPriorAccThreeMean\%, và cả hai cùng đạt \RqTwoRepairedAllSemlocAccThreeMean\%. Kết luận:
+\textbf{hạng 1 là ``guessed'' theo thiết kế, top-3 là nơi bằng chứng thực thi có tác dụng}. Trên nhật ký của tác giả
+(Claude), phân rã cho \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOneFull\% =
+\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiGuess{} (dòng đoán) +
+\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiSpectrum{} (phổ).
 
 \begin{table}[H]
 \centering
@@ -117,14 +129,17 @@ chủ yếu là ``grounded''}. Trên nhật ký công bố của tác giả (Cla
 
 SemLoc tốn trung bình \CostSemlocTokensK{} nghìn token cho mỗi chương trình, trong đó bước kiểm chứng phản thực tế chiếm
 \CostCfSharePct\% số lượt gọi LLM mà không cải thiện thứ hạng; LLM + độ phủ chỉ tốn \CostLlmCoverageTokensK{} nghìn
-token. Hình~\ref{fig:pareto} đặt độ chính xác cạnh chi phí cho năm mô hình trên cùng một tập con: với mọi mô hình,
-LLM + độ phủ có Acc@3 cao hơn và tốn ít token hơn SemLoc (so sánh theo từng mô hình chưa có khoảng tin cậy; ở Acc@1,
-GPT-6 luna không hơn).
+token. Hình~\ref{fig:pareto} đặt độ chính xác cạnh chi phí cho năm mô hình trên cùng một tập con
+(\ParetoSemlocGeminiThreeEightFlashN{} chương trình): với mọi mô hình, LLM + độ phủ có Acc@3 cao hơn và tốn ít token hơn
+SemLoc. Các so sánh theo từng mô hình chưa có khoảng tin cậy; ở Acc@1, GPT-6 luna không hơn, và trên tập con này LLM hỏi
+thẳng có Acc@1 cao nhất với Gemini 3.8 Flash (\ParetoLlmDirectGeminiThreeEightFlashAccOne\% so với
+\ParetoLlmCoverageGeminiThreeEightFlashAccOne\%).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.75\linewidth]{../generated/vi/pareto.pdf}
-\caption{Chi phí và độ chính xác (Acc@3) trên cùng tập con, dòng đã sửa; đường nối hai phương pháp của cùng một mô hình}
+\caption{Chi phí và độ chính xác (Acc@3) trên cùng tập con, dòng lỗi chuẩn đã sửa; đường nối hai phương pháp của cùng một
+mô hình}
 \label{fig:pareto}
 \end{figure}
 
@@ -133,13 +148,13 @@ GPT-6 luna không hơn).
 
 \subsection{Lỗi thật BugsInPy}
 
-Bảng~\ref{tab:rq3-bip} cho kết quả trên 31 lỗi youtube-dl, ba lần chạy. Mọi lần SemLoc đúng ở hạng 1 đều là dòng LLM tự
-đoán: Acc@1 của SemLoc (\BipAllSemlocPriorAccOneMean\%) bằng đúng Acc@1 của riêng dòng đoán
-(\BipAllLlmGuessAccOneMean\%), trong khi riêng phổ ngữ nghĩa chỉ đạt \BipAllSemlocSpectrumAccOneMean\%, ngang SBFL
-(\BipAllSbflOchiaiAccOneMean\%). LLM + độ phủ đi cùng chiều với kết quả trên SemFault-250 --- Acc@3
-\BipAllLlmCoverageAccThreeMean\% so với \BipAllSemlocPriorAccThreeMean\% --- nhưng với 31 lỗi, khoảng tin cậy của chênh
-lệch [\BipAllLlmCoverageDAccThreeLo; \BipAllLlmCoverageDAccThreeHi] vẫn chứa 0. Chỉ số của chính bộ chạy SemLoc (dòng cuối
-bảng) đo mức nhất quán của LLM với chính nó, không đo khả năng định vị.
+Bảng~\ref{tab:rq3-bip} cho kết quả trên 31 lỗi của một dự án (youtube-dl), ba lần chạy. Theo thiết kế, dòng đầu của SemLoc
+là dòng LLM đoán, nên Acc@1 của SemLoc chính là của dòng đoán (\BipAllLlmGuessAccOneMean\%); riêng phổ ngữ nghĩa chỉ đặt
+đúng \BipAllSemlocSpectrumAccOneMean\% ở hạng 1, gần SBFL (\BipAllSbflOchiaiAccOneMean\%). LLM + độ phủ đi cùng chiều với
+kết quả trên SemFault-250 --- Acc@3 \BipAllLlmCoverageAccThreeMean\% so với \BipAllSemlocPriorAccThreeMean\% --- nhưng với
+31 lỗi, khoảng tin cậy [\BipAllLlmCoverageDAccThreeLo; \BipAllLlmCoverageDAccThreeHi] vẫn chứa 0. ``Lỗi được chạy tới'' là
+các lỗi có kiểm thử thất bại chạy qua một dòng lỗi chuẩn; chỉ số của gói mã công bố (dòng cuối bảng) là hạng của dòng LLM
+đoán, đo mức nhất quán của LLM với chính nó chứ không đo khả năng định vị.
 
 \begin{table}[H]
 \centering
@@ -150,11 +165,12 @@ bảng) đo mức nhất quán của LLM với chính nó, không đo khả năn
 
 \subsection{Đổi tên định danh}
 
-Bảng~\ref{tab:rq3-ren} so sánh từng chương trình với bản đổi tên của nó, theo cặp lần chạy. Dòng LLM đoán gần như không
-đổi (Acc@1 $\Delta$ = \RenRepairedLlmGuessDAccOne{} [\RenRepairedLlmGuessDAccOneLo; \RenRepairedLlmGuessDAccOneHi]), nên
-không có dấu hiệu mô hình đoán nhờ nhớ tên. Ngược lại, phổ vi phạm ràng buộc cần tên có nghĩa: không có điểm thưởng,
-Acc@3 giảm \RenRepairedSemlocNoPriorDAccThree{} điểm. LLM + độ phủ bền hơn hẳn: Acc@3 chỉ đổi
-\RenRepairedLlmCoverageDAccThree{} điểm [\RenRepairedLlmCoverageDAccThreeLo; \RenRepairedLlmCoverageDAccThreeHi].
+Bảng~\ref{tab:rq3-ren} so sánh từng chương trình với bản đổi tên của nó, theo cặp lần chạy (chỉ với Gemini 3.8 Flash). Dòng
+LLM đoán không thay đổi đáng kể (Acc@1 $\Delta$ = \RenRepairedLlmGuessDAccOne{} [\RenRepairedLlmGuessDAccOneLo;
+\RenRepairedLlmGuessDAccOneHi]), nên không có dấu hiệu mô hình đoán nhờ nhớ tên. Ngược lại, phổ vi phạm ràng buộc cần tên
+có nghĩa: không có điểm thưởng, Acc@3 thay đổi \RenRepairedSemlocNoPriorDAccThree{} điểm. LLM + độ phủ không thay đổi
+đáng kể: Acc@3 $\Delta$ = \RenRepairedLlmCoverageDAccThree{} [\RenRepairedLlmCoverageDAccThreeLo;
+\RenRepairedLlmCoverageDAccThreeHi].
 
 \begin{table}[H]
 \centering
@@ -165,12 +181,13 @@ Acc@3 giảm \RenRepairedSemlocNoPriorDAccThree{} điểm. LLM + độ phủ b�
 
 \subsection{Các họ mô hình}
 
-Bảng~\ref{tab:rq3-ho} chạy SemLoc với năm mô hình trên cùng tập con. Mô hình càng yếu càng dựa vào điểm thưởng cho dòng
-đoán: bỏ điểm thưởng, Acc@1 của Gemini 3.5 Flash-Lite giảm từ \FamRepairedGeminiThreeFiveFlashLiteSemlocAccOneMean\% xuống
+Trên tập con (Bảng~\ref{tab:rq3-ho}, chưa có khoảng tin cậy), mô hình yếu hơn dựa vào điểm thưởng nhiều hơn: bỏ điểm
+thưởng, Acc@1 của Gemini 3.5 Flash-Lite giảm từ \FamRepairedGeminiThreeFiveFlashLiteSemlocAccOneMean\% xuống
 \FamRepairedGeminiThreeFiveFlashLiteSemlocNoPriorAccOneMean\%, của gpt-oss-120b từ
-\FamRepairedGptOssOneTwoZeroBSemlocAccOneMean\% xuống \FamRepairedGptOssOneTwoZeroBSemlocNoPriorAccOneMean\%, trong khi
-Gemini 3.8 Flash gần như không đổi (\FamRepairedGeminiThreeEightFlashSemlocAccOneMean\% so với
-\FamRepairedGeminiThreeEightFlashSemlocNoPriorAccOneMean\%).
+\FamRepairedGptOssOneTwoZeroBSemlocAccOneMean\% xuống \FamRepairedGptOssOneTwoZeroBSemlocNoPriorAccOneMean\%. Với Gemini 3.8
+Flash, tập con gần như không đổi (\FamRepairedGeminiThreeEightFlashSemlocAccOneMean\% so với
+\FamRepairedGeminiThreeEightFlashSemlocNoPriorAccOneMean\%) trong khi trên toàn tập test Acc@1 thay đổi
+\RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm; tập con quá nhỏ để xếp hạng các mô hình theo hiệu ứng này.
 
 \begin{table}[H]
 \centering
@@ -191,13 +208,15 @@ Gemini 3.8 Flash gần như không đổi (\FamRepairedGeminiThreeEightFlashSeml
 \toprule
 Câu hỏi & Trả lời \\
 \midrule
-RQ1 & Tái hiện khớp toàn bộ; nhưng một phần lớn Acc@1 đến từ điểm thưởng ẩn cho dòng LLM đoán, bước kiểm chứng phản
-thực tế không đổi thứ hạng, cách chấm của tác giả lạc quan với gỡ lỗi chia đôi và bi quan với SBFL, và lỗi của bộ dữ
-liệu làm các phương pháp dùng LLM bị đánh giá thấp. \\
-RQ2 & CovGate giúp nhỏ ở top-3. Một prompt có độ phủ vượt cả pipeline ở Acc@1 lẫn Acc@3 với chi phí thấp hơn nhiều.
-Hạng 1 chủ yếu là ``guessed'', top-3 chủ yếu là ``grounded''. \\
-RQ3 & Trên lỗi thật, mọi lần SemLoc đúng ở hạng 1 là dòng đoán; đổi tên làm yếu phổ ràng buộc nhưng không làm yếu dòng
-đoán hay LLM + độ phủ; mô hình yếu dựa vào dòng đoán nhiều hơn. \\
+RQ1 & Tính lại từ nhật ký khớp toàn bộ, chạy lại thì không; điểm thưởng ẩn quyết định dòng đầu; bước kiểm chứng phản
+thực tế không đổi thứ hạng; mã chấm điểm lạc quan với gỡ lỗi chia đôi và bi quan với SBFL; lỗi của bộ dữ liệu làm thay
+đổi đáng kể các con số. \\
+RQ2 & Trên lỗi được chạy tới, một prompt có bằng chứng thực thi vượt quy trình nhiều bước ở Acc@3 với chi phí thấp hơn
+nhiều; trên toàn bộ nhãn gốc mức hơn nhỏ lại và SemLoc tốt hơn ở Acc@5. CovGate giúp ít. Hạng 1 là ``guessed'' theo
+thiết kế, top-3 là nơi bằng chứng thực thi có tác dụng. \\
+RQ3 & Trên 31 lỗi thật, kết quả cùng chiều nhưng chưa đủ mẫu; đổi tên làm yếu phổ ràng buộc nhưng không làm thay đổi
+đáng kể dòng đoán hay LLM + độ phủ (một mô hình); mô hình yếu dựa vào dòng đoán nhiều hơn (tập con, chưa có khoảng tin
+cậy). \\
 \bottomrule
 \end{tabularx}
 \end{table}

@@ -95,7 +95,8 @@ def all_specs() -> list[Spec]:
     specs += table_specs("tol", DATA / "failure_tolerance.csv", ["method"],
                          {"acc1_exact": "pct", "acc1_guard_strict": "pct", "acc1_guard_or_body": "pct"})
     specs += table_specs("off", DATA / "failure_offsets.csv", ["method", "offset"], {"count": "int"})
-    specs += table_specs("pareto", DATA / "pareto.csv", ["method", "model"], {"acc3": "pct", "tokens_per_program": "k"})
+    specs += table_specs("pareto", DATA / "pareto.csv", ["method", "model"],
+                         {"acc1": "pct", "acc3": "pct", "tokens_per_program": "k", "n": "int"})
     return specs
 
 
@@ -110,7 +111,10 @@ def computed() -> dict[str, str]:
     spec.loader.exec_module(ce)
     lams = sorted({g["lam"] for g in ce.GRID})
     out[macro_name("const", "lambda", "grid")] = "; ".join(f"{x:g}" for x in lams)   # rendered with commas in -vi
-    out[macro_name("const", "temperature")] = "0.8"   # scripts/run_matrix.sh: every SemLoc repeat runs at T = 0.8
+    out[macro_name("const", "temperature")] = "0.8"
+    from flx.params import chosen_params
+    for g in ("original", "repaired"):
+        out[macro_name("const", "lambda", g)] = f"{chosen_params(g)['lam']:g}"   # dev-chosen CovGate weight   # scripts/run_matrix.sh: every SemLoc repeat runs at T = 0.8
     verified = json.loads((DATA / "semfault_verified_gt.json").read_text())
     for status in ("confirmed", "corrected", "unverified", "unverifiable"):
         out[macro_name("gt", status, "n")] = str(sum(r["status"] == status for r in verified))
@@ -135,6 +139,24 @@ def computed() -> dict[str, str]:
     for rel in sorted({r["guess_relation"] for r in sig}):
         out[macro_name("fail", "relation", rel, "n")] = str(sum(r["guess_relation"] == rel and r["category"] != "guess_right"
                                                                for r in sig))
+    # RQ1b: SemLoc re-executed with the paper's own model (Claude Sonnet 4.6) on the dev split vs the published log
+    spec2 = importlib.util.spec_from_file_location("rq3_families", ROOT / "scripts" / "rq3_families.py")
+    fam = importlib.util.module_from_spec(spec2)
+    spec2.loader.exec_module(fam)
+    from flx.ranking import metrics as _metrics
+    from flx._semloc import SEMLOC_ROOT
+    dev = json.loads((DATA / "split.json").read_text())["dev"]
+    gt0 = v["original"]
+    for name, run in (("rerun", ROOT / "runs" / "semloc_dev_claude46_r1"),
+                      ("published", SEMLOC_ROOT / "results" / "RQ1" / "semloc_claude_T0.8")):
+        if (run / "scores").exists():
+            m = _metrics(fam.run_ranks(run, gt0, dev, "semloc"), dev)
+            for k in ("acc1", "acc3", "acc5"):
+                out[macro_name("rep", "claude", "dev", name, k)] = f"{100 * m[k]:.1f}"
+    offs = _rows(DATA / "failure_offsets.csv")
+    guesses = sum(int(r["count"]) for r in offs if r["method"] == "llm_guess")
+    out[macro_name("off", "llm", "guess", "total")] = str(guesses)
+    out[macro_name("off", "llm", "guess", "missing")] = str(len(sig) * 3 - guesses)   # program-repeat pairs with no guess
     cost = _rows(DATA / "llm_cost.csv")
     sem = [r for r in cost if r["run_id"].startswith("semloc_test_gemini_r")]
     out[macro_name("cost", "cf", "share", "pct")] = f"{100 * sum(int(r['calls_t0']) for r in sem) / sum(int(r['calls']) for r in sem):.0f}"

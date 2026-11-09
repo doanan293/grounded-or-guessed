@@ -13,7 +13,7 @@ Toàn bộ mã nguồn, dữ liệu dẫn xuất và hướng dẫn nằm tại 
 và \texttt{python scripts/make\_numbers.py}.
 \item \textbf{Mức 1} --- sinh lại mọi tệp CSV từ gói kết quả các lượt chạy: giải nén gói rồi chạy
 \texttt{scripts/regenerate\_all.sh}; trong Docker, các tệp CSV và bảng sinh ra trùng từng byte với bản đã công bố.
-\item \textbf{Mức 2} --- chạy lại chính SemLoc và các baseline, phát lại mọi câu trả lời LLM từ bộ đệm, không gọi mạng
+\item \textbf{Mức 2} --- chạy lại chính SemLoc và các phương pháp đối chứng, phát lại mọi câu trả lời LLM từ bộ đệm, không gọi mạng
 (\texttt{FLX\_LLM\_OFFLINE=1}).
 \item \textbf{Mức 3} --- chạy mới qua một điểm cuối LLM tương thích OpenAI, với mã lượt chạy mới.
 \end{enumerate}
@@ -37,7 +37,7 @@ cập hay địa chỉ thư điện tử.
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq_decomposition_published}}
 \end{table}
 
-\subsection{Prompt của baseline LLM + độ phủ}
+\subsection{Prompt của phương pháp đối chứng LLM + độ phủ}
 
 Mỗi dòng mã được chú thích \texttt{[f=<số kiểm thử thất bại chạy qua>/p=<số kiểm thử thành công chạy qua>]}; thông điệp
 hệ thống yêu cầu trả lời đúng định dạng JSON:
