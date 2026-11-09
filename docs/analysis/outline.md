@@ -125,5 +125,8 @@ các cách bổ sung (độ phủ, CovGate, kiểm chứng, biểu quyết, ruff
 ## D. Điểm cần chủ dự án quyết
 1. Duyệt câu chuyện và thông điệp một câu ở trên.
 2. Giữ CovGate trong bài như **một trong các cách bổ sung** (không còn là "cải tiến chính") — đề xuất: giữ.
-3. Kinh nghiệm dùng cách đơn giản ở công ty chủ dự án: chỉ dùng làm động lực ở phần mở đầu (không nêu tên công ty,
-   không dùng làm bằng chứng) — đề xuất: viết chung "trong thực tế phát triển phần mềm".
+3. Kinh nghiệm dùng cách đơn giản ở công ty chủ dự án: chỉ dùng làm động lực, không nêu tên công ty — **đã duyệt 09/11**;
+   câu "trong thực tế phát triển phần mềm" được chống lưng bằng tài liệu trong `docs/literature/practice-evidence.md`
+   (khảo sát Stack Overflow / JetBrains 2025, DevGPT, Wu et al. 2023, AutoFL, Agentless, Qi 2015, Smith 2015,
+   Northcutt 2021, Parnin & Orso 2011, Kochhar 2016, Beck 2003).
+2'. CovGate giữ, hạ thành một trong các cách bổ sung — **đã duyệt 09/11**.
