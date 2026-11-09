@@ -17,6 +17,7 @@ from flx.coverage import load
 from flx.covgate import covgate_scores, semloc_attribute
 from flx.gt import load_variants
 from flx.params import chosen_params
+from flx.workdir import program_source
 from flx.labels import labels_for
 from flx.ranking import mean_rr, metrics, rank_of
 from flx.sbfl import sbfl_scores
@@ -45,7 +46,7 @@ def semloc_variants(run: Path, gt: dict, progs: list[str], params: dict) -> dict
         sem, cov = json.loads(f.read_text()), load(COV / f"{p}.json")
         cfp = run / "refined_base_cf" / f"{p}.json"
         cf = json.loads(cfp.read_text()) if cfp.exists() else None
-        attr = semloc_attribute(run / "constraints" / f"{p}.json", run / "programs" / f"{p}.py")
+        attr = semloc_attribute(run / "constraints" / f"{p}.json", program_source(run, p))
         base = {"gate": False, "lam": 0.0, "no_prior": False}
         prm = dict(params)  # every dev-chosen knob, grounded_prior included
         out["semloc"][p] = rank_of(covgate_scores(sem, cov, **base), gt[p])

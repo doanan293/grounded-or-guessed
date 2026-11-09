@@ -37,6 +37,7 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setenv("FLX_LLM_LOG", str(tmp_path / "log.jsonl"))
     monkeypatch.setenv("FLX_RUN_ID", "default")
     monkeypatch.delenv("FLX_LLM_CACHE", raising=False)
+    monkeypatch.delenv("FLX_LLM_OFFLINE", raising=False)  # the Docker image sets it; these tests use a fake client
     monkeypatch.setattr(llm_gateway.time, "sleep", lambda s: None)
     return tmp_path
 

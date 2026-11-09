@@ -23,6 +23,15 @@ def split_of(run: str) -> str:
     return "?"
 
 
+def split_size(split: str) -> int | None:
+    """Programs a run of this split must cover (from the split definitions, not from a workdir)."""
+    d = ROOT / "data"
+    return {"test": 200, "dev": len(json.loads((d / "split.json").read_text())["dev"]),
+            "subset50": len(json.loads((d / "subset50.json").read_text())["programs"]),
+            "bugsinpy": len(json.loads((d / "bugsinpy_targets.json").read_text())),
+            "renamed-test": len(json.loads((d / "renamed" / "test_programs.json").read_text()))}.get(split)
+
+
 def main() -> None:
     costs = run_costs(LOG)
     models = {}
@@ -34,15 +43,14 @@ def main() -> None:
         models.setdefault(r.get("run_id"), r.get("served_model") or r.get("model"))
     rows = []
     for wd in sorted((ROOT / "runs").glob("semloc_*_r[0-9]")):
-        n = len(list((wd / "programs").glob("*.py"))) if (wd / "programs").exists() else None
+        n = split_size(split_of(wd.name))
         h = health(wd, wd.name, LOG)
         rows.append({"run_id": wd.name, "kind": "semloc", "split": split_of(wd.name), "n": n,
                      "finished": (wd / "results_cf_base" / "summary.json").exists(), "healthy": h["healthy"]})
     for f in sorted([*(ROOT / "data" / "rankings").glob("direct*_r[0-9].json"), *(ROOT / "runs").glob("direct*_r[0-9].json")]):
         if any(r["run_id"] == f.stem for r in rows):
             continue
-        n = {"test": 200, "subset50": 50, "bugsinpy": len(json.loads((ROOT / "data" / "bugsinpy_targets.json").read_text())),
-             "renamed-test": len(json.loads((ROOT / "data" / "renamed" / "test_programs.json").read_text()))}.get(split_of(f.stem))
+        n = split_size(split_of(f.stem))
         done = len(json.loads(f.read_text()))
         rows.append({"run_id": f.stem, "kind": "single_prompt", "split": split_of(f.stem), "n": n,
                      "finished": done == n, "healthy": done == n})

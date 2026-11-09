@@ -13,6 +13,7 @@ from flx.coverage import load as load_cov
 from flx.covgate import covgate_scores, semloc_attribute
 from flx.gt import load_variants
 from flx.params import chosen_params  # noqa: F401 (re-exported for pareto_data)
+from flx.workdir import program_source
 from flx.ranking import metrics, rank_of
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,7 +55,7 @@ def run_ranks(run: Path, gt: dict, progs: list[str], method: str = "semloc", par
                 fp = sem.get("fault_line_pred")
                 out[p] = rank_of({fp: 1.0} if isinstance(fp, int) else {}, gt[p])
                 continue
-            attr = (semloc_attribute(run / "constraints" / f"{p}.json", run / "programs" / f"{p}.py")
+            attr = (semloc_attribute(run / "constraints" / f"{p}.json", program_source(run, p))
                     if opts.get("grounded_prior") else None)
             out[p] = rank_of(covgate_scores(sem, load_cov(COV / f"{p}.json"), **opts, attribute=attr), gt[p])
     return out
