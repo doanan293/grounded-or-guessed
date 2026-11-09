@@ -53,11 +53,13 @@ def main() -> None:
         for m in per:
             per[m].append(ranks[m])
     # baseline 2b (LLM + coverage), one ranking file per repeat; used only when every repeat covers every bug
-    files = [ROOT / "data" / "rankings" / f"direct_cov_bip_gemini_r{i}.json" for i in range(1, len(runs) + 1)]
-    preds = [json.loads(f.read_text()) for f in files if f.exists()]
-    if len(preds) == len(runs) and all(set(bugs) <= set(p) for p in preds):
-        per["llm_coverage"] = [{b: next((k + 1.0 for k, ln in enumerate(p[b]) if ln in targets[b]["faulty_lines"]), None)
-                                for b in bugs} for p in preds]
+    # and its ablation without coverage (LLM + failing tests); same rule
+    for name, prefix in (("llm_tests", "direct_tests_bip_gemini_r"), ("llm_coverage", "direct_cov_bip_gemini_r")):
+        files = [ROOT / "data" / "rankings" / f"{prefix}{i}.json" for i in range(1, len(runs) + 1)]
+        preds = [json.loads(f.read_text()) for f in files if f.exists()]
+        if len(preds) == len(runs) and all(set(bugs) <= set(p) for p in preds):
+            per[name] = [{b: next((k + 1.0 for k, ln in enumerate(p[b]) if ln in targets[b]["faulty_lines"]), None)
+                          for b in bugs} for p in preds]
     rows = []
     for subset, progs in (("all", bugs), ("reached", reached)):
         for m, lst in per.items():

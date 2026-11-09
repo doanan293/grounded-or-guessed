@@ -114,12 +114,12 @@ def bip_failing_tests(tgt: dict) -> list[dict]:
     return parse_failed(p.stdout, {junit_id(t) for t in tgt["tests"]})
 
 
-def run_bip(tgt: dict, cov: dict, model: str) -> list[int]:
+def run_bip(tgt: dict, cov: dict, model: str, coverage: bool = True) -> list[int]:
     """Baseline 2b on a BugsInPy target: the target function (absolute line numbers) + coverage + failing tests."""
     from flx.bip import BIP
     from flx.llm_gateway import chat
     lines = (BIP / "checkouts" / tgt["bug"] / tgt["file"]).read_text().splitlines()
     src = "\n".join(lines[tgt["fn_start"] - 1: tgt["fn_end"]]) + "\n"
-    text = chat(model, SYSTEM, build_prompt(src, bip_failing_tests(tgt), cov, first_line=tgt["fn_start"]),
+    text = chat(model, SYSTEM, build_prompt(src, bip_failing_tests(tgt), cov, first_line=tgt["fn_start"], coverage=coverage),
                 temperature=0.8)
     return parse_ranking(text)
