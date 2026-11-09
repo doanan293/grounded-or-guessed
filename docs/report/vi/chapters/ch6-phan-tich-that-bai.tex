@@ -90,8 +90,9 @@ Bộ phán định sửa tối thiểu của nhóm (mục~\ref{sec:du-lieu}) ch�
 bằng \texttt{norm = \_compute\_global\_norm(gradients) - 1}, trong khi lỗi thật là \texttt{max\_norm / (norm + 1)} ở dòng
 mà LLM chỉ cả ba lần. Ở \texttt{energy\_window\_avg}, bộ phán định ``xác nhận'' bằng cách thay một lời gọi ghi log bằng một phép gán.
 Ở các khối lỗi nhiều dòng, bộ phán định ``xác nhận'' bằng cách làm điều kiện luôn sai. Các bản sửa đặt trên dòng trống đã bị
-loại khỏi bộ dòng lỗi chuẩn đã sửa (\GtBlankFixDroppedN{} chương trình); bản sửa bù trừ trên dòng có mã thì chưa phát
-hiện tự động được.
+loại khỏi bộ dòng lỗi chuẩn đã sửa (\GtBlankFixDroppedN{} chương trình); bản sửa bù trừ trên dòng có mã thì không phát
+hiện tự động được, nhưng vòng rà soát (mục~\ref{sec:du-lieu}) đã bác \ReviewCorrectedOverturnedN{} trong
+\GtCorrectedN{} lần bộ phán định dời nhãn.
 
 \subsection{Nguyên nhân và triệu chứng trên cùng luồng dữ liệu}
 
@@ -119,7 +120,35 @@ thiếu là một cách đánh giá chấp nhận các vị trí sửa tương �
 \subsection{Khi nào bằng chứng thực thi có ích}
 
 Bằng chứng thực thi có ích rõ ràng ở top-3: phổ vi phạm đưa dòng lỗi vào ba dòng đầu ở \FailRescuedBySpectrumN{} chương
-trình mà dòng đoán sai, và bằng chứng độ phủ đưa thẳng cho LLM còn mạnh hơn (\FailCoverageOnlyWinsN{} chương trình SemLoc
-trượt top-3 nhưng LLM + độ phủ trúng). Nó không giúp phân biệt một dòng đoán đúng với một dòng đoán sai ở hạng 1
-(mục~\ref{sec:rq2}). Bài học cho thiết kế công cụ: dùng bằng chứng thực thi để \emph{thu hẹp} vùng nghi ngờ và đưa nó
-thẳng cho LLM, thay vì để LLM đoán rồi cộng điểm thưởng.
+trình mà dòng đoán sai, và bằng chứng đưa thẳng cho LLM còn mạnh hơn (\FailCoverageOnlyWinsN{} chương trình SemLoc trượt
+top-3 nhưng phương pháp một prompt trúng). Ablation ở mục~\ref{sec:rq2} cho biết phần ``bằng chứng'' có ích là kiểm thử
+thất bại, không phải độ phủ. Bằng chứng không giúp phân biệt một dòng đoán đúng với một dòng đoán sai ở hạng 1. Bài học
+cho thiết kế công cụ: đưa thẳng kiểm thử thất bại cho LLM, thay vì để LLM đoán rồi cộng điểm thưởng.
+
+\subsection{Vì sao kiểm thử không làm trọng tài tốt cho vị trí lỗi}
+
+Ba hiện tượng trong tiểu luận có chung một nguyên nhân. Bước vá thử của SemLoc không đổi thứ hạng nào; bộ phán định sửa
+tối thiểu dời nhầm \ReviewCorrectedOverturnedN{} nhãn; và ``đề xuất rồi kiểm chứng'' không cải thiện được bước đề xuất. Cả
+ba dùng cùng một tiêu chí: \emph{một bản sửa nhỏ tại dòng này làm mọi kiểm thử đạt}. Với khoảng mười kiểm thử mỗi chương
+trình, tiêu chí này thỏa được ở \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi --- thường bằng cách đổi
+một hằng số hay thêm một phép trừ để bù cho phép tính sai ở chỗ khác --- trong khi chỉ thỏa được ở
+\PavmechReviewedFaultLineFixable\% lần thử tại dòng lỗi thật, vì lỗi hai dòng, lỗi thiếu mã hay lỗi cần sửa nhiều từ tố
+không sửa được bằng một thay đổi nhỏ trên một dòng. Đây đúng là hiện tượng ``bản vá hợp lệ bề
+ngoài''~\cite{qi2015kali,smith2015cure} của sửa lỗi tự động, nhìn từ phía định vị lỗi: bộ kiểm thử đủ để \emph{gợi ý} lỗi
+nằm ở đâu, nhưng quá yếu để \emph{chứng minh} lỗi nằm ở đâu.
+
+\subsection{Bộ dữ liệu bão hòa khi nhãn đúng}
+
+Trên nhãn đã rà soát, một prompt có kiểm thử thất bại đạt Acc@3 \RqTwoReviewedAllLlmTestsAccThreeMean\%. Ba đặc điểm của
+SemFault-250 giải thích điều này: chương trình là một hàm ngắn mà phần tính toán thật chỉ vài dòng; lỗi được tiêm bằng
+một thay đổi nhỏ (đổi phép so sánh, thêm \texttt{- 1}, đảo điều kiện); và tên kiểm thử mô tả gần như trực tiếp ý định bị
+vi phạm (ví dụ \texttt{test\_fee\_deducted\_once\_not\_per\_participant}). Hệ quả là trên bộ dữ liệu này không còn đủ
+khoảng trống để chứng minh một phương pháp phức tạp hơn là cần thiết; ``độ khó'' trong bài báo gốc phần lớn đến từ nhãn
+lệch. Trên lỗi thật (mục~\ref{sec:rq3}), mọi phương pháp còn xa trần.
+
+\subsection{Hàm ý cho công cụ trong thực tế}
+
+Các trợ lý và tác tử AI sửa lỗi --- chạy trên máy cá nhân hay trong CI --- thường dừng khi bản sửa làm kiểm thử đạt. Kết quả
+trên gợi ý thận trọng: trên một bộ kiểm thử cỡ mười ca, khoảng một phần tư số dòng không có lỗi vẫn ``sửa được'', nên một
+bản sửa vượt kiểm thử cần được người xem lại, hoặc cần kiểm thử chặt hơn trước khi coi là đúng. Ngược lại, thông tin đáng
+đầu tư nhất cho định vị lỗi là kiểm thử viết rõ ý định --- đúng thứ phát triển hướng kiểm thử tạo ra.

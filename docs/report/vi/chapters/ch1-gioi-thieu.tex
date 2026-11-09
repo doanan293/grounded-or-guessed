@@ -4,86 +4,90 @@
 \section{Đặt vấn đề}
 \label{sec:dat-van-de}
 
-Định vị lỗi là bước tốn công nhất của gỡ lỗi: khi một bộ kiểm thử báo thất bại, lập trình viên phải tìm ra dòng mã gây
-lỗi trong hàng trăm dòng có liên quan. Họ phương pháp được dùng rộng rãi nhất là định vị lỗi dựa trên phổ độ phủ
-(SBFL)~\cite{jones2002,abreu2009,wong2016survey}: một dòng càng hay được các kiểm thử thất bại chạy qua và càng ít được
-các kiểm thử thành công chạy qua thì càng đáng nghi. Cách làm này rẻ, không cần hiểu ngữ nghĩa chương trình, và hoạt
-động tốt khi lỗi làm thay đổi đường thực thi.
+Định vị lỗi là bước tốn công nhất của gỡ lỗi: khi chạy kiểm thử thấy thất bại --- trên máy cá nhân hay trên hệ thống
+tích hợp liên tục (CI) --- lập trình viên phải tìm ra dòng mã gây lỗi trong hàng trăm dòng có liên quan. Các công cụ
+phân tích tĩnh thông dụng như trình kiểm tra phong cách mã (lint) hay trình kiểm tra kiểu không giúp được ở bước này
+khi lỗi nằm ở logic: mã vẫn đúng cú pháp, đúng kiểu, chỉ cho ra kết quả sai. Thông tin duy nhất chỉ ra lỗi là chính
+các kiểm thử thất bại --- và với cách phát triển hướng kiểm thử (TDD)~\cite{beck2003tdd}, các kiểm thử đó được viết ra
+trước, mô tả ý định của mã.
 
-Với \emph{lỗi ngữ nghĩa} --- chương trình chạy đúng đường nhưng tính sai giá trị, ví dụ một phép so sánh lệch biên hay
-một hằng số trừ thừa một đơn vị --- kiểm thử thành công và thất bại thường chạy qua cùng một tập dòng. Phổ độ phủ khi
-đó gần như không phân biệt được dòng lỗi với các dòng xung quanh. Trên bộ dữ liệu SemFault-250, SBFL theo công thức
-Ochiai chỉ đặt đúng dòng lỗi ở hạng 1 trong \RqOneSbflOchiaiFairAllAccOne\% số chương trình khi được chấm công bằng
-(Chương~\ref{chap:ket-qua}).
+Trợ lý AI đã trở thành công cụ hằng ngày của lập trình viên: các khảo sát lớn năm 2025 cho thấy phần lớn lập trình viên
+đang dùng hoặc định dùng chúng~\cite{stackoverflow2025,jetbrains2025}, và gỡ lỗi là một trong các việc họ thường đem
+hỏi~\cite{xiao2024devgpt}. Nghiên cứu cũng cho thấy đưa thông tin lỗi cho LLM giúp nó định vị lỗi tốt hơn
+hẳn~\cite{wu2023llmfl,kang2024autofl}. Cách làm thực tế vì vậy rất đơn giản: chạy kiểm thử, đưa kết quả thất bại cho LLM,
+hỏi dòng nào sai.
 
-Mô hình ngôn ngữ lớn (LLM) mở ra hướng ngược lại: đọc mã nguồn, hiểu ý đồ và đoán dòng sai. Các hệ thống định vị lỗi
-dựa trên LLM như AutoFL~\cite{kang2024autofl}, AgentFL~\cite{qin2025agentfl} hay FlexFL~\cite{xu2025flexfl} cho kết quả
-ấn tượng, nhưng câu trả lời của LLM mang tính ngẫu nhiên, khó kiểm chứng và có thể chịu ảnh hưởng của việc mô hình đã
-thấy dữ liệu đánh giá khi huấn luyện~\cite{sallou2024,ramos2024memorize}.
+Họ phương pháp kinh điển là định vị lỗi dựa trên phổ độ phủ (SBFL)~\cite{jones2002,abreu2009,wong2016survey}: một dòng
+càng hay được các kiểm thử thất bại chạy qua và càng ít được các kiểm thử thành công chạy qua thì càng đáng nghi. Với
+\emph{lỗi ngữ nghĩa} --- chương trình chạy đúng đường nhưng tính sai giá trị --- hai loại kiểm thử thường chạy qua cùng
+một tập dòng, và SBFL gần như mất tín hiệu.
 
-SemLoc~\cite{yang2026semloc} --- bài báo trung tâm trong ba bài được giảng viên giao --- đề xuất một cách dung hòa: bắt
-LLM viết ra các \emph{ràng buộc ngữ nghĩa có thể thực thi}, chèn chúng vào chương trình, chạy kiểm thử, rồi dùng phổ
-vi phạm ràng buộc để xếp hạng dòng. Ý tưởng cốt lõi là \emph{neo lập luận của LLM vào bằng chứng thực thi}
-(structured grounding): LLM đưa giả thuyết, còn kết quả chạy chương trình mới quyết định. SemLoc báo cáo Acc@1
-\RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% trên SemFault-250, vượt xa SBFL.
+SemLoc~\cite{yang2026semloc} --- bài báo trung tâm trong ba bài được giảng viên giao --- đề xuất một quy trình nhiều bước
+cho lỗi ngữ nghĩa: LLM viết ra các ràng buộc ngữ nghĩa thực thi được, ràng buộc được chèn vào chương trình, kiểm thử
+được chạy để lấy phổ vi phạm, rồi LLM vá thử các dòng nghi ngờ để kiểm chứng. Bài báo tuyên bố độ chính xác đến từ việc
+\emph{neo lập luận của LLM vào bằng chứng thực thi} (structured grounding) và báo cáo Acc@1
+\RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% trên bộ dữ liệu SemFault-250. Câu hỏi tự nhiên với người làm phần mềm là:
+\textbf{quy trình phức tạp đó có thật sự cần không, khi so với cách đơn giản mà lập trình viên vẫn làm?}
 
 \section{Câu hỏi nghiên cứu}
 \label{sec:cau-hoi}
 
-Tiểu luận đặt một câu hỏi đơn giản cho SemLoc: \textbf{độ chính xác của nó đến từ bằng chứng thực thi (``grounded'')
-hay từ việc LLM đoán (``guessed'')?} Câu hỏi này được tách thành ba câu hỏi nghiên cứu:
+Tiểu luận đặt câu hỏi ``grounded hay guessed?'' cho SemLoc --- độ chính xác đến từ bằng chứng thực thi hay từ việc LLM
+đoán --- và tách thành ba câu hỏi nghiên cứu:
 
 \begin{itemize}
 \item \textbf{RQ1 -- Tái hiện và kiểm tra cách đánh giá.} Kết quả công bố của SemLoc có tái hiện được không, và còn
-đứng vững khi chấm điểm công bằng, khi bỏ các thành phần không được mô tả trong bài báo, khi sửa các dòng lỗi chuẩn
-(ground truth) sai của bộ dữ liệu?
-\item \textbf{RQ2 -- Cải tiến và đối chứng.} Bổ sung tín hiệu độ phủ vào SemLoc (cải tiến CovGate) có làm tốt hơn
-không, và một prompt duy nhất chứa bằng chứng thực thi --- kiểm thử thất bại và độ phủ (LLM + độ phủ) --- so với toàn bộ quy trình nhiều bước của SemLoc thì sao, về cả
-độ chính xác lẫn chi phí?
-\item \textbf{RQ3 -- Độ bền.} Các kết luận trên có giữ được trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã
-đổi tên định danh (kiểm tra việc LLM ghi nhớ bộ dữ liệu) và trên năm họ mô hình khác nhau không?
+đứng vững khi chấm điểm công bằng, khi bỏ các thành phần không được mô tả trong bài báo, và khi kiểm tra lại chính các
+dòng lỗi chuẩn (nhãn) của bộ dữ liệu?
+\item \textbf{RQ2 -- LLM thật sự cần gì?} Một prompt duy nhất có kiểm thử thất bại so với quy trình nhiều bước của
+SemLoc thì sao, về độ chính xác và chi phí? Thông tin nào trong prompt tạo ra khác biệt (kiểm thử thất bại hay độ phủ
+từng dòng)? Các cách bổ sung --- gắn độ phủ vào SemLoc (CovGate), kiểm chứng dòng nghi ngờ bằng bản sửa và kiểm thử,
+biểu quyết nhiều câu trả lời --- và các công cụ phân tích tĩnh có thêm được gì không?
+\item \textbf{RQ3 -- Độ bền.} Các kết luận có giữ được trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã đổi tên
+định danh, trên năm họ mô hình, và trên cả ba bộ nhãn (gốc, đã sửa, đã rà soát) không?
 \end{itemize}
 
 \section{Đóng góp chính}
 \label{sec:dong-gop-tom-tat}
 
-Tiểu luận có các đóng góp sau; mỗi đóng góp gắn với số liệu được sinh tự động từ mã nguồn công khai.
+Mỗi đóng góp dưới đây gắn với số liệu được sinh tự động từ mã nguồn công khai.
 
 \begin{enumerate}
-\item \textbf{Đo phần ``grounded'' và phần ``guessed''.} Mã nguồn công bố cộng cho dòng LLM tự đoán một điểm thưởng
-lớn hơn mọi điểm ràng buộc, nên dòng đầu tiên của SemLoc \emph{luôn} là dòng LLM đoán: Acc@1 của SemLoc
-(\RqTwoRepairedAllSemlocAccOneMean\%) chính là của dòng đoán, còn riêng phổ vi phạm ràng buộc chỉ đạt
-\RqTwoRepairedAllSemlocNoPriorAccOneMean\%. Bằng chứng thực thi phát huy ở top-3: nó nâng Acc@3 từ
-\RqTwoRepairedAllSemlocAccOneMean\% (chỉ dòng đoán) lên \RqTwoRepairedAllSemlocAccThreeMean\%.
-\item \textbf{Một prompt có bằng chứng thực thi vượt quy trình nhiều bước trên các lỗi được chạy tới.} Phương pháp đối
-chứng LLM + độ phủ do nhóm thiết kế (một lượt gọi, có tên kiểm thử thất bại, thông báo lỗi và độ phủ từng dòng) hơn
-SemLoc \RqTwoOriginalExecutableLlmCoverageDAccThree{} điểm Acc@3 trên các lỗi mà kiểm thử thất bại chạy tới (bộ dòng lỗi
-chuẩn gốc), tốn ít token hơn khoảng năm lần và không thay đổi đáng kể khi đổi tên định danh; trên toàn bộ nhãn gốc, gồm
-cả lỗi không kiểm thử nào chạy tới, mức hơn chỉ còn \RqTwoOriginalAllLlmCoverageDAccThree{} điểm và SemLoc tốt hơn ở Acc@5.
-\item \textbf{Kiểm tra cách đánh giá.} Tính lại khớp toàn bộ cấu hình từ nhật ký công bố, nhưng chỉ ra điểm thưởng ẩn
-cho dòng LLM đoán, bước kiểm chứng phản thực tế không làm thay đổi thứ hạng nào, mã chấm điểm cho gỡ lỗi chia đôi
-\RqOneDdAuthorAllAccOne\% trong khi bài báo ghi 0, hai lỗi trong bộ chạy BugsInPy, và chạy lại với chính mô hình của bài
-báo không đạt con số trong nhật ký.
-\item \textbf{SemFault-250 đã sửa.} Dòng lỗi chuẩn được kiểm chứng lại bằng thực thi: \GtConfirmedN{} được xác nhận,
-\GtCorrectedN{} được sửa vị trí, \GtUnverifiedN{} chưa kiểm chứng được và giữ nhãn gốc; \GtBlankN{} dòng chuẩn gốc là
-dòng trống.
-\item \textbf{CovGate}, một bước phá hòa bằng Ochiai cho SemLoc với mức tăng nhỏ ở top-3, cùng bảng kiểm tra đánh giá
-bảy mục áp dụng cho mọi phương pháp.
+\item \textbf{Hạng 1 của SemLoc là dòng LLM đoán.} Mã nguồn công bố cộng cho dòng LLM tự đoán một điểm thưởng lớn hơn
+mọi điểm ràng buộc --- chi tiết không có trong bài báo --- nên dòng đầu tiên của SemLoc \emph{luôn} là dòng đoán. Bỏ
+điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã sửa và
+\RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã rà soát. Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM
+nhưng không đổi thứ hạng nào.
+\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
+bị dời khi rà soát (\LabaudAllBlank{} nằm trên dòng trống, \LabaudAllOffByOne{} lệch một dòng). Nhóm công bố hai bộ nhãn
+mới: \emph{đã sửa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt). Nhãn sai vô tình
+có lợi cho SemLoc: trên nhãn đã rà soát, phần hơn của SemLoc so với LLM hỏi thẳng ở Acc@3 biến mất.
+\item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất --- một lượt gọi
+LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi --- hơn SemLoc \RqTwoRepairedAllLlmTestsDAccOne{} điểm Acc@1
+và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã sửa, thắng ở Acc@1 trên cả ba bộ nhãn, và tốn
+\CostLlmTestsTokensK{} nghìn token mỗi chương trình so với \CostSemlocTokensK{} nghìn của SemLoc.
+\item \textbf{Thêm phức tạp không thêm được gì --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
+(Acc@3 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM hỏi thẳng), còn thêm độ phủ từng dòng làm Acc@1 đổi
+\AblRepairedAllCoverageEffectDAccOne{} điểm. CovGate, kiểm chứng dòng nghi ngờ bằng bản sửa và biểu quyết đều không
+cải thiện được prompt đơn giản; công cụ phân tích tĩnh (ruff, pyrefly) gần như không trúng dòng lỗi. Nguyên nhân chung:
+kiểm thử của bộ dữ liệu đủ để \emph{gợi ý} lỗi nhưng quá yếu để \emph{làm trọng tài} --- bản sửa nhỏ làm mọi kiểm thử
+đạt ở \PavmechReviewedOtherLineFixable\% lần thử trên dòng không có lỗi.
+\item \textbf{Bảng kiểm tra bảy mục} cho đánh giá định vị lỗi bằng LLM, áp cho mọi phương pháp trong bài, và một gói tái
+hiện (Docker, nhật ký và bộ đệm lượt gọi LLM, mọi con số sinh tự động).
 \end{enumerate}
 
-\IfAtLeast{lan2}{Ngoài ra, phân tích thất bại (Chương~\ref{chap:that-bai}) cho thấy độ chính xác cấp dòng phụ thuộc
-mạnh vào việc dòng lỗi chuẩn được gán ở dòng điều kiện hay ở câu lệnh mà điều kiện đó bảo vệ, và Chương~\ref{chap:dong-gop}
-trình bày quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ của kết quả.}
+\IfAtLeast{lan2}{Chương~\ref{chap:that-bai} phân tích các ca thất bại và cơ chế khiến kiểm thử không làm được trọng tài;
+Chương~\ref{chap:dong-gop} trình bày quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ của kết quả.}
 
 \section{Cấu trúc báo cáo}
 \label{sec:cau-truc}
 
 Chương~\ref{chap:tong-quan} tổng quan tài liệu và bộ từ khóa, trong đó phân tích ba bài báo được giao.
-Chương~\ref{chap:co-so} trình bày cơ sở lý thuyết về SBFL, lỗi ngữ nghĩa, SemLoc và các công cụ thống kê.
-Chương~\ref{chap:phuong-phap} mô tả câu hỏi nghiên cứu, dữ liệu, các phương pháp so sánh và thiết kế thực nghiệm.
-Chương~\ref{chap:ket-qua} trả lời ba câu hỏi nghiên cứu.
+Chương~\ref{chap:co-so} trình bày cơ sở lý thuyết về SBFL, lỗi ngữ nghĩa, SemLoc, phân tích tĩnh và động, và các công cụ
+thống kê. Chương~\ref{chap:phuong-phap} mô tả câu hỏi nghiên cứu, dữ liệu và ba bộ nhãn, các phương pháp so sánh và thiết
+kế thực nghiệm. Chương~\ref{chap:ket-qua} trả lời ba câu hỏi nghiên cứu.
 \IfAtLeast{lan2}{Chương~\ref{chap:that-bai} phân tích các ca thất bại; Chương~\ref{chap:dong-gop} tổng hợp đóng góp,
 triết lý khoa học và các mối đe dọa.}
 Chương~\ref{chap:ket-luan} kết luận và nêu hướng phát triển.
-\IfAtLeast{full}{Phụ lục hướng dẫn tái hiện toàn bộ kết quả.}
+\IfAtLeast{full}{Phụ lục hướng dẫn tái hiện toàn bộ kết quả và liệt kê các prompt.}
 Mã nguồn, dữ liệu và nhật ký gọi LLM được công bố tại \url{https://github.com/doanan293/grounded-or-guessed}.
