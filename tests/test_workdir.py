@@ -19,3 +19,19 @@ def test_make_workdir_idempotent(tmp_path):
     make_workdir(BENCH, ["ad_mix"], tmp_path / "w")
     make_workdir(BENCH, ["ad_mix"], tmp_path / "w")
     assert len(list((tmp_path / "w/programs").iterdir())) == 1
+
+
+def test_program_source_falls_back_to_the_benchmark(tmp_path):
+    """Archived runs carry no programs/ symlinks: analysis must find the source the run used (renamed or original)."""
+    from flx.workdir import program_source
+    root = tmp_path
+    (root / "third_party" / "semloc" / "benchmark" / "programs").mkdir(parents=True)
+    (root / "data" / "renamed" / "programs").mkdir(parents=True)
+    (root / "third_party" / "semloc" / "benchmark" / "programs" / "p.py").write_text("orig")
+    (root / "data" / "renamed" / "programs" / "p.py").write_text("renamed")
+    run = root / "runs" / "semloc_test_gemini_r1"
+    (run / "programs").mkdir(parents=True)
+    assert program_source(run, "p", root).read_text() == "orig"
+    assert program_source(root / "runs" / "semloc_renamed_gemini_r1", "p", root).read_text() == "renamed"
+    (run / "programs" / "p.py").write_text("own")
+    assert program_source(run, "p", root).read_text() == "own"

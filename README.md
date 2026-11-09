@@ -42,6 +42,10 @@ docs/               spec and plans (docs/superpowers), literature notes, LaTeX r
 
 ## Reproducing
 
+Full instructions, four reproduction levels and a result-to-script map: **[REPRODUCE.md](REPRODUCE.md)**. Run outputs, the LLM call log and the replayable LLM response cache are released as an archive (`scripts/export_artifact.py`); `docker build -t grounded-or-guessed .` gives an offline environment in which `scripts/regenerate_all.sh` rebuilds every CSV and table byte-identically.
+
+### Quick start
+
 Requirements: Linux, Python ≥ 3.10, [uv](https://github.com/astral-sh/uv), Docker (for the LLM proxy), TeX Live (report/paper).
 
 ```bash
@@ -58,6 +62,10 @@ scripts/run_matrix.sh semloc_test_gemini gemini-3.8-flash-high test 3
 ```
 
 Each repeat is one run id and one working directory; `python -m flx.run_health` must report a healthy run before its numbers are used. LLM calls are cached and logged per run id.
+
+## Citing
+
+See `CITATION.cff`.
 
 ## Credits and licences
 

@@ -6,6 +6,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_pilot_table_runs_from_any_cwd_with_label(tmp_path):
+    import pytest
+    if not (ROOT / "runs/pilot_dev_gemini_r1_default").exists() or not (ROOT / "runs/llm_log.jsonl").exists():
+        pytest.skip("pilot run outputs are local only (not in the archived runs)")
     out = tmp_path / "t.csv"
     p = subprocess.run([sys.executable, str(ROOT / "scripts/pilot_table.py"), "--run", str(ROOT / "runs/pilot_dev_gemini_r1_default"),
                         "--run-id", "pilot_dev_r1_default", "--label", "ours: test-label", "--out", str(out)],

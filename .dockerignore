@@ -1,0 +1,11 @@
+.git
+.venv
+runs
+dist
+.superpowers
+.env
+infra/proxy/config.yaml
+docs/requirement
+docs/presentation/template-vi.pptx
+**/__pycache__
+**/*.pyc
