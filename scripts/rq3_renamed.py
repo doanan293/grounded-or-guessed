@@ -2,7 +2,7 @@
 paired by repeat (original r_i vs renamed r_i), original and repaired ground truth.
 
     python scripts/rq3_renamed.py --out data/rq3_renamed.csv
-Renaming preserves line numbers and per-test behaviour (data/renamed/, 199 test programs), so ground
+Renaming preserves line numbers and per-test behaviour (data/semfault_renamed/, 199 test programs), so ground
 truth and coverage carry over unchanged. Also reports how often the LLM's own guess stays the same line.
 """
 import argparse
@@ -43,7 +43,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path, default=ROOT / "data" / "rq3_renamed.csv")
     args = ap.parse_args()
-    names = json.loads((ROOT / "data" / "renamed" / "test_programs.json").read_text())
+    names = json.loads((ROOT / "data" / "semfault_renamed" / "test_programs.json").read_text())
     orig = {r.name.rsplit("_r", 1)[1]: r for r in fam.usable_runs(ROOT / "runs", "semloc_test_gemini")}
     ren = {r.name.rsplit("_r", 1)[1]: r for r in fam.usable_runs(ROOT / "runs", "semloc_renamed_gemini")}
     pairs = [(orig[i], ren[i]) for i in sorted(set(orig) & set(ren))]

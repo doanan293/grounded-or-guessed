@@ -1,5 +1,5 @@
-"""Build data/renamed/: line-preserving renamed SemFault-250 (RQ3b). Programs whose per-test outcomes
-change are excluded and listed in data/renamed/excluded.json.
+"""Build data/semfault_renamed/: line-preserving renamed SemFault-250 (RQ3b). Programs whose per-test outcomes
+change are excluded and listed in data/semfault_renamed/excluded.json.
 
     python scripts/make_renamed.py --workers 8
 """
@@ -14,7 +14,7 @@ from flx.rename import keep_names, rename_program, test_outcomes
 
 ROOT = Path(__file__).resolve().parents[1]
 BENCH = SEMLOC_ROOT / "benchmark"
-OUT = ROOT / "data" / "renamed"
+OUT = ROOT / "data" / "semfault_renamed"
 
 
 def _one(entry):

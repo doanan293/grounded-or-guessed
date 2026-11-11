@@ -123,7 +123,7 @@ data/coverage/semfault/<p>.json, data/rq*.csv, docs/report/generated/*.tex
 
 ### Task 8 (M8): Biến thể đổi tên SemFault-250 (11–12/11) + chạy SemLoc Gemini × 3 trên test
 
-**Files:** Create `src/flx/rename.py`, `scripts/make_renamed.py`, `data/renamed/` (programs, testcases, ground_truth.json); Test `tests/test_rename.py`
+**Files:** Create `src/flx/rename.py`, `scripts/make_renamed.py`, `data/semfault_renamed/` (programs, testcases, ground_truth.json); Test `tests/test_rename.py`
 
 **Interfaces:** `rename_program(src: str, keep: set[str]) -> str` — đổi tên biến cục bộ, tham số không được test gọi theo keyword, hàm/hằng private (`_x`), xoá nội dung docstring/comment nhưng **giữ nguyên số dòng**; `keep` = tên mà file test dùng (tên hàm chính, keyword args, hằng import).
 - [ ] `test_renamed_preserves_lines_and_outcomes` (fixture mini + 3 chương trình thật: cùng số dòng, cùng kết quả pass/fail từng test qua `flx.coverage.collect`); `test_rename_is_deterministic`.

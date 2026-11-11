@@ -29,7 +29,7 @@ def split_size(split: str) -> int | None:
     return {"test": 200, "dev": len(json.loads((d / "split.json").read_text())["dev"]),
             "subset50": len(json.loads((d / "subset50.json").read_text())["programs"]),
             "bugsinpy": len(json.loads((d / "bugsinpy_targets.json").read_text())),
-            "renamed-test": len(json.loads((d / "renamed" / "test_programs.json").read_text()))}.get(split)
+            "renamed-test": len(json.loads((d / "semfault_renamed" / "test_programs.json").read_text()))}.get(split)
 
 
 def main() -> None:

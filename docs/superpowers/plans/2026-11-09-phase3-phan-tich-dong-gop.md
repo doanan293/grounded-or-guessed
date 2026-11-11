@@ -43,7 +43,7 @@ Lý do (chủ dự án duyệt 09/11): baseline mạnh nhất của bài mới �
 **Interfaces:**
 - Produces: `build_prompt(src, failing, cov, first_line=1)` — đánh số dòng bắt đầu từ `first_line` (hàm đích BugsInPy giữ số dòng tuyệt đối của file); với `first_line=1` prompt **giống hệt** bản cũ (cache SemFault không đổi).
 - Produces: `parse_failed(stdout: str, declared: set[str]) -> list[dict]` — `{"name", "error"}` từ dòng `FAILED path::Class::test - msg` của pytest, chỉ giữ test đã khai báo (định danh dạng JUnit qua `bip_run.junit_id`).
-- Produces: `runs/direct_cov_bip_gemini_r{1,2,3}.json` (`{bug: [lines]}`), `runs/direct_cov_renamed_gemini_r{1,2,3}.json` (`--bench data/renamed`, danh sách `data/renamed/test_programs.json`; độ phủ dùng chung vì đổi tên giữ số dòng và hành vi).
+- Produces: `runs/direct_cov_bip_gemini_r{1,2,3}.json` (`{bug: [lines]}`), `runs/direct_cov_renamed_gemini_r{1,2,3}.json` (`--bench data/semfault_renamed`, danh sách `data/semfault_renamed/test_programs.json`; độ phủ dùng chung vì đổi tên giữ số dòng và hành vi).
 
 - [ ] **Step 1: Viết test** `test_prompt_first_line_offsets_numbering` (với `first_line=40`, dòng đầu là `40: def f(x):` và chú thích độ phủ đọc theo số dòng tuyệt đối; với mặc định, prompt bằng đúng chuỗi của bản cũ) và `test_parse_failed_keeps_declared_only`.
 - [ ] **Step 2: Chạy** `.venv/bin/pytest tests/test_direct_cov.py -q` → FAIL.
