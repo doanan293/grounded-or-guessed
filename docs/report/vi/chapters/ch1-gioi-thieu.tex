@@ -44,10 +44,10 @@ SemLoc thì sao, về độ chính xác và chi phí? Thông tin nào trong prom
 từng dòng)? Các cách bổ sung --- gắn độ phủ vào SemLoc (CovGate),\IfAtLeast{full}{ kiểm chứng dòng nghi ngờ bằng bản sửa và kiểm thử,}
 biểu quyết nhiều câu trả lời --- và các công cụ phân tích tĩnh có thêm được gì không?
 \item \textbf{RQ3 -- Độ bền.} Các kết luận có giữ được trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã đổi tên
-định danh, trên năm họ mô hình, và trên \IfAtLeastElse{lan2}{cả ba bộ nhãn (gốc, đã sửa, đã rà soát)}{các bộ nhãn khác nhau} không?
+định danh, trên năm họ mô hình, và trên \IfAtLeastElse{lan3}{cả ba bộ nhãn (gốc, đã sửa, đã rà soát)}{các bộ nhãn khác nhau} không?
 \end{itemize}
 
-\section{\IfAtLeastElse{lan2}{Đóng góp chính}{Kết quả đến thời điểm báo cáo}}
+\section{\IfAtLeastElse{lan3}{Đóng góp chính}{Kết quả đến thời điểm báo cáo}}
 \label{sec:dong-gop-tom-tat}
 
 Mỗi kết quả dưới đây gắn với số liệu được sinh tự động từ mã nguồn công khai.
@@ -55,22 +55,24 @@ Mỗi kết quả dưới đây gắn với số liệu được sinh tự độ
 \begin{enumerate}
 \item \textbf{Hạng 1 của SemLoc là dòng LLM đoán.} Mã nguồn công bố cộng cho dòng LLM tự đoán một điểm thưởng lớn hơn
 mọi điểm ràng buộc --- chi tiết không có trong bài báo --- nên dòng đầu tiên của SemLoc \emph{luôn} là dòng đoán. Bỏ
-điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã sửa\IfAtLeast{lan2}{ và
-\RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã rà soát}. Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM
+điểm thưởng, \IfAtLeastElse{lan2}{Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã sửa\IfAtLeast{lan3}{ và
+\RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã rà soát}}{Acc@1 trên nhật ký công bố đi từ
+\RqOneSemlocGeminiTZeroEightFairAllAccOne\% xuống \RqOneSemlocGeminiTZeroEightNoPriorFairAllAccOne\% (Gemini) và từ
+\RqOneSemlocClaudeTZeroEightFairAllAccOne\% xuống \RqOneSemlocClaudeTZeroEightNoPriorFairAllAccOne\% (Claude)}. Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM
 nhưng không đổi thứ hạng nào.
-\IfAtLeastElse{lan2}{\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
+\IfAtLeastElse{lan3}{\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
 bị dời khi rà soát (\LabaudAllBlank{} nằm trên dòng trống, \LabaudAllOffByOne{} lệch một dòng). Nhóm công bố hai bộ nhãn
 mới: \emph{đã sửa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt, kiểm tra lại bằng
 duyệt mù). Trên nhãn đã rà soát, phần hơn của SemLoc so với LLM hỏi thẳng ở Acc@3 biến mất (trên nhãn đã sửa thì vẫn còn).}{%
 \item \textbf{Nhãn của bộ dữ liệu có vấn đề.} \GtBlankN{} nhãn gốc nằm trên dòng trống và \GtNotExecutedN{} chương trình
-không có kiểm thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm dựng bộ nhãn \emph{đã sửa} bằng thực thi: \GtConfirmedN{}
-nhãn được xác nhận, \GtCorrectedN{} nhãn được dời vị trí.}
-\item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất --- một lượt gọi
+không có kiểm thử thất bại nào chạy tới dòng lỗi chuẩn. \IfAtLeastElse{lan2}{Nhóm dựng bộ nhãn \emph{đã sửa} bằng thực thi: \GtConfirmedN{}
+nhãn được xác nhận, \GtCorrectedN{} nhãn được dời vị trí.}{Nhóm đang dựng bộ nhãn \emph{đã sửa} bằng thực thi.}}
+\IfAtLeast{lan2}{\item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất --- một lượt gọi
 LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi --- hơn SemLoc \RqTwoRepairedAllLlmTestsDAccOne{} điểm Acc@1
-và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã sửa, thắng ở Acc@1 trên \IfAtLeastElse{lan2}{cả ba bộ
+và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã sửa, thắng ở Acc@1 trên \IfAtLeastElse{lan3}{cả ba bộ
 nhãn}{cả bộ nhãn gốc lẫn bộ đã sửa}, và tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với
-\CostSemlocTokensK{} nghìn của SemLoc.
-\IfAtLeast{lan2}{\item \textbf{Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
+\CostSemlocTokensK{} nghìn của SemLoc.}
+\IfAtLeast{lan3}{\item \textbf{Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
 (Acc@3 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM hỏi thẳng), còn thêm độ phủ từng dòng làm Acc@1 đổi
 \AblRepairedAllCoverageEffectDAccOne{} điểm. CovGate chỉ giúp SemLoc một chút;\IfAtLeastElse{full}{ kiểm chứng dòng nghi ngờ bằng bản
 sửa và biểu quyết (đánh giá trên tập dev) không cải thiện được prompt đơn giản;}{ biểu quyết (đánh giá trên tập dev) không
@@ -81,10 +83,12 @@ kiểm thử của bộ dữ liệu đủ để \emph{gợi ý} lỗi nhưng qu�
 hiện (Docker, nhật ký và bộ đệm lượt gọi LLM, mọi con số sinh tự động).}
 \end{enumerate}
 
-\IfBelow{lan2}{Các phần đang thực hiện cho lần báo cáo sau: rà soát toàn bộ nhãn của bộ dữ liệu; thí nghiệm loại bỏ để
+\IfBelow{lan2}{Các phần đang thực hiện cho lần báo cáo 2: bộ nhãn đã sửa bằng thực thi; so sánh chính của RQ2 (một prompt
+có kiểm thử thất bại so với SemLoc, LLM hỏi thẳng và SBFL) trên tập test, lặp ba lần, kèm chi phí.}
+\IfBelow{lan3}{\IfAtLeast{lan2}{Các phần đang thực hiện cho lần báo cáo 3: rà soát toàn bộ nhãn của bộ dữ liệu; thí nghiệm loại bỏ để
 biết thông tin nào trong prompt tạo ra khác biệt; các cách bổ sung và công cụ phân tích tĩnh; câu hỏi RQ3 (lỗi thật, mã
-đổi tên, các họ mô hình); phân tích thất bại, đóng góp và triết lý khoa học.}
-\IfAtLeast{lan2}{Chương~\ref{chap:that-bai} phân tích các ca thất bại và cơ chế khiến kiểm thử không làm được trọng tài;
+đổi tên, các họ mô hình); đóng góp và triết lý khoa học.}}
+\IfAtLeast{lan3}{\IfAtLeast{full}{Chương~\ref{chap:that-bai} phân tích các ca thất bại và cơ chế khiến kiểm thử không làm được trọng tài;}
 Chương~\ref{chap:dong-gop} trình bày quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ của kết quả.}
 
 \section{Cấu trúc báo cáo}
@@ -94,7 +98,7 @@ Chương~\ref{chap:tong-quan} tổng quan tài liệu và bộ từ khóa, trong
 Chương~\ref{chap:co-so} trình bày cơ sở lý thuyết về SBFL, lỗi ngữ nghĩa, SemLoc, phân tích tĩnh và động, và các công cụ
 thống kê. Chương~\ref{chap:phuong-phap} mô tả câu hỏi nghiên cứu, dữ liệu và các bộ nhãn, các phương pháp so sánh và thiết
 kế thực nghiệm. Chương~\ref{chap:ket-qua} trả lời ba câu hỏi nghiên cứu.
-\IfAtLeast{lan2}{Chương~\ref{chap:that-bai} phân tích các ca thất bại; Chương~\ref{chap:dong-gop} tổng hợp đóng góp,
+\IfAtLeast{lan3}{\IfAtLeast{full}{Chương~\ref{chap:that-bai} phân tích các ca thất bại;} Chương~\ref{chap:dong-gop} tổng hợp đóng góp,
 triết lý khoa học và các mối đe dọa.}
 Chương~\ref{chap:ket-luan} kết luận và nêu hướng phát triển.
 \IfAtLeast{full}{Phụ lục hướng dẫn tái hiện toàn bộ kết quả và liệt kê các prompt.}
