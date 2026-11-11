@@ -29,3 +29,8 @@ infra/proxy/config.yaml
 docs/requirement/
 docs/presentation/template-vi.pptx
 dist/
+
+# Agent skills: kept locally, not published
+.agents/
+.claude/
+skills-lock.json
