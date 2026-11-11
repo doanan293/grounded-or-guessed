@@ -24,10 +24,10 @@ def make_workdir(benchmark: Path, programs: list[str], out: Path) -> None:
 
 def program_source(run: Path, program: str, root: Path | None = None) -> Path:
     """The source a run analysed: its own programs/ entry when present, else the benchmark copy it was built from
-    (data/renamed for renamed-program runs) — archived runs ship without the programs/ symlinks."""
+    (data/semfault_renamed for renamed-program runs) — archived runs ship without the programs/ symlinks."""
     root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
     own = Path(run) / "programs" / f"{program}.py"
     if own.exists():
         return own
-    bench = root / "data" / "renamed" if "_renamed_" in Path(run).name else root / "third_party" / "semloc" / "benchmark"
+    bench = root / "data" / "semfault_renamed" if "_renamed_" in Path(run).name else root / "third_party" / "semloc" / "benchmark"
     return bench / "programs" / f"{program}.py"

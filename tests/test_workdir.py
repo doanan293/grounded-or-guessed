@@ -26,9 +26,9 @@ def test_program_source_falls_back_to_the_benchmark(tmp_path):
     from flx.workdir import program_source
     root = tmp_path
     (root / "third_party" / "semloc" / "benchmark" / "programs").mkdir(parents=True)
-    (root / "data" / "renamed" / "programs").mkdir(parents=True)
+    (root / "data" / "semfault_renamed" / "programs").mkdir(parents=True)
     (root / "third_party" / "semloc" / "benchmark" / "programs" / "p.py").write_text("orig")
-    (root / "data" / "renamed" / "programs" / "p.py").write_text("renamed")
+    (root / "data" / "semfault_renamed" / "programs" / "p.py").write_text("renamed")
     run = root / "runs" / "semloc_test_gemini_r1"
     (run / "programs").mkdir(parents=True)
     assert program_source(run, "p", root).read_text() == "orig"
