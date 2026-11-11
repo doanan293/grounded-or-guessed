@@ -37,7 +37,6 @@ data/               derived data: labels, dev/test split, coverage matrices, res
 third_party/semloc/ SemLoc artifact @ c1db564 (Apache-2.0), with one patch routing LLM calls through our gateway
 infra/proxy/        Docker compose for the OpenAI-compatible LLM proxy; MODELS.md documents models and reasoning levels
 docs/               spec and plans (docs/superpowers), literature notes, LaTeX report and paper, slides
-.agents/, .claude/  agent skills used by the authors (third-party; see their own licences)
 ```
 
 ## Reproducing
@@ -71,5 +70,4 @@ See `CITATION.cff`.
 
 - Project code (`src/`, `scripts/`, `tests/`, `infra/`, `docs/`): MIT, see `LICENSE`.
 - `third_party/semloc/`: SemLoc by Zhaorui Yang, Haichao Zhu, Qian Zhang, Rajiv Gupta, Ashish Kundu — Apache-2.0 (`third_party/semloc/LICENSE.txt`), including the SemFault-250 benchmark and published results. We thank the authors for releasing their complete artifact; this study would not be possible otherwise.
-- `.agents/skills/`: third-party agent skills (humanizer, ppt-master, research-paper-writing, latex-document-skill) under their own licences.
 - Slides use a Slidesgo template (credits slide kept).
