@@ -173,6 +173,25 @@ def main_results_table(sets: tuple = ("original", "repaired", "reviewed"), with_
     return "\n".join(lines) + "\n"
 
 
+def tolerant_table(sets: tuple = ("original", "repaired")) -> str:
+    """Secondary metric: Acc@1 exact vs. header/body-tolerant (strict = lower bound, lenient = upper bound)."""
+    rows = {(r["gt"], r["method"]): r for r in _rows("rq2_tolerant.csv")}
+    methods = [("sbfl_ochiai", "SBFL Ochiai"), ("llm_direct", "LLM direct (source only)"), ("semloc", "SemLoc (multi-stage)"),
+               ("llm_tests", "LLM + failing tests (ours)"), ("llm_coverage", "\\quad + per-line coverage")]
+    title = {"original": "Original", "repaired": "Repaired", "reviewed": "Reviewed"}
+    k = len(sets)
+    lines = [r"\begin{tabular}{l" + "rrr" * k + "}", r"\toprule",
+             " & " + " & ".join(rf"\multicolumn{{3}}{{c}}{{{title[g]} ($n={rows[(g, 'semloc')]['n']}$)}}" for g in sets) + r" \\",
+             "".join(rf"\cmidrule(lr){{{2 + 3 * i}-{4 + 3 * i}}}" for i in range(k)),
+             "Method & " + " & ".join(["Exact & Tolerant & Upper"] * k) + r" \\", r"\midrule"]
+    for m, name in methods:
+        cells = [f"{pct(rows[(g, m)]['acc1_exact'])} & {pct(rows[(g, m)]['acc1_tol'])} & {pct(rows[(g, m)]['acc1_tol_lenient'])}"
+                 for g in sets]
+        lines.append(f"{name} & {' & '.join(cells)} \\\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    return "\n".join(lines) + "\n"
+
+
 def addons_table(include_pav: bool = True) -> str:
     """Table III: additions that do not help — Δ against the method they extend, with 95% CIs where repeated."""
     abl = {(r["gt"], r["subset"], r["contrast"]): r for r in _rows("ablation_coverage.csv")}
@@ -380,6 +399,7 @@ VI = [
     ("LLM direct (source only)", "LLM hỏi thẳng (chỉ có mã)"),
     ("SemLoc (multi-stage)", "SemLoc (nhiều bước)"),
     ("k tokens", "nghìn token"),
+    ("Exact & Tolerant & Upper", "Khớp đúng & Nới lỏng & Cận trên"),
     ("Original vs.\\ reviewed label", "Nhãn gốc so với nhãn rà soát"),
     ("Kept, second line added (two-line fault)", "Giữ nguyên, thêm một dòng (lỗi trải hai dòng)"),
     ("Log call, \\texttt{def} header or comment", "Lệnh log, dòng \\texttt{def} hoặc chú thích"),
@@ -486,6 +506,8 @@ def main() -> None:
     (OUT / "rq3_renamed.tex").write_text(rq3_renamed_table())
     (OUT / "rq_main_results.tex").write_text(main_results_table())
     (OUT / "rq_main_results_two.tex").write_text(main_results_table(("original", "repaired"), with_coverage=False))
+    if (DATA / "rq2_tolerant.csv").exists():
+        (OUT / "rq_tolerant.tex").write_text(tolerant_table())
     (OUT / "rq_addons.tex").write_text(addons_table())
     (OUT / "rq_addons_nopav.tex").write_text(addons_table(include_pav=False))
     (OUT / "rq_static.tex").write_text(static_table())

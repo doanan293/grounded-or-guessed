@@ -24,6 +24,7 @@ $PY scripts/label_audit.py > /dev/null
 $PY scripts/blind_review.py score > /dev/null
 $PY scripts/gt_sensitivity.py > /dev/null
 $PY scripts/rq2_ours.py > /dev/null
+$PY scripts/rq2_tolerant.py > /dev/null
 $PY scripts/ablation_coverage.py > /dev/null
 $PY scripts/static_tools.py > /dev/null
 $PY scripts/pav_eval.py select > /dev/null
