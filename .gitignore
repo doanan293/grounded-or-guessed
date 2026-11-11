@@ -34,3 +34,5 @@ dist/
 .agents/
 .claude/
 skills-lock.json
+# Office lock files
+~$*
