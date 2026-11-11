@@ -6,6 +6,7 @@ Every number is read from data/ (repaired ground truth unless stated).
 """
 import json
 import shutil
+import textwrap
 import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
@@ -276,22 +277,40 @@ def build() -> None:
     })
     for gid in ("shape-1668", "shape-1669", "shape-1670"):  # template body boxes indent and wrap later lines
         D("slide_08.svg", gid)
-    for i, (x, body, use) in enumerate((
-            (85, ["Lỗi sai logic (Python).", "LLM viết ràng buộc,", "chạy test để chấm.", "Acc@1 42,8%."],
-             ["→ Nhóm tái hiện và", "so sánh trực tiếp"]),
-            (386, ["Lỗi chạy chậm.", "Đo ở tải nhỏ và tải lớn:", "hàm chậm dần là nghi.", "140 lỗi thật."],
-             ["→ Khuôn cho 3 RQ;", "ý so 2 lần chạy"]),
-            (687, ["App Java bị sập (crash).", "Xếp hạng từ stack trace", "đưa vào prompt LLM.", "38 lỗi: định vị 71%."],
-             ["→ Nền cho đối chứng", "LLM + độ phủ"]))):
-        A("slide_08.svg", f'<g id="cot-{i}" data-pptx-bounds="{x} 290 250 140">' + "".join(
-            f'<text x="{x}" y="{306 + 20 * k}" font-family="{BODY}" font-size="15" fill="{INK}">{escape(l)}</text>'
-            for k, l in enumerate(body)) + "".join(
-            f'<text x="{x}" y="{396 + 20 * k}" font-family="{BODY}" font-size="15" font-weight="bold" fill="{ORANGE}">'
-            f'{escape(l)}</text>' for k, l in enumerate(use)) + '</g>')
-    A("slide_08.svg",
-           f'<g id="tai-lieu-them" data-pptx-bounds="85 470 790 44"><text x="85" y="488" font-family="{BODY}" font-size="15" fill="{INK}">'
-           f'<tspan font-weight="bold">+ 23 tài liệu nhóm tìm thêm: </tspan>SBFL kinh điển (Tarantula, Ochiai, DStar) · định vị lỗi bằng LLM</text>'
-           f'<text x="85" y="508" font-family="{BODY}" font-size="15" fill="{INK}">(AutoFL, AgentFL, FlexFL) · benchmark (Defects4J, BugsInPy, QuixBugs) · nhiễm dữ liệu LLM</text></g>')
+    # each column explains itself: problem, method, result, what the group takes (wrapped by hand, ~36 chars a line)
+    for i, (x, parts) in enumerate((
+            (85, [("Bài toán:", "code Python sai logic. Test fail nhưng không báo dòng nào sai."),
+                  ("Cách làm:", "LLM đoán dòng nghi và viết điều kiện “đúng thì phải thế này” chèn vào code. Chạy test: "
+                                "điều kiện nào bị vi phạm khi test fail thì dòng đó bị nghi nhiều."),
+                  ("Kết quả:", "chỉ đúng dòng lỗi ngay hạng 1 ở 42,8% chương trình."),
+                  ("Nhóm học được:", "chạy lại đúng mã của tác giả, kiểm tra từng con số họ công bố (RQ1).")]),
+            (386, [("Bài toán:", "code chạy chậm. Test vẫn pass, không có lỗi nào báo ra để lần theo."),
+                   ("Cách làm:", "chạy 2 lần, với dữ liệu nhỏ và dữ liệu lớn. Hàm nào chậm hẳn đi khi dữ liệu lớn thì bị "
+                                 "nghi; chỉ đưa các hàm đó cho LLM chỉ chỗ sửa."),
+                   ("Kết quả:", "thử trên 140 lỗi chạy chậm thật."),
+                   ("Nhóm học được:", "đặt lần chạy bình thường cạnh lần chạy có vấn đề, chỉ nghi chỗ khác nhau. Nhóm so "
+                                      "test pass với test fail để xếp lại các dòng SemLoc đưa ra (CovGate). Mượn cách chia 3 RQ.")]),
+            (680, [("Bài toán:", "2 app Java lớn bị sập hàng nghìn lần mỗi tuần; mỗi lần có stack trace (các hàm đang chạy "
+                                 "lúc sập)."),
+                   ("Cách làm:", "gom stack trace, đếm hàm nào hay xuất hiện thành bảng xếp hạng hàm đáng nghi, rồi đưa "
+                                 "bảng vào prompt hỏi LLM lỗi ở đâu."),
+                   ("Kết quả:", "38 lỗi thật, chỉ đúng chỗ lỗi 71%."),
+                   ("Nhóm học được:", "đưa bằng chứng thật vào prompt giúp LLM trúng hơn. Nhóm thử 1 prompt có test fail "
+                                      "(+ độ phủ từng dòng) thay cho quy trình nhiều bước của SemLoc.")]))):
+        out, y = [], 298
+        for label, text in parts:
+            lines = textwrap.wrap(f"{label} {text}", 36)
+            color = ORANGE if label.startswith("Nhóm") else NAVY
+            for k, line in enumerate(lines):
+                if k == 0:  # bold coloured label, then the rest of the first line
+                    body = (f'<tspan font-weight="bold" fill="{color}">{escape(label)}</tspan>'
+                            f'{escape(line[len(label):])}')
+                else:
+                    body = escape(line)
+                out.append(f'<text x="{x}" y="{y}" font-family="{BODY}" font-size="12.5" fill="{INK}">{body}</text>')
+                y += 15
+            y += 5
+        A("slide_08.svg", f'<g id="cot-{i}" data-pptx-bounds="{x} 288 245 {y - 288}">' + "".join(out) + '</g>')
     E("slide_25.svg", [
         ("Step-by-step coding", "SemLoc hoạt động thế nào"),
         ("Earth", "Neo"), ("It’s the only planet known", ["Chọn vị trí", "đặt kiểm tra"]),
