@@ -3,7 +3,7 @@
 .PHONY: all vi vi-full vi-lan1 vi-lan2 vi-lan3 paper check clean
 VI = cd vi && latexmk -xelatex -interaction=nonstopmode -halt-on-error
 all: vi-full paper
-vi: vi-full
+vi: vi-lan2
 vi-full vi-lan1 vi-lan2 vi-lan3:
 	$(VI) -jobname=main-$(@:vi-%=%) -usepretex='\def\Version{$(@:vi-%=%)}' main.tex
 paper:

@@ -1,14 +1,11 @@
-# Báo cáo và bài báo
+# Báo cáo tiến độ lần 2 (18–19/11/2026)
+
+Nhánh `bao-cao-lan-2` là bản báo cáo tiến độ lần 2, chưa đầy đủ: thêm bộ nhãn đã sửa bằng thực thi và so sánh chính của RQ2. Mỗi lần báo cáo chỉ thêm một phần;
+bản đầy đủ (bài nộp cuối) ở nhánh `main`.
 
 | Tệp | Nội dung |
 |---|---|
-| `bao-cao.pdf` | Báo cáo tiểu luận tiếng Việt, bản đầy đủ (bài nộp cuối kỳ) |
-| `paper.pdf` | Bài báo tiếng Anh (IEEEtran, bản arXiv) |
+| `bao-cao-lan-2.pdf` | Báo cáo tiếng Việt, phiên bản `lan2` |
+| `../presentation/bao-cao-lan-2.pptx` | Slide báo cáo lần 2 |
 
-Nhánh này (`main`) là bản đầy đủ. Ba bản báo cáo tiến độ nằm ở nhánh `bao-cao-lan-1` (11/11/2026),
-`bao-cao-lan-2` (18–19/11/2026) và `bao-cao-lan-3` (25–26/11/2026), dựng từ cùng nguồn LaTeX với công tắc phiên bản
-`\Version` (`lan1`, `lan2`, `lan3`, `full`); mỗi lần chỉ thêm một phần kết quả.
-
-Dựng lại: `make -C docs/report vi-full paper` (hoặc `vi-lan1`, `vi-lan2`, `vi-lan3`); `make -C docs/report check` dựng mọi phiên
-bản và báo lỗi nếu còn trích dẫn/tham chiếu chưa định nghĩa hoặc số gõ tay. Mọi con số là macro trong
-`generated/numbers-vi.tex` / `generated/numbers.tex`, sinh từ `data/` bởi `scripts/make_numbers.py`.
+Dựng lại: `make -C docs/report vi` (mặc định `\Version` = `lan2` trên nhánh này); `make -C docs/report check`.
