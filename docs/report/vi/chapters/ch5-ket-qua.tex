@@ -154,6 +154,41 @@ tên kiểm thử thất bại và thông báo lỗi (Mục~\ref{sec:cau-hoi}). 
 quả, khoảng tin cậy và chi phí token sẽ được trình bày ở lần báo cáo sau.
 }}
 
+\IfAtLeast{lan2}{%
+\subsection{Độ nhạy với quy ước gán nhãn}
+\label{sec:do-nhay-nhan}
+
+Acc@$k$ ở trên chấm \emph{khớp đúng dòng}: chỉ vào dòng ngay cạnh dòng lỗi chuẩn cũng là trượt. Khi đọc các ca trượt,
+nhóm thấy phần lớn là chỉ vào dòng kề cạnh, thường là cặp \emph{dòng điều kiện -- câu lệnh nó bảo vệ}: lỗi cài vào nằm
+ở câu lệnh bên trong \texttt{if} còn nhãn ghi dòng \texttt{if}, hoặc ngược lại\IfAtLeast{full}{ (Mục~\ref{sec:mo-ho})}.
+Vì vậy nhóm báo cáo thêm một chỉ số phụ, \emph{Acc@1 nới lỏng}: dòng hạng một cũng được tính đúng khi nó và một dòng lỗi
+chuẩn là đầu một câu lệnh ghép (\texttt{if}, \texttt{for}, \texttt{while}, \texttt{with}, \texttt{try}) và dòng đầu tiên
+của thân câu lệnh đó; \emph{cận trên} chấp nhận thêm phần còn lại của câu lệnh đầu tiên trong thân nếu nó dài không quá
+ba dòng. Thứ hạng, các lần chạy và tham số giữ nguyên, chỉ tập dòng được chấp nhận thay đổi. Chỉ số phụ được đặt ra sau
+khi đã thấy kết quả, nên nhóm chỉ dùng nó để kiểm tra độ bền của kết luận; mọi giả thuyết vẫn được kiểm định trên chỉ số
+chính.
+
+\begin{table}[H]
+\centering
+\caption{Acc@1 khớp đúng dòng, nới lỏng (dòng điều kiện -- dòng đầu của thân) và cận trên (tập test, Gemini 3.8 Flash,
+trung bình 3 lần chạy)}
+\label{tab:nhay-nhan}
+\resizebox{\linewidth}{!}{\input{../generated/vi/rq_tolerant}}
+\end{table}
+
+Bảng~\ref{tab:nhay-nhan} cho thấy nới lỏng nâng Acc@1 của mọi phương pháp dùng LLM lên rõ rệt: trên bộ đã sửa, SemLoc từ
+\RqtolRepairedSemlocAccOneExact\% lên \RqtolRepairedSemlocAccOneTol\%, LLM + kiểm thử thất bại từ
+\RqtolRepairedLlmTestsAccOneExact\% lên \RqtolRepairedLlmTestsAccOneTol\%. Phần lớn các lần ``trượt'' vì vậy là trượt
+theo quy ước gán nhãn chứ không phải chỉ sai chỗ. Kết luận chính không đổi: LLM + kiểm thử thất bại vẫn hơn SemLoc
+\RqtolRepairedLlmTestsDAccOneTol{} [\RqtolRepairedLlmTestsDAccOneTolLo; \RqtolRepairedLlmTestsDAccOneTolHi] điểm Acc@1
+trên bộ đã sửa và \RqtolOriginalLlmTestsDAccOneTol{} [\RqtolOriginalLlmTestsDAccOneTolLo;
+\RqtolOriginalLlmTestsDAccOneTolHi] trên bộ gốc. Khoảng cách hẹp lại so với khi chấm khớp đúng
+(\RqTwoRepairedAllLlmTestsDAccOne{} điểm trên bộ đã sửa): một phần lợi thế của phương pháp đề xuất là chọn đúng dòng mà
+nhãn ghi trong cặp dòng điều kiện -- thân. Riêng LLM hỏi thẳng, vốn hơn SemLoc khi chấm khớp đúng, trở nên ngang SemLoc
+khi nới lỏng (\RqtolRepairedLlmDirectDAccOneTol{} [\RqtolRepairedLlmDirectDAccOneTolLo;
+\RqtolRepairedLlmDirectDAccOneTolHi] điểm trên bộ đã sửa).
+}
+
 \IfAtLeast{lan3}{%
 \subsection{Thông tin nào tạo ra khác biệt}
 
