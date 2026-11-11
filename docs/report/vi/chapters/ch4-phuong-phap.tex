@@ -17,7 +17,7 @@ bản sửa;} biểu quyết nhiều câu trả lời) và công cụ phân tíc
 SemLoc đến từ bằng chứng thực thi, bao nhiêu từ dòng LLM tự đoán?
 
 \textbf{RQ3 (độ bền):} các kết luận của RQ2 có còn đúng (a) trên lỗi thật của BugsInPy, (b) khi đổi tên mọi định danh
-và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên năm mô hình thuộc các họ khác nhau, (d) trên \IfAtLeastElse{lan2}{cả ba bộ nhãn}{các bộ nhãn khác nhau}?
+và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên năm mô hình thuộc các họ khác nhau, (d) trên \IfAtLeastElse{lan3}{cả ba bộ nhãn}{các bộ nhãn khác nhau}?
 
 \subsection{Giả thuyết và tiêu chí bác bỏ}
 
@@ -54,7 +54,7 @@ tại dòng chuẩn), \GtCorrectedN{} được \emph{sửa vị trí} (dòng chu
 \GtUnverifiableN{} \emph{không kiểm chứng được} (bị loại). Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
 nên bị loại; bộ dòng lỗi chuẩn đã sửa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã sửa.
 
-\IfAtLeast{lan2}{%
+\IfAtLeast{lan3}{%
 \subsection{SemFault-250 đã rà soát: LLM rà trước, nhóm duyệt}
 
 Bộ phán định sửa tối thiểu chỉ có thể xác nhận một dòng khi tìm được bản sửa nhỏ, và chỉ tìm dòng lân cận khi dòng gốc
@@ -81,7 +81,7 @@ nhiên, không ghi dòng nào từ đâu, không có nhận định của LLM. T
 này không còn mù và bị loại khỏi thống kê duyệt mù (quy tắc loại ghi trong mã, đặt ra trước khi tính độ đồng thuận).
 
 Bảng~\ref{tab:ba-bo-nhan} tóm tắt ba bộ nhãn. Bộ \emph{đã sửa} chỉ do kiểm thử quyết định nên được dùng cho kết quả
-chính; bộ \emph{đã rà soát} đầy đủ hơn nhưng nhãn do một LLM đề xuất, nên các phương pháp dùng LLM có thể được lợi\IfAtLeast{lan2}{ (Chương~\ref{chap:dong-gop})} --- nó được dùng như một góc nhìn độ nhạy.
+chính; bộ \emph{đã rà soát} đầy đủ hơn nhưng nhãn do một LLM đề xuất, nên các phương pháp dùng LLM có thể được lợi\IfAtLeast{lan3}{ (Chương~\ref{chap:dong-gop})} --- nó được dùng như một góc nhìn độ nhạy.
 
 \begin{table}[H]
 \centering
@@ -138,7 +138,7 @@ thiết kế trước khi xem kết quả trên tập test và không được t
 xây quy trình nhiều bước lấy từ báo cáo công nghiệp~\cite{medeiros2026crash} và các nghiên cứu cho thấy nhật ký lỗi
 giúp LLM định vị tốt hơn~\cite{wu2023llmfl}.
 
-\IfAtLeast{lan2}{%
+\IfAtLeast{lan3}{%
 \subsection{Ablation: tách độ phủ khỏi kiểm thử thất bại}
 
 Biến thể \emph{LLM + kiểm thử thất bại + độ phủ} giữ nguyên prompt trên và chú thích thêm cho mỗi dòng số kiểm thử thất

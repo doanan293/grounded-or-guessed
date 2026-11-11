@@ -10,14 +10,15 @@
 \lstset{basicstyle=\ttfamily\footnotesize,columns=fullflexible,keepspaces=true,frame=single,breaklines=true}
 \usepackage[hidelinks]{hyperref}
 \newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
-% Phiên bản: lan1 (báo cáo lần 1) < lan2 (báo cáo lần 2) < full (bài nộp). Đặt bằng `make vi-lan1` …;
-% mặc định full. \IfAtLeast{lan2}{...} chỉ đưa nội dung vào khi phiên bản đang dựng >= lan2.
+% Phiên bản: lan1 (báo cáo lần 1, 11/11) < lan2 (lần 2, 18–19/11) < lan3 (lần 3, 25–26/11) < full (bài nộp).
+% Đặt bằng `make vi-lan1` …; mặc định full. \IfAtLeast{lan2}{...} chỉ đưa nội dung vào khi phiên bản đang dựng >= lan2.
 \providecommand{\Version}{full}
 \expandafter\def\csname VersionRank@lan1\endcsname{1}
 \expandafter\def\csname VersionRank@lan2\endcsname{2}
-\expandafter\def\csname VersionRank@full\endcsname{3}
+\expandafter\def\csname VersionRank@lan3\endcsname{3}
+\expandafter\def\csname VersionRank@full\endcsname{4}
 \expandafter\ifx\csname VersionRank@\Version\endcsname\relax
-  \errmessage{Unknown \string\Version: \Version\space (use lan1, lan2 or full)}\fi
+  \errmessage{Unknown \string\Version: \Version\space (use lan1, lan2, lan3 or full)}\fi
 \newcommand{\IfAtLeastElse}[3]{\ifnum\csname VersionRank@\Version\endcsname<\csname VersionRank@#1\endcsname\relax#3\else#2\fi}
 \newcommand{\IfAtLeast}[2]{\IfAtLeastElse{#1}{#2}{}}   % only when version >= #1
 \newcommand{\IfBelow}[2]{\IfAtLeastElse{#1}{}{#2}}     % only when version <  #1

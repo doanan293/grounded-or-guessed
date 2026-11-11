@@ -1,0 +1,103 @@
+% Thông tin nhóm, phân công theo mảng việc, công cụ AI; hiện trạng sau tuần đầu chỉ ở báo cáo lần 1.
+\begingroup\renewcommand{\thetable}{\arabic{table}}% before chapter 1: no "0." prefix
+\chapter*{Thông tin nhóm và phân công công việc}
+\addcontentsline{toc}{chapter}{Thông tin nhóm và phân công công việc}
+
+\section*{Thành viên}
+
+Nhóm M9 gồm bảy học viên, đã chốt danh sách và đề tài 02-KH (phát hiện lỗi và định vị lỗi, hướng nghiên cứu khoa học).
+Nhóm trưởng: \textbf{Doãn Văn An} (20252778M), đầu mối liên hệ với giảng viên và người giữ kho mã của nhóm.
+
+\begin{table}[H]
+\centering
+\caption{Thành viên nhóm M9}
+\label{tab:thanh-vien}
+\small
+\begin{tabularx}{\linewidth}{@{}r l l >{\raggedright\arraybackslash}X@{}}
+\toprule
+STT & Họ và tên & MSHV & Vai trò chính \\
+\midrule
+1 & Doãn Văn An & 20252778M & Nhóm trưởng; điều phối, hạ tầng thực nghiệm, phương pháp và viết bài \\
+2 & Tạ Công Nam & 20252640M & Bộ nhãn và duyệt nhãn; phân tích kết quả \\
+3 & Nguyễn Hoàng Hải & 20252583M & Tổng quan tài liệu và bộ từ khóa \\
+4 & Đỗ Xuân Tráng & 20252774M & Lỗi thật BugsInPy (RQ3) \\
+5 & Hoàng Trung Kiên & 20251333M & Biến thể đổi tên và các họ mô hình (RQ3) \\
+6 & Mai Văn Tùng & 20252788M & Slide, trình bày báo cáo \\
+7 & Nguyễn Đức Tùng & 20252772M & Công cụ phân tích tĩnh; kiểm tra số liệu \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section*{Phân công theo mảng việc}
+
+Công việc của cả tiểu luận được chia thành bảy mảng lớn. Nhóm trưởng phụ trách phần lớn khối lượng (hạ tầng, tái hiện,
+phương pháp đề xuất và viết bài); mỗi thành viên còn lại phụ trách chính một mảng và cùng tham gia duyệt nhãn.
+
+\begin{table}[H]
+\centering
+\caption{Phân công công việc theo mảng}
+\label{tab:phan-cong}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.2\linewidth} >{\raggedright\arraybackslash}p{0.27\linewidth}@{}}
+\toprule
+Mảng việc & Phụ trách chính & Cùng thực hiện \\
+\midrule
+Tổng quan tài liệu, bộ từ khóa, phân tích ba bài báo được giao & Nguyễn Hoàng Hải & Doãn Văn An \\
+Hạ tầng gọi LLM, tái hiện SemLoc và kiểm tra cách đánh giá (RQ1) & Doãn Văn An & Tạ Công Nam \\
+Bộ nhãn: kiểm chứng bằng thực thi, rà soát nhãn, duyệt mù & Tạ Công Nam & Doãn Văn An; cả nhóm duyệt nhãn \\
+Phương pháp đề xuất và so sánh (RQ2): prompt, thí nghiệm loại bỏ, các cách bổ sung, phân tích tĩnh & Doãn Văn An &
+Nguyễn Đức Tùng \\
+Độ bền (RQ3): lỗi thật BugsInPy, mã đổi tên, các họ mô hình & Đỗ Xuân Tráng, Hoàng Trung Kiên & Doãn Văn An \\
+Phân tích thất bại, đóng góp, triết lý khoa học, mối đe dọa & Doãn Văn An & Tạ Công Nam, Hoàng Trung Kiên \\
+Báo cáo, bài báo arXiv, slide, gói tái hiện & Doãn Văn An & Mai Văn Tùng, Nguyễn Đức Tùng \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section*{Công cụ AI sử dụng}
+
+\begin{itemize}
+\item \textbf{Claude Code} (Anthropic) là trợ lý chính: đọc và tóm tắt tài liệu, viết mã thực nghiệm và kiểm thử tự
+động, chạy thực nghiệm, soạn báo cáo LaTeX và slide. Mọi thay đổi được nhóm trưởng duyệt trước khi đưa vào kho mã.
+\item \textbf{Các skill cho agent}: ppt-master (dựng slide theo mẫu của môn học), research-paper-writing (bố cục bài
+báo), humanizer (rà văn phong), latex-document-skill (trình bày LaTeX).
+\item \textbf{LLM là đối tượng thực nghiệm}, gọi qua một proxy tương thích OpenAI: Gemini 3.8 Flash là mô hình chính;
+Claude Sonnet 4.6 (mô hình của bài báo gốc) để đối chiếu khi tái hiện; các họ mô hình khác cho RQ3.
+\end{itemize}
+
+Để kết quả kiểm chứng được dù có dùng AI, mọi con số trong báo cáo là macro sinh tự động từ dữ liệu, mọi lượt gọi LLM
+được ghi nhật ký và lưu bộ đệm để chạy lại, và kho mã có bộ kiểm thử tự động.
+
+\IfBelow{lan2}{%
+\section*{Hiện trạng và đánh giá sau tuần làm việc đầu tiên}
+
+Tính đến ngày 11/11/2026, một tuần sau khi chốt nhóm và đề tài, hiện trạng bốn nội dung theo hướng dẫn của môn học như
+sau.
+
+\begin{table}[H]
+\centering
+\caption{Hiện trạng bốn nội dung của tiểu luận (11/11/2026)}
+\label{tab:hien-trang}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.22\linewidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.17\linewidth}@{}}
+\toprule
+Nội dung & Hiện trạng & Tự đánh giá \\
+\midrule
+1. Tài liệu và từ khóa & Đã đọc ba bài báo được giao, tìm thêm tài liệu liên quan, lập bộ từ khóa và bảng so sánh
+(Chương~\ref{chap:tong-quan}) & Đạt \\
+2. RQ và thực nghiệm & Ba câu hỏi nghiên cứu, giả thuyết và thiết kế thực nghiệm (Chương~\ref{chap:phuong-phap}); hạ
+tầng gọi LLM và tái hiện SemLoc; đã có kết quả RQ1 (Mục~\ref{sec:rq1}). RQ2 đang chạy, RQ3 chưa bắt đầu & Đang thực
+hiện, đúng tiến độ \\
+3. Đóng góp và triết lý khoa học & Đã xác định các hướng đóng góp từ kết quả RQ1; chốt ở lần báo cáo 3 & Chưa đến hạn \\
+4. Bài báo arXiv & Đã dựng khung bài báo tiếng Anh (IEEEtran) & Chưa đến hạn \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Đánh giá chung.} Nhóm đã ổn định tổ chức, có hạ tầng thực nghiệm chạy lại được và kết quả đầu tiên: dòng hạng 1
+của SemLoc luôn là dòng LLM tự đoán, và nhãn của bộ dữ liệu có vấn đề. \textbf{Khó khăn:} chạy lại SemLoc với chính mô
+hình của bài báo không khớp nhật ký công bố; hạn mức gọi LLM của proxy giới hạn số lần chạy mỗi ngày; dựng môi trường
+cho lỗi thật của BugsInPy tốn thời gian. \textbf{Hướng xử lý:} báo cáo cả hai cách (tính lại từ nhật ký và chạy lại),
+lưu bộ đệm mọi lượt gọi LLM để không phải gọi lại, và dựng môi trường BugsInPy song song với RQ2.
+}
+\endgroup

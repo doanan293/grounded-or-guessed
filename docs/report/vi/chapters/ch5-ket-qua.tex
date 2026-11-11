@@ -48,7 +48,7 @@ Bộ chạy BugsInPy của SemLoc có thêm hai lỗi: (i) chỉ số ``hạng t
 cùng kích thước tệp, để lại bản biên dịch Python (\texttt{.pyc}) của phiên bản \emph{đã vá}, khiến lỗi ``biến mất'' ở
 lượt chạy sau. Nhóm đã sửa lỗi thứ hai trong bộ chạy của mình và chấm lại BugsInPy theo dòng đã sửa thật.
 
-\IfAtLeastElse{lan2}{%
+\IfAtLeastElse{lan3}{%
 \subsection{Chất lượng nhãn của bộ dữ liệu}
 
 Bảng~\ref{tab:nhan-lech} so nhãn gốc với nhãn đã rà soát trên cả \LabaudAllN{} chương trình. Chỉ \LabaudAllSame{} nhãn
@@ -90,21 +90,24 @@ bộ nhãn do LLM gợi ý và cần đọc kèm nguy cơ vòng tròn. Giải th
 nêu một hai dòng (Acc@3 gần bằng Acc@5), còn SemLoc xếp hạng nhiều dòng liền nhau, nên khi nhãn lệch một dòng SemLoc vẫn
 ``trúng'' nhờ dòng hàng xóm.
 }{%
-\subsection{Ảnh hưởng của dòng lỗi chuẩn}
+\subsection{\IfAtLeastElse{lan2}{Ảnh hưởng của dòng lỗi chuẩn}{Dòng lỗi chuẩn của bộ dữ liệu}}
 
 \GtBlankN{} nhãn gốc nằm trên dòng trống và \GtNotExecutedN{} chương trình không có kiểm thử thất bại nào chạy tới dòng
-lỗi chuẩn. Trên lượt chạy của nhóm, chuyển từ nhãn gốc (200 chương trình) sang bộ đã sửa bằng thực thi làm Acc@1 của
+lỗi chuẩn. \IfAtLeastElse{lan2}{Trên lượt chạy của nhóm, chuyển từ nhãn gốc (200 chương trình) sang bộ đã sửa bằng thực thi làm Acc@1 của
 SemLoc đi từ \RqTwoOriginalAllSemlocAccOneMean\% lên \RqTwoRepairedAllSemlocAccOneMean\%; một phần mức tăng đến từ mẫu số
-nhỏ hơn, vì bộ đã sửa bỏ các lỗi không kiểm chứng được. Việc rà soát toàn bộ nhãn đang được thực hiện.
+nhỏ hơn, vì bộ đã sửa bỏ các lỗi không kiểm chứng được. Việc rà soát toàn bộ nhãn đang được thực hiện.}{Một nhãn nằm
+trên dòng trống thì không phương pháp nào ``trúng'' được, còn một lỗi không được kiểm thử thất bại nào chạy tới thì
+bằng chứng thực thi không thể chỉ ra. Nhóm đang dựng bộ nhãn \emph{đã sửa}: mỗi nhãn được kiểm chứng bằng cách vá
+dòng đó rồi chạy lại kiểm thử; kết quả và ảnh hưởng của nó lên độ chính xác sẽ được trình bày ở lần báo cáo sau.}
 
 }
 
 \section{RQ2 -- LLM thật sự cần gì?}
 \label{sec:rq2}
 
-\subsection{Một prompt có kiểm thử thất bại so với quy trình nhiều bước}
+\IfAtLeast{lan2}{\subsection{Một prompt có kiểm thử thất bại so với quy trình nhiều bước}}
 
-\IfAtLeastElse{lan2}{%
+\IfAtLeastElse{lan3}{%
 Bảng~\ref{tab:ket-qua-chinh} là kết quả chính trên ba bộ nhãn. \textbf{LLM + kiểm thử thất bại} --- phương pháp đề xuất
 --- thắng SemLoc trên cả ba bộ ở Acc@1: \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo;
 \RqTwoOriginalAllLlmTestsDAccOneHi] trên bộ gốc, \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo;
@@ -126,8 +129,8 @@ trình, so với \CostSemlocTokensK{} nghìn của SemLoc. SBFL thấp nhất tr
 \end{table}
 
 Trên bộ đã rà soát, LLM + kiểm thử thất bại đạt Acc@3 \RqTwoReviewedAllLlmTestsAccThreeMean\%: với nhãn đã rà soát (do LLM gợi ý), SemFault-250
-gần như \emph{bão hòa} với một prompt đơn giản.\IfAtLeast{lan2}{ Chương~\ref{chap:that-bai} bàn vì sao.}
-}{%
+gần như \emph{bão hòa} với một prompt đơn giản.\IfAtLeast{full}{ Chương~\ref{chap:that-bai} bàn vì sao.}
+}{\IfAtLeastElse{lan2}{%
 Bảng~\ref{tab:ket-qua-chinh} là kết quả chính trên bộ nhãn gốc và bộ đã sửa. \textbf{LLM + kiểm thử thất bại} --- phương
 pháp đề xuất --- thắng SemLoc ở Acc@1 trên cả hai bộ: \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo;
 \RqTwoOriginalAllLlmTestsDAccOneHi] trên bộ gốc và \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo;
@@ -144,9 +147,14 @@ mỗi chương trình}
 \label{tab:ket-qua-chinh}
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq_main_results_two}}
 \end{table}
-}
+}{%
+RQ2 đang được thực hiện. Bộ chạy đã sẵn sàng cho bốn phương pháp trên cùng các chương trình của tập test: SBFL (Ochiai),
+LLM hỏi thẳng, SemLoc chạy lại bằng mã của tác giả, và phương pháp đề xuất của nhóm --- một lượt gọi LLM với mã nguồn,
+tên kiểm thử thất bại và thông báo lỗi (Mục~\ref{sec:cau-hoi}). Mỗi phương pháp chạy ba lần với Gemini 3.8 Flash; kết
+quả, khoảng tin cậy và chi phí token sẽ được trình bày ở lần báo cáo sau.
+}}
 
-\IfAtLeast{lan2}{%
+\IfAtLeast{lan3}{%
 \subsection{Thông tin nào tạo ra khác biệt}
 
 Ablation tách hai nguồn thông tin trong prompt. \textbf{Kiểm thử thất bại} (tên kiểm thử và dòng thông báo lỗi đầu tiên)
@@ -209,11 +217,12 @@ các công cụ này trên bộ dữ liệu này: chúng kiểm tra cách mã đ
 \end{table}
 }% lan2: ablation, additions, static analysis
 
+\IfAtLeast{lan2}{%
 \subsection{Grounded hay guessed: giá trị biên và phân rã}
 
 Vì điểm thưởng lớn hơn mọi điểm ràng buộc, thêm phổ vào dòng đoán \emph{không thể} thay đổi dòng đầu tiên: riêng dòng đoán
 và SemLoc cùng đạt Acc@1 \RqTwoRepairedAllSemlocAccOneMean\% trên bộ đã sửa, còn riêng phổ đạt
-\RqTwoRepairedAllSemlocNoPriorAccOneMean\%\IfAtLeast{lan2}{; trên bộ đã rà soát là \RqTwoReviewedAllSemlocAccOneMean\% so với
+\RqTwoRepairedAllSemlocNoPriorAccOneMean\%\IfAtLeast{lan3}{; trên bộ đã rà soát là \RqTwoReviewedAllSemlocAccOneMean\% so với
 \RqTwoReviewedAllSemlocNoPriorAccOneMean\%}. Giá trị Shapley của phổ ở Acc@1 (Bảng~\ref{tab:phan-ra},
 \DecSemlocRepairedAllAccOnePhiSpectrum{} điểm) vì vậy là phần công cho điều phổ \emph{sẽ} đạt được nếu không có dòng đoán,
 không phải đóng góp vào dòng đầu của SemLoc. Ở top-3, phổ có tác dụng thật: dòng đoán chỉ nêu một dòng nên dừng ở
@@ -230,8 +239,9 @@ tác giả (Claude), phân rã cho \PubSemlocClaudeTZeroEightSemlocOriginalAllAc
 \label{tab:phan-ra}
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq_decomposition_ours}}
 \end{table}
+}% lan2: decomposition
 
-\IfAtLeast{lan2}{%
+\IfAtLeast{lan3}{%
 \subsection{Chi phí theo mô hình}
 
 Hình~\ref{fig:pareto} đặt độ chính xác cạnh chi phí cho năm mô hình trên cùng một tập con
@@ -248,7 +258,7 @@ mô hình}
 \end{figure}
 }
 
-\IfAtLeastElse{lan2}{%
+\IfAtLeastElse{lan3}{%
 \section{RQ3 -- Độ bền}
 \label{sec:rq3}
 
@@ -320,7 +330,7 @@ SemFault-250 và các họ mô hình khác; kết quả sẽ được trình bà
 \section{Tóm tắt trả lời các câu hỏi nghiên cứu}
 \label{sec:tom-tat-rq}
 
-\IfAtLeastElse{lan2}{%
+\IfAtLeastElse{lan3}{%
 \begin{table}[H]
 \centering
 \caption{Trả lời ba câu hỏi nghiên cứu}
@@ -343,6 +353,11 @@ kết luận giữ trên cả ba bộ nhãn. \\
 \end{tabularx}
 \end{table}
 }{%
+% row text defined outside the table: a conditional inside a tabular row breaks alignment
+\IfAtLeastElse{lan2}{\def\TraLoiRQTwo{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước ở Acc@1 trên bộ gốc và bộ
+đã sửa, rẻ hơn khoảng bảy lần. Hạng 1 của SemLoc là ``guessed'' theo thiết kế. Đang thực hiện: thông tin nào trong
+prompt tạo ra khác biệt, các cách bổ sung.}}{\def\TraLoiRQTwo{Đang thực hiện: bộ chạy cho SBFL, LLM hỏi thẳng,
+SemLoc và phương pháp một prompt đã sẵn sàng trên tập test.}}
 \begin{table}[H]
 \centering
 \caption{Trả lời các câu hỏi nghiên cứu đến thời điểm báo cáo}
@@ -355,9 +370,7 @@ Câu hỏi & Trả lời \\
 RQ1 & Tính lại từ nhật ký khớp toàn bộ, chạy lại thì không; điểm thưởng ẩn quyết định dòng đầu; bước kiểm chứng phản
 thực tế không đổi thứ hạng; mã chấm điểm lạc quan với gỡ lỗi chia đôi và bi quan với SBFL; nhãn gốc có nhiều dòng trống
 và lỗi không được chạy tới. \\
-RQ2 & Một prompt có kiểm thử thất bại thắng quy trình nhiều bước ở Acc@1 trên bộ gốc và bộ đã sửa, rẻ hơn khoảng bảy lần.
-Hạng 1 của SemLoc là ``guessed'' theo thiết kế. Đang thực hiện: thông tin nào trong prompt tạo ra khác biệt, các cách bổ
-sung. \\
+RQ2 & \TraLoiRQTwo \\
 RQ3 & Đang thực hiện. \\
 \bottomrule
 \end{tabularx}

@@ -30,22 +30,32 @@ def _pdf_text(pdf: Path) -> str:
     return " ".join(subprocess.run(["pdftotext", str(pdf), "-"], capture_output=True, text=True).stdout.split())
 
 
+VERSIONS = ("lan1", "lan2", "lan3", "full")
+
+
+def _build_all() -> dict:
+    r = subprocess.run(["make", "-C", str(ROOT / "docs" / "report"), *(f"vi-{v}" for v in VERSIONS)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-2000:] + r.stderr[-2000:]
+    return {v: _pdf_text(ROOT / "docs" / "report" / "vi" / f"main-{v}.pdf") for v in VERSIONS}
+
+
 @pytest.mark.slow
 @pytest.mark.skipif(shutil.which("latexmk") is None, reason="needs TeX Live")
 def test_versions_contain_expected_chapters():
-    r = subprocess.run(["make", "-C", str(ROOT / "docs" / "report"), "vi-lan1", "vi-lan2", "vi-full"],
-                       capture_output=True, text=True)
-    assert r.returncode == 0, r.stdout[-2000:] + r.stderr[-2000:]
-    t = {v: _pdf_text(ROOT / "docs" / "report" / "vi" / f"main-{v}.pdf") for v in ("lan1", "lan2", "full")}
-    assert "Kết quả thực nghiệm" in t["lan1"] and "Phân tích thất bại" not in t["lan1"]
-    assert "Phân tích thất bại" in t["lan2"] and "Phụ lục" not in t["lan2"]
-    assert "Phụ lục" in t["full"]
-    # progress-report markers only below full, and the right one per version
-    assert "Báo cáo tiến độ lần 1" in t["lan1"] and "Báo cáo tiến độ lần 2" in t["lan2"]
-    assert "Báo cáo tiến độ" not in t["full"] and "Kế hoạch đến bài nộp cuối" not in t["full"]
-    assert "báo cáo lần 2" in t["lan1"] and "báo cáo lần 2" not in t["lan2"]
+    t = _build_all()
+    assert "Kết quả thực nghiệm" in t["lan1"] and "Đóng góp, triết lý khoa học" not in t["lan2"]
+    assert "Đóng góp, triết lý khoa học" in t["lan3"] and "Phân tích thất bại và thảo luận" not in t["lan3"]
+    assert "Phân tích thất bại và thảo luận" in t["full"] and "Phụ lục" not in t["lan3"] and "Phụ lục" in t["full"]
+    # every version lists the group and the work split; progress markers only below full, one per version
     for v, text in t.items():
+        assert "Thành viên nhóm M9" in text and "Phân công công việc theo mảng" in text, v
         assert "??" not in text, v
+    assert "Báo cáo tiến độ lần 1 (11/11/2026)" in t["lan1"]
+    assert "Báo cáo tiến độ lần 2 (18–19/11/2026)" in t["lan2"]
+    assert "Báo cáo tiến độ lần 3 (25–26/11/2026)" in t["lan3"]
+    assert "Báo cáo tiến độ" not in t["full"] and "Kế hoạch đến bài nộp cuối" not in t["full"]
+    assert "Hiện trạng bốn nội dung" in t["lan1"] and "Hiện trạng bốn nội dung" not in t["lan2"]
 
 
 @pytest.mark.slow
@@ -59,19 +69,23 @@ def test_paper_draft_marker_only_below_full():
 @pytest.mark.slow
 @pytest.mark.skipif(shutil.which("latexmk") is None, reason="needs TeX Live")
 def test_versions_stage_the_results():
-    """Report 1 shows RQ1 and the main comparison only; report 2 adds the rest except propose-and-verify; full has all."""
-    r = subprocess.run(["make", "-C", str(ROOT / "docs" / "report"), "vi-lan1", "vi-lan2", "vi-full"],
-                       capture_output=True, text=True)
-    assert r.returncode == 0, r.stdout[-2000:] + r.stderr[-2000:]
-    t = {v: _pdf_text(ROOT / "docs" / "report" / "vi" / f"main-{v}.pdf") for v in ("lan1", "lan2", "full")}
-    lan2_only = ["Duyệt mù", "SemFault-250 đã rà soát", "Thông tin nào tạo ra khác biệt", "RQ3a:",
-                 "Các cách bổ sung không cải thiện được", "Phân tích tĩnh trên 250 chương trình"]
-    full_only = ["cấu hình mạnh tay nhất", "Đề xuất rồi kiểm chứng dùng kiểm thử làm trọng tài"]
-    for s in lan2_only + full_only:
-        assert s not in t["lan1"], s
-        assert s in t["full"], s
-    for s in lan2_only:
-        assert s in t["lan2"], s
-    for s in full_only:
-        assert s not in t["lan2"], s
-    assert "Kết quả đến thời điểm báo cáo" in t["lan1"] and "RQ3 đang được thực hiện" in t["lan1"]
+    """Each report shows a little more: 1 = RQ1; 2 = + repaired labels, main comparison; 3 = + review, ablation,
+    additions, static tools, RQ3, contributions; full = + failure analysis, propose-and-verify, appendix."""
+    t = _build_all()
+    stages = {
+        "lan2": ["Kết quả chính trên bộ nhãn gốc và bộ đã sửa", "Grounded hay guessed: giá trị biên"],
+        "lan3": ["Duyệt mù", "SemFault-250 đã rà soát", "Thông tin nào tạo ra khác biệt", "RQ3a:",
+                 "Các cách bổ sung không cải thiện được", "Phân tích tĩnh trên 250 chương trình"],
+        "full": ["cấu hình mạnh tay nhất", "Đề xuất rồi kiểm chứng dùng kiểm thử làm trọng tài", "Năm mẫu nguyên nhân"],
+    }
+    order = list(VERSIONS)
+    for first, phrases in stages.items():
+        for s in phrases:
+            for v in order:
+                shown = order.index(v) >= order.index(first)
+                if first == "lan2" and s.startswith("Kết quả chính trên bộ nhãn gốc") and v in ("lan3", "full"):
+                    continue  # from lan3 the table covers three label sets and is captioned differently
+                assert (s in t[v]) == shown, (s, v)
+    assert "RQ2 đang được thực hiện" in t["lan1"] and "RQ2 đang được thực hiện" not in t["lan2"]
+    assert "RQ3 đang được thực hiện" in t["lan2"] and "RQ3 đang được thực hiện" not in t["lan3"]
+    assert "Kết quả đến thời điểm báo cáo" in t["lan1"] and "Kết quả đến thời điểm báo cáo" in t["lan2"]

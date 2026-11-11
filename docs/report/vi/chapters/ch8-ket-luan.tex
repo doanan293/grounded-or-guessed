@@ -4,7 +4,7 @@
 \section{Kết luận}
 \label{sec:ket-luan}
 
-\IfAtLeastElse{lan2}{%
+\IfAtLeastElse{lan3}{%
 Tiểu luận đặt câu hỏi ``grounded hay guessed?'' cho SemLoc~\cite{yang2026semloc}, phương pháp định vị lỗi ngữ nghĩa tuyên
 bố neo lập luận của LLM vào bằng chứng thực thi, và so nó với một cách làm đơn giản, gần với cách nhiều lập trình viên đang làm: chạy kiểm thử, đưa
 kết quả thất bại cho LLM. Bằng cách tính lại từ nhật ký và chạy lại từ mã nguồn của tác giả, kiểm tra lại chính các nhãn
@@ -19,7 +19,7 @@ thứ LLM cần là kiểm thử thất bại, không phải độ phủ từng 
 SemLoc,\IfAtLeast{full}{ kiểm chứng dòng nghi ngờ bằng bản sửa,} biểu quyết --- và các công cụ phân tích tĩnh đều không thu hẹp được khoảng cách (CovGate chỉ giúp SemLoc một chút), vì
 kiểm thử của bộ dữ liệu đủ để gợi ý lỗi nhưng quá yếu để chứng minh vị trí lỗi. Các kết luận này đến từ một mô hình chính,
 các chương trình một hàm có kiểm thử mô tả rõ ý định, và 31 lỗi thật của một dự án.
-\IfAtLeast{lan2}{Phân tích thất bại cho thấy thêm rằng độ chính xác cấp dòng phụ thuộc vào việc nhãn được gán ở dòng điều
+\IfAtLeast{full}{Phân tích thất bại cho thấy thêm rằng độ chính xác cấp dòng phụ thuộc vào việc nhãn được gán ở dòng điều
 kiện hay ở câu lệnh mà điều kiện bảo vệ, và trên nhãn đã rà soát, bộ dữ liệu gần như bão hòa với một prompt đơn giản.}
 Vì vậy, nhóm đề xuất mọi đánh giá định vị lỗi bằng LLM áp dụng bảng kiểm tra bảy mục: phá hòa bằng hạng trung bình; mẫu
 số cố định; dòng lỗi chuẩn được kiểm chứng; loại bỏ từng thành phần, kể cả thành phần không được mô tả; lặp và báo khoảng
@@ -27,23 +27,32 @@ tin cậy ghép cặp; báo cáo chi phí; và so với một prompt duy nhất 
 }{%
 Tiểu luận đặt câu hỏi ``grounded hay guessed?'' cho SemLoc~\cite{yang2026semloc}, phương pháp định vị lỗi ngữ nghĩa tuyên
 bố neo lập luận của LLM vào bằng chứng thực thi, và so nó với một cách làm đơn giản: chạy kiểm thử, đưa kết quả thất bại
-cho LLM. Đến thời điểm báo cáo này, nhóm rút ra hai kết luận. Thứ nhất, kết quả công bố tính lại được từ nhật ký, nhưng dòng
+cho LLM. \IfAtLeastElse{lan2}{Đến thời điểm báo cáo này, nhóm rút ra hai kết luận. Thứ nhất, kết quả công bố tính lại được từ nhật ký, nhưng dòng
 hạng 1 của SemLoc --- theo một lựa chọn thiết kế không có trong bài báo --- luôn là dòng LLM tự đoán, và bước vá thử không đổi
 thứ hạng nào; cách chấm điểm và các nhãn của bộ dữ liệu cũng làm thay đổi đáng kể các con số. Thứ hai, một prompt duy nhất có
 kiểm thử thất bại thắng quy trình nhiều bước ở Acc@1 trên cả bộ nhãn gốc lẫn bộ đã sửa, và rẻ hơn khoảng bảy lần. Các kết
-quả này đến từ một mô hình chính và cần được kiểm tra thêm ở các phần sau.
+quả này đến từ một mô hình chính và cần được kiểm tra thêm ở các phần sau.}{Sau tuần làm việc đầu tiên, kết quả
+của RQ1 cho thấy kết quả công bố tính lại được từ nhật ký, nhưng dòng hạng 1 của SemLoc --- theo một lựa chọn thiết kế
+không có trong bài báo --- luôn là dòng LLM tự đoán, và bước vá thử không đổi thứ hạng nào; cách chấm điểm và các nhãn của
+bộ dữ liệu cũng làm thay đổi đáng kể các con số. Câu hỏi còn lại là một cách làm đơn giản có đạt được độ chính xác đó
+hay không (RQ2), và các kết luận có bền không (RQ3).}
 }
 
 \section{Hướng phát triển}
 \label{sec:huong-phat-trien}
 
 \IfBelow{full}{\textbf{Kế hoạch đến bài nộp cuối.}
-\IfAtLeastElse{lan2}{Đánh giá phương pháp ``đề xuất rồi kiểm chứng'' (LLM đề xuất dòng nghi ngờ, bản sửa nhỏ và kiểm thử
-xác nhận) trên tập test; hoàn thiện bài báo tiếng Anh theo chuẩn arXiv; tự phản biện theo năm chiều; chỉnh sửa theo góp ý
-của giảng viên sau hai lần báo cáo và chuẩn bị slide bảo vệ.}{Đến báo cáo lần 2: rà soát toàn bộ nhãn của bộ dữ liệu (kèm
+\IfAtLeastElse{lan3}{Phân tích các ca thất bại và cơ chế khiến kiểm thử không làm được trọng tài; đánh giá phương pháp ``đề xuất rồi
+kiểm chứng'' (LLM đề xuất dòng nghi ngờ, bản sửa nhỏ và kiểm thử xác nhận) trên tập test; hoàn thiện bài báo tiếng Anh
+theo chuẩn arXiv; tự phản biện theo năm chiều; chỉnh sửa theo góp ý của giảng viên sau ba lần báo cáo và chuẩn bị slide
+bảo vệ.}{\IfAtLeastElse{lan2}{Đến báo cáo lần 3: rà soát toàn bộ nhãn của bộ dữ liệu (kèm
 duyệt độc lập); thí nghiệm loại bỏ để biết thông tin nào trong prompt tạo ra khác biệt; các cách bổ sung (CovGate, biểu
-quyết) và công cụ phân tích tĩnh; RQ3 trên lỗi thật, mã đổi tên và các họ mô hình; phân tích thất bại, đóng góp, triết lý
-khoa học và các mối đe dọa. Sau đó: phương pháp mới của nhóm và bài báo tiếng Anh theo chuẩn arXiv.}
+quyết) và công cụ phân tích tĩnh; RQ3 trên lỗi thật, mã đổi tên và các họ mô hình; đóng góp, triết lý khoa học và các mối
+đe dọa. Sau đó: phân tích thất bại, phương pháp mới của nhóm và bài báo tiếng Anh theo chuẩn arXiv.}{Đến báo cáo lần 2
+(18--19/11): bộ nhãn đã sửa bằng thực thi; so sánh chính của RQ2 trên tập test (ba lần chạy, khoảng tin cậy, chi phí).
+Đến báo cáo lần 3 (25--26/11): rà soát toàn bộ nhãn, thí nghiệm loại bỏ, các cách bổ sung và công cụ phân tích tĩnh,
+RQ3, đóng góp và triết lý khoa học. Sau đó: phân tích thất bại, phương pháp mới của nhóm và bài báo tiếng Anh theo chuẩn
+arXiv.}}
 
 }Về nghiên cứu, bốn hướng mở ra từ kết quả: (i) định vị lỗi cấp dự án --- thu hẹp từ cả kho mã xuống một hàm trước khi
 hỏi LLM, phần khó nhất trên dự án lớn mà tiểu luận chưa đánh giá; (ii) một thí nghiệm giấu tên kiểm thử để đo phần thông tin

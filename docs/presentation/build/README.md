@@ -1,7 +1,9 @@
-# Building `bao-cao-lan-1.pptx`
+# Building the decks (`bao-cao-lan-1/2/3.pptx`, `bao-ve.pptx`)
 
 The deck fills `docs/presentation/template-vi.pptx` (Slidesgo template — not redistributed here; download it from Slidesgo and keep its credits slide)
-through ppt-master's Edit Native PPTX route.
+through ppt-master's Edit Native PPTX route. `make_decks.sh [lan1] [lan2] [lan3] [baove]` builds, checks and exports
+them; each progress report shows a little more than the one before (lần 1 = group, work split, AI tools, status, RQ1;
+lần 2 = + main comparison; lần 3 = + RQ3, contributions; bảo vệ = everything).
 
 ```bash
 S=.claude/skills/ppt-master/scripts; W=runs/slides/bao-cao-lan-1_20261108
