@@ -410,7 +410,7 @@ def group_pages() -> None:
         ["Công cụ", "Dùng để làm gì"],
         ["Claude Code\n(Anthropic)", "Trợ lý chính: đọc tài liệu, viết mã và kiểm thử,\nchạy thực nghiệm, soạn LaTeX và slide"],
         ["Skill cho agent", "ppt-master (slide theo mẫu), research-paper-writing,\nhumanizer (văn phong), latex-document-skill"],
-        ["LLM thực nghiệm\n(qua proxy)", "Gemini 3.8 Flash (chính); Claude Sonnet 4.6 để đối chiếu\nbài báo gốc; các họ mô hình khác cho RQ3"],
+        ["LLM thực nghiệm\n(qua proxy)", "Gemini 3.8 Flash (chính), Claude Sonnet 4.6 (đối chiếu bài gốc);\nRQ3: Gemini 3.5 Flash-Lite, Claude Sonnet 5.5, GPT-6 luna, gpt-oss-120b"],
         ["Kiểm soát", "Nhóm trưởng duyệt mọi thay đổi; số liệu sinh tự động\ntừ dữ liệu; mọi lượt gọi LLM có nhật ký và bộ đệm"],
     ], head_h=40, row_h=66, fs=15))
     A("hien_trang.svg", table("bang-hien-trang", 84, 112, [215, 425, 160], [
