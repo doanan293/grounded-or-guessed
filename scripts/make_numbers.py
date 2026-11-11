@@ -94,6 +94,10 @@ def all_specs() -> list[Spec]:
                           "gt": ["original"], "subset": ["all"]})
     specs += table_specs("tol", DATA / "failure_tolerance.csv", ["method"],
                          {"acc1_exact": "pct", "acc1_guard_strict": "pct", "acc1_guard_or_body": "pct"})
+    if (DATA / "rq2_tolerant.csv").exists():
+        specs += table_specs("rqtol", DATA / "rq2_tolerant.csv", ["gt", "method"],
+                             {"acc1_exact": "pct", "acc1_tol": "pct", "acc1_tol_lenient": "pct", "acc3_exact": "pct",
+                              "acc3_tol": "pct", **{f"d_acc{k}_tol{s}": "pp" for k in (1, 3) for s in ("", "_lo", "_hi")}})
     specs += table_specs("off", DATA / "failure_offsets.csv", ["method", "offset"], {"count": "int"})
     if (DATA / "ablation_coverage.csv").exists():
         specs += table_specs("abl", DATA / "ablation_coverage.csv", ["gt", "subset", "contrast"],
