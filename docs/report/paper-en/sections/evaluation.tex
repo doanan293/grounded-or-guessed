@@ -100,6 +100,17 @@ per program}
 \resizebox{0.85\textwidth}{!}{\input{../generated/rq_main_results}}
 \end{table*}
 
+\textbf{Sensitivity to the labeling convention.} Acc@$k$ counts only the exact labeled line, and most misses point at
+an adjacent line, typically a compound-statement header and the statement it guards. As a secondary metric, chosen after
+seeing the results and used only as a robustness check, we also accept a top-ranked line that forms such a pair with a
+labeled line (header and first body line). This lifts Acc@1 on the repaired labels from
+\RqtolRepairedSemlocAccOneExact\% to \RqtolRepairedSemlocAccOneTol\% for SemLoc and from
+\RqtolRepairedLlmTestsAccOneExact\% to \RqtolRepairedLlmTestsAccOneTol\% for LLM + failing tests, which still leads by
+\RqtolRepairedLlmTestsDAccOneTol{} [\RqtolRepairedLlmTestsDAccOneTolLo, \RqtolRepairedLlmTestsDAccOneTolHi] points
+(\RqtolOriginalLlmTestsDAccOneTol{} [\RqtolOriginalLlmTestsDAccOneTolLo, \RqtolOriginalLlmTestsDAccOneTolHi] on the
+original labels), a narrower margin than under exact matching; LLM direct ties SemLoc
+(\RqtolRepairedLlmDirectDAccOneTol{} [\RqtolRepairedLlmDirectDAccOneTolLo, \RqtolRepairedLlmDirectDAccOneTolHi]).
+
 \textbf{What carries the signal.} The failing tests do: against LLM direct they change Acc@3 by
 \AblRepairedAllTestsEffectDAccThree{} [\AblRepairedAllTestsEffectDAccThreeLo, \AblRepairedAllTestsEffectDAccThreeHi]
 points (repaired). Per-line coverage does not: adding it changes Acc@3 by \AblRepairedAllCoverageEffectDAccThree{}
