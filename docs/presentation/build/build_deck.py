@@ -39,8 +39,9 @@ ANALYSIS = ["chuong04.svg", "that_bai.svg", "mo_ho.svg", "mau_loi.svg", "dong_go
 GROUP = ["chuong_nhom.svg", "nhom.svg", "phan_cong.svg", "cong_cu_ai.svg", "hien_trang.svg"]
 DECKS = {
     # report 1 (11/11): the group, its work split, AI tools, status after week 1; background, RQs, design, RQ1 only
-    "lan1": ["slide_01.svg", "slide_03.svg", *GROUP, "slide_04.svg", "slide_05.svg", "slide_08.svg", "slide_25.svg",
-             "slide_09.svg", "chuong02.svg", "slide_20.svg", "slide_19.svg", "thiet_ke.svg", "chuong03.svg", "slide_14.svg",
+    # 15 pages: no table of contents, no section dividers
+    "lan1": ["slide_01.svg", "nhom.svg", "phan_cong.svg", "cong_cu_ai.svg", "hien_trang.svg", "slide_05.svg",
+             "slide_08.svg", "slide_25.svg", "slide_09.svg", "slide_20.svg", "slide_19.svg", "thiet_ke.svg", "slide_14.svg",
              "slide_21.svg", "slide_30.svg"],
     # report 2 (18–19/11): + repaired labels and the main comparison; no RQ3 / cross-model cost yet
     "lan2": ["slide_01.svg", "slide_03.svg", *INTRO, *METHOD, "chuong03.svg", "slide_14.svg", "ket_qua_thu.svg",
@@ -271,11 +272,22 @@ def build() -> None:
     })
     E("slide_08.svg", {
         "What is this topic about?": "Nghiên cứu liên quan",
-        "Mercury": "SemLoc", "Venus": "EffiHolmes", "Mars": "Crash+LLM",
-        "closest planet to the Sun and the smallest": ["Lỗi ngữ nghĩa.", "LLM + chạy test.", "Acc@1 42,8%."],
-        "Venus has a beautiful name": ["Lỗi hiệu năng.", "Profiling 2 tải.", "140 issue thật."],
-        "Despite being red, Mars": ["Crash Java,", "38 lỗi thật.", "Định vị 71%."],
+        "Mercury": "SemLoc", "Venus": "EffiHolmes", "Mars": "Sự cố+LLM",
     })
+    for gid in ("shape-1668", "shape-1669", "shape-1670"):  # template body boxes indent and wrap later lines
+        D("slide_08.svg", gid)
+    for i, (x, body, use) in enumerate((
+            (85, ["Lỗi sai logic (Python).", "LLM viết ràng buộc,", "chạy test để chấm.", "Acc@1 42,8%."],
+             ["→ Nhóm tái hiện và", "so sánh trực tiếp"]),
+            (386, ["Lỗi chạy chậm.", "Đo ở tải nhỏ và tải lớn:", "hàm chậm dần là nghi.", "140 lỗi thật."],
+             ["→ Khuôn cho 3 RQ;", "ý so 2 lần chạy"]),
+            (687, ["App Java bị sập (crash).", "Xếp hạng từ stack trace", "đưa vào prompt LLM.", "38 lỗi: định vị 71%."],
+             ["→ Nền cho đối chứng", "LLM + độ phủ"]))):
+        A("slide_08.svg", f'<g id="cot-{i}" data-pptx-bounds="{x} 290 250 140">' + "".join(
+            f'<text x="{x}" y="{306 + 20 * k}" font-family="{BODY}" font-size="15" fill="{INK}">{escape(l)}</text>'
+            for k, l in enumerate(body)) + "".join(
+            f'<text x="{x}" y="{396 + 20 * k}" font-family="{BODY}" font-size="15" font-weight="bold" fill="{ORANGE}">'
+            f'{escape(l)}</text>' for k, l in enumerate(use)) + '</g>')
     A("slide_08.svg",
            f'<g id="tai-lieu-them" data-pptx-bounds="85 470 790 44"><text x="85" y="488" font-family="{BODY}" font-size="15" fill="{INK}">'
            f'<tspan font-weight="bold">+ 23 tài liệu nhóm tìm thêm: </tspan>SBFL kinh điển (Tarantula, Ochiai, DStar) · định vị lỗi bằng LLM</text>'
@@ -299,9 +311,9 @@ def build() -> None:
         E(name, {"Classification": title})
         D(name, "shape-2194")
     A("slide_22.svg", table("bang-so-sanh", 84, 135, [176, 158, 158, 158, 158], [
-        ["Tiêu chí", "SemLoc", "EffiHolmes", "Crash+LLM", "Nhóm mình"],
-        ["Loại lỗi", "ngữ nghĩa", "hiệu năng", "crash (Java)", "ngữ nghĩa"],
-        ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "profiling\n2 mức tải", "stack trace\n+ xếp hạng", "test fail đưa\nthẳng cho LLM"],
+        ["Tiêu chí", "SemLoc", "EffiHolmes", "Sự cố + LLM", "Nhóm mình"],
+        ["Loại lỗi", "ngữ nghĩa", "chạy chậm", "sập (Java)", "ngữ nghĩa"],
+        ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "so 2 lần chạy\ntải nhỏ / lớn", "stack trace\n+ xếp hạng", "test fail đưa\nthẳng cho LLM"],
         ["Lỗi thật", "7 có kết quả\ncấp dòng", "140 issue", "38 (công nghiệp)",
          "đang dựng\n(lần 3)" if EARLY() else "31 lỗi thật\n× 3 lần chạy"],
         ["Kiểm tra\nbenchmark", "không", "—", "—", "kiểm chứng nhãn\nbằng thực thi" if EARLY() else "rà soát cả\n250 nhãn"],
@@ -311,7 +323,7 @@ def build() -> None:
         ("Recommendations", "Học được & áp dụng"),
         ("Mars", "SemLoc"), ("Despite being red, Mars", ["Giả thuyết từ LLM, test", "phán xử; dùng mã gốc"]),
         ("Venus", "EffiHolmes"), ("Venus is the second", ["So 2 lần chạy để", "lọc nhiễu → CovGate"]),
-        ("Neptune", "Crash+LLM"), ("Neptune is the farthest", ["Đưa xếp hạng cho LLM", "giúp định vị tốt hơn"]),
+        ("Neptune", "Sự cố+LLM"), ("Neptune is the farthest", ["Đưa xếp hạng cho LLM", "giúp định vị tốt hơn"]),
         ("Mercury", "Pearson 2017"), ("Mercury is the closest", ["Cách chấm khi hòa điểm", "và khi lỗi thiếu code"]),
         ("Saturn", "Thuộc bài"), ("Saturn is a gas giant", ["LLM có thể thuộc bài →", "biến thể đổi tên (RQ3)"]),
         ("Jupiter", "FlexFL"), ("Jupiter is the biggest", ["Gợi ý SBFL cho LLM ở", "cấp hàm → ta cấp dòng"]),
@@ -355,6 +367,9 @@ def build() -> None:
             "Distance between the Earth": "Acc@1 SemLoc khi bỏ thưởng ẩn (Gemini)"} if DECK == "lan1" else
            {"386,000 km": _m("RqTwoRepairedAllLlmTestsDAccOne"), "Distance between the Earth": "Acc@1: 1 prompt có test fail so với SemLoc"}),
     })
+    if DECK == "lan1":  # no "Kết quả" divider in this deck: the numbers need their own title
+        A("slide_14.svg", f'<g id="tieu-de-rq1" data-pptx-bounds="560 50 360 40"><text x="560" y="78" font-family="{BODY}" '
+          f'font-size="24" font-weight="bold" fill="{NAVY}">Kết quả RQ1: tái hiện</text></g>')
     E("slide_21.svg", [
         ("Sequences", "Tiến độ"),
         ("First", "05/11"), ("Saturn is composed", "Chốt nhóm, đề tài"),
@@ -409,7 +424,6 @@ def group_pages() -> None:
     A("cong_cu_ai.svg", table("bang-cong-cu-ai", 84, 125, [220, 580], [
         ["Công cụ", "Dùng để làm gì"],
         ["Claude Code\n(Anthropic)", "Trợ lý chính: đọc tài liệu, viết mã và kiểm thử,\nchạy thực nghiệm, soạn LaTeX và slide"],
-        ["Skill cho agent", "ppt-master (slide theo mẫu), research-paper-writing,\nhumanizer (văn phong), latex-document-skill"],
         ["LLM thực nghiệm\n(qua proxy)", "Gemini 3.8 Flash (chính), Claude Sonnet 4.6 (đối chiếu bài gốc);\nRQ3: Gemini 3.5 Flash-Lite, Claude Sonnet 5.5, GPT-6 luna, gpt-oss-120b"],
         ["Kiểm soát", "Nhóm trưởng duyệt mọi thay đổi; số liệu sinh tự động\ntừ dữ liệu; mọi lượt gọi LLM có nhật ký và bộ đệm"],
     ], head_h=40, row_h=66, fs=15))
@@ -417,8 +431,6 @@ def group_pages() -> None:
         ["Nội dung", "Hiện trạng", "Tự đánh giá"],
         ["1. Tài liệu, từ khóa", "3 bài được giao + tài liệu thêm, bộ từ khóa,\nbảng so sánh", "Đạt"],
         ["2. RQ, thực nghiệm", "3 RQ, thiết kế; hạ tầng LLM; tái hiện SemLoc;\ncó kết quả RQ1. RQ2 đang chạy", "Đang làm,\nđúng tiến độ"],
-        ["3. Đóng góp,\ntriết lý", "Đã có hướng đóng góp từ RQ1;\nchốt ở lần báo cáo 3", "Chưa đến hạn"],
-        ["4. Bài báo arXiv", "Đã dựng khung bài báo tiếng Anh (IEEEtran)", "Chưa đến hạn"],
     ], head_h=40, row_h=56, fs=15,
         note="Khó khăn: chạy lại SemLoc không khớp nhật ký công bố; hạn mức gọi LLM; dựng môi trường BugsInPy.\n"
              "Hướng xử lý: báo cáo cả tính lại và chạy lại; bộ đệm lượt gọi LLM; dựng BugsInPy song song với RQ2."))
