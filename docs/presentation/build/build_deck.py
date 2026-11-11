@@ -390,7 +390,7 @@ def group_pages() -> None:
         ["3", "Nguyễn Hoàng Hải", "20252583M", "Tổng quan tài liệu, bộ từ khóa"],
         ["4", "Đỗ Xuân Tráng", "20252774M", "Lỗi thật BugsInPy (RQ3)"],
         ["5", "Hoàng Trung Kiên", "20251333M", "Mã đổi tên, các họ mô hình (RQ3)"],
-        ["6", "Mai Văn Tùng", "20252788M", "Slide, trình bày báo cáo"],
+        ["6", "Mai Văn Tùng", "20252788M", "Slide"],
         ["7", "Nguyễn Đức Tùng", "20252772M", "Công cụ phân tích tĩnh; kiểm tra số liệu"],
     ], head_h=40, row_h=40, fs=15,
         note="Đã chốt 7 thành viên · đề tài 02-KH (phát hiện và định vị lỗi, hướng nghiên cứu khoa học)\n"
