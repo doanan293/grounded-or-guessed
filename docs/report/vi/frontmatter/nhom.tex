@@ -59,8 +59,6 @@ Báo cáo, bài báo arXiv, slide, gói tái hiện & Doãn Văn An & Mai Văn T
 \begin{itemize}
 \item \textbf{Claude Code} (Anthropic) là trợ lý chính: đọc và tóm tắt tài liệu, viết mã thực nghiệm và kiểm thử tự
 động, chạy thực nghiệm, soạn báo cáo LaTeX và slide. Mọi thay đổi được nhóm trưởng duyệt trước khi đưa vào kho mã.
-\item \textbf{Các skill cho agent}: ppt-master (dựng slide theo mẫu của môn học), research-paper-writing (bố cục bài
-báo), humanizer (rà văn phong), latex-document-skill (trình bày LaTeX).
 \item \textbf{LLM là đối tượng thực nghiệm}, gọi qua một proxy tương thích OpenAI: Gemini 3.8 Flash là mô hình chính;
 Claude Sonnet 4.6 (mô hình của bài báo gốc) để đối chiếu khi tái hiện; cho RQ3 thêm Gemini 3.5 Flash-Lite,
 Claude Sonnet 5.5, GPT-6 luna và gpt-oss-120b (mô hình mở của OpenAI).
@@ -72,12 +70,12 @@ Claude Sonnet 5.5, GPT-6 luna và gpt-oss-120b (mô hình mở của OpenAI).
 \IfBelow{lan2}{%
 \section*{Hiện trạng và đánh giá sau tuần làm việc đầu tiên}
 
-Tính đến ngày 11/11/2026, một tuần sau khi chốt nhóm và đề tài, hiện trạng bốn nội dung theo hướng dẫn của môn học như
-sau.
+Tính đến ngày 11/11/2026, một tuần sau khi chốt nhóm và đề tài, hiện trạng hai nội dung đầu theo hướng dẫn của môn học
+như sau.
 
 \begin{table}[H]
 \centering
-\caption{Hiện trạng bốn nội dung của tiểu luận (11/11/2026)}
+\caption{Hiện trạng sau tuần làm việc đầu tiên (11/11/2026)}
 \label{tab:hien-trang}
 \small
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.22\linewidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.17\linewidth}@{}}
@@ -89,8 +87,6 @@ Nội dung & Hiện trạng & Tự đánh giá \\
 2. RQ và thực nghiệm & Ba câu hỏi nghiên cứu, giả thuyết và thiết kế thực nghiệm (Chương~\ref{chap:phuong-phap}); hạ
 tầng gọi LLM và tái hiện SemLoc; đã có kết quả RQ1 (Mục~\ref{sec:rq1}). RQ2 đang chạy, RQ3 chưa bắt đầu & Đang thực
 hiện, đúng tiến độ \\
-3. Đóng góp và triết lý khoa học & Đã xác định các hướng đóng góp từ kết quả RQ1; chốt ở lần báo cáo 3 & Chưa đến hạn \\
-4. Bài báo arXiv & Đã dựng khung bài báo tiếng Anh (IEEEtran) & Chưa đến hạn \\
 \bottomrule
 \end{tabularx}
 \end{table}
