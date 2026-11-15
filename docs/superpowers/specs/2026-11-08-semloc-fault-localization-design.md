@@ -144,7 +144,7 @@ Báo cáo đầy đủ và bài báo dùng chung số liệu, bảng, hình; nê
 
 ## 7. Lộ trình 4 phase
 
-Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội dung), **lần 2 ngày 25–26/11** (cần 3/4), **nộp và bảo vệ tháng 12** (ngày cụ thể chưa biết — tạm đặt xong mọi thứ trước 12/12).
+Mốc của thầy: **báo cáo lần 1 ngày 18–19/11** (cần xong 2/4 nội dung), **lần 2 ngày 25–26/11** (cần 3/4), **nộp và bảo vệ tháng 12** (ngày cụ thể chưa biết — tạm đặt xong mọi thứ trước 12/12). (15/11: bản ngày 11/11 chỉ là nháp nội bộ và đã bỏ; nhánh `bao-cao-lan-1` = 18–19/11, `bao-cao-lan-2` = 25–26/11.)
 
 ### Phase 1 — Tài liệu và nền tảng (làm xong 08/11)
 - 1.1 Đọc sâu SemLoc (bài + mã nguồn) và 2 bài còn lại (EffiHolmes, Crash report + LLM)

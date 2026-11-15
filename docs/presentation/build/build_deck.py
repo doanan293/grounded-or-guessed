@@ -1,7 +1,7 @@
-"""Build the Vietnamese decks from template-vi.pptx pages: báo cáo lần 1, 2, 3 and bảo vệ.
+"""Build the Vietnamese decks from template-vi.pptx pages: báo cáo lần 1, 2 and bảo vệ.
 
 Re-runnable: every page is rebuilt from the pristine imported SVG kept in orig/.
-    python3 docs/presentation/build/build_deck.py lan1|lan2|lan3|baove   (workspace: see README.md)
+    python3 docs/presentation/build/build_deck.py lan1|lan2|baove   (workspace: see README.md)
 Every number is read from data/ (repaired ground truth unless stated).
 """
 import json
@@ -39,30 +39,26 @@ RESULTS = ["slide_14.svg", "ket_qua_thu.svg", "ket_qua_rq3.svg", "pareto.svg"]
 ANALYSIS = ["chuong04.svg", "that_bai.svg", "mo_ho.svg", "mau_loi.svg", "dong_gop.svg", "triet_ly.svg", "de_doa.svg"]
 GROUP = ["chuong_nhom.svg", "nhom.svg", "phan_cong.svg", "cong_cu_ai.svg", "hien_trang.svg"]
 DECKS = {
-    # report 1 (11/11): the group, its work split, AI tools, status after week 1; background, RQs, design, RQ1 only
-    # 15 pages: no table of contents, no section dividers
-    "lan1": ["slide_01.svg", "nhom.svg", "phan_cong.svg", "cong_cu_ai.svg", "hien_trang.svg", "slide_05.svg",
-             "slide_08.svg", "slide_25.svg", "slide_09.svg", "slide_20.svg", "slide_19.svg", "thiet_ke.svg", "slide_14.svg",
-             "slide_21.svg", "slide_30.svg"],
-    # report 2 (18–19/11): + repaired labels and the main comparison; no RQ3 / cross-model cost yet
-    "lan2": ["slide_01.svg", "slide_03.svg", *INTRO, *METHOD, "chuong03.svg", "slide_14.svg", "ket_qua_thu.svg",
-             "slide_21.svg", "slide_30.svg"],
-    # report 3 (25–26/11): + RQ3, cost, contributions; failure analysis waits for the final submission
-    "lan3": ["slide_01.svg", "slide_03.svg", "slide_20.svg", *RESULTS, "chuong04.svg", "dong_gop.svg", "triet_ly.svg",
-             "de_doa.svg", "slide_21.svg", "slide_30.svg"],
+    # report 1 (18–19/11): the group, its work split, AI tools; background, RQs, design, RQ1, repaired labels and the
+    # main comparison; status of the four contents; no RQ3 / cross-model cost yet
+    "lan1": ["slide_01.svg", "nhom.svg", "phan_cong.svg", "cong_cu_ai.svg", "slide_03.svg", *INTRO, *METHOD,
+             "chuong03.svg", "slide_14.svg", "ket_qua_thu.svg", "hien_trang.svg", "slide_21.svg", "slide_30.svg"],
+    # report 2 (25–26/11): + RQ3, cost, contributions; failure analysis waits for the final submission
+    "lan2": ["slide_01.svg", "slide_03.svg", "slide_20.svg", *RESULTS, "chuong04.svg", "dong_gop.svg", "triet_ly.svg",
+             "de_doa.svg", "hien_trang.svg", "slide_21.svg", "slide_30.svg"],
     "baove": ["slide_01.svg", "slide_03.svg", *INTRO, *METHOD, "chuong03.svg", *RESULTS, *ANALYSIS, "ket_luan.svg",
               "slide_30.svg"],
 }
-OCCASION = {"lan1": "Báo cáo lần 1 · 11/11/2026", "lan2": "Báo cáo lần 2 · 18/11/2026", "lan3": "Báo cáo lần 3 · 25/11/2026",
+OCCASION = {"lan1": "Báo cáo lần 1 · 18/11/2026", "lan2": "Báo cáo lần 2 · 25/11/2026",
             "baove": "Bảo vệ tiểu luận · 12/2026"}
-OUT_NAME = {"lan1": "bao-cao-lan-1.pptx", "lan2": "bao-cao-lan-2.pptx", "lan3": "bao-cao-lan-3.pptx", "baove": "bao-ve.pptx"}
+OUT_NAME = {"lan1": "bao-cao-lan-1.pptx", "lan2": "bao-cao-lan-2.pptx", "baove": "bao-ve.pptx"}
 DECK = "lan1"
 PAGES: list = []
 
 
 def EARLY() -> bool:
-    """Reports 1 and 2: original + repaired labels only, no ablation / additions / RQ3 yet."""
-    return DECK in ("lan1", "lan2")
+    """Report 1: original + repaired labels only, no ablation / additions / RQ3 yet."""
+    return DECK == "lan1"
 
 
 def fresh() -> None:
@@ -229,18 +225,14 @@ def build() -> None:
                                                    f"Nhóm M9 · {OCCASION[DECK]}"],
     })
     toc = {
-        "lan1": [("Nhóm & tiến độ", ["Thành viên, phân công,", "công cụ AI, hiện trạng"]),
-                 ("Bối cảnh", ["Vấn đề, nghiên cứu liên quan,", "SemLoc"]),
-                 ("Phương pháp", ["3 câu hỏi, đề xuất,", "thiết kế thực nghiệm"]),
-                 ("Kết quả RQ1", ["Tái hiện, thưởng ẩn,", "nhãn; kế hoạch"])],
-        "lan2": [("Bối cảnh", ["Vấn đề, nghiên cứu liên quan,", "SemLoc"]),
+        "lan1": [("Bối cảnh", ["Vấn đề, nghiên cứu liên quan,", "SemLoc"]),
                  ("Phương pháp", ["3 câu hỏi, đề xuất,", "thiết kế thực nghiệm"]),
                  ("Kết quả RQ1–RQ2", ["Tái hiện, nhãn đã sửa,", "so sánh chính"]),
-                 ("Kế hoạch", ["Tiến độ và việc đến lần 3"])],
-        "lan3": [("Câu hỏi", ["Nhắc lại 3 câu hỏi", "nghiên cứu"]),
+                 ("Kế hoạch", ["Hiện trạng, tiến độ và", "việc đến lần 2"])],
+        "lan2": [("Câu hỏi", ["Nhắc lại 3 câu hỏi", "nghiên cứu"]),
                  ("Kết quả RQ1–RQ3", ["Nhãn rà soát, ablation,", "độ bền, chi phí"]),
                  ("Đóng góp", ["Đóng góp, triết lý", "khoa học, mối đe dọa"]),
-                 ("Kế hoạch", ["Tiến độ và việc đến", "bài nộp cuối"])],
+                 ("Kế hoạch", ["Hiện trạng, việc đến", "bài nộp cuối"])],
     }.get(DECK, [("Bối cảnh", ["Vấn đề, nghiên cứu liên quan,", "SemLoc"]),
                  ("Phương pháp", ["3 câu hỏi, CovGate,", "thiết kế thực nghiệm"]),
                  ("Kết quả RQ1–RQ3", ["Tái hiện, CovGate,", "độ bền, chi phí"]),
@@ -251,13 +243,13 @@ def build() -> None:
         ("Tips", toc[2][0]), ("Practical exercise", toc[3][0]),
         *[(("You can describe the topic", 0), entry[1]) for entry in toc],
     ])
-    results_sub = {"lan1": "RQ1 tái hiện và kiểm tra cách đánh giá", "lan2": "RQ1 tái hiện · RQ2 so sánh chính"}
+    results_sub = {"lan1": "RQ1 tái hiện · RQ2 so sánh chính"}
     dividers = [("chuong_nhom.svg", "Nhóm & tiến độ", "Thành viên · phân công · công cụ AI · hiện trạng"),
                 ("slide_04.svg", "Bối cảnh", "Vấn đề, nghiên cứu liên quan và SemLoc"),
                 ("chuong02.svg", "Phương pháp", "Câu hỏi nghiên cứu, đề xuất, thiết kế thực nghiệm"),
                 ("chuong03.svg", "Kết quả", results_sub.get(DECK, "RQ1 tái hiện · RQ2 CovGate · RQ3 độ bền")),
-                ("chuong04.svg", "Đóng góp" if DECK == "lan3" else "Phân tích",
-                 "Đóng góp · triết lý khoa học · mối đe dọa" if DECK == "lan3" else "Thất bại · đóng góp · triết lý khoa học")]
+                ("chuong04.svg", "Đóng góp" if DECK == "lan2" else "Phân tích",
+                 "Đóng góp · triết lý khoa học · mối đe dọa" if DECK == "lan2" else "Thất bại · đóng góp · triết lý khoa học")]
     for k, (name, title, sub) in enumerate([d for d in dividers if has(d[0])], start=1):
         E(name, {"01": f"{k:02d}", "Theory lesson": title, "You can enter a subtitle": sub})
     E("slide_05.svg", {
@@ -334,7 +326,7 @@ def build() -> None:
         ["Loại lỗi", "ngữ nghĩa", "chạy chậm", "sập (Java)", "ngữ nghĩa"],
         ["Tín hiệu", "ràng buộc LLM\n+ chạy test", "so 2 lần chạy\ntải nhỏ / lớn", "stack trace\n+ xếp hạng", "test fail đưa\nthẳng cho LLM"],
         ["Lỗi thật", "7 có kết quả\ncấp dòng", "140 issue", "38 (công nghiệp)",
-         "đang dựng\n(lần 3)" if EARLY() else "31 lỗi thật\n× 3 lần chạy"],
+         "đang dựng\n(lần 2)" if EARLY() else "31 lỗi thật\n× 3 lần chạy"],
         ["Kiểm tra\nbenchmark", "không", "—", "—", "kiểm chứng nhãn\nbằng thực thi" if EARLY() else "rà soát cả\n250 nhãn"],
         ["Lặp + kiểm\nđịnh", "1 lần", "—", "—", "3 lần + McNemar\n/ Wilcoxon"],
     ], highlight_col=4))
@@ -350,7 +342,7 @@ def build() -> None:
     E("thiet_ke.svg", [
         ("Recommendations", "Thiết kế thực nghiệm"),
         ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250, nhãn", "gốc + đã sửa"] if EARLY() else ["SemFault-250, 3 bộ", "nhãn; 31 BugsInPy"]),
-        ("Venus", "Biến thể"), ("Venus is the second", ["Đổi tên, BugsInPy:", "lần báo cáo 3"] if EARLY() else ["Đổi tên, xóa docstring", "→ chống thuộc bài"]),
+        ("Venus", "Biến thể"), ("Venus is the second", ["Đổi tên, BugsInPy:", "lần báo cáo 2"] if EARLY() else ["Đổi tên, xóa docstring", "→ chống thuộc bài"]),
         ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, LLM hỏi thẳng,", "SemLoc, 1 prompt"] if EARLY() else ["SBFL, ruff, SemLoc,", "1 prompt + test fail"]),
         ("Mercury", "Mô hình"), ("Mercury is the closest", ["Gemini 3.8 Flash", "+ 4 họ model khác"]),
         ("Saturn", "Chỉ số"), ("Saturn is a gas giant", ["Acc@1/3/5, thứ hạng,", "%Susp, lượt gọi, token"]),
@@ -368,7 +360,7 @@ def build() -> None:
         ("Mars", "Đầu vào"), ("Despite being red", ["Mã nguồn,", "tên test fail,", "dòng lỗi đầu"]),
         *([("Neptune", "1 lượt gọi"), ("It’s the farthest", ["Không pipeline,", "không ràng buộc"]),
            ("Jupiter", "So với"), ("Jupiter is the biggest", ["SemLoc, LLM", "hỏi thẳng, SBFL"]),
-           ("Saturn", "Tiếp theo"), ("It’s a gas giant", ["Ablation, bổ", "sung (lần 3)"])] if EARLY() else
+           ("Saturn", "Tiếp theo"), ("It’s a gas giant", ["Ablation, bổ", "sung (lần 2)"])] if EARLY() else
           [("Neptune", "Ablation"), ("It’s the farthest", ["Có / không", "độ phủ từng dòng"]),
            ("Jupiter", "Bổ sung"), ("Jupiter is the biggest", ["CovGate,", "kiểm chứng,", "biểu quyết"] if DECK == "baove"
                                                              else ["CovGate,", "biểu quyết"]),
@@ -382,20 +374,15 @@ def build() -> None:
         "9h 55m 23s": "13/13", "Jupiter’s rotation period": "cấu hình SemLoc tái hiện khớp từng số",
         "333,000": _m("GtBlankN") if EARLY() else f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')}",
         "The Sun’s mass compared": "nhãn gốc nằm trên dòng trống" if EARLY() else "nhãn gốc bị dời khi rà soát",
-        **({"386,000 km": f"{_m('RqOneSemlocGeminiTZeroEightFairAllAccOne')}→{_m('RqOneSemlocGeminiTZeroEightNoPriorFairAllAccOne')}",
-            "Distance between the Earth": "Acc@1 SemLoc khi bỏ thưởng ẩn (Gemini)"} if DECK == "lan1" else
-           {"386,000 km": _m("RqTwoRepairedAllLlmTestsDAccOne"), "Distance between the Earth": "Acc@1: 1 prompt có test fail so với SemLoc"}),
+        "386,000 km": _m("RqTwoRepairedAllLlmTestsDAccOne"), "Distance between the Earth": "Acc@1: 1 prompt có test fail so với SemLoc",
     })
-    if DECK == "lan1":  # no "Kết quả" divider in this deck: the numbers need their own title
-        A("slide_14.svg", f'<g id="tieu-de-rq1" data-pptx-bounds="560 50 360 40"><text x="560" y="78" font-family="{BODY}" '
-          f'font-size="24" font-weight="bold" fill="{NAVY}">Kết quả RQ1: tái hiện</text></g>')
     E("slide_21.svg", [
         ("Sequences", "Tiến độ"),
         ("First", "05/11"), ("Saturn is composed", "Chốt nhóm, đề tài"),
-        (("Next", 0), "11/11"), ("Mercury is the closest", ["Lần 1: nhóm,", "tài liệu, RQ1"]),
-        (("Next", 0), "18/11"), ("Jupiter was named", ["Lần 2: nhãn,", "so sánh RQ2"]),
+        (("Next", 0), "11/11"), ("Mercury is the closest", ["Tài liệu,", "tái hiện, RQ1"]),
+        (("Next", 0), "18/11"), ("Jupiter was named", ["Lần 1: nhãn,", "so sánh RQ2"]),
         (("Next", 0), "22/11"), ("Despite being red", ["RQ3, ablation,", "bổ sung"]),
-        (("Next", 0), "25/11"), ("Earth is the third", ["Lần 3: đóng góp,", "triết lý"]),
+        (("Next", 0), "25/11"), ("Earth is the third", ["Lần 2: đóng góp,", "triết lý"]),
         ("Last", "12/12"), ("Venus has extremely", ["Bài báo arXiv,", "bảo vệ"]),
     ])
     if has("slide_21.svg"):
@@ -412,9 +399,10 @@ def build() -> None:
 
 
 def group_pages() -> None:
-    """Report 1: members, the work split by work package, AI tools, status after week 1 (mirrors frontmatter/nhom.tex)."""
+    """Members, the work split by work package, AI tools (report 1); status of the four contents (reports 1 and 2).
+    Mirrors frontmatter/nhom.tex and docs/phan-cong.md."""
     for name, title in (("nhom.svg", "Nhóm M9: thành viên"), ("phan_cong.svg", "Phân công theo mảng việc"),
-                        ("cong_cu_ai.svg", "Công cụ AI nhóm sử dụng"), ("hien_trang.svg", "Hiện trạng sau tuần đầu (11/11)")):
+                        ("cong_cu_ai.svg", "Công cụ AI nhóm sử dụng"), ("hien_trang.svg", f"Hiện trạng bốn nội dung ({OCCASION[DECK].split(' · ')[0].lower()})")):
         E(name, {"Classification": title})
         D(name, "shape-2194")
     A("nhom.svg", table("bang-nhom", 84, 120, [50, 215, 135, 400], [
@@ -446,13 +434,20 @@ def group_pages() -> None:
         ["LLM thực nghiệm\n(qua proxy)", "Gemini 3.8 Flash (chính), Claude Sonnet 4.6 (đối chiếu bài gốc);\nRQ3: Gemini 3.5 Flash-Lite, Claude Sonnet 5.5, GPT-6 luna, gpt-oss-120b"],
         ["Kiểm soát", "Nhóm trưởng duyệt mọi thay đổi; số liệu sinh tự động\ntừ dữ liệu; mọi lượt gọi LLM có nhật ký và bộ đệm"],
     ], head_h=40, row_h=66, fs=15))
+    early = EARLY()
     A("hien_trang.svg", table("bang-hien-trang", 84, 112, [215, 425, 160], [
         ["Nội dung", "Hiện trạng", "Tự đánh giá"],
         ["1. Tài liệu, từ khóa", "3 bài được giao + tài liệu thêm, bộ từ khóa,\nbảng so sánh", "Đạt"],
-        ["2. RQ, thực nghiệm", "3 RQ, thiết kế; hạ tầng LLM; tái hiện SemLoc;\ncó kết quả RQ1. RQ2 đang chạy", "Đang làm,\nđúng tiến độ"],
+        ["2. RQ, thực nghiệm", "3 RQ, thiết kế; RQ1; RQ2 trên nhãn gốc\nvà đã sửa. RQ3 đang làm" if early else
+         "RQ1–RQ3 có kết quả; ablation, bổ sung,\nphân tích tĩnh, rà soát nhãn", "Đạt phần chính" if early else "Đạt"],
+        ["3. Đóng góp, triết lý", "Đang làm, trình bày ở lần 2" if early else "Đóng góp, triết lý khoa học,\nmối đe dọa",
+         "Đang làm" if early else "Đạt"],
+        ["4. Bài báo arXiv", "Viết sau khi đủ kết quả" if early else "Có bản nháp tiếng Anh;\nhoàn thiện cho bài nộp cuối",
+         "Theo kế hoạch" if early else "Đang làm"],
     ], head_h=40, row_h=56, fs=15,
-        note="Khó khăn: chạy lại SemLoc không khớp nhật ký công bố; hạn mức gọi LLM; dựng môi trường BugsInPy.\n"
-             "Hướng xử lý: báo cáo cả tính lại và chạy lại; bộ đệm lượt gọi LLM; dựng BugsInPy song song với RQ2."))
+        note=("Yêu cầu lần 1: xong ít nhất 2/4 nội dung. " if early else "Yêu cầu lần 2: xong ít nhất 3/4 nội dung. ") +
+             "Khó khăn: hạn mức gọi LLM; dựng môi trường BugsInPy.\n"
+             "Hướng xử lý: bộ đệm mọi lượt gọi LLM; chỉ dùng lượt chạy không còn lỗi LLM."))
 
 
 def analysis_pages() -> None:
