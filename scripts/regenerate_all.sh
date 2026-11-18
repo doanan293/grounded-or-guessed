@@ -35,6 +35,7 @@ $PY scripts/decompose.py --published --out data/rq_decomposition_published.csv >
 $PY scripts/decompose.py --runs semloc_test_gemini_r1 semloc_test_gemini_r2 semloc_test_gemini_r3 --out data/rq_decomposition.csv > /dev/null
 $PY scripts/failure_cases.py > /dev/null
 $PY scripts/pareto_data.py > /dev/null
+$PY scripts/figure_data.py > /dev/null
 $PY scripts/checklist.py > /dev/null
 $PY scripts/make_tables.py
 $PY scripts/make_numbers.py > /dev/null

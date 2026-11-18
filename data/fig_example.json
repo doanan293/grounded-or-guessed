@@ -1,0 +1,187 @@
+{
+ "program": "votes_apportion",
+ "gt_line": 29,
+ "guess_line": 26,
+ "code_lines": [
+  {
+   "no": 9,
+   "text": "def votes_apportion(total, weights, *, floor_to_int=True, minimum=0):"
+  },
+  {
+   "no": 10,
+   "text": "    \"\"\""
+  },
+  {
+   "no": 11,
+   "text": "    Compute weighted allocation for votes capacity."
+  },
+  {
+   "no": 12,
+   "text": "    \"\"\""
+  },
+  {
+   "no": 13,
+   "text": "    if len(weights) == 0:"
+  },
+  {
+   "no": 14,
+   "text": "        raise ValueError(\"weights required\")"
+  },
+  {
+   "no": 15,
+   "text": "    if total < 0:"
+  },
+  {
+   "no": 16,
+   "text": "        raise ValueError(\"negative total\")"
+  },
+  {
+   "no": 17,
+   "text": "    if minimum < 0:"
+  },
+  {
+   "no": 18,
+   "text": "        raise ValueError(\"negative minimum\")"
+  },
+  {
+   "no": 19,
+   "text": "    if sum(weights) == 0:"
+  },
+  {
+   "no": 20,
+   "text": "        raise ValueError(\"zero total weight\")"
+  },
+  {
+   "no": 21,
+   "text": ""
+  },
+  {
+   "no": 22,
+   "text": "    weight_sum = sum(weights)"
+  },
+  {
+   "no": 23,
+   "text": "    shares = []"
+  },
+  {
+   "no": 24,
+   "text": "    for w in weights:"
+  },
+  {
+   "no": 25,
+   "text": "        portion = (w / weight_sum) * total"
+  },
+  {
+   "no": 26,
+   "text": "        shares.append(portion if portion > minimum else minimum)"
+  },
+  {
+   "no": 27,
+   "text": ""
+  },
+  {
+   "no": 28,
+   "text": "    if floor_to_int:"
+  },
+  {
+   "no": 29,
+   "text": "        return [int(v) for v in shares]"
+  },
+  {
+   "no": 30,
+   "text": "    return shares"
+  }
+ ],
+ "tests": [
+  {
+   "id": "test_integer_total_exact_division_pass",
+   "passed": true,
+   "lines": [
+    9,
+    13,
+    15,
+    17,
+    19,
+    22,
+    23,
+    24,
+    25,
+    26,
+    28,
+    29
+   ]
+  },
+  {
+   "id": "test_truncation_sum_equals_total_fail",
+   "passed": false,
+   "lines": [
+    9,
+    13,
+    15,
+    17,
+    19,
+    22,
+    23,
+    24,
+    25,
+    26,
+    28,
+    29
+   ]
+  },
+  {
+   "id": "test_unequal_weights_sum_preserved_fail",
+   "passed": true,
+   "lines": [
+    9,
+    13,
+    15,
+    17,
+    19,
+    22,
+    23,
+    24,
+    25,
+    26,
+    28,
+    29
+   ]
+  },
+  {
+   "id": "test_single_recipient_pass",
+   "passed": true,
+   "lines": [
+    9,
+    13,
+    15,
+    17,
+    19,
+    22,
+    23,
+    24,
+    25,
+    26,
+    28,
+    29
+   ]
+  },
+  {
+   "id": "test_all_integer_allocations_pass",
+   "passed": true,
+   "lines": [
+    9,
+    13,
+    15,
+    17,
+    19,
+    22,
+    23,
+    24,
+    25,
+    26,
+    28,
+    29
+   ]
+  }
+ ]
+}
