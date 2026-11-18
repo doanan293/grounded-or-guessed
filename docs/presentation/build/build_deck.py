@@ -13,7 +13,8 @@ from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
 from slidekit import append, drop_group, edit  # noqa: E402
-import story  # noqa: E402
+import story_common  # noqa: E402
+import story_lan1  # noqa: E402
 
 WS = Path(__file__).resolve().parents[3] / "runs" / "slides" / "bao-cao-lan-1_20261108"
 SVG = WS / "authoring-svg-flat"
@@ -34,7 +35,7 @@ SOURCE = {
     "triet_ly.svg": 19, "de_doa.svg": 9, "ket_luan.svg": 5,
     "chuong_nhom.svg": 4, "nhom.svg": 22, "phan_cong.svg": 22, "cong_cu_ai.svg": 22, "hien_trang.svg": 22,
 }
-SOURCE.update({n: src for n, src in story.LAN1 if n not in SOURCE})
+SOURCE.update({n: src for n, src in story_lan1.LAN1 if n not in SOURCE})
 INTRO = ["slide_04.svg", "slide_05.svg", "slide_08.svg", "slide_25.svg", "slide_09.svg", "slide_22.svg", "slide_11.svg"]
 METHOD = ["chuong02.svg", "slide_20.svg", "slide_19.svg", "thiet_ke.svg"]
 RESULTS = ["slide_14.svg", "ket_qua_thu.svg", "ket_qua_rq3.svg", "pareto.svg"]
@@ -43,7 +44,7 @@ GROUP = ["chuong_nhom.svg", "nhom.svg", "phan_cong.svg", "cong_cu_ai.svg", "hien
 DECKS = {
     # report 1 (18–19/11): the group, its work split, AI tools; background, RQs, design, RQ1, repaired labels and the
     # main comparison; status of the four contents; no RQ3 / cross-model cost yet
-    "lan1": [n for n, _ in story.LAN1],  # storytelling deck, see story.py
+    "lan1": [n for n, _ in story_lan1.LAN1],  # storytelling deck, see story_lan1.py
     # report 2 (25–26/11): + RQ3, cost, contributions; failure analysis waits for the final submission
     "lan2": ["slide_01.svg", "slide_03.svg", "slide_20.svg", *RESULTS, "chuong04.svg", "dong_gop.svg", "triet_ly.svg",
              "de_doa.svg", "hien_trang.svg", "slide_21.svg", "slide_30.svg"],
@@ -224,7 +225,7 @@ def _para(gid, x, y, w, h, paras) -> str:
 
 def build() -> None:
     fresh()
-    story.cover(sys.modules[__name__], DECK, OCCASION[DECK])
+    story_common.cover(sys.modules[__name__], DECK, OCCASION[DECK])
     toc = {
         "lan1": [("Bối cảnh", ["Vấn đề, nghiên cứu liên quan,", "SemLoc"]),
                  ("Phương pháp", ["3 câu hỏi, đề xuất,", "thiết kế thực nghiệm"]),
@@ -549,8 +550,8 @@ def main(deck: str) -> None:
     build()
     analysis_pages()
     if deck == "lan1":
-        story.lan1(sys.modules[__name__])
-    write_notes(story.notes_lan1(sys.modules[__name__]) if deck == "lan1" else {})
+        story_lan1.pages(sys.modules[__name__])
+    write_notes(story_lan1.notes(sys.modules[__name__]) if deck == "lan1" else {})
     json.dump({"schema": "ppt-master.roundtrip-page-plan.v1",
                "pages": [{"source_slide": s, **({} if n == f"slide_{s:02d}.svg" else {"svg": n})} for s, n in PAGES]},
               open(WS / "page_plan.json", "w"), indent=2)
