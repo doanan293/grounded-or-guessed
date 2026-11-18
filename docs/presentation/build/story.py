@@ -205,19 +205,19 @@ def lan1(bd) -> None:
                                 w=880))
 
     # 6b. the three representative studies
-    _title(bd, "ba_bai.svg", "Nghiên cứu liên quan: ba bài tiêu biểu và điều nhóm học được")
+    _title(bd, "ba_bai.svg", "Nghiên cứu liên quan: ba bài tiêu biểu và nhóm áp dụng gì")
     cards = [("SemLoc (2026)", [("Bài toán", "lỗi ngữ nghĩa trong hàm Python; test fail nhưng không chỉ ra dòng."),
                                  ("Cách làm", "LLM viết ràng buộc, chạy test lấy phổ vi phạm, vá thử để kiểm chứng."),
                                  ("Kết quả", f"Acc@1 {m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}% trên SemFault-250."),
-                                 ("Nhóm học", "chạy lại đúng mã của tác giả, soát từng con số (RQ1).")]),
+                                 ("Nhóm áp dụng", "dùng lại đúng mã nguồn và dữ liệu của tác giả để chạy lại, rồi kiểm tra từng con số bài báo công bố (RQ1).")]),
              ("EffiHolmes (2026)", [("Bài toán", "lỗi hiệu năng: test vẫn pass, không có lỗi để lần theo."),
                                      ("Cách làm", "so hai lần chạy dữ liệu nhỏ và lớn; hàm chậm hẳn đi thì bị nghi."),
                                      ("Kết quả", "thử trên 140 lỗi chạy chậm thật."),
-                                     ("Nhóm học", "đặt lần chạy đúng cạnh lần chạy lỗi; cách chia ba câu hỏi.")]),
+                                     ("Nhóm áp dụng", "ý tưởng so một lần chạy bình thường với một lần chạy có lỗi để tìm chỗ khác nhau; ở đề tài này là so test pass với test fail. Nhóm cũng học cách chia đề tài thành ba câu hỏi nghiên cứu.")]),
              ("Sự cố + LLM (2026)", [("Bài toán", "app Java lớn sập hàng nghìn lần mỗi tuần, mỗi lần có stack trace."),
                                       ("Cách làm", "gom stack trace thành bảng hàm đáng nghi, đưa bảng vào prompt."),
                                       ("Kết quả", "38 lỗi thật, chỉ đúng chỗ lỗi 71%."),
-                                      ("Nhóm học", "đưa bằng chứng sẵn có vào một prompt: ý tưởng của phương pháp FailLoc.")])]
+                                      ("Nhóm áp dụng", "đưa thẳng bằng chứng có sẵn vào prompt thì LLM đoán trúng hơn; nhóm đưa thông báo lỗi của test fail vào prompt, đó là phương pháp FailLoc.")])]
     for k, (head, blocks) in enumerate(cards):
         bd.A("ba_bai.svg", _t(40 + k * 300, 128, head, size=19, fill=ORANGE, weight="bold"))
         bd.A("ba_bai.svg", P(f"bai-{k}", 40 + k * 300, 140, 284, [(a, b[0].upper() + b[1:]) for a, b in blocks], size=14))
@@ -422,8 +422,9 @@ def notes_lan1(bd) -> dict:
                    "của nhóm chỉ dùng một lượt gọi LLM. RQ3 kiểm tra độ bền, nhóm sẽ trình bày ở lần sau.",
         "ba_bai": "Trong nhiều nghiên cứu về định vị lỗi nhóm đã đọc, ba bài tiêu biểu nhất là ba bài thầy giao. SemLoc là bài trung tâm: LLM viết ràng buộc, chạy test để lấy phổ vi phạm. EffiHolmes xử lý lỗi chạy chậm "
                   "bằng cách so hai lần chạy, còn nghiên cứu công nghiệp đưa stack trace của các lần sập vào prompt. Từ SemLoc "
-                  "nhóm học cách tái hiện và soát số, từ hai bài kia nhóm lấy ý tưởng đặt bằng chứng sẵn có vào một prompt, "
-                  "tức là FailLoc.",
+                  "nhóm dùng lại mã của tác giả để tái hiện và soát số. Từ EffiHolmes, nhóm lấy ý tưởng so lần chạy bình "
+                  "thường với lần chạy có lỗi, ở đây là so test pass với test fail. Từ nghiên cứu công nghiệp, nhóm lấy ý "
+                  "tưởng đưa bằng chứng có sẵn vào prompt, chính là phương pháp FailLoc.",
         "hop_den_1": f"Giờ nhóm mở hộp phương pháp SemLoc trên một chương trình cụ thể, {rs[0]['program']}. Mỗi thanh là điểm phổ vi phạm "
                      f"của một dòng, cao nhất là 1. Dòng {gt_line}, dòng lỗi thật, có điểm cao nhất, nghĩa là phổ vi phạm "
                      "đã chỉ đúng.",
