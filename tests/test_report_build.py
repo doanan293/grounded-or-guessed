@@ -47,10 +47,14 @@ def test_versions_contain_expected_chapters():
     assert "Kết quả thực nghiệm" in t["lan1"] and "Đóng góp, triết lý khoa học" not in t["lan1"]
     assert "Đóng góp, triết lý khoa học" in t["lan2"] and "Phân tích thất bại và thảo luận" not in t["lan2"]
     assert "Phân tích thất bại và thảo luận" in t["full"] and "Phụ lục" not in t["lan2"] and "Phụ lục" in t["full"]
-    # every version lists the group and the work split; progress markers only below full, one per version
+    # members and the work split live only in docs/phan-cong.md; every version names FailLoc and lists its figures
     for v, text in t.items():
-        assert "Thành viên nhóm M9" in text and "Phân công công việc theo mảng" in text, v
+        assert "Thành viên nhóm M9" not in text and "Phân công công việc theo mảng" not in text, v
+        assert "Phân công theo mảng việc" not in text, v
+        assert "FailLoc" in text and "Danh sách hình vẽ" in text and "Hình 1.1" in text, v
+        assert "LLM hỏi thẳng" not in text and "LLM + kiểm thử thất bại" not in text, v
         assert "??" not in text, v
+    assert "FailLoc+Cov" not in t["lan1"] and "nhãn đã rà soát" not in t["lan1"]
     assert "Báo cáo tiến độ lần 1 (18–19/11/2026)" in t["lan1"]
     assert "Báo cáo tiến độ lần 2 (25–26/11/2026)" in t["lan2"]
     assert "Báo cáo tiến độ" not in t["full"] and "Kế hoạch đến bài nộp cuối" not in t["full"]

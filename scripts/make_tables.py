@@ -173,7 +173,7 @@ def main_results_table(sets: tuple = ("original", "repaired", "reviewed"), with_
     return "\n".join(lines) + "\n"
 
 
-def tolerant_table(sets: tuple = ("original", "repaired")) -> str:
+def tolerant_table(sets: tuple = ("original", "repaired"), with_coverage: bool = True) -> str:
     """Secondary metric: Acc@1 exact vs. header/body-tolerant (strict = lower bound, lenient = upper bound)."""
     rows = {(r["gt"], r["method"]): r for r in _rows("rq2_tolerant.csv")}
     methods = [("sbfl_ochiai", "SBFL (Ochiai)"), ("llm_direct", "LLM-Direct"), ("semloc", "SemLoc"),
@@ -185,6 +185,8 @@ def tolerant_table(sets: tuple = ("original", "repaired")) -> str:
              "".join(rf"\cmidrule(lr){{{2 + 3 * i}-{4 + 3 * i}}}" for i in range(k)),
              "Method & " + " & ".join(["Exact & Tolerant & Upper"] * k) + r" \\", r"\midrule"]
     for m, name in methods:
+        if m == "llm_coverage" and not with_coverage:
+            continue
         cells = [f"{pct(rows[(g, m)]['acc1_exact'])} & {pct(rows[(g, m)]['acc1_tol'])} & {pct(rows[(g, m)]['acc1_tol_lenient'])}"
                  for g in sets]
         lines.append(f"{name} & {' & '.join(cells)} \\\\")
@@ -500,6 +502,7 @@ def main() -> None:
     (OUT / "rq_main_results_two.tex").write_text(main_results_table(("original", "repaired"), with_coverage=False))
     if (DATA / "rq2_tolerant.csv").exists():
         (OUT / "rq_tolerant.tex").write_text(tolerant_table())
+        (OUT / "rq_tolerant_nocov.tex").write_text(tolerant_table(with_coverage=False))
     (OUT / "rq_addons.tex").write_text(addons_table())
     (OUT / "rq_addons_nopav.tex").write_text(addons_table(include_pav=False))
     (OUT / "rq_static.tex").write_text(static_table())

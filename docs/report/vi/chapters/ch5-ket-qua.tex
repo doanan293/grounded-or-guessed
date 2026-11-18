@@ -194,7 +194,7 @@ chính.
 \caption{Acc@1 khớp đúng dòng, nới lỏng (dòng điều kiện -- dòng đầu của thân) và cận trên (tập test, Gemini 3.8 Flash,
 trung bình 3 lần chạy)}
 \label{tab:nhay-nhan}
-\resizebox{\linewidth}{!}{\input{../generated/vi/rq_tolerant}}
+\resizebox{\linewidth}{!}{\IfAtLeastElse{lan2}{\input{../generated/vi/rq_tolerant}}{\input{../generated/vi/rq_tolerant_nocov}}}
 \end{table}
 
 Bảng~\ref{tab:nhay-nhan} cho thấy nới lỏng nâng Acc@1 của mọi phương pháp dùng LLM lên rõ rệt: trên bộ đã sửa, SemLoc từ

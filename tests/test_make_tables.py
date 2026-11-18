@@ -44,3 +44,8 @@ def test_tables_use_failloc():
         assert "LLM + kiểm thử thất bại" not in vi and "hỏi thẳng" not in vi
     en = mt.main_results_table()
     assert "FailLoc (ours)" in en and "failing tests (ours)" not in en
+
+
+def test_tolerant_table_without_coverage_for_report_1():
+    assert "FailLoc+Cov" in mt.tolerant_table()
+    assert "FailLoc+Cov" not in mt.tolerant_table(with_coverage=False)
