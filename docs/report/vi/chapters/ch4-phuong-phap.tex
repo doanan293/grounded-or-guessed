@@ -121,16 +121,19 @@ nguyên số dòng}, chỉ giữ các tên mà kiểm thử phụ thuộc. Mỗi
 \subsection{Các phương pháp có sẵn}
 
 \begin{itemize}
-\item \textbf{SBFL Ochiai, DStar} trên ma trận độ phủ do nhóm thu thập (mỗi kiểm thử một ngữ cảnh độ phủ).
-\item \textbf{LLM hỏi thẳng}: chế độ dự đoán trực tiếp của SemLoc --- một lượt gọi chỉ có mã nguồn chương trình, LLM
+\item \textbf{SBFL (Ochiai)}, \textbf{SBFL (DStar)} trên ma trận độ phủ do nhóm thu thập (mỗi kiểm thử một ngữ cảnh độ phủ).
+\item \textbf{LLM-Direct}: chế độ dự đoán trực tiếp của SemLoc --- một lượt gọi chỉ có mã nguồn chương trình, LLM
 trả về các dòng nghi ngờ; không có thông tin kiểm thử nào.
 \item \textbf{SemLoc} như phát hành, chạy qua mã nguồn gốc của tác giả, chỉ thay lớp gọi LLM bằng cổng của nhóm
 (cùng prompt, cùng logic).
+\item \textbf{SemLoc−Bonus}: SemLoc bỏ điểm thưởng \ConstPriorWeight{} mà mã nguồn công bố cộng cho dòng LLM tự đoán;
+chỉ còn điểm từ phổ vi phạm ràng buộc.
 \end{itemize}
 
-\subsection{LLM + kiểm thử thất bại: phương pháp đề xuất}
+\subsection{FailLoc: phương pháp đề xuất}
 
-Phương pháp chính của nhóm làm điều mà các khảo sát cho thấy nhiều lập trình viên đang làm: một lượt gọi LLM duy nhất (nhiệt độ
+\textbf{FailLoc} (Failure-guided Localization --- định vị lỗi dẫn dắt bởi kiểm thử thất bại) là phương pháp chính của nhóm.
+Nó làm điều mà các khảo sát cho thấy nhiều lập trình viên đang làm: một lượt gọi LLM duy nhất (nhiệt độ
 $T = \ConstTemperature$) với mã nguồn đánh số dòng, số kiểm thử đạt/không đạt, câu ``chương trình có đúng một dòng lỗi'',
 và tên cùng dòng thông báo lỗi đầu tiên của mỗi kiểm thử thất bại; LLM trả về năm dòng nghi ngờ nhất dưới dạng JSON
 \IfAtLeastElse{full}{(nội dung prompt ở Phụ lục~\ref{chap:phu-luc})}{(nội dung prompt có trong kho mã)}. Prompt được
@@ -141,10 +144,10 @@ giúp LLM định vị tốt hơn~\cite{wu2023llmfl}.
 \IfAtLeast{lan2}{%
 \subsection{Ablation: tách độ phủ khỏi kiểm thử thất bại}
 
-Biến thể \emph{LLM + kiểm thử thất bại + độ phủ} giữ nguyên prompt trên và chú thích thêm cho mỗi dòng số kiểm thử thất
+Biến thể \emph{FailLoc+Cov} giữ nguyên prompt trên và chú thích thêm cho mỗi dòng số kiểm thử thất
 bại và thành công chạy qua nó (cùng một câu giải thích chú thích). Hai so sánh ghép cặp tách hai nguồn thông tin:
-(LLM + kiểm thử thất bại) so với LLM hỏi thẳng đo tác dụng của kiểm thử thất bại; (LLM + kiểm thử thất bại + độ phủ) so
-với (LLM + kiểm thử thất bại) đo tác dụng của độ phủ.
+(FailLoc) so với LLM-Direct đo tác dụng của kiểm thử thất bại; (FailLoc+Cov) so
+với (FailLoc) đo tác dụng của độ phủ.
 
 \subsection{Các cách bổ sung}
 
@@ -156,7 +159,7 @@ chọn chỉ trên tập dev; cấu hình được chọn không bật cổng đ
 $\lambda = \ConstLambdaOriginal$ (bộ gốc) hoặc $\lambda = \ConstLambdaRepaired$ (bộ đã sửa) --- tức là một bước \emph{phá
 hòa bằng Ochiai} cho SemLoc.
 
-\IfAtLeast{full}{\textbf{Đề xuất rồi kiểm chứng} dùng kiểm thử làm trọng tài cho vị trí lỗi: (1) LLM + kiểm thử thất bại đề xuất các dòng
+\IfAtLeast{full}{\textbf{Đề xuất rồi kiểm chứng} dùng kiểm thử làm trọng tài cho vị trí lỗi: (1) FailLoc đề xuất các dòng
 nghi ngờ; (2) với $k$ dòng đầu, LLM viết một bản sửa nhỏ tại đúng dòng đó (cùng bộ đề xuất bản sửa và cùng tiêu chí
 ``thay đổi nhỏ'' như bộ phán định nhãn), chương trình đã vá được chạy với bộ kiểm thử; dòng có bản sửa làm mọi kiểm thử
 đạt được đưa lên đầu. Tham số $k \in \{2, 3\}$, số lần thử mỗi dòng (1 hoặc 2), thứ tự giữa các dòng được xác nhận (theo
@@ -165,7 +168,7 @@ LLM hoặc theo kích thước bản sửa) và giới hạn kích thước bả
 nhất (3 dòng, 2 lần thử) trên \emph{tập dev}, 3 lần. Quy tắc chọn được cố định trong mã trước khi chạy: Acc@1 trung bình
 trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã sửa vì bộ đó được dựng bằng chính cơ chế sửa thử).}
 
-\textbf{Biểu quyết}: gộp ba câu trả lời của LLM + kiểm thử thất bại bằng tổng nghịch đảo hạng, cũng trên tập dev.
+\textbf{Biểu quyết}: gộp ba câu trả lời của FailLoc bằng tổng nghịch đảo hạng, cũng trên tập dev.
 
 \subsection{Phân tích tĩnh}
 

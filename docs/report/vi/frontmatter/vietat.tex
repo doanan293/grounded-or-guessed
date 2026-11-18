@@ -1,7 +1,7 @@
 \chapter*{Danh mục từ viết tắt và thuật ngữ}
 \addcontentsline{toc}{chapter}{Danh mục từ viết tắt và thuật ngữ}
-\IfAtLeastElse{full}{\def\GlossaryRowPav{Đề xuất rồi kiểm chứng & Cách bổ sung do nhóm thử: LLM đề xuất dòng nghi ngờ, bản sửa nhỏ và kiểm thử xác nhận \\}}{\def\GlossaryRowPav{}}
-\IfAtLeastElse{lan2}{\def\GlossaryRowReviewed{SemFault-250 đã rà soát & Bộ dữ liệu trên với nhãn được LLM rà trước và thành viên nhóm duyệt \\}}{\def\GlossaryRowReviewed{}}
+\IfAtLeastElse{full}{\def\GlossaryRowPav{FailLoc+Verify & Đề xuất rồi kiểm chứng: FailLoc đề xuất dòng nghi ngờ, bản sửa nhỏ và kiểm thử xác nhận \\}}{\def\GlossaryRowPav{}}
+\IfAtLeastElse{lan2}{\def\GlossaryRowCov{FailLoc+Cov & FailLoc có thêm độ phủ từng dòng trong prompt \\}\def\GlossaryRowReviewed{SemFault-250 đã rà soát & Bộ dữ liệu trên với nhãn được LLM rà trước và thành viên nhóm duyệt \\}}{\def\GlossaryRowCov{}\def\GlossaryRowReviewed{}}
 {\setstretch{1.2}
 \begin{longtable}{@{}p{0.22\linewidth}p{0.73\linewidth}@{}}
 \toprule
@@ -25,10 +25,14 @@ CI & Khoảng tin cậy (confidence interval), ở đây là khoảng \ConstCiLe
 CovGate & Cách bổ sung do nhóm thử: kết hợp độ phủ với điểm của SemLoc \\
 \GlossaryRowPav
 DD & Gỡ lỗi chia đôi (delta debugging) \\
+FailLoc & Phương pháp đề xuất (failure-guided localization): một lượt gọi LLM với mã nguồn và các kiểm thử thất bại \\
+\GlossaryRowCov
 GT & Dòng lỗi chuẩn (ground truth) của bộ dữ liệu \\
 LLM & Mô hình ngôn ngữ lớn (large language model) \\
+LLM-Direct & Chế độ dự đoán trực tiếp của SemLoc: một lượt gọi LLM chỉ có mã nguồn \\
 RQ & Câu hỏi nghiên cứu (research question) \\
 SBFL & Định vị lỗi dựa trên phổ độ phủ (spectrum-based fault localization) \\
+SemLoc−Bonus & SemLoc bỏ điểm thưởng cho dòng LLM tự đoán \\
 SemFault-250 & Bộ dữ liệu 250 chương trình Python có lỗi ngữ nghĩa của SemLoc \\
 \GlossaryRowReviewed
 SemFault-250 đã sửa & Bộ dữ liệu trên với dòng lỗi chuẩn được nhóm kiểm chứng và sửa lại bằng thực thi (tiếng Anh: SemFault-250-repaired) \\

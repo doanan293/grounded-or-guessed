@@ -35,3 +35,12 @@ def test_rq1_table_has_author_and_fair_columns():
     tex = mt.rq1_table()
     assert r"\begin{tabular}" in tex and "Author" in tex and "Fair" in tex
     assert "42.8" in tex  # SemLoc Claude T=0.8, author scoring, all 250
+
+
+def test_tables_use_failloc():
+    for vi in (mt.to_vi(mt.main_results_table(("original", "repaired"), with_coverage=False)),
+               mt.to_vi(mt.rq2_table())):
+        assert "FailLoc" in vi
+        assert "LLM + kiểm thử thất bại" not in vi and "hỏi thẳng" not in vi
+    en = mt.main_results_table()
+    assert "FailLoc (ours)" in en and "failing tests (ours)" not in en

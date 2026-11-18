@@ -16,9 +16,9 @@ NAMES = {
     "semloc_claude_T0.3": "SemLoc, Claude Sonnet 4.6, $T{=}0.3$", "semloc_claude_T0.8": "SemLoc, Claude Sonnet 4.6, $T{=}0.8$",
     "semloc_gemini_T0.0": "SemLoc, Gemini 2.5 Pro, $T{=}0$", "semloc_gemini_T0.3": "SemLoc, Gemini 2.5 Pro, $T{=}0.3$",
     "semloc_gemini_T0.8": "SemLoc, Gemini 2.5 Pro, $T{=}0.8$", "cf_disabled_claude_T0.8": "SemLoc w/o CF (separate run), Claude",
-    "cf_disabled_gemini_T0.8": "SemLoc w/o CF (separate run), Gemini", "semantic_indexing_disabled_claude": "LLM direct, Claude",
-    "semantic_indexing_disabled_gemini": "LLM direct, Gemini", "sbfl_ochiai": "SBFL Ochiai", "sbfl_tarantula": "SBFL Tarantula",
-    "dd": "Delta debugging", "ours_sbfl_dstar": "SBFL DStar (recomputed)",
+    "cf_disabled_gemini_T0.8": "SemLoc w/o CF (separate run), Gemini", "semantic_indexing_disabled_claude": "LLM-Direct, Claude",
+    "semantic_indexing_disabled_gemini": "LLM-Direct, Gemini", "sbfl_ochiai": "SBFL (Ochiai)", "sbfl_tarantula": "SBFL Tarantula",
+    "dd": "Delta debugging", "ours_sbfl_dstar": "SBFL (DStar, recomputed)",
     "semloc_claude_T0.8_no_prior": "SemLoc Claude $T{=}0.8$ without LLM-guess bonus",
     "semloc_gemini_T0.8_no_prior": "SemLoc Gemini $T{=}0.8$ without LLM-guess bonus",
 }
@@ -120,10 +120,10 @@ def pval(v) -> str:
 GT_LABEL = {"original": "Original ground truth", "repaired": "Execution-repaired ground truth",
             "reviewed": "Reviewed ground truth"}
 RQ2_NAMES = {"gate_only": "\\quad + coverage gate only", "lam_only": "\\quad + $\\lambda$·Ochiai only",
-             "grounded_prior_only": "\\quad bonus only when grounded", "semloc": "SemLoc (as released)", "semloc_no_prior": "\\quad w/o LLM-guess bonus",
+             "grounded_prior_only": "\\quad bonus only when grounded", "semloc": "SemLoc (as released)", "semloc_no_prior": "SemLoc−Bonus",
              "cf_rerank": "\\quad + CF re-ranking", "covgate": "CovGate (ours)", "covgate_cf": "CovGate + CF re-ranking",
-             "llm_direct": "LLM direct (1 prompt)", "llm_tests": "\\quad + failing tests, no coverage (ablation)",
-             "llm_coverage": "LLM + coverage (1 prompt, ours)", "sbfl_ochiai": "SBFL Ochiai"}
+             "llm_direct": "LLM-Direct", "llm_tests": "FailLoc (ours)",
+             "llm_coverage": "FailLoc+Cov", "sbfl_ochiai": "SBFL (Ochiai)"}
 
 
 def rq2_table() -> str:
@@ -153,10 +153,10 @@ def main_results_table(sets: tuple = ("original", "repaired", "reviewed"), with_
     cost = _rows("llm_cost.csv")
     tok = lambda prefix: (f"{sum(float(r['tokens_per_program']) for r in cost if r['run_id'].startswith(prefix)) / 1000 / max(1, sum(1 for r in cost if r['run_id'].startswith(prefix))):.1f}"
                           if any(r["run_id"].startswith(prefix) for r in cost) else "0")
-    methods = [("sbfl_ochiai", "SBFL Ochiai", None), ("llm_direct", "LLM direct (source only)", "direct_test_gemini_r"),
-               ("semloc", "SemLoc (multi-stage)", "semloc_test_gemini_r"),
-               ("llm_tests", "LLM + failing tests (ours)", "direct_tests_test_gemini_r"),
-               ("llm_coverage", "\\quad + per-line coverage", "direct_cov_test_gemini_r")]
+    methods = [("sbfl_ochiai", "SBFL (Ochiai)", None), ("llm_direct", "LLM-Direct", "direct_test_gemini_r"),
+               ("semloc", "SemLoc", "semloc_test_gemini_r"),
+               ("llm_tests", "FailLoc (ours)", "direct_tests_test_gemini_r"),
+               ("llm_coverage", "FailLoc+Cov", "direct_cov_test_gemini_r")]
     n = {g: rows[(g, "semloc")]["n"] for g in sets}
     title = {"original": "Original", "repaired": "Repaired", "reviewed": "Reviewed"}
     k = len(sets)
@@ -176,8 +176,8 @@ def main_results_table(sets: tuple = ("original", "repaired", "reviewed"), with_
 def tolerant_table(sets: tuple = ("original", "repaired")) -> str:
     """Secondary metric: Acc@1 exact vs. header/body-tolerant (strict = lower bound, lenient = upper bound)."""
     rows = {(r["gt"], r["method"]): r for r in _rows("rq2_tolerant.csv")}
-    methods = [("sbfl_ochiai", "SBFL Ochiai"), ("llm_direct", "LLM direct (source only)"), ("semloc", "SemLoc (multi-stage)"),
-               ("llm_tests", "LLM + failing tests (ours)"), ("llm_coverage", "\\quad + per-line coverage")]
+    methods = [("sbfl_ochiai", "SBFL (Ochiai)"), ("llm_direct", "LLM-Direct"), ("semloc", "SemLoc"),
+               ("llm_tests", "FailLoc (ours)"), ("llm_coverage", "FailLoc+Cov")]
     title = {"original": "Original", "repaired": "Repaired", "reviewed": "Reviewed"}
     k = len(sets)
     lines = [r"\begin{tabular}{l" + "rrr" * k + "}", r"\toprule",
@@ -209,17 +209,17 @@ def addons_table(include_pav: bool = True) -> str:
              r" & & \multicolumn{2}{c}{Repaired} & \multicolumn{2}{c}{Reviewed} \\", r"\cmidrule(lr){3-4}\cmidrule(lr){5-6}",
              r"Addition (compared with) & Split & $\Delta$Acc@1 & $\Delta$Acc@3 & $\Delta$Acc@1 & $\Delta$Acc@3 \\", r"\midrule"]
     a = lambda g: abl[(g, "all", "coverage_effect")]
-    lines.append(f"Per-line coverage (LLM + failing tests) & test & {dci(a('repaired'), 'acc1')} & {dci(a('repaired'), 'acc3')} & "
+    lines.append(f"Per-line coverage: FailLoc+Cov (FailLoc) & test & {dci(a('repaired'), 'acc1')} & {dci(a('repaired'), 'acc3')} & "
                  f"{dci(a('reviewed'), 'acc1')} & {dci(a('reviewed'), 'acc3')} \\\\")
     c = lambda g: rq2[(g, "covgate")]
     lines.append(f"CovGate (SemLoc) & test & {dci(c('repaired'), 'acc1')} & {dci(c('repaired'), 'acc3')} & "
                  f"{dci(c('reviewed'), 'acc1')} & {dci(c('reviewed'), 'acc3')} \\\\")
-    for name, r in ((("Propose-and-verify, selected", chosen), ("Propose-and-verify, most aggressive", worst)) if include_pav else ()):
-        lines.append(f"{name} (LLM + failing tests) & dev & {pp(r['repaired_acc1'], base['repaired_acc1'])} & "
+    for name, r in ((("FailLoc+Verify, selected", chosen), ("FailLoc+Verify, most aggressive", worst)) if include_pav else ()):
+        lines.append(f"{name} (FailLoc) & dev & {pp(r['repaired_acc1'], base['repaired_acc1'])} & "
                      f"{pp(r['repaired_acc3'], base['repaired_acc3'])} & {pp(r['reviewed_acc1'], base['reviewed_acc1'])} & "
                      f"{pp(r['reviewed_acc3'], base['reviewed_acc3'])} \\\\")
     v = lambda g, k: pp(vote[g][f"vote_{k}"], vote[g][f"single_{k}"])
-    lines.append(f"Vote over 3 answers (LLM + failing tests) & dev & {v('repaired', 'acc1')} & {v('repaired', 'acc3')} & "
+    lines.append(f"FailLoc+Vote, 3 answers (FailLoc) & dev & {v('repaired', 'acc1')} & {v('repaired', 'acc3')} & "
                  f"{v('reviewed', 'acc1')} & {v('reviewed', 'acc3')} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"
@@ -253,7 +253,7 @@ def rq2_by_label_table() -> str:
     rows = {(r["subset"], r["method"]): r for r in _rows("rq2_ours.csv") if r["gt"] == "repaired"}
     subs = [("semantic", "Semantic"), ("coverage_revealed", "Coverage-revealed"), ("not_executed", "Not executed"),
             ("executable", "Executable (all but not executed)")]
-    meths = [("sbfl_ochiai", "SBFL"), ("semloc", "SemLoc"), ("covgate", "CovGate"), ("llm_coverage", "LLM + cov.")]
+    meths = [("sbfl_ochiai", "SBFL"), ("semloc", "SemLoc"), ("covgate", "CovGate"), ("llm_coverage", "FailLoc+Cov")]
     lines = [r"\begin{tabular}{lr" + "rr" * len(meths) + "}", r"\toprule",
              " & & " + " & ".join(rf"\multicolumn{{2}}{{c}}{{{n}}}" for _, n in meths) + r" \\",
              "".join(rf"\cmidrule(lr){{{3 + 2 * i}-{4 + 2 * i}}}" for i in range(len(meths))),
@@ -272,7 +272,7 @@ def rq3_families_table() -> str:
     fams = list(dict.fromkeys(r["family"] for r in rows))
     get = {(r["family"], r["method"]): r for r in rows}
     lines = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
-             r" & & \multicolumn{2}{c}{SemLoc} & \multicolumn{2}{c}{w/o LLM-guess bonus} & CovGate \\",
+             r" & & \multicolumn{2}{c}{SemLoc} & \multicolumn{2}{c}{SemLoc−Bonus} & CovGate \\",
              r"\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-7}",
              r"Model & Repeats & Acc@1 & Acc@3 & Acc@1 & Acc@3 & Acc@3 \\", r"\midrule"]
     for f in fams:
@@ -284,9 +284,9 @@ def rq3_families_table() -> str:
 
 
 BIP_NAMES = {"semloc_spectrum": "SemLoc semantic spectrum only", "semloc_prior": "SemLoc (spectrum + LLM-guess bonus)",
-             "llm_guess": "LLM guess alone", "covgate": "CovGate (ours)", "llm_tests": "LLM + failing tests (1 prompt)",
-             "llm_coverage": "LLM + coverage (1 prompt, ours)", "sbfl_ochiai": "SBFL Ochiai",
-             "sbfl_dstar": "SBFL DStar", "artifact_metric": "Artifact's own metric (rank of the LLM guess)"}
+             "llm_guess": "LLM guess alone", "covgate": "CovGate (ours)", "llm_tests": "FailLoc (ours)",
+             "llm_coverage": "FailLoc+Cov", "sbfl_ochiai": "SBFL (Ochiai)",
+             "sbfl_dstar": "SBFL (DStar)", "artifact_metric": "Artifact's own metric (rank of the LLM guess)"}
 
 
 def rq3_bugsinpy_table() -> str:
@@ -307,8 +307,8 @@ def rq3_bugsinpy_table() -> str:
 
 def rq3_renamed_table() -> str:
     rows = [r for r in _rows("rq3_renamed.csv") if r["gt"] == "repaired"]
-    names = {"semloc": "SemLoc", "semloc_no_prior": "\\quad w/o LLM-guess bonus", "llm_guess": "LLM guess alone",
-             "llm_coverage": "LLM + coverage (1 prompt)"}
+    names = {"semloc": "SemLoc", "semloc_no_prior": "SemLoc−Bonus", "llm_guess": "LLM guess alone",
+             "llm_coverage": "FailLoc+Cov"}
     lines = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
              r" & \multicolumn{3}{c}{Acc@1} & \multicolumn{3}{c}{Acc@3} \\", r"\cmidrule(lr){2-4}\cmidrule(lr){5-7}",
              r"Method & Original & Renamed & $\Delta$ [95\% CI] & Original & Renamed & $\Delta$ [95\% CI] \\", r"\midrule"]
@@ -329,11 +329,11 @@ def pareto_figure(path: Path, lang: str = "en") -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     rows = _rows("pareto.csv")
-    T = ({"direct": " (hỏi thẳng)", "sbfl": "SBFL Ochiai (không dùng LLM)", "x": "Số token LLM mỗi chương trình (thang log)",
-          "same": "cùng mô hình", "LLM + coverage": "LLM + độ phủ", "LLM direct": "LLM hỏi thẳng (Gemini 3.8)", "SemLoc": "SemLoc"}
+    T = ({"direct": " (LLM-Direct)", "sbfl": "SBFL (Ochiai), không dùng LLM", "x": "Số token LLM mỗi chương trình (thang log)",
+          "same": "cùng mô hình", "LLM + coverage": "FailLoc+Cov", "LLM direct": "LLM-Direct (Gemini 3.8)", "SemLoc": "SemLoc"}
          if lang == "vi" else
-         {"direct": " (direct)", "sbfl": "SBFL Ochiai (no LLM)", "x": "LLM tokens per program (log scale)",
-          "same": "same model", "LLM + coverage": "LLM + coverage", "LLM direct": "LLM direct (Gemini 3.8)", "SemLoc": "SemLoc"})
+         {"direct": " (LLM-Direct)", "sbfl": "SBFL (Ochiai), no LLM", "x": "LLM tokens per program (log scale)",
+          "same": "same model", "LLM + coverage": "FailLoc+Cov", "LLM direct": "LLM-Direct (Gemini 3.8)", "SemLoc": "SemLoc"})
     style = {"SemLoc": ("#2a78d6", "o"), "CovGate": ("#2a78d6", "o"), "LLM + coverage": ("#1baf7a", "s"),
              "LLM direct": ("#eb6834", "^")}
     short = {"Gemini 3.8 Flash": "Gemini 3.8", "GPT-6 luna": "luna", "Claude Sonnet 5.5": "Sonnet 5.5",
@@ -387,17 +387,14 @@ def pareto_figure(path: Path, lang: str = "en") -> None:
 
 # Vietnamese report: same tables, labels translated (guide: Việt hóa thuật ngữ) and decimal commas.
 VI = [
-    ("Per-line coverage (LLM + failing tests)", "Độ phủ từng dòng (so với LLM + kiểm thử thất bại)"),
-    ("Propose-and-verify, most aggressive (LLM + failing tests)", "Đề xuất rồi kiểm chứng, cấu hình mạnh tay nhất (so với LLM + kiểm thử thất bại)"),
-    ("Propose-and-verify, selected (LLM + failing tests)", "Đề xuất rồi kiểm chứng, cấu hình được chọn (so với LLM + kiểm thử thất bại)"),
-    ("Vote over 3 answers (LLM + failing tests)", "Biểu quyết 3 câu trả lời (so với LLM + kiểm thử thất bại)"),
+    ("Per-line coverage: FailLoc+Cov (FailLoc)", "Độ phủ từng dòng: FailLoc+Cov (so với FailLoc)"),
+    ("FailLoc+Verify, most aggressive (FailLoc)", "FailLoc+Verify, cấu hình mạnh tay nhất (so với FailLoc)"),
+    ("FailLoc+Verify, selected (FailLoc)", "FailLoc+Verify, cấu hình được chọn (so với FailLoc)"),
+    ("FailLoc+Vote, 3 answers (FailLoc)", "FailLoc+Vote, 3 câu trả lời (so với FailLoc)"),
     ("Addition (compared with)", "Phần bổ sung (so với)"),
     ("CovGate (SemLoc)", "CovGate (so với SemLoc)"),
-    ("LLM + failing tests (ours)", "LLM + kiểm thử thất bại (nhóm đề xuất)"),
-    ("LLM + failing tests (1 prompt)", "LLM + kiểm thử thất bại (1 prompt)"),
+    ("FailLoc (ours)", "FailLoc (nhóm đề xuất)"),
     ("+ per-line coverage", "+ độ phủ từng dòng"),
-    ("LLM direct (source only)", "LLM hỏi thẳng (chỉ có mã)"),
-    ("SemLoc (multi-stage)", "SemLoc (nhiều bước)"),
     ("k tokens", "nghìn token"),
     ("Exact & Tolerant & Upper", "Khớp đúng & Nới lỏng & Cận trên"),
     ("Original vs.\\ reviewed label", "Nhãn gốc so với nhãn rà soát"),
@@ -431,18 +428,14 @@ VI = [
     ("SemLoc (spectrum + LLM-guess bonus)", "SemLoc (phổ + điểm thưởng dòng đoán)"),
     ("Executable (all but not executed)", "Thực thi được (trừ nhóm không thực thi)"),
     ("Execution-repaired ground truth", "Dòng lỗi chuẩn đã sửa bằng thực thi"),
-    ("LLM + coverage (1 prompt, ours)", "LLM + độ phủ (1 prompt, nhóm đề xuất)"),
-    ("LLM + coverage (1 prompt)", "LLM + độ phủ (1 prompt)"),
     ("SemLoc semantic spectrum only", "Chỉ phổ ngữ nghĩa của SemLoc"),
     ("bonus only when grounded", "chỉ thưởng khi có căn cứ"),
     ("without LLM-guess bonus", "không có điểm thưởng dòng đoán"),
     ("w/o LLM-guess bonus", "bỏ điểm thưởng dòng đoán"),
-    ("SBFL DStar (recomputed)", "SBFL DStar (tính lại)"),
+    ("SBFL (DStar, recomputed)", "SBFL (DStar, tính lại)"),
     ("CovGate + CF re-ranking", "CovGate + xếp lại bằng CF"),
     ("+ coverage gate only", "+ chỉ cổng độ phủ"),
     ("+ CF re-ranking", "+ xếp lại bằng CF"),
-    ("LLM direct (1 prompt)", "LLM hỏi thẳng (1 prompt)"),
-    ("+ failing tests, no coverage (ablation)", "+ kiểm thử thất bại, không độ phủ (loại bỏ)"),
     ("Original ground truth", "Dòng lỗi chuẩn gốc"),
     ("SemLoc (as released)", "SemLoc (bản phát hành)"),
     ("Configuration (all 250 programs)", "Cấu hình (cả 250 chương trình)"),
@@ -453,7 +446,6 @@ VI = [
     ("Delta debugging", "Gỡ lỗi chia đôi (DD)"),
     ("LLM direct", "LLM hỏi thẳng"),
     ("LLM + coverage", "LLM + độ phủ"),
-    ("LLM + cov.", "LLM + độ phủ"),
     ("CovGate (ours)", "CovGate (nhóm đề xuất)"),
     ("Author scoring", "Cách chấm của tác giả"),
     ("Fair scoring", "Cách chấm công bằng"),

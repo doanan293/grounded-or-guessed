@@ -27,7 +27,7 @@ Nhóm & Định nghĩa & Số chương trình \\
 \texttt{guess\_right} & dòng LLM tự đoán là dòng lỗi chuẩn & \FailGuessRightN \\
 \texttt{prior\_hurts} & phổ xếp dòng lỗi hạng 1 nhưng điểm thưởng đẩy dòng đoán sai lên trên & \FailPriorHurtsN \\
 \texttt{rescued\_by\_spectrum} & đoán sai nhưng SemLoc vẫn có dòng lỗi trong top-3 & \FailRescuedBySpectrumN \\
-\texttt{coverage\_only\_wins} & SemLoc trượt top-3, LLM + độ phủ trúng top-3 & \FailCoverageOnlyWinsN \\
+\texttt{coverage\_only\_wins} & SemLoc trượt top-3, FailLoc+Cov trúng top-3 & \FailCoverageOnlyWinsN \\
 \texttt{all\_miss} & còn lại: mọi phương pháp trượt & \FailAllMissN \\
 \bottomrule
 \end{tabularx}
@@ -37,7 +37,7 @@ Nhóm & Định nghĩa & Số chương trình \\
 
 Trong mỗi nhóm trừ \texttt{guess\_right}, nhóm chọn tối đa bốn ca, ưu tiên các cụm khuôn mẫu khác nhau, với hạt giống
 cố định, để mẫu đọc trải rộng chứ không lặp lại một khuôn mẫu. Với mỗi ca, công cụ trích đoạn mã quanh dòng lỗi chuẩn
-và dòng đoán, dòng đoán của từng lần chạy, năm dòng đầu của SemLoc và của LLM + độ phủ, và ràng buộc có điểm cao nhất.
+và dòng đoán, dòng đoán của từng lần chạy, năm dòng đầu của SemLoc và của FailLoc+Cov, và ràng buộc có điểm cao nhất.
 
 \section{Mơ hồ dòng kề cạnh}
 \label{sec:mo-ho}
@@ -46,7 +46,7 @@ và dòng đoán, dòng đoán của từng lần chạy, năm dòng đầu củ
 
 Trên mọi lần đoán của ba lần chạy, dòng đoán trùng dòng lỗi chuẩn \OffLlmGuessZeroCount{} lần; lệch xuống một dòng
 \OffLlmGuessOneCount{} lần và hai dòng \OffLlmGuessTwoCount{} lần, nhưng lệch lên một dòng chỉ
-\OffLlmGuessMinusOneCount{} lần và hai dòng \OffLlmGuessMinusTwoCount{} lần. LLM + độ phủ lệch cùng chiều
+\OffLlmGuessMinusOneCount{} lần và hai dòng \OffLlmGuessMinusTwoCount{} lần. FailLoc+Cov lệch cùng chiều
 (\OffLlmCoverageOneCount{} lần xuống một dòng so với \OffLlmCoverageMinusOneCount{} lần lên một dòng). Phần lớn các lần
 ``sai'' vì vậy không phải chỉ vào một chỗ khác, mà chỉ vào dòng ngay bên dưới.
 
@@ -56,7 +56,7 @@ Phân tích cây cú pháp cho thấy, trong \FailWrongGuessN{} chương trình 
 dòng đoán và dòng lỗi chuẩn là \emph{đầu một câu lệnh ghép} (\texttt{if}, \texttt{for}, \texttt{while}\ldots) \emph{và câu
 lệnh mà nó bảo vệ}. Nếu chấp nhận cả hai dòng của cặp này là đúng, Acc@1 của SemLoc tăng từ \TolSemlocAccOneExact\% lên
 \TolSemlocAccOneGuardStrict\% (biến thể chặt: chỉ dòng đầu khối và dòng đầu tiên của thân) đến
-\TolSemlocAccOneGuardOrBody\% (cận trên); của LLM + độ phủ từ \TolLlmCoverageAccOneExact\% lên
+\TolSemlocAccOneGuardOrBody\% (cận trên); của FailLoc+Cov từ \TolLlmCoverageAccOneExact\% lên
 \TolLlmCoverageAccOneGuardStrict\%--\TolLlmCoverageAccOneGuardOrBody\%. Hơn hai mươi điểm Acc@1 phụ thuộc vào quy ước gán
 nhãn --- lớn hơn mọi khác biệt giữa các phương pháp dùng LLM ở Chương~\ref{chap:ket-qua}; thứ tự giữa các phương pháp
 không đổi.

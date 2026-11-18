@@ -23,7 +23,7 @@ trong bài báo; bằng chứng thực thi của SemLoc chỉ có tác dụng t�
 \subsection{C2. Gần một nửa nhãn của SemFault-250 không trỏ đúng dòng lỗi}
 
 \textbf{Khẳng định.} \LabaudAllMoved{} trong \LabaudAllN{} nhãn gốc bị dời khi rà soát (\LabaudAllBlank{} trên dòng trống,
-\LabaudAllOffByOne{} lệch một dòng); trên bộ đã rà soát, phần hơn của SemLoc so với LLM hỏi thẳng ở Acc@3 biến mất (trên bộ
+\LabaudAllOffByOne{} lệch một dòng); trên bộ đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc@3 biến mất (trên bộ
 đã sửa thì vẫn còn). Nhóm công bố hai bộ nhãn: \emph{đã
 sửa} (chỉ kiểm thử quyết định, \GtConfirmedN{} xác nhận, \GtCorrectedN{} dời vị trí) và \emph{đã rà soát} (LLM rà trước,
 \ReviewReviewersN{} thành viên duyệt \ReviewHumanN{} nhãn, \ReviewOverrideN{} ca sửa có bằng chứng chạy kiểm thử).
@@ -35,7 +35,7 @@ và bị loại; mọi kết quả chính được báo cáo trên cả bộ g�
 
 \subsection{C3. Một prompt có kiểm thử thất bại thắng quy trình nhiều bước}
 
-\textbf{Khẳng định.} LLM + kiểm thử thất bại hơn SemLoc ở Acc@1 trên cả ba bộ nhãn (\RqTwoRepairedAllLlmTestsDAccOne{}
+\textbf{Khẳng định.} FailLoc hơn SemLoc ở Acc@1 trên cả ba bộ nhãn (\RqTwoRepairedAllLlmTestsDAccOne{}
 [\RqTwoRepairedAllLlmTestsDAccOneLo; \RqTwoRepairedAllLlmTestsDAccOneHi] trên bộ đã sửa) và ở Acc@3 trên bộ đã sửa và bộ
 đã rà soát, với \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với \CostSemlocTokensK{} nghìn.
 \textbf{Bằng chứng:} \texttt{data/rq2\_ours.csv}, \texttt{data/llm\_cost.csv}. \textbf{Bác bỏ nếu:} khoảng tin cậy của
@@ -45,7 +45,7 @@ một hàm; trên 31 lỗi thật kết quả cùng chiều nhưng khoảng tin 
 \subsection{C4. Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao}
 
 \textbf{Khẳng định.} Trong prompt, kiểm thử thất bại là tín hiệu chính (Acc@3 \AblRepairedAllTestsEffectDAccThree{} so với
-LLM hỏi thẳng); độ phủ từng dòng không giúp ở Acc@3 và làm Acc@1 đi xuống. CovGate chỉ giúp SemLoc một chút
+LLM-Direct); độ phủ từng dòng không giúp ở Acc@3 và làm Acc@1 đi xuống. CovGate chỉ giúp SemLoc một chút
 (Acc@3 \RqTwoRepairedAllCovgateDAccThree{} điểm);\IfAtLeastElse{full}{ đề xuất rồi kiểm chứng và}{} biểu quyết không cải thiện được prompt đơn giản; ruff và pyrefly gần như không trúng dòng lỗi. \IfAtLeastElse{full}{Cơ chế chung: một bản sửa nhỏ
 làm mọi kiểm thử đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng viên không có lỗi (tập dev), nên kiểm thử không làm được trọng
 tài cho vị trí lỗi.}{Cơ chế chung: bản sửa nhỏ làm mọi kiểm thử đạt có thể nằm ở dòng không có lỗi, nên kiểm thử không làm được trọng
@@ -91,7 +91,7 @@ cũng là một giả thuyết: nhãn có thể sai hoặc mơ hồ, và cả b�
 cáo trên bộ gốc.
 \item \textbf{Bộ dòng lỗi kiểm chứng có thể thiên về phương pháp dùng độ phủ}, vì bộ phán định cần kiểm thử thất bại chạy tới
 dòng sửa; so sánh giữa SemLoc, các phương pháp đối chứng dùng LLM và CovGate ở Acc@1 và Acc@3 cùng chiều trên bộ gốc, riêng cổng độ phủ
-thì không; ở Acc@5, SemLoc hơn LLM + độ phủ trên bộ gốc nhưng kém trên bộ đã sửa.
+thì không; ở Acc@5, SemLoc hơn FailLoc+Cov trên bộ gốc nhưng kém trên bộ đã sửa.
 \item \textbf{Mơ hồ dòng kề cạnh}: Acc@1 chặt phụ thuộc quy ước gán nhãn; nhóm báo cáo cả Acc@1 chấp nhận đầu khối/thân khối.
 \item \textbf{Prompt của phương pháp một prompt} do nhóm viết trước khi xem kết quả và không tinh chỉnh; prompt khác có thể cho kết quả khác.
 \item \textbf{Vòng tròn của bộ nhãn đã rà soát}: nhãn do một LLM đề xuất và ở vòng đầu người duyệt có xem gợi ý, nên các phương pháp

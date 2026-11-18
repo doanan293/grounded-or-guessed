@@ -61,17 +61,17 @@ nhưng không đổi thứ hạng nào.
 \IfAtLeastElse{lan2}{\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
 bị dời khi rà soát (\LabaudAllBlank{} nằm trên dòng trống, \LabaudAllOffByOne{} lệch một dòng). Nhóm công bố hai bộ nhãn
 mới: \emph{đã sửa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt, kiểm tra lại bằng
-duyệt mù). Trên nhãn đã rà soát, phần hơn của SemLoc so với LLM hỏi thẳng ở Acc@3 biến mất (trên nhãn đã sửa thì vẫn còn).}{%
+duyệt mù). Trên nhãn đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc@3 biến mất (trên nhãn đã sửa thì vẫn còn).}{%
 \item \textbf{Nhãn của bộ dữ liệu có vấn đề.} \GtBlankN{} nhãn gốc nằm trên dòng trống và \GtNotExecutedN{} chương trình
 không có kiểm thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm dựng bộ nhãn \emph{đã sửa} bằng thực thi: \GtConfirmedN{}
 nhãn được xác nhận, \GtCorrectedN{} nhãn được dời vị trí.}
-\item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất --- một lượt gọi
-LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi --- hơn SemLoc \RqTwoRepairedAllLlmTestsDAccOne{} điểm Acc@1
+\item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất, \textbf{FailLoc}
+(một lượt gọi LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi), hơn SemLoc \RqTwoRepairedAllLlmTestsDAccOne{} điểm Acc@1
 và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã sửa, thắng ở Acc@1 trên \IfAtLeastElse{lan2}{cả ba bộ
 nhãn}{cả bộ nhãn gốc lẫn bộ đã sửa}, và tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với
 \CostSemlocTokensK{} nghìn của SemLoc.
 \IfAtLeast{lan2}{\item \textbf{Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
-(Acc@3 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM hỏi thẳng), còn thêm độ phủ từng dòng làm Acc@1 đổi
+(Acc@3 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM-Direct), còn thêm độ phủ từng dòng làm Acc@1 đổi
 \AblRepairedAllCoverageEffectDAccOne{} điểm. CovGate chỉ giúp SemLoc một chút;\IfAtLeastElse{full}{ kiểm chứng dòng nghi ngờ bằng bản
 sửa và biểu quyết (đánh giá trên tập dev) không cải thiện được prompt đơn giản;}{ biểu quyết (đánh giá trên tập dev) không
 cải thiện được prompt đơn giản;} công cụ phân tích tĩnh (ruff, pyrefly) gần như không trúng dòng lỗi. Nguyên nhân chung:

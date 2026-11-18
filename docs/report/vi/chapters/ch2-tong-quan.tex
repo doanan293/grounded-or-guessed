@@ -69,7 +69,7 @@ buộc còn lại, LLM viết một bản vá một dòng tại dòng được q
 theo kết quả.
 
 \textbf{Đánh giá.} Bộ dữ liệu SemFault-250 gồm 250 chương trình Python một hàm, một lỗi, mỗi chương trình có khoảng
-mười kiểm thử. SemLoc được so với SBFL (Ochiai, Tarantula), gỡ lỗi chia đôi và LLM hỏi thẳng, dùng Claude Sonnet 4.6
+mười kiểm thử. SemLoc được so với SBFL (Ochiai, Tarantula), gỡ lỗi chia đôi và LLM-Direct, dùng Claude Sonnet 4.6
 và Gemini 2.5 Pro ở ba mức nhiệt độ. Kết quả công bố: Acc@1 \RqOneSemlocClaudeTZeroEightAuthorAllAccOne\%,
 Acc@3 \RqOneSemlocClaudeTZeroEightAuthorAllAccThree\%; trên lỗi thật, bài báo chỉ có bảng cấp dòng cho bảy lỗi
 youtube-dl và tự nhận đây là kết quả khả thi.
@@ -103,7 +103,7 @@ nhất định vị được tới 71 trên 100 lỗi và sửa đúng 52 trên 
 lời nhắc tới phương thức đã được sửa.
 
 Bài học cho đề tài: (i) \emph{đưa bằng chứng chương trình đã khai thác (xếp hạng) vào prompt} giúp LLM định vị tốt hơn
---- đây chính là ý tưởng của phương pháp đối chứng LLM + độ phủ mà nhóm xây dựng; (ii) đầu ra của LLM cần được kiểm tra vì hay bị
+--- đây chính là ý tưởng của phương pháp đối chứng FailLoc+Cov mà nhóm xây dựng; (ii) đầu ra của LLM cần được kiểm tra vì hay bị
 cắt cụt, lệch định dạng hoặc khẳng định không kiểm chứng. Bài cần dữ liệu công nghiệp nên không được dùng để thực nghiệm.
 
 \section{Các hướng nghiên cứu liên quan}
