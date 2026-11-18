@@ -252,3 +252,77 @@ def _guess_rank1_share() -> tuple[float, int]:
     rows = _csv(ROOT / "data" / "semloc_line_scores.csv")
     guesses = [r for r in rows if r["is_guess"] == "1"]
     return sum(r["rank"] == "1" for r in guesses) / len(guesses), len(guesses)
+
+
+def notes_lan1(bd) -> dict:
+    """Spoken notes for báo cáo lần 1 (Vietnamese prose; every number is one the page shows)."""
+    ex = json.loads((ROOT / "data" / "fig_example.json").read_text())
+    rq2 = {(r["gt"], r["method"]): r for r in _csv(ROOT / "data" / "rq2_ours.csv") if r.get("subset", "all") == "all"}
+    a1 = lambda gt, m: _p(100 * float(rq2[(gt, m)]["acc1_mean"]))
+    share, n_pairs = _guess_rank1_share()
+    rs = _bonus_rows()
+    gt_line = next(r["line"] for r in rs if r["is_gt_repaired"] == "1")
+    guess_line = next(r["line"] for r in rs if r["is_guess"] == "1")
+    ratio = float(bd._m("CostSemlocTokensK").replace(",", ".")) / float(bd._m("CostLlmTestsTokensK").replace(",", "."))
+    m = bd._m
+    return {
+        "slide_01": "Chào thầy và các bạn, nhóm M9 xin trình bày báo cáo tiến độ lần 1 của đề tài: bằng chứng hay phỏng đoán, "
+                    "tái hiện và đánh giá việc định vị lỗi ngữ nghĩa trong mã nguồn bằng mô hình ngôn ngữ lớn.",
+        "moc": f"Nhóm bắt đầu bằng một tình huống quen thuộc. Đây là hàm {ex['program']} trong bộ dữ liệu SemFault-250: chạy "
+               "bộ test thì có một test trượt, các test còn lại đều đạt. Mã vẫn chạy bình thường, chỉ có kết quả bị tính sai, "
+               "nên các công cụ kiểm tra cú pháp hay kiểu không báo gì. Câu hỏi là dòng nào sai.",
+        "sbfl_mu": "Cách kinh điển là định vị lỗi dựa trên phổ, gọi tắt là SBFL: dòng nào hay được test trượt chạy qua mà ít "
+                   "được test đạt chạy qua thì đáng nghi. Ở đây cột màu đỏ là test trượt, và nó chạy qua đúng những dòng mà "
+                   f"các test đạt cũng chạy qua. Mọi dòng vì thế nhận cùng một điểm, kể cả dòng {ex['gt_line']} là dòng lỗi "
+                   f"thật. Trên cả 250 chương trình, SBFL chỉ đúng ngay hạng 1 ở {m('RqOneSbflOchiaiFairAllAccOne')}%.",
+        "semloc_hua": "SemLoc, bài trung tâm trong ba bài thầy giao, đề xuất một quy trình nhiều bước. LLM viết ra các ràng "
+                      "buộc ngữ nghĩa, ràng buộc được chèn vào mã, chạy test để biết ràng buộc nào bị vi phạm, rồi LLM vá thử "
+                      f"để kiểm chứng. Tác giả báo cáo Acc@1 là {m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}% và cho rằng "
+                      "độ chính xác này đến từ việc neo LLM vào bằng chứng thực thi. Nhóm muốn kiểm tra lại đúng điều đó.",
+        "cau_hoi": "Từ đó nhóm đặt câu hỏi: thứ hạng của SemLoc đến từ bằng chứng thực thi hay từ việc LLM tự đoán. RQ1 tái "
+                   "hiện kết quả công bố và kiểm tra cách chấm điểm, kể cả chính các nhãn. RQ2 so SemLoc với FailLoc, phương "
+                   "pháp của nhóm chỉ dùng một lượt gọi LLM. RQ3 kiểm tra độ bền, nhóm sẽ trình bày ở lần sau.",
+        "slide_08": "Ba hướng liên quan nhất nhóm đọc là SemLoc, EffiHolmes cho lỗi chạy chậm, và một nghiên cứu công nghiệp "
+                    "đưa stack trace vào prompt cho LLM. Từ SemLoc, nhóm học cách chạy lại đúng mã của tác giả và soát từng "
+                    "con số. Nghiên cứu công nghiệp cho thấy đưa bằng chứng sẵn có vào prompt giúp LLM trúng hơn, và FailLoc "
+                    "đi theo ý tưởng đó.",
+        "hop_den_1": f"Giờ nhóm mở hộp SemLoc trên một chương trình cụ thể, {rs[0]['program']}. Mỗi thanh là điểm phổ vi phạm "
+                     f"của một dòng, cao nhất là 1. Dòng {gt_line}, dòng lỗi thật, có điểm cao nhất, nghĩa là phổ vi phạm "
+                     "đã chỉ đúng.",
+        "hop_den_2": f"Nhưng mã nguồn công bố có một bước bài báo không nhắc tới: dòng LLM tự đoán được cộng thêm "
+                     f"{m('ConstPriorWeight')} điểm. Điểm phổ không bao giờ vượt quá 1, nên dòng đoán luôn vượt lên đứng đầu, "
+                     f"ở đây là dòng {guess_line} đứng trên dòng lỗi. Trong {n_pairs} lần chạy có dòng đoán, tỉ lệ này là "
+                     f"{_p(100 * share, 0)}%.",
+        "nhan_sai": f"Kiểm tra kỹ hơn, nhóm thấy chính nhãn của bộ dữ liệu cũng có vấn đề: {m('GtBlankN')} nhãn nằm trên dòng "
+                    f"trống, và ở {m('GtNotExecutedN')} chương trình không test trượt nào chạy tới dòng được gán nhãn. Nhóm "
+                    "dựng lại bộ nhãn bằng thực thi: LLM chỉ đề xuất bản sửa nhỏ, còn test quyết định. Kết quả là "
+                    f"{m('GtConfirmedN')} nhãn được xác nhận, {m('GtCorrectedN')} nhãn được dời vị trí, và bộ nhãn đã sửa "
+                    f"còn {m('GtRepairedN')} chương trình. Mọi kết quả sau đây đều báo trên cả hai bộ nhãn.",
+        "failloc": "Phương pháp nhóm đề xuất tên là FailLoc. Nó làm đúng việc lập trình viên vẫn làm với trợ lý AI: đưa mã "
+                   "nguồn cùng tên và thông báo lỗi của các test trượt cho LLM, hỏi một lần, nhận về năm dòng đáng nghi nhất. "
+                   f"SemLoc tốn khoảng {m('CostSemlocTokensK')} nghìn token mỗi chương trình, FailLoc khoảng "
+                   f"{m('CostLlmTestsTokensK')} nghìn.",
+        "thiet_ke_l1": "Để so sánh công bằng, năm phương pháp chạy trên cùng 200 chương trình của tập test, cùng mô hình "
+                       "Gemini 3.8 Flash. Mỗi phương pháp có LLM được chạy ba lần, kết quả báo trên cả nhãn gốc lẫn nhãn đã "
+                       "sửa. Tập dev 50 chương trình chỉ dùng để chọn tham số.",
+        "ket_qua": f"Đây là kết quả chính. Trên cả nhãn gốc lẫn nhãn đã sửa, FailLoc đứng đầu ở Acc@1. Trên nhãn đã sửa, "
+                   f"FailLoc đạt {a1('repaired', 'llm_tests')}%, SemLoc {a1('repaired', 'semloc')}%, tức hơn "
+                   f"{m('RqTwoRepairedAllLlmTestsDAccOne')} điểm, và khoảng tin cậy không chạm 0. Bỏ điểm thưởng đi, SemLoc "
+                   f"chỉ còn {a1('repaired', 'semloc_no_prior')}%.",
+        "chi_phi": f"Gói lại trong ba con số: FailLoc hơn SemLoc {m('RqTwoRepairedAllLlmTestsDAccOne')} điểm Acc@1, dùng ít "
+                   f"token hơn khoảng {_p(ratio, 0)} lần, và chỉ cần {m('CostLlmTestsCalls').split(',')[0]} lượt gọi LLM cho "
+                   "mỗi chương trình. Một quy trình nhiều bước chỉ đáng dùng khi nó thắng được cách hỏi thẳng này.",
+        "lan_sau": "Trước khi tin kết quả này, nhóm còn ba câu hỏi phải trả lời. Thứ nhất, nhãn đã sửa vẫn có thể còn sai, "
+                   "nên nhóm rà soát lại cả 250 nhãn và cho hai người duyệt mù. Thứ hai, kết quả có giữ được trên lỗi thật, "
+                   "trên mã đã đổi tên và trên các họ mô hình khác không. Thứ ba, thông tin nào trong prompt tạo ra khác biệt. "
+                   "Nhóm sẽ trình bày cả ba ở báo cáo lần 2.",
+        "cong_cu_ai": "Về công cụ AI, Claude Code là trợ lý chính để đọc tài liệu, viết mã, chạy thực nghiệm và soạn báo cáo. "
+                      "Các LLM trong thực nghiệm đều được gọi qua một proxy có nhật ký và bộ đệm, nên mọi lượt chạy phát lại "
+                      "được. Nhóm trưởng duyệt mọi thay đổi, và mọi con số được sinh tự động từ dữ liệu.",
+        "hien_trang": "Theo yêu cầu, lần 1 cần xong ít nhất hai trong bốn nội dung. Nhóm đã xong phần tài liệu và phần chính "
+                      "của câu hỏi nghiên cứu và thực nghiệm. Đóng góp và triết lý khoa học sẽ trình bày ở lần 2, còn bài báo "
+                      "được viết khi đủ kết quả.",
+        "tien_do": "Về tiến độ, các thanh màu xanh đậm là phần đã xong. Từ nay đến báo cáo lần 2 ngày 25/11, nhóm hoàn thành "
+                   "rà soát nhãn, RQ3 và ablation, sau đó viết bài báo và chuẩn bị bảo vệ ngày 12/12.",
+        "slide_30": "Nhóm xin cảm ơn thầy và các bạn đã lắng nghe, và rất mong nhận được câu hỏi và góp ý.",
+    }

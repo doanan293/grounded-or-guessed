@@ -530,6 +530,18 @@ def analysis_pages() -> None:
     })
 
 
+def write_notes(notes: dict) -> None:
+    """notes/<stem>.md for every page of the deck (speaker notes, spoken prose); stale notes are removed."""
+    d = WS / "notes"
+    d.mkdir(exist_ok=True)
+    stems = {Path(n).stem for _, n in PAGES}
+    for f in d.glob("*.md"):
+        if f.stem not in stems or f.stem not in notes:
+            f.unlink()
+    for stem in stems & set(notes):
+        (d / f"{stem}.md").write_text(notes[stem].strip() + "\n")
+
+
 def main(deck: str) -> None:
     global DECK, PAGES
     DECK = deck
@@ -538,6 +550,7 @@ def main(deck: str) -> None:
     analysis_pages()
     if deck == "lan1":
         story.lan1(sys.modules[__name__])
+    write_notes(story.notes_lan1(sys.modules[__name__]) if deck == "lan1" else {})
     json.dump({"schema": "ppt-master.roundtrip-page-plan.v1",
                "pages": [{"source_slide": s, **({} if n == f"slide_{s:02d}.svg" else {"svg": n})} for s, n in PAGES]},
               open(WS / "page_plan.json", "w"), indent=2)
