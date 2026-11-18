@@ -108,6 +108,15 @@ Gốc & Tác giả SemLoc & So với bài báo gốc \\
 \end{table}
 % lan2: reviewed labels, blind review, label-set table
 
+Hình~\ref{fig:ra-soat} tóm tắt hai bước rà soát và vòng duyệt mù.
+
+\begin{figure}[H]
+\centering
+\input{figures/ra-soat-nhan}
+\caption{Rà soát nhãn hai bước (LLM rà trước, thành viên nhóm duyệt) và vòng duyệt mù kiểm tra lại bộ nhãn đã rà soát mà không có gợi ý của LLM}
+\label{fig:ra-soat}
+\end{figure}
+
 \subsection{Lỗi thật BugsInPy}
 
 Nhóm dựng môi trường cho các lỗi của dự án youtube-dl trong BugsInPy~\cite{widyasari2020} và giữ những lỗi thỏa đủ bốn
@@ -212,6 +221,15 @@ nhất (3 dòng, 2 lần thử) trên \emph{tập dev}, 3 lần. Quy tắc chọ
 trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã chuẩn hóa vì bộ đó được dựng bằng chính cơ chế sửa thử).
 
 \textbf{Biểu quyết}: gộp ba câu trả lời của FailLoc bằng tổng nghịch đảo hạng, cũng trên tập dev.
+
+Hình~\ref{fig:verify} là quy trình của FailLoc+Verify và lý do nó không cải thiện được FailLoc.
+
+\begin{figure}[H]
+\centering
+\input{figures/de-xuat-kiem-chung}
+\caption{FailLoc+Verify (đề xuất rồi kiểm chứng): kiểm thử được dùng làm trọng tài cho vị trí lỗi; trên bộ dữ liệu này kiểm thử quá yếu nên bản sửa nhỏ ở dòng không lỗi cũng thường làm mọi kiểm thử đạt}
+\label{fig:verify}
+\end{figure}
 
 \subsection{Phân tích tĩnh}
 

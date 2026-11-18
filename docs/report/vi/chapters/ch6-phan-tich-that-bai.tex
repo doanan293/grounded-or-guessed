@@ -9,6 +9,16 @@ Gemini 3.8 Flash trên tập test với bộ nhãn đã chuẩn hóa; tín hiệ
 
 \subsection{Sáu nhóm kết quả}
 
+Hình~\ref{fig:that-bai} cho số chương trình trong mỗi nhóm.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_failures.pdf}
+\caption{Phân nhóm kết quả của SemLoc theo chương trình (tập test, nhãn đã chuẩn hóa, đa số ba lần chạy)}
+\label{fig:that-bai}
+\end{figure}
+
+
 Mỗi chương trình được xếp vào đúng một nhóm theo thứ tự ưu tiên của Bảng~\ref{tab:nhom-that-bai}. Trên
 \FailProgramsN{} chương trình, khoảng một nửa được giải quyết bởi chính dòng LLM tự đoán; \FailRescuedBySpectrumN{} chương
 trình là nơi bằng chứng thực thi thật sự ``cứu'' SemLoc khi dòng đoán sai --- đây là phiên bản theo từng chương trình

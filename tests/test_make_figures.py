@@ -38,7 +38,8 @@ def test_vi_decimal_comma():
 
 def test_pdf_width_16cm():
     mf.main()
-    for name in ("fig_rq2_main", "fig_cost_acc", "fig_semloc_bonus"):
+    for name in ("fig_rq2_main", "fig_cost_acc", "fig_semloc_bonus", "fig_label_flow", "fig_ablation", "fig_addons",
+                 "fig_rq3", "fig_decomposition", "fig_improvement", "fig_failures"):
         info = subprocess.run(["pdfinfo", str(VI / f"{name}.pdf")], capture_output=True, text=True).stdout
         w_pt = float(next(l for l in info.splitlines() if l.startswith("Page size")).split()[2])
         assert abs(w_pt / 72 * 2.54 - 16.0) < 0.1, name
@@ -76,3 +77,40 @@ def test_failloc_example_tex_shows_prompt_and_answer():
     tex = mf.failloc_example_tex(va)
     assert "test\\_truncation\\_sum\\_equals\\_total\\_fail" in tex and "exactly one faulty line" in tex
     assert "[29, 25, 26, 28, 30]" in tex
+
+
+def test_label_flow_sums_to_n():
+    d = mf.label_flow_data()
+    assert sum(v for _, v in d["parts"]) == d["n"] == 250
+
+
+def test_ablation_rows_match_csv():
+    rows = mf.ablation_data()
+    r = next(x for x in rows if x["gt"] == "repaired" and x["contrast"] == "tests_effect")
+    assert abs(r["d_acc1"] - 5.77) < 1e-6 and abs(r["lo1"] - 1.70) < 1e-6
+    assert {x["gt"] for x in rows} == {"original", "repaired", "reviewed"}
+
+
+def test_addons_include_covgate_cov_and_vote():
+    names = [r["name"] for r in mf.addons_data()]
+    assert any("CovGate" in n for n in names) and any("FailLoc+Cov" in n for n in names) and any("FailLoc+Vote" in n for n in names)
+
+
+def test_rq3_panels():
+    d = mf.rq3_data()
+    assert abs(d["bugsinpy"]["llm_tests"] - 50.54) < 1e-6
+    assert len(d["families"]) == 5
+    assert abs(d["renamed"]["semloc_no_prior"][1] - 55.06) < 1e-6  # Acc@3 after renaming, normalized labels
+
+
+def test_decomposition_and_improvement():
+    d = mf.decomposition_data()
+    r = next(x for x in d if x["gt"] == "repaired" and x["metric"] == "acc1")
+    assert abs(r["guess"] - 30.73) < 1e-6 and abs(r["spectrum"] - 21.6) < 1e-6
+    imp = {r["setting"]: r for r in mf.improvement_data()}
+    assert abs(imp["Nhãn đã chuẩn hóa"]["failloc1"] - 62.6) < 0.05 and "BugsInPy (lỗi thật)" in imp
+
+
+def test_failure_categories_count_programs():
+    d = dict(mf.failure_data())
+    assert sum(d.values()) > 0 and "prior_hurts" in d

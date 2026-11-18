@@ -51,6 +51,16 @@ lượt chạy sau. Nhóm đã sửa lỗi thứ hai trong bộ chạy của mì
 %
 \subsection{Chất lượng nhãn của bộ dữ liệu}
 
+Hình~\ref{fig:nhan-goc} cho thấy mỗi nhãn gốc đi đâu sau khi rà soát.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_label_flow.pdf}
+\caption{Nhãn gốc của 250 chương trình so với nhãn đã rà soát: giữ nguyên, thêm dòng thứ hai (lỗi trải hai dòng), hoặc bị dời (dòng trống, dòng không phải mã, lệch một dòng, lệch từ hai dòng trở lên)}
+\label{fig:nhan-goc}
+\end{figure}
+
+
 Bảng~\ref{tab:nhan-lech} so nhãn gốc với nhãn đã rà soát trên cả \LabaudAllN{} chương trình. Chỉ \LabaudAllSame{} nhãn
 giữ nguyên; \LabaudAllExtended{} nhãn được giữ và thêm một dòng (lỗi trải hai dòng); \LabaudAllMoved{} nhãn bị dời: nằm
 trên dòng trống (\LabaudAllBlank), trên lệnh log, dòng \texttt{def} hoặc chú thích (\LabaudAllNonCode), lệch một dòng
@@ -208,6 +218,16 @@ khi nới lỏng (\RqtolRepairedLlmDirectDAccOneTol{} [\RqtolRepairedLlmDirectDA
 %
 \subsection{Thông tin nào tạo ra khác biệt}
 
+Hình~\ref{fig:ablation} so từng bước thêm thông tin vào prompt trên ba bộ nhãn.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_ablation.pdf}
+\caption{Ablation trên prompt (tập test, Gemini 3.8 Flash, ba lần chạy): chênh lệch khi thêm kiểm thử thất bại (LLM-Direct sang FailLoc) và khi thêm độ phủ từng dòng (FailLoc sang FailLoc+Cov), với khoảng tin cậy \ConstCiLevel\% bootstrap}
+\label{fig:ablation}
+\end{figure}
+
+
 Ablation tách hai nguồn thông tin trong prompt. \textbf{Kiểm thử thất bại} (tên kiểm thử và dòng thông báo lỗi đầu tiên)
 là tín hiệu chính: so với LLM-Direct, nó thay đổi Acc@3 \AblRepairedAllTestsEffectDAccThree{}
 [\AblRepairedAllTestsEffectDAccThreeLo; \AblRepairedAllTestsEffectDAccThreeHi] điểm trên bộ đã chuẩn hóa và
@@ -220,6 +240,16 @@ gốc. \textbf{Độ phủ từng dòng} không giúp: thêm nó vào prompt tha
 \emph{kiểm thử nào thất bại và vì sao}, không cần biết dòng nào được chạy qua.
 
 \subsection{Các cách bổ sung không cải thiện được}
+
+Hình~\ref{fig:bo-sung} đặt các cách bổ sung cạnh nhau.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_addons.pdf}
+\caption{Chênh lệch của từng cách bổ sung so với phương pháp nó mở rộng (nhãn đã chuẩn hóa). Điểm đặc có khoảng tin cậy \ConstCiLevel\% (tập test, ba lần chạy); điểm rỗng là tập dev, một cấu hình}
+\label{fig:bo-sung}
+\end{figure}
+
 
 Bảng~\ref{tab:bo-sung} tổng hợp mọi cách bổ sung nhóm đã thử, mỗi cách so với phương pháp nó mở rộng.
 
@@ -271,6 +301,16 @@ các công cụ này trên bộ dữ liệu này: chúng kiểm tra cách mã đ
 %
 \subsection{Grounded hay guessed: giá trị biên và phân rã}
 
+Hình~\ref{fig:phan-ra} chia độ chính xác của SemLoc cho hai nguồn.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_decomposition.pdf}
+\caption{Phân rã Shapley độ chính xác của SemLoc (tập test, ba lần chạy Gemini 3.8 Flash) thành phần do dòng LLM đoán và phần do phổ vi phạm}
+\label{fig:phan-ra}
+\end{figure}
+
+
 Vì điểm thưởng lớn hơn mọi điểm ràng buộc, thêm phổ vào dòng đoán \emph{không thể} thay đổi dòng đầu tiên: riêng dòng đoán
 và SemLoc cùng đạt Acc@1 \RqTwoRepairedAllSemlocAccOneMean\% trên bộ đã chuẩn hóa, còn riêng phổ đạt
 \RqTwoRepairedAllSemlocNoPriorAccOneMean\%; trên bộ đã rà soát là \RqTwoReviewedAllSemlocAccOneMean\% so với
@@ -312,6 +352,16 @@ mô hình}
 %
 \section{RQ3 -- Độ bền}
 \label{sec:rq3}
+
+Hình~\ref{fig:rq3} tóm tắt ba thí nghiệm độ bền.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_rq3.pdf}
+\caption{Độ bền: (a) lỗi thật BugsInPy, (b) trước và sau khi đổi tên định danh, (c) năm họ mô hình trên một tập con cố định của tập test}
+\label{fig:rq3}
+\end{figure}
+
 
 \subsection{Lỗi thật BugsInPy}
 
@@ -374,6 +424,16 @@ theo bộ nhãn là so sánh giữa SemLoc và LLM-Direct ở Acc@3, và chỉ t
 
 \section{Tóm tắt trả lời các câu hỏi nghiên cứu}
 \label{sec:tom-tat-rq}
+
+Hình~\ref{fig:cai-tien} tóm tắt mức hơn của FailLoc so với SemLoc trên mọi bộ nhãn và trên lỗi thật.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_improvement.pdf}
+\caption{FailLoc so với SemLoc trên cùng chương trình và cùng mô hình: ba bộ nhãn (tập test) và lỗi thật BugsInPy}
+\label{fig:cai-tien}
+\end{figure}
+
 
 %
 \begin{table}[H]

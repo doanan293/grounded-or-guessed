@@ -252,12 +252,278 @@ def failloc_example_tex(ex: dict, keep: int = 12) -> str:
             f"\\texttt{{{ans}}}; dòng lỗi theo nhãn: {ex['label_lines'][0]}.}}}}}}\n")
 
 
+# ---------------------------------------------------------------- report figures beyond the main comparison
+GT_ORDER = ("original", "repaired", "reviewed")
+GT_VI3 = {"original": "Nhãn gốc", "repaired": "Nhãn đã chuẩn hóa", "reviewed": "Nhãn đã rà soát"}
+GT_MARK = {"original": ("#9a9a94", "s"), "repaired": (st.FAILLOC, "o"), "reviewed": (st.SEMLOC, "D")}
+
+
+def label_flow_data() -> dict:
+    r = next(x for x in _rows("label_audit.csv") if x["subset"] == "all")
+    parts = [("Giữ nguyên", int(r["same"])), ("Thêm dòng thứ hai", int(r["extended"])), ("Dòng trống", int(r["blank"])),
+             ("Không phải mã", int(r["non_code"])), ("Lệch một dòng", int(r["off_by_one"])),
+             ("Lệch từ hai dòng", int(r["farther"]))]
+    return {"n": int(r["n"]), "parts": parts}
+
+
+def ablation_data() -> list[dict]:
+    out = []
+    for r in _rows("ablation_coverage.csv"):
+        if r["subset"] == "all":
+            out.append({"gt": r["gt"], "contrast": r["contrast"],
+                        **{k: 100 * float(r[c]) for k, c in (("d_acc1", "d_acc1"), ("lo1", "d_acc1_lo"), ("hi1", "d_acc1_hi"),
+                                                             ("d_acc3", "d_acc3"), ("lo3", "d_acc3_lo"), ("hi3", "d_acc3_hi"))}})
+    return out
+
+
+def addons_data(gt: str = "repaired") -> list[dict]:
+    """Δ of each addition against the method it extends (points with a 95% interval where repeated runs exist)."""
+    import json
+    rq2 = {(r["gt"], r["method"]): r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"}
+    ab = {(r["gt"], r["contrast"]): r for r in ablation_data()}
+    c = rq2[(gt, "covgate")]
+    out = [{"name": "CovGate (so với SemLoc), tập test", "d1": 100 * float(c["d_acc1"]), "lo1": 100 * float(c["d_acc1_lo"]),
+            "hi1": 100 * float(c["d_acc1_hi"]), "d3": 100 * float(c["d_acc3"]), "lo3": 100 * float(c["d_acc3_lo"]),
+            "hi3": 100 * float(c["d_acc3_hi"])}]
+    a = ab[(gt, "coverage_effect")]
+    out.append({"name": "FailLoc+Cov (so với FailLoc), tập test", "d1": a["d_acc1"], "lo1": a["lo1"], "hi1": a["hi1"],
+                "d3": a["d_acc3"], "lo3": a["lo3"], "hi3": a["hi3"]})
+    v = next(r for r in _rows("vote_dev.csv") if r["gt"] == gt)
+    out.append({"name": "FailLoc+Vote (so với FailLoc), tập dev", "d1": 100 * (float(v["vote_acc1"]) - float(v["single_acc1"])),
+                "d3": 100 * (float(v["vote_acc3"]) - float(v["single_acc3"]))})
+    params = json.loads((DATA / "pav_params.json").read_text())
+    grid = _rows("pav_dev_grid.csv")
+    ch = next(r for r in grid if r["order"] == params["order"] and int(r["k"]) == params["k"]
+              and int(r["attempts"]) == params["attempts"]
+              and r["max_size"] == ("" if params["max_size"] is None else str(params["max_size"])))
+    out.append({"name": "FailLoc+Verify (so với FailLoc), tập dev",
+                "d1": 100 * (float(ch[f"{gt}_acc1"]) - float(grid[0][f"{gt}_acc1"])),
+                "d3": 100 * (float(ch[f"{gt}_acc3"]) - float(grid[0][f"{gt}_acc3"]))})
+    return out
+
+
+def rq3_data(gt: str = "repaired") -> dict:
+    bip = {r["method"]: 100 * float(r["acc1_mean"]) for r in _rows("rq3_bugsinpy.csv") if r["subset"] == "all"}
+    ren = {r["method"]: (100 * float(r["orig_acc3_mean"]), 100 * float(r["renamed_acc3_mean"]))
+           for r in _rows("rq3_renamed.csv") if r["gt"] == gt}
+    fam = {}
+    for r in _rows("rq3_families.csv"):
+        if r["gt"] == gt and r["method"] in ("semloc", "semloc_no_prior"):
+            fam.setdefault(r["family"], {})[r["method"]] = 100 * float(r["acc1_mean"])
+            n_fam = int(r["n"])
+    return {"bugsinpy": bip, "renamed": ren, "families": fam, "n_families": n_fam}
+
+
+def decomposition_data() -> list[dict]:
+    return [{"gt": r["gt"], "metric": r["metric"], "guess": 100 * float(r["phi_guess"]),
+             "spectrum": 100 * float(r["phi_spectrum"])}
+            for r in _rows("rq_decomposition.csv") if r["game"] == "semloc" and r["subset"] == "all"]
+
+
+def improvement_data() -> list[dict]:
+    rq2 = {(r["gt"], r["method"]): r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"}
+    out = [{"setting": GT_VI3[g], "semloc1": 100 * float(rq2[(g, "semloc")]["acc1_mean"]),
+            "failloc1": 100 * float(rq2[(g, "llm_tests")]["acc1_mean"]),
+            "semloc3": 100 * float(rq2[(g, "semloc")]["acc3_mean"]), "failloc3": 100 * float(rq2[(g, "llm_tests")]["acc3_mean"])}
+           for g in GT_ORDER]
+    bip = {r["method"]: r for r in _rows("rq3_bugsinpy.csv") if r["subset"] == "all"}
+    out.append({"setting": "BugsInPy (lỗi thật)", "semloc1": 100 * float(bip["semloc_prior"]["acc1_mean"]),
+                "failloc1": 100 * float(bip["llm_tests"]["acc1_mean"]),
+                "semloc3": 100 * float(bip["semloc_prior"]["acc3_mean"]), "failloc3": 100 * float(bip["llm_tests"]["acc3_mean"])})
+    return out
+
+
+FAIL_VI = {"guess_right": "Dòng LLM đoán là dòng lỗi", "rescued_by_spectrum": "Đoán sai, phổ vi phạm cứu vào top 3",
+           "prior_hurts": "Phổ đúng hạng 1, điểm thưởng đẩy xuống", "coverage_only_wins": "Chỉ FailLoc+Cov trúng top 3",
+           "gt_suspect": "Mọi phương pháp trượt, nhãn đáng ngờ", "all_miss": "Mọi phương pháp trượt top 3"}
+
+
+def failure_data() -> list[tuple[str, int]]:
+    cats = [r["category"] for r in _rows("failure_signals.csv")]  # one row per test program (failure_cases: examples only)
+    return [(c, cats.count(c)) for c in FAIL_VI if cats.count(c)]
+
+
+def _save(fig, path):
+    import matplotlib.pyplot as plt
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+
+
+def fig_label_flow(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    d = label_flow_data()
+    colors = [st.GREY, "#c9c9c3", st.FAILLOC, "#e8956f", st.SEMLOC, "#8fb6ea"]
+    fig, ax = plt.subplots(figsize=(st.WIDTH_IN, 2.3))
+    left = 0
+    for (lab, v), c in zip(d["parts"], colors):
+        ax.barh(0, v, left=left, color=c, edgecolor="white", lw=1.5, height=0.5)
+        if v >= 15:
+            ax.text(left + v / 2, 0, str(v), ha="center", va="center", fontsize=12, color="white" if c in (st.FAILLOC, st.SEMLOC, st.GREY) else st.INK)
+        left += v
+    from matplotlib.patches import Patch
+    ax.legend(handles=[Patch(color=c, label=f"{lab} ({v})") for (lab, v), c in zip(d["parts"], colors)], ncol=3,
+              loc="upper center", bbox_to_anchor=(0.5, -0.12), frameon=False, fontsize=11)
+    ax.set_xlim(0, d["n"])
+    ax.set_yticks([])
+    ax.spines["left"].set_visible(False)
+    ax.set_xlabel("")
+    ax.tick_params(axis="x", labelsize=11)
+    _save(fig, path)
+
+
+def _forest(ax, rows, key, lo, hi, title):
+    for i, r in enumerate(rows):
+        c, mk = r["style"]
+        if lo in r:
+            ax.errorbar(r[key], i, xerr=[[r[key] - r[lo]], [r[hi] - r[key]]], fmt=mk, color=c, ms=7, capsize=0, lw=1.6)
+        else:
+            ax.plot(r[key], i, mk, mfc="white", mec=c, ms=7, mew=1.6)
+    ax.axvline(0, color=st.MUTED, lw=1)
+    ax.set_title(title, fontsize=13, loc="left")
+    ax.set_xlabel("Chênh lệch (điểm %)")
+    ax.xaxis.grid(True, color=st.GRID, lw=0.6)
+    ax.set_axisbelow(True)
+    ax.tick_params(axis="y", length=0)
+
+
+def fig_ablation(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    rows, labels = [], []
+    for contrast, lab in (("tests_effect", "Thêm kiểm thử thất bại\n(LLM-Direct → FailLoc)"), ("coverage_effect", "Thêm độ phủ\n(FailLoc → FailLoc+Cov)")):
+        for gt in GT_ORDER:
+            r = next(x for x in ablation_data() if x["gt"] == gt and x["contrast"] == contrast)
+            rows.append({**r, "style": GT_MARK[gt]})
+            labels.append(f"{lab.splitlines()[0]}, {GT_VI3[gt].lower()}")
+    fig, axes = plt.subplots(1, 2, figsize=(st.WIDTH_IN, 3.4), sharey=True)
+    _forest(axes[0], rows, "d_acc1", "lo1", "hi1", "Acc@1")
+    _forest(axes[1], rows, "d_acc3", "lo3", "hi3", "Acc@3")
+    axes[0].set_yticks(range(len(rows)), labels, fontsize=11)
+    axes[0].invert_yaxis()
+    _save(fig, path)
+
+
+def fig_addons(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    rows = [{**r, "style": (st.SEMLOC if "CovGate" in r["name"] else st.FAILLOC, "o")} for r in addons_data()]
+    fig, axes = plt.subplots(1, 2, figsize=(st.WIDTH_IN, 2.9), sharey=True)
+    _forest(axes[0], rows, "d1", "lo1", "hi1", "Acc@1")
+    _forest(axes[1], rows, "d3", "lo3", "hi3", "Acc@3")
+    axes[0].set_yticks(range(len(rows)), [r["name"].replace(", ", "\n") for r in rows], fontsize=11)
+    axes[0].invert_yaxis()
+    _save(fig, path)
+
+
+def fig_rq3(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    d = rq3_data()
+    fig = plt.figure(figsize=(st.WIDTH_IN, 5.6))
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.1, 1])
+    axes = [fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])]
+    ax = axes[0]
+    meths = [("sbfl_ochiai", "SBFL (Ochiai)"), ("semloc_spectrum", "Chỉ phổ vi phạm"), ("llm_guess", "Chỉ dòng đoán"),
+             ("semloc_prior", "SemLoc"), ("llm_tests", "FailLoc")]
+    for i, (m, lab) in enumerate(meths):
+        c = st.FAILLOC if m == "llm_tests" else st.SEMLOC if m == "semloc_prior" else st.GREY
+        ax.barh(i, d["bugsinpy"][m], color=c, height=0.6)
+        ax.text(d["bugsinpy"][m] + 1.5, i, fmt(d["bugsinpy"][m]), va="center", fontsize=10)
+    ax.set_yticks(range(len(meths)), [l for _, l in meths], fontsize=10)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 75)
+    ax.set_title("(a) Lỗi thật BugsInPy, Acc@1", fontsize=11, loc="left")
+    ax = axes[1]
+    for m, lab in (("semloc", "SemLoc"), ("semloc_no_prior", "SemLoc−Bonus"), ("llm_guess", "Chỉ dòng đoán"), ("llm_coverage", "FailLoc+Cov")):
+        a, b = d["renamed"][m]
+        c = st.SEMLOC if m == "semloc" else st.FAILLOC if m == "llm_coverage" else st.GREY
+        ax.plot([0, 1], [a, b], "-o", color=c, ms=5)
+        ax.text(1.06, b + (1.2 if m == "semloc" else -1.2 if m == "llm_guess" else 0), lab, va="center", fontsize=9)
+    ax.set_xticks([0, 1], ["Mã gốc", "Đổi tên"], fontsize=10)
+    ax.set_xlim(-0.2, 2.0)
+    ax.set_title("(b) Đổi tên định danh, Acc@3", fontsize=11, loc="left")
+    ax = axes[2]
+    fams = list(d["families"])
+    for i, f in enumerate(fams):
+        a, b = d["families"][f]["semloc"], d["families"][f]["semloc_no_prior"]
+        ax.plot([b, a], [i, i], color=st.GRID, lw=3)
+        ax.plot(a, i, "o", color=st.SEMLOC, ms=6)
+        ax.plot(b, i, "o", mfc="white", mec=st.SEMLOC, ms=6)
+    ax.set_yticks(range(len(fams)), fams, fontsize=10)
+    ax.invert_yaxis()
+    ax.set_title(f"(c) Năm họ mô hình ({d['n_families']} chương trình), Acc@1: ● SemLoc, ○ SemLoc−Bonus", fontsize=11, loc="left")
+    ax.set_xlim(0, 100)
+    for a_ in axes:
+        a_.tick_params(labelsize=10)
+    _save(fig, path)
+
+
+def fig_decomposition(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    rows = [r for r in decomposition_data() if r["gt"] in ("original", "repaired")]
+    fig, ax = plt.subplots(figsize=(st.WIDTH_IN, 2.8))
+    for i, r in enumerate(rows):
+        ax.barh(i, r["guess"], color=st.FAILLOC, height=0.55)
+        ax.barh(i, r["spectrum"], left=r["guess"], color=st.SEMLOC, height=0.55)
+        ax.text(r["guess"] / 2, i, fmt(r["guess"]), ha="center", va="center", color="white", fontsize=11)
+        ax.text(r["guess"] + r["spectrum"] / 2, i, fmt(r["spectrum"]), ha="center", va="center", color="white", fontsize=11)
+    ax.set_yticks(range(len(rows)), [f"{GT_VI3[r['gt']]}, {r['metric'].replace('acc', 'Acc@')}" for r in rows], fontsize=11)
+    ax.invert_yaxis()
+    ax.set_xlabel("Phần độ chính xác của SemLoc (điểm %)")
+    from matplotlib.patches import Patch
+    ax.legend(handles=[Patch(color=st.FAILLOC, label="Phần do dòng LLM đoán"), Patch(color=st.SEMLOC, label="Phần do phổ vi phạm")],
+              loc="upper center", bbox_to_anchor=(0.5, -0.32), ncol=2, frameon=False, fontsize=11)
+    _save(fig, path)
+
+
+def fig_improvement(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    rows = improvement_data()
+    fig, axes = plt.subplots(1, 2, figsize=(st.WIDTH_IN, 3.0), sharey=True)
+    for ax, k, title in ((axes[0], "1", "Acc@1"), (axes[1], "3", "Acc@3")):
+        for i, r in enumerate(rows):
+            a, b = r["semloc" + k], r["failloc" + k]
+            ax.plot([a, b], [i, i], color=st.GRID, lw=3, zorder=1)
+            ax.plot(a, i, "o", color=st.SEMLOC, ms=7, zorder=2)
+            ax.plot(b, i, "o", color=st.FAILLOC, ms=7, zorder=2)
+            ax.text(max(a, b) + 2, i, f"{'+' if b >= a else ''}{fmt(b - a)}", va="center", fontsize=10)
+        ax.set_title(title, fontsize=13, loc="left")
+        ax.set_xlim(0, 112)
+        ax.xaxis.grid(True, color=st.GRID, lw=0.6)
+        ax.set_axisbelow(True)
+        ax.set_xlabel("Độ chính xác (%)")
+    axes[0].set_yticks(range(len(rows)), [r["setting"] for r in rows], fontsize=11)
+    axes[0].invert_yaxis()
+    from matplotlib.lines import Line2D
+    fig.legend(handles=[Line2D([], [], marker="o", ls="", color=st.SEMLOC, label="SemLoc"),
+                        Line2D([], [], marker="o", ls="", color=st.FAILLOC, label="FailLoc")],
+               loc="lower center", ncol=2, frameon=False, fontsize=11)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    fig.savefig(path)
+    plt.close(fig)
+
+
+def fig_failures(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    rows = failure_data()
+    fig, ax = plt.subplots(figsize=(st.WIDTH_IN, 0.42 * len(rows) + 1.2))
+    for i, (c, n) in enumerate(rows):
+        ax.barh(i, n, color=st.FAILLOC if c == "prior_hurts" else st.SEMLOC if c == "rescued_by_spectrum" else st.GREY, height=0.6)
+        ax.text(n + 1, i, str(n), va="center", fontsize=11)
+    ax.set_yticks(range(len(rows)), [FAIL_VI[c] for c, _ in rows], fontsize=11)
+    ax.invert_yaxis()
+    ax.set_xlabel("Số chương trình (tập test, nhãn đã chuẩn hóa)")
+    _save(fig, path)
+
+
 def main() -> None:
     st.apply("vi")
     OUT.mkdir(parents=True, exist_ok=True)
     fig_rq2_main(OUT / "fig_rq2_main.pdf")
     fig_cost_acc(OUT / "fig_cost_acc.pdf")
     fig_semloc_bonus(OUT / "fig_semloc_bonus.pdf")
+    for name, fn in (("fig_label_flow", fig_label_flow), ("fig_ablation", fig_ablation), ("fig_addons", fig_addons),
+                     ("fig_rq3", fig_rq3), ("fig_decomposition", fig_decomposition), ("fig_improvement", fig_improvement),
+                     ("fig_failures", fig_failures)):
+        fn(OUT / f"{name}.pdf")
     import json
     (OUT / "fig_sbfl_matrix.tex").write_text(sbfl_matrix_tex(json.loads((DATA / "fig_example.json").read_text())))
     ex2 = json.loads((DATA / "fig_semloc_examples.json").read_text())
