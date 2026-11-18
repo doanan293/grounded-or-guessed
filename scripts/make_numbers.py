@@ -8,6 +8,7 @@ Percentages are ×100 with one decimal; differences (d_*) are signed percentage 
 """
 import csv
 import json
+import sys
 import re
 from pathlib import Path
 
@@ -137,6 +138,11 @@ def computed() -> dict[str, str]:
     lams = sorted({g["lam"] for g in ce.GRID})
     out[macro_name("const", "lambda", "grid")] = "; ".join(f"{x:g}" for x in lams)   # rendered with commas in -vi
     out[macro_name("const", "temperature")] = "0.8"
+    from flx._semloc import SEMLOC_ROOT as semloc_root
+    sys.path.insert(0, str(semloc_root / "src"))
+    from spectrum import _GRANULARITY_WEIGHT  # SemLoc multiplies a constraint's Ochiai by its region weight
+    for region, w in _GRANULARITY_WEIGHT.items():
+        out[macro_name("const", "region", "weight", *region.lower().split("_"))] = f"{w:g}"
     from flx.params import chosen_params
     for g in ("original", "repaired"):
         out[macro_name("const", "lambda", g)] = f"{chosen_params(g)['lam']:g}"   # dev-chosen CovGate weight   # scripts/run_matrix.sh: every SemLoc repeat runs at T = 0.8

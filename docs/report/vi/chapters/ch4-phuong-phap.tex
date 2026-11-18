@@ -174,7 +174,15 @@ và tên cùng dòng thông báo lỗi đầu tiên của mỗi kiểm thử th�
 (nội dung prompt ở Phụ lục~\ref{chap:phu-luc}). Prompt được
 thiết kế trước khi xem kết quả trên tập test và không được tinh chỉnh. Ý tưởng đưa thông tin sẵn có vào prompt thay vì
 xây quy trình nhiều bước lấy từ báo cáo công nghiệp~\cite{medeiros2026crash} và các nghiên cứu cho thấy nhật ký lỗi
-giúp LLM định vị tốt hơn~\cite{wu2023llmfl}.
+giúp LLM định vị tốt hơn~\cite{wu2023llmfl}. Hình~\ref{fig:failloc-vd} là prompt thật và câu trả lời của FailLoc trên
+chương trình \texttt{votes\_apportion}.
+
+\begin{figure}[H]
+\centering
+\input{../generated/vi/fig_failloc_votes_apportion}
+\caption{FailLoc trên \texttt{votes\_apportion} (lượt chạy 1, Gemini 3.8 Flash): prompt gửi cho LLM (các dòng ngoài hàm được lược bớt) và năm dòng LLM trả về; dòng lỗi theo nhãn đứng hạng 1}
+\label{fig:failloc-vd}
+\end{figure}
 
 %
 \subsection{Ablation: tách độ phủ khỏi kiểm thử thất bại}

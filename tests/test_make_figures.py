@@ -54,3 +54,25 @@ def test_sbfl_matrix_tex():
     assert "\\gtrow" in tex  # the labelled fault line is highlighted
     # every Ochiai value printed equals ef/sqrt((ef+nf)(ef+ep)) of its line
     assert "0,45" in tex
+
+
+def _examples():
+    import json
+    return json.loads((ROOT / "data" / "fig_semloc_examples.json").read_text())
+
+
+def test_semloc_example_tex_lists_constraints_and_scores():
+    bo = _examples()["blend_orders"]
+    tex = mf.semloc_example_tex(bo)
+    for c in bo["constraints"]:
+        assert c["id"] in tex and mf.fmt(c["ochiai"], 2) in tex
+    assert "0,60 + 1,2" in tex and "kiểm tra C1" in tex and "Hệ số vùng" in tex
+    assert "1,00 & 0,6 & 0,60" in tex  # C1: Ochiai × region weight = score given to line 73
+    assert "\\begin{tabular}" in tex
+
+
+def test_failloc_example_tex_shows_prompt_and_answer():
+    va = _examples()["votes_apportion"]
+    tex = mf.failloc_example_tex(va)
+    assert "test\\_truncation\\_sum\\_equals\\_total\\_fail" in tex and "exactly one faulty line" in tex
+    assert "[29, 25, 26, 28, 30]" in tex

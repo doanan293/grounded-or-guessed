@@ -74,7 +74,7 @@ Hình~\ref{fig:semloc} tóm tắt quy trình của SemLoc~\cite{yang2026semloc}.
 $\langle$mã, loại, vùng, điểm neo, biểu thức, ý đồ$\rangle$; biểu thức được chèn vào chương trình dưới dạng một lời gọi
 kiểm tra tại điểm neo. Chạy bộ kiểm thử cho ma trận ``ràng buộc $\times$ kiểm thử'' ghi ràng buộc nào bị vi phạm trong
 kiểm thử nào; thay ``dòng'' bằng ``ràng buộc'' trong công thức~\eqref{eq:ochiai} cho điểm của từng ràng buộc, và điểm
-của một dòng là điểm lớn nhất trong các ràng buộc được quy về dòng đó. Bước kiểm chứng phản thực tế loại ràng buộc bị
+của một dòng là điểm lớn nhất (đã nhân hệ số theo loại vị trí) trong các ràng buộc được quy về dòng đó. Bước kiểm chứng phản thực tế loại ràng buộc bị
 vi phạm cả trong kiểm thử thành công, rồi cho LLM vá thử tại dòng được quy cho từng ràng buộc còn lại và chạy lại kiểm thử.
 
 \begin{figure}[H]
@@ -112,6 +112,21 @@ trên một chương trình.
 \includegraphics{../generated/vi/fig_semloc_bonus.pdf}
 \caption{Điểm xếp hạng của SemLoc trên từng dòng của một chương trình (lượt chạy 1, Gemini 3.8 Flash). Phần xanh là điểm phổ vi phạm, tối đa là 1; phần cam là điểm thưởng \ConstPriorWeight{} mà mã nguồn công bố cộng cho dòng LLM tự đoán. Dòng nhãn có điểm phổ cao nhất nhưng dòng đoán vẫn vượt lên hạng 1}
 \label{fig:diem-thuong}
+\end{figure}
+
+Hình~\ref{fig:semloc-blend} đi qua từng bước của SemLoc trên cùng chương trình \texttt{blend\_orders}: LLM viết bốn ràng
+buộc, mỗi ràng buộc được chèn thành một lệnh kiểm tra; chạy bộ test cho biết mỗi ràng buộc bị vi phạm trong bao nhiêu
+kiểm thử thất bại và kiểm thử thành công, từ đó ra điểm Ochiai; điểm Ochiai được nhân với một hệ số theo loại vị trí của ràng buộc (gắn
+vào đúng một dòng: \ConstRegionWeightLine; cuối nhánh \texttt{if}: \ConstRegionWeightAfterBranch; cuối vòng lặp: \ConstRegionWeightLoopTail; mọi lệnh \texttt{return}: \ConstRegionWeightAnyReturn), điểm của một dòng
+là giá trị lớn nhất trong các ràng buộc gắn với nó, rồi cộng điểm thưởng nếu đó là dòng LLM đoán. Ở chương trình \texttt{votes\_apportion} (Hình~\ref{fig:sbfl-mu}), bốn ràng buộc
+LLM viết đều không bị vi phạm trong test nào, nên mọi điểm phổ bằng 0 và thứ hạng của SemLoc chỉ còn dòng LLM đoán
+(dòng 26, không phải dòng lỗi): hạng 1 ở đây hoàn toàn do điểm thưởng.
+
+\begin{figure}[H]
+\centering
+\input{../generated/vi/fig_semloc_blend_orders}
+\caption{SemLoc trên chương trình \texttt{blend\_orders} (lượt chạy 1, Gemini 3.8 Flash; dòng tô màu là dòng lỗi theo nhãn đã chuẩn hóa). Trên: mã nguồn với các lệnh kiểm tra được chèn. Giữa: số kiểm thử thất bại và kiểm thử thành công vi phạm từng ràng buộc và điểm Ochiai. Dưới: điểm xếp hạng của ba dòng đầu}
+\label{fig:semloc-blend}
 \end{figure}
 
 

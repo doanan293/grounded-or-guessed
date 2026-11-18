@@ -1,0 +1,60 @@
+{\small\setstretch{1.0}
+\fbox{\parbox{0.95\linewidth}{\ttfamily\footnotesize The program below has exactly one faulty line. 4 tests fail and 6 pass.\\
+~\\
+...\\
+32: def blend\_orders(left: Sequence[float], right: Sequence[float]) -> List[float]:\\
+33: ~~~~"""Merge two sorted order streams into a single sorted stream.\\
+34: \\
+35: ~~~~Both input sequences must be pre-sorted in non-decreasing order.\\
+36: ~~~~Duplicate values across streams are preserved so that each original\\
+37: ~~~~order appears in the output exactly once.\\
+38: \\
+39: ~~~~Args:\\
+40: ~~~~~~~~left: First sorted sequence of order values.\\
+41: ~~~~~~~~right: Second sorted sequence of order values.\\
+42: \\
+43: ~~~~Returns:\\
+44: ~~~~~~~~A new list containing all elements from both streams in sorted order.\\
+45: \\
+46: ~~~~Raises:\\
+47: ~~~~~~~~ValueError: If either stream is unsorted or exceeds MAX\_STREAM\_LENGTH.\\
+48: ~~~~"""\\
+49: ~~~~\_validate\_stream(left, "left")\\
+50: ~~~~\_validate\_stream(right, "right")\\
+51: \\
+52: ~~~~merged: List[float] = []\\
+53: ~~~~i = j = 0\\
+54: \\
+55: ~~~~while i < len(left) and j < len(right):\\
+56: ~~~~~~~~a, b = \_clamp\_value(left[i]), \_clamp\_value(right[j])\\
+57: ~~~~~~~~if a < b:\\
+58: ~~~~~~~~~~~~merged.append(a)\\
+59: ~~~~~~~~~~~~i += 1\\
+60: ~~~~~~~~elif b < a:\\
+61: ~~~~~~~~~~~~merged.append(b)\\
+62: ~~~~~~~~~~~~j += 1\\
+63: ~~~~~~~~else:\\
+64: ~~~~~~~~~~~~merged.append(a)\\
+65: ~~~~~~~~~~~~merged.append(b)\\
+66: ~~~~~~~~~~~~i += 1\\
+67: ~~~~~~~~~~~~j += 1\\
+68: \\
+69: ~~~~merged.extend(\_clamp\_value(v) for v in left[i:])\\
+70: ~~~~merged.extend(\_clamp\_value(v) for v in right[j:])\\
+71: \\
+72: ~~~~if merged and left and right and merged[-1] == left[-1] == right[-1]:\\
+73: ~~~~~~~~merged.pop()\\
+74: \\
+75: ~~~~\_log.debug("Blended \%d + \%d orders into \%d total", len(left), len(right), len(merged))\\
+76: ~~~~return merged\\
+~\\
+Failing tests:\\
+- test\_matching\_last\_elements\_preserved: \\
+- test\_identical\_streams: \\
+- test\_all\_equal\_elements: \\
+- test\_shared\_tail\_value\_three\_elements: \\
+~\\
+Return the five most suspicious line numbers, most suspicious first.}}
+
+\medskip
+\fbox{\parbox{0.95\linewidth}{Câu trả lời của LLM (năm dòng nghi nhất): \texttt{[72, 73, 64, 65, 71]}; dòng lỗi theo nhãn: 72.}}}

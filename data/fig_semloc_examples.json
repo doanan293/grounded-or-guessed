@@ -104,6 +104,7 @@
     "anchor_line": 26,
     "expr": "shares[-1] <= portion",
     "intent": "Ensure the allocated share appended at line 26 does not exceed the calculated portion when below minimum.",
+    "weight": 0.6,
     "ef": 0,
     "ep": 0,
     "ochiai": 0.0
@@ -115,6 +116,7 @@
     "anchor_line": null,
     "expr": "shares[-1] <= portion and sum(shares) <= total",
     "intent": "Verify that individual shares do not exceed portion and cumulative shares do not exceed total capacity.",
+    "weight": 0.9,
     "ef": 0,
     "ep": 0,
     "ochiai": 0.0
@@ -126,6 +128,7 @@
     "anchor_line": null,
     "expr": "sum(shares__1) <= total",
     "intent": "Check that the sum of shares does not exceed total capacity before returning.",
+    "weight": 1.0,
     "ef": 0,
     "ep": 0,
     "ochiai": 0.0
@@ -137,6 +140,7 @@
     "anchor_line": null,
     "expr": "sum(__cbfl_result) <= total",
     "intent": "Ensure total apportioned votes returned do not exceed total votes capacity.",
+    "weight": 0.3,
     "ef": 0,
     "ep": 0,
     "ochiai": 0.0
@@ -359,6 +363,7 @@
     "anchor_line": 73,
     "expr": "len(merged__1) == len(left) + len(right)",
     "intent": "Total count of merged elements must equal the sum of left and right stream lengths",
+    "weight": 0.6,
     "ef": 4,
     "ep": 0,
     "ochiai": 1.0
@@ -370,6 +375,7 @@
     "anchor_line": 72,
     "expr": "len(merged__1) == len(left) + len(right)",
     "intent": "Merged stream length must not decrease after executing the then branch",
+    "weight": 1.0,
     "ef": 4,
     "ep": 0,
     "ochiai": 1.0
@@ -381,6 +387,7 @@
     "anchor_line": null,
     "expr": "len(merged__1) == i + j",
     "intent": "Merged list count must equal the number of consumed elements from both inputs at each loop iteration",
+    "weight": 0.9,
     "ef": 4,
     "ep": 2,
     "ochiai": 0.8165
@@ -392,6 +399,7 @@
     "anchor_line": null,
     "expr": "len(__cbfl_result) == len(left) + len(right)",
     "intent": "The returned list must contain all elements from both input sequences",
+    "weight": 0.3,
     "ef": 4,
     "ep": 0,
     "ochiai": 1.0

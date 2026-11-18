@@ -57,6 +57,8 @@ def test_examples_match_runs():
     sc = {r["line"]: r for r in bo["line_scores"]}
     assert sc[72]["spectrum"] == 1.0 and abs(sc[73]["spectrum"] - 0.6) < 0.01 and sc[73]["bonus"] == 1.2
     assert sc[73]["rank"] == 1 and bo["guess_line"] == 73
+    w = {c["id"]: c["weight"] for c in bo["constraints"]}
+    assert w["C1"] == 0.6 and w["C2"] == 1.0  # SemLoc down-weights a constraint pinned to one line
     assert bo["failloc_top5"][0] == 72 and bo["label_status"] == "confirmed"
     assert "exactly one faulty line" in va["failloc_prompt"] and "test_truncation_sum_equals_total_fail" in va["failloc_prompt"]
     assert "[f=" not in va["failloc_prompt"]  # FailLoc: no coverage annotations

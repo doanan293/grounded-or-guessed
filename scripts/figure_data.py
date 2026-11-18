@@ -94,6 +94,8 @@ def semloc_example(run_dir: Path, program: str, failloc_rank: list[int]) -> dict
     from flx.coverage import load
     from flx.direct_cov import build_prompt, failing_tests
     from flx.gt import load_variants
+    sys.path.insert(0, str(SEMLOC_ROOT / "src"))
+    from spectrum import _GRANULARITY_WEIGHT as region_weight  # SemLoc's own weights, not a copy
     sc = json.loads((run_dir / "scores" / f"{program}.json").read_text())
     cons = json.loads((run_dir / "constraints" / f"{program}.json").read_text())
     cf = run_dir / "refined_base_cf" / f"{program}.json"
@@ -113,6 +115,7 @@ def semloc_example(run_dir: Path, program: str, failloc_rank: list[int]) -> dict
         "guess_line": sc.get("fault_line_pred"),
         "constraints": [{"id": c["id"], "category": c.get("category"), "region": c["instrument"]["region"],
                          "anchor_line": _anchor_line(c), "expr": c["spec"]["expr"], "intent": c.get("intent", ""),
+                         "weight": region_weight.get(c["instrument"]["region"], 1.0),
                          **{k: sc["constraint_scores"].get(c["id"], {}).get(k, 0) for k in ("ef", "ep")},
                          "ochiai": round(sc["constraint_scores"].get(c["id"], {}).get("ochiai", 0.0), 4)}
                         for c in cons["constraints"]],

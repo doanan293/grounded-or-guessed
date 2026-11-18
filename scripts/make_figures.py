@@ -144,11 +144,11 @@ def fig_semloc_bonus(path: Path) -> None:
     plt.close(fig)
 
 
-def _tex_code(line: str) -> str:
+def _tex_code(line: str, limit: int | None = 46) -> str:
     rep = {"\\": r"\textbackslash{}", "{": r"\{", "}": r"\}", "_": r"\_", "#": r"\#", "%": r"\%", "&": r"\&",
            "$": r"\$", "^": r"\^{}", "~": r"\~{}"}
-    if len(line) > 46:  # long signatures are cut so the code column stays left of the test columns
-        line = line[:43].rstrip() + " …"
+    if limit and len(line) > limit:  # long signatures are cut so the code column stays left of the test columns
+        line = line[:limit - 3].rstrip() + " …"
     body = line.lstrip(" ")
     indent = len(line) - len(body)
     return (rf"\hspace*{{{indent * 0.5}em}}" if indent else "") + "".join(rep.get(ch, ch) for ch in body)
@@ -184,6 +184,74 @@ def sbfl_matrix_tex(ex: dict, row_mm: float = 4.4) -> str:
     return "\n".join(out) + "\n"
 
 
+def _plain_tex(t: str) -> str:
+    rep = {"\\": r"\textbackslash{}", "{": r"\{", "}": r"\}", "_": r"\_", "#": r"\#", "%": r"\%", "&": r"\&",
+           "$": r"\$", "^": r"\^{}", "~": r"\~{}"}
+    return "".join(rep.get(ch, ch) for ch in t)
+
+
+def semloc_example_tex(ex: dict, context: int = 2) -> str:
+    """SemLoc on one program: (a) code around the constraint anchors with the inserted checks, (b) constraint ×
+    (failing tests violating, passing tests violating, Ochiai), (c) the line scores = spectrum + bonus, top 3."""
+    code = {c["no"]: c["text"] for c in ex["code_lines"]}
+    anchors = [c["anchor_line"] for c in ex["constraints"] if c["anchor_line"] in code]
+    lo = max(min(code), min(anchors + [ex["guess_line"]]) - context)
+    hi = min(max(code), max(anchors + [ex["guess_line"]]) + context)
+    after = {}
+    for c in ex["constraints"]:
+        if c["anchor_line"] in code:
+            after.setdefault(c["anchor_line"], []).append(c)
+    rows = []
+    for n in range(lo, hi + 1):
+        mark = r"\rowcolor{failloc!12}" if n in ex["label_lines"] else ""
+        rows.append(f"{mark}{n} & \\texttt{{{_tex_code(code[n], limit=80)}}} \\\\")
+        for c in after.get(n, []):
+            rows.append(f" & \\textit{{\\color{{semloc}}kiểm tra {c['id']}: \\texttt{{{_plain_tex(c['expr'])}}}}} \\\\")
+    a = ("\\begin{tabular}{@{}r>{\\raggedright\\arraybackslash}p{0.86\\linewidth}@{}}\n\\toprule\n"
+         "Dòng & Mã nguồn (dòng nghiêng: kiểm tra được SemLoc chèn vào) \\\\\n\\midrule\n" + "\n".join(rows) +
+         "\n\\bottomrule\n\\end{tabular}")
+    crow = "\n".join(f"{c['id']} & {c['anchor_line'] if c['anchor_line'] else c['region'].replace('_', ' ').lower()} & "
+                      f"\\texttt{{{_plain_tex(c['expr'])}}} & {c['ef']} & {c['ep']} & {fmt(c['ochiai'], 2)} & {fmt(c['weight'], 1)} & "
+                      f"{fmt(c['ochiai'] * c['weight'], 2)} \\\\"
+                      for c in ex["constraints"])
+    num = ">{\\centering\\arraybackslash}p{1.2cm}"
+    b = (f"\\begin{{tabularx}}{{\\linewidth}}{{@{{}}lp{{1.5cm}}>{{\\raggedright\\arraybackslash}}X{num}{num}{num}{num}{num}@{{}}}}\n\\toprule\n"
+         "Ràng buộc & Gắn ở & Biểu thức & Kiểm thử thất bại vi phạm & Kiểm thử thành công vi phạm & Ochiai & Hệ số vùng & Điểm cho dòng \\\\\n\\midrule\n" + crow +
+         "\n\\bottomrule\n\\end{tabularx}")
+    tops = ex["line_scores"][:3]
+    parts = [f"dòng {r['line']}: {fmt(r['spectrum'], 2)}" + (f" + {fmt(r['bonus'], 1)}" if r["bonus"] else "") +
+             f" (hạng {r['rank']})" for r in tops]
+    c_ = "Điểm xếp hạng: " + "; ".join(parts) + "."
+    return f"{{\\small\\setstretch{{1.05}}\n{a}\n\n\\medskip\n{b}\n\n\\medskip\n{c_}}}\n"
+
+
+def failloc_example_tex(ex: dict, keep: int = 12) -> str:
+    """FailLoc on one program: the prompt (program lines cut to the function) and the model's answer."""
+    lines = ex["failloc_prompt"].split("\n")
+    code_idx = [i for i, l in enumerate(lines) if l[:1].isdigit() and ": " in l]
+    first = {c["no"] for c in ex["code_lines"]}
+    kept = []
+    skipped = False
+    for i, l in enumerate(lines):
+        if i in code_idx and int(l.split(":")[0]) not in first:
+            if not skipped:
+                kept.append("...")
+                skipped = True
+            continue
+        kept.append(l)
+    def keep_indent(l: str) -> str:
+        if l[:1].isdigit() and ": " in l:  # "25:     portion = ..." keeps the indentation after the line number
+            no, rest = l.split(": ", 1)
+            body_ = rest.lstrip(" ")
+            return f"{no}: " + "~" * (len(rest) - len(body_)) + _tex_code(body_, limit=None)
+        return _tex_code(l, limit=None)
+    body = "\\\\\n".join(keep_indent(l) if l else "~" for l in kept)
+    ans = "[" + ", ".join(str(x) for x in ex["failloc_top5"]) + "]"
+    return ("{\\small\\setstretch{1.0}\n\\fbox{\\parbox{0.95\\linewidth}{\\ttfamily\\footnotesize " + body + "}}\n\n"
+            "\\medskip\n\\fbox{\\parbox{0.95\\linewidth}{Câu trả lời của LLM (năm dòng nghi nhất): "
+            f"\\texttt{{{ans}}}; dòng lỗi theo nhãn: {ex['label_lines'][0]}.}}}}}}\n")
+
+
 def main() -> None:
     st.apply("vi")
     OUT.mkdir(parents=True, exist_ok=True)
@@ -192,6 +260,10 @@ def main() -> None:
     fig_semloc_bonus(OUT / "fig_semloc_bonus.pdf")
     import json
     (OUT / "fig_sbfl_matrix.tex").write_text(sbfl_matrix_tex(json.loads((DATA / "fig_example.json").read_text())))
+    ex2 = json.loads((DATA / "fig_semloc_examples.json").read_text())
+    for prog, e in ex2.items():
+        (OUT / f"fig_semloc_{prog}.tex").write_text(semloc_example_tex(e))
+        (OUT / f"fig_failloc_{prog}.tex").write_text(failloc_example_tex(e))
 
 
 if __name__ == "__main__":

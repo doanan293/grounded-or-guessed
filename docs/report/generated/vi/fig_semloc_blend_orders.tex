@@ -1,0 +1,30 @@
+{\small\setstretch{1.05}
+\begin{tabular}{@{}r>{\raggedright\arraybackslash}p{0.86\linewidth}@{}}
+\toprule
+Dòng & Mã nguồn (dòng nghiêng: kiểm tra được SemLoc chèn vào) \\
+\midrule
+70 & \texttt{\hspace*{2.0em}merged.extend(\_clamp\_value(v) for v in right[j:])} \\
+71 & \texttt{} \\
+\rowcolor{failloc!12}72 & \texttt{\hspace*{2.0em}if merged and left and right and merged[-1] == left[-1] == right[-1]:} \\
+ & \textit{\color{semloc}kiểm tra C2: \texttt{len(merged\_\_1) == len(left) + len(right)}} \\
+73 & \texttt{\hspace*{4.0em}merged.pop()} \\
+ & \textit{\color{semloc}kiểm tra C1: \texttt{len(merged\_\_1) == len(left) + len(right)}} \\
+74 & \texttt{} \\
+75 & \texttt{\hspace*{2.0em}\_log.debug("Blended \%d + \%d orders into \%d total", len(left), len(right), …} \\
+\bottomrule
+\end{tabular}
+
+\medskip
+\begin{tabularx}{\linewidth}{@{}lp{1.5cm}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}@{}}
+\toprule
+Ràng buộc & Gắn ở & Biểu thức & Kiểm thử thất bại vi phạm & Kiểm thử thành công vi phạm & Ochiai & Hệ số vùng & Điểm cho dòng \\
+\midrule
+C1 & 73 & \texttt{len(merged\_\_1) == len(left) + len(right)} & 4 & 0 & 1,00 & 0,6 & 0,60 \\
+C2 & 72 & \texttt{len(merged\_\_1) == len(left) + len(right)} & 4 & 0 & 1,00 & 1,0 & 1,00 \\
+C3 & loop tail & \texttt{len(merged\_\_1) == i + j} & 4 & 2 & 0,82 & 0,9 & 0,73 \\
+C4 & any return & \texttt{len(\_\_cbfl\_result) == len(left) + len(right)} & 4 & 0 & 1,00 & 0,3 & 0,30 \\
+\bottomrule
+\end{tabularx}
+
+\medskip
+Điểm xếp hạng: dòng 73: 0,60 + 1,2 (hạng 1); dòng 72: 1,00 (hạng 2); dòng 57: 0,73 (hạng 3).}

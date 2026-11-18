@@ -54,3 +54,12 @@ def test_cost_calls_per_program_macros():
     subprocess.run([str(root / ".venv/bin/python"), str(root / "scripts/make_numbers.py")], check=True, capture_output=True)
     tex = (root / "docs/report/generated/numbers-vi.tex").read_text()
     assert "\\newcommand{\\CostSemlocCalls}" in tex and "\\newcommand{\\CostLlmTestsCalls}{1,0}" in tex
+
+
+def test_region_weight_macros_come_from_semloc():
+    import subprocess
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    subprocess.run([str(root / ".venv/bin/python"), str(root / "scripts/make_numbers.py")], check=True, capture_output=True)
+    tex = (root / "docs/report/generated/numbers-vi.tex").read_text()
+    assert "\\newcommand{\\ConstRegionWeightLine}{0,6}" in tex and "\\newcommand{\\ConstRegionWeightAnyReturn}{0,3}" in tex
