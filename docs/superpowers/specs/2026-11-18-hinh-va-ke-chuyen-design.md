@@ -49,6 +49,16 @@ làm gì để kiểm tra, (4) kết quả ra sao.
 
 ## Ràng buộc
 
+- **Quy định trình bày của thầy** (`docs/requirement/HuongDanTieuLuan 2026.pdf`, mục III.1.2): hình/bảng đánh số theo
+  chương (Hình 3.4); tên bảng ở trên, tên hình ở dưới; căn giữa; **cỡ chữ trong hình bằng cỡ chữ văn bản (13pt)** —
+  đặt font/kích thước matplotlib và TikZ theo khổ in thật; hình lấy từ nguồn khác phải ghi xuất xứ; có danh mục hình và
+  danh mục bảng. Slide: thầy không ràng buộc kiểu dáng ("free style", trưởng nhóm xác nhận).
+- **Bỏ thông tin thành viên và phân công** khỏi slide và báo cáo (trưởng nhóm, 18/11): bỏ trang `nhom.svg`,
+  `phan_cong.svg` khỏi deck; bỏ mục "Thành viên" và "Phân công theo mảng việc" trong `vi/frontmatter/nhom.tex`, đổi tên
+  phần còn lại (công cụ AI, hiện trạng bốn nội dung) cho phù hợp. Phân công chỉ còn trong `docs/phan-cong.md`. Thầy không
+  yêu cầu ghi phân công; công cụ AI và hiện trạng bốn nội dung bám yêu cầu của thầy nên giữ (Claude quyết). Cập nhật
+  `tests/test_report_build.py` nếu nó canh các cụm từ đó.
+
 - **Hạn:** lần 1 trình bày 18–19/11/2026 (hôm nay là 18/11) → lần 1 là ưu tiên tuyệt đối và phải xong trước; lần 2
   25–26/11; bảo vệ tháng 12 (mục tiêu nhóm 12/12). Thầy có thể chấm qua slide hoặc PDF → **lần 1 phải có cả hai**.
 - Cơ chế phiên bản: LaTeX `\IfAtLeast{lan2|full}` / `\IfAtLeastElse` (lan1 < lan2 < full), `make -C docs/report
@@ -124,8 +134,8 @@ bằng SVG khối gốc trong `build_deck.py` (sửa được trong PowerPoint),
 phương pháp, cán cân chi phí), con số lớn, và **mở dần**: cùng một hình lặp qua 2–3 slide, mỗi slide hiện thêm một lớp
 (thay cho animation, an toàn khi xuất PDF).
 
-**Mạch lần 1** (giữ các trang nhóm/phân công/công cụ AI/hiện trạng/tiến độ mà hướng dẫn của thầy yêu cầu, nhưng gọn và
-có hình; Gantt cho tiến độ):
+**Mạch lần 1** (bỏ trang thành viên và phân công; giữ gọn, có hình: công cụ AI, hiện trạng bốn nội dung, tiến độ
+dạng Gantt):
 1. Móc: một đoạn mã Python có lỗi ngữ nghĩa, test fail — "dòng nào sai?"
 2. Vấn đề: SBFL mù — test pass và fail đi cùng đường (ma trận phủ trực quan).
 3. Lời hứa của SemLoc: quy trình nhiều bước, Acc@1 công bố — "neo vào bằng chứng thực thi".
