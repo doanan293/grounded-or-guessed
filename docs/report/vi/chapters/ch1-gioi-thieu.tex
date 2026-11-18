@@ -54,7 +54,7 @@ SemLoc thì sao, về độ chính xác và chi phí? Thông tin nào trong prom
 từng dòng)? Các cách bổ sung --- gắn độ phủ vào SemLoc (CovGate),\IfAtLeast{full}{ kiểm chứng dòng nghi ngờ bằng bản sửa và kiểm thử,}
 biểu quyết nhiều câu trả lời --- và các công cụ phân tích tĩnh có thêm được gì không?
 \item \textbf{RQ3 -- Độ bền.} Các kết luận có giữ được trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã đổi tên
-định danh, trên năm họ mô hình, và trên \IfAtLeastElse{lan2}{cả ba bộ nhãn (gốc, đã sửa, đã rà soát)}{các bộ nhãn khác nhau} không?
+định danh, trên năm họ mô hình, và trên \IfAtLeastElse{lan2}{cả ba bộ nhãn (gốc, đã chuẩn hóa, đã rà soát)}{các bộ nhãn khác nhau} không?
 \end{itemize}
 
 \section{\IfAtLeastElse{lan2}{Đóng góp chính}{Kết quả đến thời điểm báo cáo}}
@@ -65,21 +65,21 @@ Mỗi kết quả dưới đây gắn với số liệu được sinh tự độ
 \begin{enumerate}
 \item \textbf{Hạng 1 của SemLoc là dòng LLM đoán.} Mã nguồn công bố cộng cho dòng LLM tự đoán một điểm thưởng lớn hơn
 mọi điểm ràng buộc --- chi tiết không có trong bài báo --- nên dòng đầu tiên của SemLoc \emph{luôn} là dòng đoán. Bỏ
-điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã sửa\IfAtLeast{lan2}{ và
+điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã chuẩn hóa\IfAtLeast{lan2}{ và
 \RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã rà soát}. Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM
 nhưng không đổi thứ hạng nào. Nói cách khác, bài báo tuyên bố quá mức (overclaim) về nguồn gốc độ chính xác
 (Mục~\ref{sec:overclaim}).
 \IfAtLeastElse{lan2}{\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
 bị dời khi rà soát (\LabaudAllBlank{} nằm trên dòng trống, \LabaudAllOffByOne{} lệch một dòng). Nhóm công bố hai bộ nhãn
-mới: \emph{đã sửa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt, kiểm tra lại bằng
-duyệt mù). Trên nhãn đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc@3 biến mất (trên nhãn đã sửa thì vẫn còn).}{%
+mới: \emph{đã chuẩn hóa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt, kiểm tra lại bằng
+duyệt mù). Trên nhãn đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc@3 biến mất (trên nhãn đã chuẩn hóa thì vẫn còn).}{%
 \item \textbf{Nhãn của bộ dữ liệu có vấn đề.} \GtBlankN{} nhãn gốc nằm trên dòng trống và \GtNotExecutedN{} chương trình
-không có kiểm thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm dựng bộ nhãn \emph{đã sửa} bằng thực thi: \GtConfirmedN{}
+không có kiểm thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm dựng bộ nhãn \emph{đã chuẩn hóa} bằng thực thi: \GtConfirmedN{}
 nhãn được xác nhận, \GtCorrectedN{} nhãn được dời vị trí.}
 \item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất, \textbf{FailLoc}
 (một lượt gọi LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi), hơn SemLoc \RqTwoRepairedAllLlmTestsDAccOne{} điểm Acc@1
-và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã sửa, thắng ở Acc@1 trên \IfAtLeastElse{lan2}{cả ba bộ
-nhãn}{cả bộ nhãn gốc lẫn bộ đã sửa}, và tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với
+và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã chuẩn hóa, thắng ở Acc@1 trên \IfAtLeastElse{lan2}{cả ba bộ
+nhãn}{cả bộ nhãn gốc lẫn bộ đã chuẩn hóa}, và tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với
 \CostSemlocTokensK{} nghìn của SemLoc.
 \IfAtLeast{lan2}{\item \textbf{Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
 (Acc@3 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM-Direct), còn thêm độ phủ từng dòng làm Acc@1 đổi
@@ -104,15 +104,15 @@ mô hình Gemini 3.8 Flash (trung bình ba lần chạy; chênh lệch kèm kho�
 \toprule
 Tiêu chí & SemLoc & FailLoc & Chênh lệch [CI \ConstCiLevel\%] \\
 \midrule
-Acc@1, nhãn đã sửa (\%) & \RqTwoRepairedAllSemlocAccOneMean & \textbf{\RqTwoRepairedAllLlmTestsAccOneMean} &
+Acc@1, nhãn đã chuẩn hóa (\%) & \RqTwoRepairedAllSemlocAccOneMean & \textbf{\RqTwoRepairedAllLlmTestsAccOneMean} &
   \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo; \RqTwoRepairedAllLlmTestsDAccOneHi] \\
-Acc@3, nhãn đã sửa (\%) & \RqTwoRepairedAllSemlocAccThreeMean & \textbf{\RqTwoRepairedAllLlmTestsAccThreeMean} &
+Acc@3, nhãn đã chuẩn hóa (\%) & \RqTwoRepairedAllSemlocAccThreeMean & \textbf{\RqTwoRepairedAllLlmTestsAccThreeMean} &
   \RqTwoRepairedAllLlmTestsDAccThree{} [\RqTwoRepairedAllLlmTestsDAccThreeLo; \RqTwoRepairedAllLlmTestsDAccThreeHi] \\
 Acc@1, nhãn gốc (\%) & \RqTwoOriginalAllSemlocAccOneMean & \textbf{\RqTwoOriginalAllLlmTestsAccOneMean} &
   \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo; \RqTwoOriginalAllLlmTestsDAccOneHi] \\
 Nghìn token mỗi CT & \CostSemlocTokensK & \textbf{\CostLlmTestsTokensK} & -- \\
 Lượt gọi LLM mỗi CT & \CostSemlocCalls & \textbf{\CostLlmTestsCalls} & -- \\
-Nhãn dùng để chấm & nhãn gốc & gốc và đã sửa & -- \\
+Nhãn dùng để chấm & nhãn gốc & gốc và đã chuẩn hóa & -- \\
 Lặp và kiểm định & một lần chạy & ba lần, khoảng tin cậy & -- \\
 \bottomrule
 \end{tabularx}}

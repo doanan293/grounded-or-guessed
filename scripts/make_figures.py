@@ -15,7 +15,7 @@ DATA = ROOT / "data"
 OUT = ROOT / "docs" / "report" / "generated" / "vi"
 MAIN = ["sbfl_ochiai", "llm_direct", "semloc", "semloc_no_prior", "llm_tests"]
 COST_PREFIX = {"llm_direct": "direct_test_gemini_r", "semloc": "semloc_test_gemini_r", "llm_tests": "direct_tests_test_gemini_r"}
-GT_VI = {"original": "Nhãn gốc", "repaired": "Nhãn đã sửa", "reviewed": "Nhãn đã rà soát"}
+GT_VI = {"original": "Nhãn gốc", "repaired": "Nhãn đã chuẩn hóa", "reviewed": "Nhãn đã rà soát"}
 fmt = st.fmt
 
 
@@ -97,7 +97,7 @@ def fig_cost_acc(path: Path) -> None:
     from matplotlib.ticker import FuncFormatter
     ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: fmt(v, 0) if v >= 1 else fmt(v, 1)))
     ax.set_xlabel("Số nghìn token LLM mỗi chương trình (thang log)")
-    ax.set_ylabel("Acc@1, nhãn đã sửa (%)")
+    ax.set_ylabel("Acc@1, nhãn đã chuẩn hóa (%)")
     ax.yaxis.grid(True, color=st.GRID, lw=0.6)
     ax.set_axisbelow(True)
     fig.tight_layout()

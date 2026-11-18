@@ -83,7 +83,7 @@ LLM-Direct \RqTwoOriginalAllSemlocAccThreeMean\% so với \RqTwoOriginalAllLlmDi
 hai phương pháp ngang nhau (\RqTwoReviewedAllSemlocAccThreeMean\% so với \RqTwoReviewedAllLlmDirectAccThreeMean\%;
 $\Delta$ của LLM-Direct \RqTwoReviewedAllLlmDirectDAccThree{} [\RqTwoReviewedAllLlmDirectDAccThreeLo;
 \RqTwoReviewedAllLlmDirectDAccThreeHi]) và LLM-Direct còn hơn ở Acc@1 (\RqTwoReviewedAllLlmDirectDAccOne{}
-[\RqTwoReviewedAllLlmDirectDAccOneLo; \RqTwoReviewedAllLlmDirectDAccOneHi]). Trên bộ đã sửa --- nơi LLM không phán đoán vị
+[\RqTwoReviewedAllLlmDirectDAccOneLo; \RqTwoReviewedAllLlmDirectDAccOneHi]). Trên bộ đã chuẩn hóa --- nơi LLM không phán đoán vị
 trí lỗi --- SemLoc vẫn hơn (LLM-Direct $\Delta$Acc@3 \RqTwoRepairedAllLlmDirectDAccThree{}
 [\RqTwoRepairedAllLlmDirectDAccThreeLo; \RqTwoRepairedAllLlmDirectDAccThreeHi]), nên việc phần hơn biến mất chỉ dựa trên
 bộ nhãn do LLM gợi ý và cần đọc kèm nguy cơ vòng tròn. Giải thích hợp lý: LLM-Direct thường chỉ
@@ -93,9 +93,9 @@ nêu một hai dòng (Acc@3 gần bằng Acc@5), còn SemLoc xếp hạng nhiề
 \subsection{Ảnh hưởng của dòng lỗi chuẩn}
 
 \GtBlankN{} nhãn gốc nằm trên dòng trống và \GtNotExecutedN{} chương trình không có kiểm thử thất bại nào chạy tới dòng
-lỗi chuẩn. Trên lượt chạy của nhóm, chuyển từ nhãn gốc (200 chương trình) sang bộ đã sửa bằng thực thi làm Acc@1 của
+lỗi chuẩn. Trên lượt chạy của nhóm, chuyển từ nhãn gốc (200 chương trình) sang bộ đã chuẩn hóa bằng thực thi làm Acc@1 của
 SemLoc đi từ \RqTwoOriginalAllSemlocAccOneMean\% lên \RqTwoRepairedAllSemlocAccOneMean\%; một phần mức tăng đến từ mẫu số
-nhỏ hơn, vì bộ đã sửa bỏ các lỗi không kiểm chứng được. Việc rà soát toàn bộ nhãn đang được thực hiện.
+nhỏ hơn, vì bộ đã chuẩn hóa bỏ các lỗi không kiểm chứng được. Việc rà soát toàn bộ nhãn đang được thực hiện.
 
 }
 
@@ -118,7 +118,7 @@ Bài báo khẳng định & Nhóm kiểm tra thấy \\
 \midrule
 Độ chính xác đến từ việc neo lập luận của LLM vào bằng chứng thực thi &
   Dòng LLM tự đoán luôn đứng hạng 1 nhờ điểm thưởng \ConstPriorWeight{} không được mô tả trong bài báo; bỏ điểm thưởng,
-  Acc@1 (nhãn đã sửa) đi từ \RqTwoRepairedAllSemlocAccOneMean\% xuống \RqTwoRepairedAllSemlocNoPriorAccOneMean\% \\
+  Acc@1 (nhãn đã chuẩn hóa) đi từ \RqTwoRepairedAllSemlocAccOneMean\% xuống \RqTwoRepairedAllSemlocNoPriorAccOneMean\% \\
 Bước kiểm chứng phản thực tế (vá thử) xác nhận dòng lỗi &
   Kết quả vá thử không được dùng để xếp hạng: thứ hạng trùng nhau ở cả 250 chương trình, dù bước này chiếm
   \CostCfSharePct\% lượt gọi LLM \\
@@ -140,28 +140,28 @@ Kết quả báo cáo từ một lần chạy &
 Bảng~\ref{tab:ket-qua-chinh} là kết quả chính trên ba bộ nhãn. \textbf{FailLoc} --- phương pháp đề xuất
 --- thắng SemLoc trên cả ba bộ ở Acc@1: \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo;
 \RqTwoOriginalAllLlmTestsDAccOneHi] trên bộ gốc, \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo;
-\RqTwoRepairedAllLlmTestsDAccOneHi] trên bộ đã sửa và \RqTwoReviewedAllLlmTestsDAccOne{}
+\RqTwoRepairedAllLlmTestsDAccOneHi] trên bộ đã chuẩn hóa và \RqTwoReviewedAllLlmTestsDAccOne{}
 [\RqTwoReviewedAllLlmTestsDAccOneLo; \RqTwoReviewedAllLlmTestsDAccOneHi] trên bộ đã rà soát. Ở Acc@3, nó hơn
 \RqTwoRepairedAllLlmTestsDAccThree{} [\RqTwoRepairedAllLlmTestsDAccThreeLo; \RqTwoRepairedAllLlmTestsDAccThreeHi] điểm trên
-bộ đã sửa và \RqTwoReviewedAllLlmTestsDAccThree{} [\RqTwoReviewedAllLlmTestsDAccThreeLo;
+bộ đã chuẩn hóa và \RqTwoReviewedAllLlmTestsDAccThree{} [\RqTwoReviewedAllLlmTestsDAccThreeLo;
 \RqTwoReviewedAllLlmTestsDAccThreeHi] trên bộ đã rà soát; trên toàn bộ nhãn gốc, mức hơn \RqTwoOriginalAllLlmTestsDAccThree{}
 có khoảng tin cậy chạm 0, vì nhãn gốc chứa các lỗi mà không kiểm thử nào chạy tới (chỉ tính lỗi được chạy tới:
 \RqTwoOriginalExecutableLlmTestsDAccThree{} [\RqTwoOriginalExecutableLlmTestsDAccThreeLo;
 \RqTwoOriginalExecutableLlmTestsDAccThreeHi]). Phương pháp đề xuất tốn \CostLlmTestsTokensK{} nghìn token mỗi chương
 trình, so với \CostSemlocTokensK{} nghìn của SemLoc. SBFL thấp nhất trên mọi bộ nhãn. Hình~\ref{fig:ket-qua-chinh} và
-Hình~\ref{fig:chi-phi} tóm tắt kết quả trên nhãn gốc và nhãn đã sửa và chi phí.
+Hình~\ref{fig:chi-phi} tóm tắt kết quả trên nhãn gốc và nhãn đã chuẩn hóa và chi phí.
 
 \begin{figure}[H]
 \centering
 \includegraphics{../generated/vi/fig_rq2_main.pdf}
-\caption{Kết quả chính trên tập test (Gemini 3.8 Flash): Acc@1 (cột đậm) và Acc@3 (cột nhạt) trên nhãn gốc và nhãn đã sửa, trung bình ba lần chạy; vạch là độ lệch chuẩn giữa các lần chạy. FailLoc màu cam, SemLoc màu xanh}
+\caption{Kết quả chính trên tập test (Gemini 3.8 Flash): Acc@1 (cột đậm) và Acc@3 (cột nhạt) trên nhãn gốc và nhãn đã chuẩn hóa, trung bình ba lần chạy; vạch là độ lệch chuẩn giữa các lần chạy. FailLoc màu cam, SemLoc màu xanh}
 \label{fig:ket-qua-chinh}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics{../generated/vi/fig_cost_acc.pdf}
-\caption{Chi phí và độ chính xác trên tập test với cùng mô hình: số token LLM trung bình mỗi chương trình (thang log) và Acc@1 trên nhãn đã sửa}
+\caption{Chi phí và độ chính xác trên tập test với cùng mô hình: số token LLM trung bình mỗi chương trình (thang log) và Acc@1 trên nhãn đã chuẩn hóa}
 \label{fig:chi-phi}
 \end{figure}
 
@@ -175,11 +175,11 @@ Hình~\ref{fig:chi-phi} tóm tắt kết quả trên nhãn gốc và nhãn đã 
 Trên bộ đã rà soát, FailLoc đạt Acc@3 \RqTwoReviewedAllLlmTestsAccThreeMean\%: với nhãn đã rà soát (do LLM gợi ý), SemFault-250
 gần như \emph{bão hòa} với một prompt đơn giản.\IfAtLeast{full}{ Chương~\ref{chap:that-bai} bàn vì sao.}
 }{%
-Bảng~\ref{tab:ket-qua-chinh} là kết quả chính trên bộ nhãn gốc và bộ đã sửa. \textbf{FailLoc} --- phương
+Bảng~\ref{tab:ket-qua-chinh} là kết quả chính trên bộ nhãn gốc và bộ đã chuẩn hóa. \textbf{FailLoc} --- phương
 pháp đề xuất --- thắng SemLoc ở Acc@1 trên cả hai bộ: \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo;
 \RqTwoOriginalAllLlmTestsDAccOneHi] trên bộ gốc và \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo;
-\RqTwoRepairedAllLlmTestsDAccOneHi] trên bộ đã sửa. Ở Acc@3, nó hơn \RqTwoRepairedAllLlmTestsDAccThree{}
-[\RqTwoRepairedAllLlmTestsDAccThreeLo; \RqTwoRepairedAllLlmTestsDAccThreeHi] điểm trên bộ đã sửa; trên toàn bộ nhãn gốc,
+\RqTwoRepairedAllLlmTestsDAccOneHi] trên bộ đã chuẩn hóa. Ở Acc@3, nó hơn \RqTwoRepairedAllLlmTestsDAccThree{}
+[\RqTwoRepairedAllLlmTestsDAccThreeLo; \RqTwoRepairedAllLlmTestsDAccThreeHi] điểm trên bộ đã chuẩn hóa; trên toàn bộ nhãn gốc,
 mức hơn \RqTwoOriginalAllLlmTestsDAccThree{} có khoảng tin cậy chạm 0, vì nhãn gốc chứa các lỗi mà không kiểm thử nào
 chạy tới. Phương pháp đề xuất tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình, so với \CostSemlocTokensK{} nghìn
 của SemLoc. SBFL thấp nhất trên cả hai bộ nhãn. Hình~\ref{fig:ket-qua-chinh} và Hình~\ref{fig:chi-phi} tóm tắt kết quả và chi phí.
@@ -187,20 +187,20 @@ của SemLoc. SBFL thấp nhất trên cả hai bộ nhãn. Hình~\ref{fig:ket-q
 \begin{figure}[H]
 \centering
 \includegraphics{../generated/vi/fig_rq2_main.pdf}
-\caption{Kết quả chính trên tập test (Gemini 3.8 Flash): Acc@1 (cột đậm) và Acc@3 (cột nhạt) trên nhãn gốc và nhãn đã sửa, trung bình ba lần chạy; vạch là độ lệch chuẩn giữa các lần chạy. FailLoc màu cam, SemLoc màu xanh}
+\caption{Kết quả chính trên tập test (Gemini 3.8 Flash): Acc@1 (cột đậm) và Acc@3 (cột nhạt) trên nhãn gốc và nhãn đã chuẩn hóa, trung bình ba lần chạy; vạch là độ lệch chuẩn giữa các lần chạy. FailLoc màu cam, SemLoc màu xanh}
 \label{fig:ket-qua-chinh}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics{../generated/vi/fig_cost_acc.pdf}
-\caption{Chi phí và độ chính xác trên tập test với cùng mô hình: số token LLM trung bình mỗi chương trình (thang log) và Acc@1 trên nhãn đã sửa}
+\caption{Chi phí và độ chính xác trên tập test với cùng mô hình: số token LLM trung bình mỗi chương trình (thang log) và Acc@1 trên nhãn đã chuẩn hóa}
 \label{fig:chi-phi}
 \end{figure}
 
 \begin{table}[H]
 \centering
-\caption{Kết quả chính trên bộ nhãn gốc và bộ đã sửa (tập test, Gemini 3.8 Flash, trung bình 3 lần chạy) và chi phí token
+\caption{Kết quả chính trên bộ nhãn gốc và bộ đã chuẩn hóa (tập test, Gemini 3.8 Flash, trung bình 3 lần chạy) và chi phí token
 mỗi chương trình}
 \label{tab:ket-qua-chinh}
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq_main_results_two}}
@@ -229,17 +229,17 @@ trung bình 3 lần chạy)}
 \resizebox{\linewidth}{!}{\IfAtLeastElse{lan2}{\input{../generated/vi/rq_tolerant}}{\input{../generated/vi/rq_tolerant_nocov}}}
 \end{table}
 
-Bảng~\ref{tab:nhay-nhan} cho thấy nới lỏng nâng Acc@1 của mọi phương pháp dùng LLM lên rõ rệt: trên bộ đã sửa, SemLoc từ
+Bảng~\ref{tab:nhay-nhan} cho thấy nới lỏng nâng Acc@1 của mọi phương pháp dùng LLM lên rõ rệt: trên bộ đã chuẩn hóa, SemLoc từ
 \RqtolRepairedSemlocAccOneExact\% lên \RqtolRepairedSemlocAccOneTol\%, FailLoc từ
 \RqtolRepairedLlmTestsAccOneExact\% lên \RqtolRepairedLlmTestsAccOneTol\%. Phần lớn các lần ``trượt'' vì vậy là trượt
 theo quy ước gán nhãn chứ không phải chỉ sai chỗ. Kết luận chính không đổi: FailLoc vẫn hơn SemLoc
 \RqtolRepairedLlmTestsDAccOneTol{} [\RqtolRepairedLlmTestsDAccOneTolLo; \RqtolRepairedLlmTestsDAccOneTolHi] điểm Acc@1
-trên bộ đã sửa và \RqtolOriginalLlmTestsDAccOneTol{} [\RqtolOriginalLlmTestsDAccOneTolLo;
+trên bộ đã chuẩn hóa và \RqtolOriginalLlmTestsDAccOneTol{} [\RqtolOriginalLlmTestsDAccOneTolLo;
 \RqtolOriginalLlmTestsDAccOneTolHi] trên bộ gốc. Khoảng cách hẹp lại so với khi chấm khớp đúng
-(\RqTwoRepairedAllLlmTestsDAccOne{} điểm trên bộ đã sửa): một phần lợi thế của phương pháp đề xuất là chọn đúng dòng mà
+(\RqTwoRepairedAllLlmTestsDAccOne{} điểm trên bộ đã chuẩn hóa): một phần lợi thế của phương pháp đề xuất là chọn đúng dòng mà
 nhãn ghi trong cặp dòng điều kiện -- thân. Riêng LLM-Direct, vốn hơn SemLoc khi chấm khớp đúng, trở nên ngang SemLoc
 khi nới lỏng (\RqtolRepairedLlmDirectDAccOneTol{} [\RqtolRepairedLlmDirectDAccOneTolLo;
-\RqtolRepairedLlmDirectDAccOneTolHi] điểm trên bộ đã sửa).
+\RqtolRepairedLlmDirectDAccOneTolHi] điểm trên bộ đã chuẩn hóa).
 
 
 \IfAtLeast{lan2}{%
@@ -247,12 +247,12 @@ khi nới lỏng (\RqtolRepairedLlmDirectDAccOneTol{} [\RqtolRepairedLlmDirectDA
 
 Ablation tách hai nguồn thông tin trong prompt. \textbf{Kiểm thử thất bại} (tên kiểm thử và dòng thông báo lỗi đầu tiên)
 là tín hiệu chính: so với LLM-Direct, nó thay đổi Acc@3 \AblRepairedAllTestsEffectDAccThree{}
-[\AblRepairedAllTestsEffectDAccThreeLo; \AblRepairedAllTestsEffectDAccThreeHi] điểm trên bộ đã sửa và
+[\AblRepairedAllTestsEffectDAccThreeLo; \AblRepairedAllTestsEffectDAccThreeHi] điểm trên bộ đã chuẩn hóa và
 \AblOriginalAllTestsEffectDAccThree{} [\AblOriginalAllTestsEffectDAccThreeLo; \AblOriginalAllTestsEffectDAccThreeHi] trên bộ
 gốc. \textbf{Độ phủ từng dòng} không giúp: thêm nó vào prompt thay đổi Acc@3 \AblRepairedAllCoverageEffectDAccThree{}
 [\AblRepairedAllCoverageEffectDAccThreeLo; \AblRepairedAllCoverageEffectDAccThreeHi] và làm Acc@1 đi xuống
 \AblRepairedAllCoverageEffectDAccOne{} [\AblRepairedAllCoverageEffectDAccOneLo; \AblRepairedAllCoverageEffectDAccOneHi]
-điểm trên bộ đã sửa; trên bộ đã rà soát Acc@1 cũng đi xuống (\AblReviewedAllCoverageEffectDAccOne{}
+điểm trên bộ đã chuẩn hóa; trên bộ đã rà soát Acc@1 cũng đi xuống (\AblReviewedAllCoverageEffectDAccOne{}
 [\AblReviewedAllCoverageEffectDAccOneLo; \AblReviewedAllCoverageEffectDAccOneHi]). Giả thuyết H3 bị bác bỏ: LLM cần biết
 \emph{kiểm thử nào thất bại và vì sao}, không cần biết dòng nào được chạy qua.
 
@@ -269,7 +269,7 @@ khoảng tin cậy; các dòng còn lại trên tập dev)}
 \end{table}
 
 \textbf{CovGate} được chọn trên tập dev là một bước phá hòa bằng Ochiai; nó thay đổi Acc@3 \RqTwoRepairedAllCovgateDAccThree{}
-[\RqTwoRepairedAllCovgateDAccThreeLo; \RqTwoRepairedAllCovgateDAccThreeHi] điểm trên bộ đã sửa và không đổi Acc@1. Các thành
+[\RqTwoRepairedAllCovgateDAccThreeLo; \RqTwoRepairedAllCovgateDAccThreeHi] điểm trên bộ đã chuẩn hóa và không đổi Acc@1. Các thành
 phần còn lại còn làm kết quả đi xuống: ``chỉ thưởng khi có căn cứ'' thay đổi Acc@1 \RqTwoRepairedAllGroundedPriorOnlyDAccOne{}
 điểm, xếp lại bằng kiểm chứng phản thực tế \RqTwoRepairedAllCfRerankDAccOne{} điểm.
 
@@ -282,7 +282,7 @@ kiểm tại dòng \emph{không} có lỗi --- ví dụ đổi một hằng số
 cách nhau đủ xa để làm tiêu chí xếp hạng. Vì kết quả trên dev đã rõ, phương pháp này không được chạy trên tập test.}
 
 \textbf{Biểu quyết} ba câu trả lời của FailLoc (tập dev) cho Acc@1 \VoteReviewedVoteAccOne\% so với
-trung bình \VoteReviewedSingleAccOne\% của một câu trả lời trên bộ đã rà soát, nhưng làm Acc@3 đi xuống trên bộ đã sửa
+trung bình \VoteReviewedSingleAccOne\% của một câu trả lời trên bộ đã rà soát, nhưng làm Acc@3 đi xuống trên bộ đã chuẩn hóa
 (\VoteRepairedVoteAccThree\% so với \VoteRepairedSingleAccThree\%) và bộ gốc (\VoteOriginalVoteAccThree\% so với
 \VoteOriginalSingleAccThree\%); không có kiểm định thống kê cho phép so sánh này.
 
@@ -309,7 +309,7 @@ các công cụ này trên bộ dữ liệu này: chúng kiểm tra cách mã đ
 \subsection{Grounded hay guessed: giá trị biên và phân rã}
 
 Vì điểm thưởng lớn hơn mọi điểm ràng buộc, thêm phổ vào dòng đoán \emph{không thể} thay đổi dòng đầu tiên: riêng dòng đoán
-và SemLoc cùng đạt Acc@1 \RqTwoRepairedAllSemlocAccOneMean\% trên bộ đã sửa, còn riêng phổ đạt
+và SemLoc cùng đạt Acc@1 \RqTwoRepairedAllSemlocAccOneMean\% trên bộ đã chuẩn hóa, còn riêng phổ đạt
 \RqTwoRepairedAllSemlocNoPriorAccOneMean\%\IfAtLeast{lan2}{; trên bộ đã rà soát là \RqTwoReviewedAllSemlocAccOneMean\% so với
 \RqTwoReviewedAllSemlocNoPriorAccOneMean\%}. Giá trị Shapley của phổ ở Acc@1 (Bảng~\ref{tab:phan-ra},
 \DecSemlocRepairedAllAccOnePhiSpectrum{} điểm) vì vậy là phần công cho điều phổ \emph{sẽ} đạt được nếu không có dòng đoán,
@@ -340,7 +340,7 @@ tin cậy; ở Acc@1, GPT-6 luna không hơn.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.75\linewidth]{../generated/vi/pareto.pdf}
-\caption{Chi phí và độ chính xác (Acc@3) trên cùng tập con, dòng lỗi chuẩn đã sửa; đường nối hai phương pháp của cùng một
+\caption{Chi phí và độ chính xác (Acc@3) trên cùng tập con, nhãn đã chuẩn hóa; đường nối hai phương pháp của cùng một
 mô hình}
 \label{fig:pareto}
 \end{figure}
@@ -380,7 +380,7 @@ không đổi tên kiểm thử, nên tên kiểm thử vẫn mô tả ý địn
 
 \begin{table}[H]
 \centering
-\caption{RQ3b: bản gốc và bản đổi tên định danh (dòng lỗi chuẩn đã sửa, 3 cặp lần chạy)}
+\caption{RQ3b: bản gốc và bản đổi tên định danh (nhãn đã chuẩn hóa, 3 cặp lần chạy)}
 \label{tab:rq3-ren}
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq3_renamed}}
 \end{table}
@@ -397,7 +397,7 @@ Flash, tập con gần như không đổi (\FamRepairedGeminiThreeEightFlashSeml
 
 \begin{table}[H]
 \centering
-\caption{RQ3c: năm mô hình trên cùng tập con (dòng lỗi chuẩn đã sửa, 3 lần chạy)}
+\caption{RQ3c: năm mô hình trên cùng tập con (nhãn đã chuẩn hóa, 3 lần chạy)}
 \label{tab:rq3-ho}
 \resizebox{\linewidth}{!}{\input{../generated/vi/rq3_families}}
 \end{table}
@@ -443,7 +443,7 @@ kết luận giữ trên cả ba bộ nhãn. \\
 }{%
 % row text defined outside the table: a conditional inside a tabular row breaks alignment
 \def\TraLoiRQTwo{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước ở Acc@1 trên bộ gốc và bộ
-đã sửa, rẻ hơn khoảng bảy lần. Hạng 1 của SemLoc là ``guessed'' theo thiết kế. Đang thực hiện: thông tin nào trong
+đã chuẩn hóa, rẻ hơn khoảng bảy lần. Hạng 1 của SemLoc là ``guessed'' theo thiết kế. Đang thực hiện: thông tin nào trong
 prompt tạo ra khác biệt, các cách bổ sung.}
 \begin{table}[H]
 \centering

@@ -2,7 +2,7 @@
 \label{chap:that-bai}
 
 Chương này trả lời câu hỏi: khi SemLoc (hoặc dòng LLM tự đoán) sai, nó sai thế nào và vì sao? Phân tích dùng ba lần chạy
-Gemini 3.8 Flash trên tập test với bộ dòng lỗi chuẩn đã sửa; tín hiệu nhị phân của mỗi chương trình lấy theo đa số ba lần.
+Gemini 3.8 Flash trên tập test với bộ nhãn đã chuẩn hóa; tín hiệu nhị phân của mỗi chương trình lấy theo đa số ba lần.
 
 \section{Phân nhóm tự động}
 \label{sec:phan-nhom}
@@ -16,7 +16,7 @@ của phân rã Shapley ở mục~\ref{sec:rq2}.
 
 \begin{table}[H]
 \centering
-\caption{Phân nhóm kết quả theo chương trình (dòng lỗi chuẩn đã sửa)}
+\caption{Phân nhóm kết quả theo chương trình (nhãn đã chuẩn hóa)}
 \label{tab:nhom-that-bai}
 \small
 \begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}Xr@{}}
@@ -90,7 +90,7 @@ Bộ phán định sửa tối thiểu của nhóm (mục~\ref{sec:du-lieu}) ch�
 bằng \texttt{norm = \_compute\_global\_norm(gradients) - 1}, trong khi lỗi thật là \texttt{max\_norm / (norm + 1)} ở dòng
 mà LLM chỉ cả ba lần. Ở \texttt{energy\_window\_avg}, bộ phán định ``xác nhận'' bằng cách thay một lời gọi ghi log bằng một phép gán.
 Ở các khối lỗi nhiều dòng, bộ phán định ``xác nhận'' bằng cách làm điều kiện luôn sai. Các bản sửa đặt trên dòng trống đã bị
-loại khỏi bộ dòng lỗi chuẩn đã sửa (\GtBlankFixDroppedN{} chương trình); bản sửa bù trừ trên dòng có mã thì không phát
+loại khỏi bộ nhãn đã chuẩn hóa (\GtBlankFixDroppedN{} chương trình); bản sửa bù trừ trên dòng có mã thì không phát
 hiện tự động được, nhưng vòng rà soát (mục~\ref{sec:du-lieu}) đã bác \ReviewCorrectedOverturnedN{} trong
 \GtCorrectedN{} lần bộ phán định dời nhãn.
 

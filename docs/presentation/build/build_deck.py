@@ -159,11 +159,11 @@ def results_pages() -> None:
              ("llm_tests", "FailLoc (nhóm)", tok("direct_tests_test_gemini_r")),
              ("llm_coverage", "FailLoc+Cov", tok("direct_cov_test_gemini_r"))]
     orig = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "original" and r.get("subset", "all") == "all"}
-    head = f"Gemini 3.8 Flash, tập test, 3 lần chạy. FailLoc vs SemLoc, Acc@1 (đã sửa): " \
+    head = f"Gemini 3.8 Flash, tập test, 3 lần chạy. FailLoc vs SemLoc, Acc@1 (đã chuẩn hóa): " \
            f"{_m('RqTwoRepairedAllLlmTestsDAccOne')} [{_m('RqTwoRepairedAllLlmTestsDAccOneLo')}; {_m('RqTwoRepairedAllLlmTestsDAccOneHi')}].\n"
     if EARLY():  # report 1: original + repaired labels, no ablation / additions yet
         A("ket_qua_thu.svg", table("bang-rq2", 84, 128, [330, 115, 115, 115, 133], [
-            ["Phương pháp", "Acc@1\nđã sửa", "Acc@3\nđã sửa", "Acc@1\ngốc", "Token/CT"],
+            ["Phương pháp", "Acc@1\nchuẩn hóa", "Acc@3\nchuẩn hóa", "Acc@1\ngốc", "Token/CT"],
             *[[label, _p(rq2[m]["acc1_mean"]), _p(rq2[m]["acc3_mean"]), _p(orig[m]["acc1_mean"]), t]
               for m, label, t in names if m != "llm_coverage"],
         ], highlight_col=None, head_h=48, row_h=40, fs=16,
@@ -172,7 +172,7 @@ def results_pages() -> None:
         tail = ("Kiểm chứng bằng bản sửa, biểu quyết (dev), ruff, pyrefly: không giúp." if DECK == "baove"
                 else "CovGate, biểu quyết (dev), ruff, pyrefly: không giúp.")
         A("ket_qua_thu.svg", table("bang-rq2", 84, 128, [330, 115, 115, 115, 133], [
-            ["Phương pháp", "Acc@1\nđã sửa", "Acc@3\nđã sửa", "Acc@1\nrà soát", "Token/CT"],
+            ["Phương pháp", "Acc@1\nchuẩn hóa", "Acc@3\nchuẩn hóa", "Acc@1\nrà soát", "Token/CT"],
             *[[label, _p(rq2[m]["acc1_mean"]), _p(rq2[m]["acc3_mean"]), _p(rev[m]["acc1_mean"]), t] for m, label, t in names],
         ], highlight_col=None, head_h=48, row_h=38, fs=16,
             note=head + f"Thêm độ phủ: Acc@1 {_m('AblRepairedAllCoverageEffectDAccOne')} điểm. " + tail))
@@ -228,7 +228,7 @@ def build() -> None:
     toc = {
         "lan1": [("Bối cảnh", ["Vấn đề, nghiên cứu liên quan,", "SemLoc"]),
                  ("Phương pháp", ["3 câu hỏi, đề xuất,", "thiết kế thực nghiệm"]),
-                 ("Kết quả RQ1–RQ2", ["Tái hiện, nhãn đã sửa,", "so sánh chính"]),
+                 ("Kết quả RQ1–RQ2", ["Tái hiện, nhãn đã chuẩn hóa,", "so sánh chính"]),
                  ("Kế hoạch", ["Hiện trạng, tiến độ và", "việc đến lần 2"])],
         "lan2": [("Câu hỏi", ["Nhắc lại 3 câu hỏi", "nghiên cứu"]),
                  ("Kết quả RQ1–RQ3", ["Nhãn rà soát, ablation,", "độ bền, chi phí"]),
@@ -342,7 +342,7 @@ def build() -> None:
     ])
     E("thiet_ke.svg", [
         ("Recommendations", "Thiết kế thực nghiệm"),
-        ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250, nhãn", "gốc + đã sửa"] if EARLY() else ["SemFault-250, 3 bộ", "nhãn; 31 BugsInPy"]),
+        ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250, nhãn", "gốc + chuẩn hóa"] if EARLY() else ["SemFault-250, 3 bộ", "nhãn; 31 BugsInPy"]),
         ("Venus", "Biến thể"), ("Venus is the second", ["Đổi tên, BugsInPy:", "lần báo cáo 2"] if EARLY() else ["Đổi tên, xóa docstring", "→ chống thuộc bài"]),
         ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, LLM-Direct,", "SemLoc, FailLoc"] if EARLY() else ["SBFL, ruff, SemLoc,", "FailLoc"]),
         ("Mercury", "Mô hình"), ("Mercury is the closest", ["Gemini 3.8 Flash", "+ 4 họ model khác"]),
@@ -439,7 +439,7 @@ def group_pages() -> None:
     A("hien_trang.svg", table("bang-hien-trang", 84, 112, [215, 425, 160], [
         ["Nội dung", "Hiện trạng", "Tự đánh giá"],
         ["1. Tài liệu, từ khóa", "3 bài được giao + tài liệu thêm, bộ từ khóa,\nbảng so sánh", "Đạt"],
-        ["2. RQ, thực nghiệm", "3 RQ, thiết kế; RQ1; RQ2 trên nhãn gốc\nvà đã sửa. RQ3 đang làm" if early else
+        ["2. RQ, thực nghiệm", "3 RQ, thiết kế; RQ1; RQ2 trên nhãn gốc\nvà chuẩn hóa. RQ3 đang làm" if early else
          "RQ1–RQ3 có kết quả; ablation, bổ sung,\nphân tích tĩnh, rà soát nhãn", "Đạt phần chính" if early else "Đạt"],
         ["3. Đóng góp, triết lý", "Đang làm, trình bày ở lần 2" if early else "Đóng góp, triết lý khoa học,\nmối đe dọa",
          "Đang làm" if early else "Đạt"],
@@ -477,7 +477,7 @@ def analysis_pages() -> None:
         ["GT đáng ngờ", "nhãn chưa kiểm chứng, mọi cách trượt", str(cat["gt_suspect"])],
         ["Mọi cách trượt", "còn lại", str(cat["all_miss"])],
     ], highlight_col=None, head_h=40, row_h=40, fs=16,
-        note="Gemini 3.8 Flash, đa số 3 lần chạy, dòng lỗi chuẩn đã sửa. Một nửa số chương trình được giải bằng chính dòng đoán."))
+        note="Gemini 3.8 Flash, đa số 3 lần chạy, nhãn đã chuẩn hóa. Một nửa số chương trình được giải bằng chính dòng đoán."))
     E("mo_ho.svg", {
         "9h 55m 23s": f"{hb}/{wrong}", "Jupiter’s rotation period": "lần đoán sai là cặp đầu khối – thân khối",
         "333,000": f"{_p(tol['semloc']['acc1_exact'])}→{_p(tol['semloc']['acc1_guard_strict'])}",

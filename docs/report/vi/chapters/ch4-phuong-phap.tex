@@ -39,7 +39,7 @@ chương trình làm tập kiểm tra (test) để báo cáo, phân tầng theo 
 định. Vì nhiều chương trình được sinh từ cùng một khuôn mẫu, nhóm gom các chương trình có cấu trúc giống nhau thành cụm
 (độ tương đồng 4-gram Jaccard từ bốn phần năm trở lên, trên dạng chuẩn hóa của mã) để dùng trong bootstrap theo cụm.
 
-\subsection{SemFault-250 đã sửa: kiểm chứng dòng lỗi chuẩn bằng thực thi}
+\subsection{SemFault-250 đã chuẩn hóa: kiểm chứng dòng lỗi chuẩn bằng thực thi}
 
 Kiểm tra dòng lỗi chuẩn cho thấy \GtBlankN{} dòng là dòng trống và \GtNotExecutedN{} chương trình không có kiểm thử thất
 bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{bộ phán định sửa tối thiểu}: một dòng được coi là vị trí lỗi nếu thay nó
@@ -52,7 +52,7 @@ bộ phán định không phát hiện được trường hợp hai dòng cùng 
 tại dòng chuẩn), \GtCorrectedN{} được \emph{sửa vị trí} (dòng chuẩn không chạy tới được nhưng một dòng gần đó sửa được),
 \GtUnverifiedN{} \emph{chưa kiểm chứng được} (dòng chuẩn chạy tới được nhưng không bản sửa đề xuất nào đạt) và
 \GtUnverifiableN{} \emph{không kiểm chứng được} (bị loại). Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
-nên bị loại; bộ dòng lỗi chuẩn đã sửa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã sửa.
+nên bị loại; bộ nhãn đã chuẩn hóa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã chuẩn hóa.
 Hình~\ref{fig:sua-nhan} tóm tắt quy trình.
 
 \begin{figure}[H]
@@ -88,7 +88,7 @@ nhiên, không ghi dòng nào từ đâu, không có nhận định của LLM. T
 \BlindAnswersExcluded{} trên \BlindAnswersTotal{} câu có ghi chú dẫn lại tệp duyệt lần trước (có gợi ý của LLM); các câu
 này không còn mù và bị loại khỏi thống kê duyệt mù (quy tắc loại ghi trong mã, đặt ra trước khi tính độ đồng thuận).
 
-Bảng~\ref{tab:ba-bo-nhan} tóm tắt ba bộ nhãn. Bộ \emph{đã sửa} chỉ do kiểm thử quyết định nên được dùng cho kết quả
+Bảng~\ref{tab:ba-bo-nhan} tóm tắt ba bộ nhãn. Bộ \emph{đã chuẩn hóa} chỉ do kiểm thử quyết định nên được dùng cho kết quả
 chính; bộ \emph{đã rà soát} đầy đủ hơn nhưng nhãn do một LLM đề xuất, nên các phương pháp dùng LLM có thể được lợi\IfAtLeast{lan2}{ (Chương~\ref{chap:dong-gop})} --- nó được dùng như một góc nhìn độ nhạy.
 
 \begin{table}[H]
@@ -101,7 +101,7 @@ chính; bộ \emph{đã rà soát} đầy đủ hơn nhưng nhãn do một LLM �
 Bộ nhãn & Ai quyết định & Vai trò \\
 \midrule
 Gốc & Tác giả SemLoc & So với bài báo gốc \\
-Đã sửa & Kiểm thử (LLM chỉ đề xuất bản sửa) & Kết quả chính; LLM không phán đoán vị trí \\
+Đã chuẩn hóa & Kiểm thử (LLM chỉ đề xuất bản sửa) & Kết quả chính; LLM không phán đoán vị trí \\
 Đã rà soát & LLM rà trước, thành viên nhóm duyệt, trưởng nhóm sửa ca có bằng chứng chạy kiểm thử & Góc nhìn độ nhạy; đủ mọi chương trình \\
 \bottomrule
 \end{tabularx}
@@ -191,7 +191,7 @@ với (FailLoc) đo tác dụng của độ phủ.
 của dòng, với $\lambda \in \{\ConstLambdaGrid\}$; (3) \emph{xếp lại bằng kết quả kiểm chứng phản thực tế}; (4) \emph{chỉ
 thưởng khi có căn cứ} --- giữ điểm thưởng cho dòng LLM đoán chỉ khi dòng đó có bằng chứng thực thi. Tổ hợp tham số được
 chọn chỉ trên tập dev; cấu hình được chọn không bật cổng độ phủ, giữ nguyên điểm thưởng và dùng
-$\lambda = \ConstLambdaOriginal$ (bộ gốc) hoặc $\lambda = \ConstLambdaRepaired$ (bộ đã sửa) --- tức là một bước \emph{phá
+$\lambda = \ConstLambdaOriginal$ (bộ gốc) hoặc $\lambda = \ConstLambdaRepaired$ (bộ đã chuẩn hóa) --- tức là một bước \emph{phá
 hòa bằng Ochiai} cho SemLoc.
 
 \IfAtLeast{full}{\textbf{Đề xuất rồi kiểm chứng} dùng kiểm thử làm trọng tài cho vị trí lỗi: (1) FailLoc đề xuất các dòng
@@ -201,7 +201,7 @@ nghi ngờ; (2) với $k$ dòng đầu, LLM viết một bản sửa nhỏ tại
 LLM hoặc theo kích thước bản sửa) và giới hạn kích thước bản sửa (1, 2, 3 từ tố hoặc không giới hạn) tạo thành một lưới
 \PavGridSize{} cấu hình. Mọi lần thử được ghi lại, nên cả lưới được đánh giá offline từ một lượt chạy với cấu hình rộng
 nhất (3 dòng, 2 lần thử) trên \emph{tập dev}, 3 lần. Quy tắc chọn được cố định trong mã trước khi chạy: Acc@1 trung bình
-trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã sửa vì bộ đó được dựng bằng chính cơ chế sửa thử).}
+trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã chuẩn hóa vì bộ đó được dựng bằng chính cơ chế sửa thử).}
 
 \textbf{Biểu quyết}: gộp ba câu trả lời của FailLoc bằng tổng nghịch đảo hạng, cũng trên tập dev.
 

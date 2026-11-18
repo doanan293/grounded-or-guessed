@@ -1,4 +1,4 @@
-% Bộ phán định sửa tối thiểu: từ nhãn gốc đến bộ nhãn đã sửa. Số liệu qua macro.
+% Bộ phán định sửa tối thiểu: từ nhãn gốc đến bộ nhãn đã chuẩn hóa. Số liệu qua macro.
 {\setstretch{1}%
 \begin{tikzpicture}[
   q/.style={fbox=semloc, text width=46mm, minimum height=12mm},
@@ -18,7 +18,7 @@
 \draw[farr] (q3.south) -- ++(0,-3mm) -| node[lab, pos=0.25, above] {có} (l3.north);
 \draw[farr] (q3.south) -- ++(0,-3mm) -| node[lab, pos=0.25, above] {không} (l4.north);
 \node[fbox=failloc, text width=120mm] (out) at (-1.0, -7.0)
-  {\textbf{SemFault-250 đã sửa: \GtRepairedN{} chương trình}\\\small bỏ nhãn không kiểm chứng được và
+  {\textbf{SemFault-250 đã chuẩn hóa: \GtRepairedN{} chương trình}\\\small bỏ nhãn không kiểm chứng được và
    \GtBlankFixDroppedN{} vị trí sửa nằm trên dòng trống};
 \foreach \l in {l1, l2, l3} \draw[farr] (\l.south) -- (\l.south |- out.north);
 \end{tikzpicture}}
