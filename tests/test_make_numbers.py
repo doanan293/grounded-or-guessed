@@ -41,3 +41,16 @@ def test_macro_name_keeps_the_sign_of_negative_keys():
 def test_vietnamese_numbers_use_a_true_minus_sign():
     assert mn.fmt("-0.091", "pp", comma=True) == "−9,1"
     assert mn.fmt("-0.091", "pp") == "-9.1"
+
+
+def test_cost_calls_per_program_macros():
+    import importlib.util
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location("make_numbers", root / "scripts" / "make_numbers.py")
+    mn = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mn)
+    import subprocess
+    subprocess.run([str(root / ".venv/bin/python"), str(root / "scripts/make_numbers.py")], check=True, capture_output=True)
+    tex = (root / "docs/report/generated/numbers-vi.tex").read_text()
+    assert "\\newcommand{\\CostSemlocCalls}" in tex and "\\newcommand{\\CostLlmTestsCalls}{1,0}" in tex

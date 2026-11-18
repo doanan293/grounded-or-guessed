@@ -53,6 +53,14 @@ tại dòng chuẩn), \GtCorrectedN{} được \emph{sửa vị trí} (dòng chu
 \GtUnverifiedN{} \emph{chưa kiểm chứng được} (dòng chuẩn chạy tới được nhưng không bản sửa đề xuất nào đạt) và
 \GtUnverifiableN{} \emph{không kiểm chứng được} (bị loại). Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
 nên bị loại; bộ dòng lỗi chuẩn đã sửa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã sửa.
+Hình~\ref{fig:sua-nhan} tóm tắt quy trình.
+
+\begin{figure}[H]
+\centering
+\input{figures/sua-nhan}
+\caption{Bộ phán định sửa tối thiểu: LLM chỉ đề xuất bản sửa, kiểm thử quyết định dòng nào là dòng lỗi. Nhãn được xác nhận hoặc dời vị trí khi một bản sửa nhỏ làm mọi kiểm thử đạt; nhãn chưa kiểm chứng giữ nguyên vị trí gốc}
+\label{fig:sua-nhan}
+\end{figure}
 
 \IfAtLeast{lan2}{%
 \subsection{SemFault-250 đã rà soát: LLM rà trước, nhóm duyệt}
@@ -117,6 +125,33 @@ nguyên số dòng}, chỉ giữ các tên mà kiểm thử phụ thuộc. Mỗi
 
 \section{Các phương pháp so sánh}
 \label{sec:phuong-phap-so-sanh}
+
+Bảng~\ref{tab:phuong-phap} tóm tắt năm phương pháp của so sánh chính; Hình~\ref{fig:thiet-ke} là thiết kế thực nghiệm.
+
+\begin{table}[H]
+\centering
+\caption{Các phương pháp trong so sánh chính: đầu vào, số lượt gọi LLM trung bình mỗi chương trình (tập test, Gemini 3.8 Flash) và việc có chạy kiểm thử hay không}
+\label{tab:phuong-phap}
+{\setstretch{1.15}\small
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+Phương pháp & Đầu vào & Lượt gọi LLM & Chạy kiểm thử \\
+\midrule
+SBFL (Ochiai) & Ma trận độ phủ kiểm thử $\times$ dòng & -- & có \\
+LLM-Direct & Chỉ mã nguồn & \CostLlmDirectCalls & không \\
+SemLoc & Mã nguồn; ràng buộc do LLM viết được chèn vào và chạy cùng kiểm thử & \CostSemlocCalls & có \\
+SemLoc−Bonus & Như SemLoc, bỏ điểm thưởng cho dòng LLM tự đoán & \CostSemlocCalls & có \\
+\textbf{FailLoc} & Mã nguồn, tên và dòng lỗi đầu tiên của từng kiểm thử thất bại & \CostLlmTestsCalls & có \\
+\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\input{figures/thiet-ke}
+\caption{Thiết kế thực nghiệm của so sánh chính: mọi phương pháp chạy trên cùng các chương trình của tập test, cùng mô hình, trên hai bộ nhãn, mỗi cấu hình có LLM chạy ba lần}
+\label{fig:thiet-ke}
+\end{figure}
 
 \subsection{Các phương pháp có sẵn}
 

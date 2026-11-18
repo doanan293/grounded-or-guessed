@@ -190,6 +190,8 @@ def computed() -> dict[str, str]:
                          ("direct_tests_test_gemini_r", "llm tests")):
         rs = [float(r["tokens_per_program"]) for r in cost if r["run_id"].startswith(prefix)]
         out[macro_name("cost", *name.split(), "tokens", "k")] = f"{sum(rs) / len(rs) / 1000:.1f}" if rs else ""
+        cs = [float(r["calls_per_program"]) for r in cost if r["run_id"].startswith(prefix)]
+        out[macro_name("cost", *name.split(), "calls")] = f"{sum(cs) / len(cs):.1f}" if cs else ""
     rev = DATA / "semfault_reviewed_gt.json"
     if rev.exists():  # team review of the labels: how many, how many overrides, agreement with the LLM suggestion
         recs = json.loads(rev.read_text())

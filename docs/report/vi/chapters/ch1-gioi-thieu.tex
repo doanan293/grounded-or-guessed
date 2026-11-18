@@ -29,6 +29,16 @@ cho lỗi ngữ nghĩa: LLM viết ra các ràng buộc ngữ nghĩa thực thi 
 \RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% trên bộ dữ liệu SemFault-250. Câu hỏi tự nhiên với người làm phần mềm là:
 \textbf{quy trình phức tạp đó có thật sự cần không, khi so với cách làm đơn giản đó?}
 
+Hình~\ref{fig:tong-quan} đặt hai cách làm cạnh nhau: quy trình nhiều bước của SemLoc và một lượt gọi LLM có kiểm thử thất bại
+(FailLoc, phương pháp nhóm đề xuất).
+
+\begin{figure}[H]
+\centering
+\input{figures/tong-quan}
+\caption{Hai cách định vị lỗi bằng LLM được so sánh. Trên: SemLoc viết ràng buộc ngữ nghĩa, chạy kiểm thử để lấy phổ vi phạm, vá thử để kiểm chứng; khung nét đứt là điểm thưởng cho dòng LLM tự đoán, có trong mã nguồn nhưng không có trong bài báo. Dưới: FailLoc đưa thẳng kiểm thử thất bại cho LLM trong một lượt gọi. Chi phí là trung bình trên tập test với Gemini 3.8 Flash}
+\label{fig:tong-quan}
+\end{figure}
+
 \section{Câu hỏi nghiên cứu}
 \label{sec:cau-hoi}
 

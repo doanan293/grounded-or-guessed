@@ -43,7 +43,14 @@ ghép và câu lệnh nó bảo vệ (Mục~\ref{sec:do-nhay-nhan}).
 Lỗi ngữ nghĩa là lỗi làm chương trình tính sai giá trị trong khi vẫn chạy qua cùng các câu lệnh như khi đúng --- ví
 dụ \texttt{updated = cap - 1} thay vì \texttt{updated = cap}. Khi cả kiểm thử thành công và thất bại đều chạy qua dòng
 lỗi, $e_p(s) > 0$ làm điểm Ochiai của dòng lỗi giảm và ngang với các dòng xung quanh; SBFL khi đó gần như đoán mò trong
-phạm vi hàm.
+phạm vi hàm. Hình~\ref{fig:sbfl-mu} là một ví dụ thật trong SemFault-250.
+
+\begin{figure}[H]
+\centering
+\input{figures/sbfl-mu}
+\caption{SBFL không phân biệt được dòng lỗi của một lỗi ngữ nghĩa. Chương trình \texttt{votes\_apportion} (SemFault-250, tập test): mỗi cột là một kiểm thử, chấm là kiểm thử đó chạy qua dòng. Kiểm thử thất bại và kiểm thử thành công chạy qua đúng cùng các dòng, nên mọi dòng có cùng điểm Ochiai; dòng tô màu là dòng lỗi (nhãn đã sửa)}
+\label{fig:sbfl-mu}
+\end{figure}
 
 \subsection{Định nghĩa khách quan bằng độ phủ}
 
@@ -97,7 +104,16 @@ vi phạm cả trong kiểm thử thành công, rồi cho LLM vá thử tại d�
 Khi đọc mã nguồn công khai, nhóm thấy một thành phần không được mô tả trong bài báo: ngoài các ràng buộc, LLM còn trả
 về một dòng lỗi mà nó tự đoán (trường \texttt{fault\_line}), và dòng này được cộng thêm \ConstPriorWeight{} điểm --- lớn hơn điểm tối đa
 1 của một ràng buộc. Vì vậy, dòng LLM tự đoán \emph{luôn} đứng hạng 1, bất kể phổ vi phạm ra sao. Thành
-phần này là trọng tâm của câu hỏi ``grounded hay guessed'' ở các chương sau.
+phần này là trọng tâm của câu hỏi ``grounded hay guessed'' ở các chương sau. Hình~\ref{fig:diem-thuong} cho thấy tác dụng của nó
+trên một chương trình.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_semloc_bonus.pdf}
+\caption{Điểm xếp hạng của SemLoc trên từng dòng của một chương trình (lượt chạy 1, Gemini 3.8 Flash). Phần xanh là điểm phổ vi phạm, tối đa là 1; phần cam là điểm thưởng \ConstPriorWeight{} mà mã nguồn công bố cộng cho dòng LLM tự đoán. Dòng nhãn có điểm phổ cao nhất nhưng dòng đoán vẫn vượt lên hạng 1}
+\label{fig:diem-thuong}
+\end{figure}
+
 
 \section{Phân tích tĩnh và phân tích động}
 \label{sec:tinh-dong}

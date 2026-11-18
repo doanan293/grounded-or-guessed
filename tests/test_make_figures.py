@@ -42,3 +42,15 @@ def test_pdf_width_16cm():
         info = subprocess.run(["pdfinfo", str(VI / f"{name}.pdf")], capture_output=True, text=True).stdout
         w_pt = float(next(l for l in info.splitlines() if l.startswith("Page size")).split()[2])
         assert abs(w_pt / 72 * 2.54 - 16.0) < 0.1, name
+
+
+def test_sbfl_matrix_tex():
+    import json
+    ex = json.loads((ROOT / "data" / "fig_example.json").read_text())
+    tex = mf.sbfl_matrix_tex(ex)
+    assert tex.startswith("\\begin{tikzpicture}") and tex.rstrip().endswith("\\end{tikzpicture}")
+    assert tex.count("\\covdot") == sum(len(t["lines"]) for t in ex["tests"])
+    assert tex.count("\\testhead") == len(ex["tests"])
+    assert "\\gtrow" in tex  # the labelled fault line is highlighted
+    # every Ochiai value printed equals ef/sqrt((ef+nf)(ef+ep)) of its line
+    assert "0,45" in tex

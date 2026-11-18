@@ -13,7 +13,11 @@
 \usepackage{graphicx,booktabs,amsmath,amssymb,xcolor,float,tabularx,multirow,longtable,adjustbox}
 \newcommand{\TallTableHeight}{0.82\textheight}   % chiều cao tối đa của bảng dài ở phụ lục
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc,backgrounds}
+\definecolor{failloc}{HTML}{D9541E}   % FailLoc, như scripts/fig_style.py
+\definecolor{semloc}{HTML}{2A78D6}    % SemLoc
+\tikzset{fbox/.style={draw=#1, rounded corners=2pt, align=center, fill=#1!7, inner sep=3pt},
+  farr/.style={-{Stealth[length=2.2mm]}, thick, draw=#1}, farr/.default=black!70}
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces=true,numbers=left,numberstyle=\tiny,
         frame=single,breaklines=true,xleftmargin=1.5em}

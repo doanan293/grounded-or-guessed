@@ -116,7 +116,22 @@ bộ đã sửa và \RqTwoReviewedAllLlmTestsDAccThree{} [\RqTwoReviewedAllLlmTe
 có khoảng tin cậy chạm 0, vì nhãn gốc chứa các lỗi mà không kiểm thử nào chạy tới (chỉ tính lỗi được chạy tới:
 \RqTwoOriginalExecutableLlmTestsDAccThree{} [\RqTwoOriginalExecutableLlmTestsDAccThreeLo;
 \RqTwoOriginalExecutableLlmTestsDAccThreeHi]). Phương pháp đề xuất tốn \CostLlmTestsTokensK{} nghìn token mỗi chương
-trình, so với \CostSemlocTokensK{} nghìn của SemLoc. SBFL thấp nhất trên mọi bộ nhãn.
+trình, so với \CostSemlocTokensK{} nghìn của SemLoc. SBFL thấp nhất trên mọi bộ nhãn. Hình~\ref{fig:ket-qua-chinh} và
+Hình~\ref{fig:chi-phi} tóm tắt kết quả trên nhãn gốc và nhãn đã sửa và chi phí.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_rq2_main.pdf}
+\caption{Kết quả chính trên tập test (Gemini 3.8 Flash): Acc@1 (cột đậm) và Acc@3 (cột nhạt) trên nhãn gốc và nhãn đã sửa, trung bình ba lần chạy; vạch là độ lệch chuẩn giữa các lần chạy. FailLoc màu cam, SemLoc màu xanh}
+\label{fig:ket-qua-chinh}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_cost_acc.pdf}
+\caption{Chi phí và độ chính xác trên tập test với cùng mô hình: số token LLM trung bình mỗi chương trình (thang log) và Acc@1 trên nhãn đã sửa}
+\label{fig:chi-phi}
+\end{figure}
 
 \begin{table}[H]
 \centering
@@ -135,7 +150,21 @@ pháp đề xuất --- thắng SemLoc ở Acc@1 trên cả hai bộ: \RqTwoOrigi
 [\RqTwoRepairedAllLlmTestsDAccThreeLo; \RqTwoRepairedAllLlmTestsDAccThreeHi] điểm trên bộ đã sửa; trên toàn bộ nhãn gốc,
 mức hơn \RqTwoOriginalAllLlmTestsDAccThree{} có khoảng tin cậy chạm 0, vì nhãn gốc chứa các lỗi mà không kiểm thử nào
 chạy tới. Phương pháp đề xuất tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình, so với \CostSemlocTokensK{} nghìn
-của SemLoc. SBFL thấp nhất trên cả hai bộ nhãn.
+của SemLoc. SBFL thấp nhất trên cả hai bộ nhãn. Hình~\ref{fig:ket-qua-chinh} và Hình~\ref{fig:chi-phi} tóm tắt kết quả và chi phí.
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_rq2_main.pdf}
+\caption{Kết quả chính trên tập test (Gemini 3.8 Flash): Acc@1 (cột đậm) và Acc@3 (cột nhạt) trên nhãn gốc và nhãn đã sửa, trung bình ba lần chạy; vạch là độ lệch chuẩn giữa các lần chạy. FailLoc màu cam, SemLoc màu xanh}
+\label{fig:ket-qua-chinh}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{../generated/vi/fig_cost_acc.pdf}
+\caption{Chi phí và độ chính xác trên tập test với cùng mô hình: số token LLM trung bình mỗi chương trình (thang log) và Acc@1 trên nhãn đã sửa}
+\label{fig:chi-phi}
+\end{figure}
 
 \begin{table}[H]
 \centering

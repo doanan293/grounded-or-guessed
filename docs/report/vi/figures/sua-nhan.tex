@@ -1,0 +1,24 @@
+% Bộ phán định sửa tối thiểu: từ nhãn gốc đến bộ nhãn đã sửa. Số liệu qua macro.
+{\setstretch{1}%
+\begin{tikzpicture}[
+  q/.style={fbox=semloc, text width=46mm, minimum height=12mm},
+  leaf/.style={fbox=#1, text width=33mm, minimum height=15mm}, leaf/.default=gray,
+  lab/.style={font=\small, fill=white, inner sep=1.5pt}]
+\node[q] (q1) at (0, 0) {Có kiểm thử thất bại chạy tới nhãn gốc?};
+\node[q] (q2) at (-4.1, -2.0) {Bản sửa nhỏ \emph{tại nhãn}\\làm mọi kiểm thử đạt?};
+\node[q] (q3) at (4.1, -2.0) {Bản sửa nhỏ ở dòng lân cận\\($\le 4$ dòng) làm mọi kiểm thử đạt?};
+\node[leaf=failloc] (l1) at (-6.15, -4.7) {\textbf{Xác nhận}\\\GtConfirmedN{} nhãn};
+\node[leaf] (l2) at (-2.05, -4.7) {\textbf{Chưa kiểm chứng}\\\GtUnverifiedN{} nhãn\\(giữ nhãn gốc)};
+\node[leaf=failloc] (l3) at (2.05, -4.7) {\textbf{Dời vị trí}\\\GtCorrectedN{} nhãn};
+\node[leaf] (l4) at (6.15, -4.7) {\textbf{Không kiểm chứng}\\\textbf{được}: \GtUnverifiableN{}\\(loại)};
+\draw[farr] (q1.south) -- ++(0,-3mm) -| node[lab, pos=0.25, above] {có} (q2.north);
+\draw[farr] (q1.south) -- ++(0,-3mm) -| node[lab, pos=0.25, above] {không} (q3.north);
+\draw[farr] (q2.south) -- ++(0,-3mm) -| node[lab, pos=0.25, above] {có} (l1.north);
+\draw[farr] (q2.south) -- ++(0,-3mm) -| node[lab, pos=0.25, above] {không} (l2.north);
+\draw[farr] (q3.south) -- ++(0,-3mm) -| node[lab, pos=0.25, above] {có} (l3.north);
+\draw[farr] (q3.south) -- ++(0,-3mm) -| node[lab, pos=0.25, above] {không} (l4.north);
+\node[fbox=failloc, text width=120mm] (out) at (-1.0, -7.0)
+  {\textbf{SemFault-250 đã sửa: \GtRepairedN{} chương trình}\\\small bỏ nhãn không kiểm chứng được và
+   \GtBlankFixDroppedN{} vị trí sửa nằm trên dòng trống};
+\foreach \l in {l1, l2, l3} \draw[farr] (\l.south) -- (\l.south |- out.north);
+\end{tikzpicture}}

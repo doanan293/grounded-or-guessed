@@ -144,12 +144,54 @@ def fig_semloc_bonus(path: Path) -> None:
     plt.close(fig)
 
 
+def _tex_code(line: str) -> str:
+    rep = {"\\": r"\textbackslash{}", "{": r"\{", "}": r"\}", "_": r"\_", "#": r"\#", "%": r"\%", "&": r"\&",
+           "$": r"\$", "^": r"\^{}", "~": r"\~{}"}
+    if len(line) > 46:  # long signatures are cut so the code column stays left of the test columns
+        line = line[:43].rstrip() + " …"
+    body = line.lstrip(" ")
+    indent = len(line) - len(body)
+    return (rf"\hspace*{{{indent * 0.5}em}}" if indent else "") + "".join(rep.get(ch, ch) for ch in body)
+
+
+def sbfl_matrix_tex(ex: dict, row_mm: float = 4.4) -> str:
+    """Coverage matrix of the SBFL-blind example: code lines × tests, a dot where the test runs the line, Ochiai per
+    line. Uses \\covdot, \\testhead{label}{pass?}, \\gtrow{y} defined in docs/report/vi/figures/sbfl-mu.tex."""
+    import math
+    tests = ex["tests"]
+    n_fail = sum(not t["passed"] for t in tests)
+    x0 = 10.4  # cm: first test column
+    out = [r"\begin{tikzpicture}[x=1cm, y=-1mm]"]
+    for j, t in enumerate(tests):
+        out.append(rf"\node at ({x0 + 0.9 * j:.2f}, 0) {{\testhead{{$t_{{{j + 1}}}$}}{{{'1' if t['passed'] else '0'}}}}};")
+    out.append(rf"\node[anchor=east] at ({x0 + 0.9 * len(tests) + 1.0:.2f}, 0) {{\footnotesize Ochiai}};")
+    for i, c in enumerate(ex["code_lines"]):
+        y = row_mm * (i + 1.4)
+        if c["no"] == ex["gt_line"]:
+            out.append(rf"\gtrow{{{y:.2f}}}{{{x0 + 0.9 * len(tests) + 1.1:.2f}}}")
+        out.append(rf"\node[anchor=east, font=\scriptsize\color{{gray}}] at (0.45, {y:.2f}) {{{c['no']}}};")
+        out.append(rf"\node[anchor=west, font=\ttfamily\footnotesize, inner sep=1pt] at (0.5, {y:.2f}) {{{_tex_code(c['text'])}}};")
+        ef = ep = 0
+        for j, t in enumerate(tests):
+            if c["no"] in t["lines"]:
+                out.append(rf"\node at ({x0 + 0.9 * j:.2f}, {y:.2f}) {{\covdot}};")
+                ef += not t["passed"]
+                ep += t["passed"]
+        if ef + ep:
+            o = ef / math.sqrt(n_fail * (ef + ep))
+            out.append(rf"\node[anchor=east, font=\footnotesize] at ({x0 + 0.9 * len(tests) + 1.0:.2f}, {y:.2f}) {{{fmt(o, 2)}}};")
+    out.append(r"\end{tikzpicture}")
+    return "\n".join(out) + "\n"
+
+
 def main() -> None:
     st.apply("vi")
     OUT.mkdir(parents=True, exist_ok=True)
     fig_rq2_main(OUT / "fig_rq2_main.pdf")
     fig_cost_acc(OUT / "fig_cost_acc.pdf")
     fig_semloc_bonus(OUT / "fig_semloc_bonus.pdf")
+    import json
+    (OUT / "fig_sbfl_matrix.tex").write_text(sbfl_matrix_tex(json.loads((DATA / "fig_example.json").read_text())))
 
 
 if __name__ == "__main__":
