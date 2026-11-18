@@ -1,0 +1,156 @@
+"""Report figures from data/ (matplotlib): docs/report/generated/vi/fig_*.pdf, each exactly \\linewidth wide so the
+13 pt text in the figure prints at the size of the body text.
+    .venv/bin/python scripts/make_figures.py
+"""
+import csv
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+import fig_style as st  # noqa: E402
+from method_names import name  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[1]
+DATA = ROOT / "data"
+OUT = ROOT / "docs" / "report" / "generated" / "vi"
+MAIN = ["sbfl_ochiai", "llm_direct", "semloc", "semloc_no_prior", "llm_tests"]
+COST_PREFIX = {"llm_direct": "direct_test_gemini_r", "semloc": "semloc_test_gemini_r", "llm_tests": "direct_tests_test_gemini_r"}
+GT_VI = {"original": "Nhãn gốc", "repaired": "Nhãn đã sửa", "reviewed": "Nhãn đã rà soát"}
+fmt = st.fmt
+
+
+def _rows(name_: str) -> list[dict]:
+    with open(DATA / name_) as f:
+        return list(csv.DictReader(f))
+
+
+def rq2_main_data(gt_sets: tuple = ("original", "repaired")) -> list[dict]:
+    out = []
+    for r in _rows("rq2_ours.csv"):
+        if r.get("subset", "all") == "all" and r["gt"] in gt_sets and r["method"] in MAIN:
+            out.append({"gt": r["gt"], "method": r["method"], **{k: 100 * float(r[k]) for k in
+                                                                   ("acc1_mean", "acc1_sd", "acc3_mean", "acc3_sd")}})
+            out[-1]["acc1"], out[-1]["acc3"] = out[-1].pop("acc1_mean"), out[-1].pop("acc3_mean")
+    return out
+
+
+def matplotlib_ticker():
+    import matplotlib.ticker as t
+    return t
+
+
+def cost_acc_data(gt: str = "repaired") -> list[dict]:
+    cost = _rows("llm_cost.csv")
+    acc = {r["method"]: r for r in _rows("rq2_ours.csv") if r["gt"] == gt and r.get("subset", "all") == "all"}
+    out = []
+    for m, prefix in COST_PREFIX.items():
+        runs = [float(r["tokens_per_program"]) for r in cost if r["run_id"].startswith(prefix)]
+        out.append({"method": m, "ktokens": sum(runs) / len(runs) / 1000, "acc1": 100 * float(acc[m]["acc1_mean"])})
+    return out
+
+
+def fig_rq2_main(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    rows = rq2_main_data(("original", "repaired"))
+    fig, axes = plt.subplots(1, 2, figsize=(st.WIDTH_IN, 3.6), sharey=True)
+    y = range(len(MAIN))
+    for ax, gt in zip(axes, ("original", "repaired")):
+        by = {r["method"]: r for r in rows if r["gt"] == gt}
+        for i, m in enumerate(MAIN):
+            r, c = by[m], st.color(m)
+            ax.barh(i + 0.19, r["acc3"], height=0.36, color=c, alpha=0.38, xerr=r["acc3_sd"], ecolor=st.MUTED, capsize=0)
+            ax.barh(i - 0.19, r["acc1"], height=0.36, color=c, xerr=r["acc1_sd"], ecolor=st.MUTED, capsize=0)
+            ax.text(r["acc1"] + r["acc1_sd"] + 1.2, i - 0.19, fmt(r["acc1"]), va="center", fontsize=11, color=st.INK)
+            ax.text(r["acc3"] + r["acc3_sd"] + 1.2, i + 0.19, fmt(r["acc3"]), va="center", fontsize=11, color=st.MUTED)
+        ax.set_title(GT_VI[gt], fontsize=13, loc="left")
+        ax.set_xlim(0, 100)
+        ax.set_xticks([0, 25, 50, 75, 100])
+        ax.set_xlabel("Độ chính xác (%)")
+        ax.xaxis.grid(True, color=st.GRID, lw=0.6)
+        ax.set_axisbelow(True)
+        ax.tick_params(axis="y", length=0)
+    axes[0].set_yticks(list(y), [name(m) for m in MAIN])
+    axes[0].invert_yaxis()
+    from matplotlib.patches import Patch
+    fig.legend(handles=[Patch(color=st.GREY, label="Acc@1"), Patch(color=st.GREY, alpha=0.38, label="Acc@3")],
+               loc="lower right", ncol=2, frameon=False, bbox_to_anchor=(1, -0.02))
+    fig.tight_layout(rect=(0, 0.06, 1, 1))
+    fig.savefig(path)
+    plt.close(fig)
+
+
+def fig_cost_acc(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    pts = cost_acc_data()
+    fig, ax = plt.subplots(figsize=(st.WIDTH_IN, 3.4))
+    for p in pts:
+        ax.scatter(p["ktokens"], p["acc1"], s=90, color=st.color(p["method"]), edgecolor="white", lw=1.5, zorder=3)
+        below = p["method"] == "llm_direct"  # FailLoc and LLM-Direct sit close together: one label above, one below
+        ax.annotate(f"{name(p['method'])}: {fmt(p['ktokens'])}k token, Acc@1 {fmt(p['acc1'])}%", (p["ktokens"], p["acc1"]),
+                    xytext=(8, -16 if below else 12), textcoords="offset points", va="center", fontsize=12, color=st.INK)
+    ax.set_xscale("log")
+    xs = [p["ktokens"] for p in pts]
+    ax.set_xlim(min(xs) / 1.6, max(xs) * 3.2)
+    ax.set_xticks([1, 2, 5, 10, 20, 50])
+    ax.xaxis.set_minor_locator(matplotlib_ticker().NullLocator())
+    ax.set_ylim(0, 100)
+    from matplotlib.ticker import FuncFormatter
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: fmt(v, 0) if v >= 1 else fmt(v, 1)))
+    ax.set_xlabel("Số nghìn token LLM mỗi chương trình (thang log)")
+    ax.set_ylabel("Acc@1, nhãn đã sửa (%)")
+    ax.yaxis.grid(True, color=st.GRID, lw=0.6)
+    ax.set_axisbelow(True)
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+
+
+def bonus_example(run: str = "semloc_test_gemini_r1") -> tuple[str, list[dict]]:
+    """Program of `run` whose top spectrum line is not the guess and that has the most scored lines (ties: name)."""
+    rows = [r for r in _rows("semloc_line_scores.csv") if r["run"] == run]
+    progs: dict[str, list[dict]] = {}
+    for r in rows:
+        progs.setdefault(r["program"], []).append(r)
+    def ok(rs):
+        top = max(rs, key=lambda r: float(r["spectrum"]))
+        return float(top["spectrum"]) > 0 and top["is_guess"] == "0" and any(r["is_guess"] == "1" for r in rs)
+    cands = sorted((p for p, rs in progs.items() if ok(rs) and 4 <= len(rs) <= 8), key=lambda p: (-len(progs[p]), p))
+    p = cands[0]
+    return p, sorted(progs[p], key=lambda r: int(r["line"]))
+
+
+def fig_semloc_bonus(path: Path) -> None:
+    import matplotlib.pyplot as plt
+    prog, rs = bonus_example()
+    fig, ax = plt.subplots(figsize=(st.WIDTH_IN, 0.42 * len(rs) + 1.5))
+    for i, r in enumerate(rs):
+        sp, bo = float(r["spectrum"]), float(r["bonus"])
+        ax.barh(i, sp, height=0.6, color=st.SEMLOC)
+        if bo:
+            ax.barh(i, bo, left=sp, height=0.6, color=st.FAILLOC)
+            ax.text(sp + bo + 0.03, i, f"dòng LLM đoán: {fmt(sp, 2)} + {fmt(bo, 1)}", va="center", fontsize=12)
+        else:
+            ax.text(sp + 0.03, i, fmt(sp, 2), va="center", fontsize=12, color=st.MUTED)
+    ax.axvline(1.0, color=st.MUTED, lw=1, ls="--")
+    ax.text(1.0, len(rs) - 0.35, " điểm phổ tối đa", fontsize=11, color=st.MUTED, va="bottom")
+    labels = [f"dòng {r['line']}" + (" (nhãn)" if r["is_gt_repaired"] == "1" else "") for r in rs]
+    ax.set_yticks(range(len(rs)), labels)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 2.7)
+    ax.set_xlabel(f"Điểm xếp hạng của SemLoc (chương trình {prog})")
+    ax.tick_params(axis="y", length=0)
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+
+
+def main() -> None:
+    st.apply("vi")
+    OUT.mkdir(parents=True, exist_ok=True)
+    fig_rq2_main(OUT / "fig_rq2_main.pdf")
+    fig_cost_acc(OUT / "fig_cost_acc.pdf")
+    fig_semloc_bonus(OUT / "fig_semloc_bonus.pdf")
+
+
+if __name__ == "__main__":
+    main()
