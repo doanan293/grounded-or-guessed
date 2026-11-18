@@ -101,11 +101,17 @@ nhãn và duyệt mù + độ bền + ablation + phân tích thất bại (phân
 sao "test đủ gợi ý nhưng quá yếu để làm trọng tài") + cải tiến tổng + đóng góp + triết lý khoa học + hạn chế và mối đe
 dọa + kết luận + cảm ơn.
 
-**Bảng tiến độ (lần 1, lần 2):** cột Việc | Trạng thái | Tuần thực hiện (ghi theo tuần, ví dụ "19–25/11"). Lần 1: đã
-xong — chốt nhóm và đề tài; tài liệu và từ khóa (nội dung 1); 3 RQ và thiết kế (nội dung 2); tái hiện SemLoc (RQ1);
-chuẩn hóa nhãn; so sánh chính FailLoc–SemLoc. Chưa làm — rà soát nhãn và duyệt mù, RQ3, ablation và các cách bổ sung,
-đóng góp và triết lý (nội dung 3) → 19–25/11; phân tích thất bại, kiểm chứng bằng bản sửa → 26/11–05/12; bài báo arXiv
-(nội dung 4) → 26/11–10/12; bảo vệ → 12/2026. Lần 2: cập nhật tương ứng.
+**Bảng tiến độ (lần 1, lần 2)** — trưởng nhóm duyệt 18/11: cột Việc | Trạng thái | Trình bày / tuần. Ba mức trạng thái
+để không dòng nào sai sự thật (dữ liệu và kết quả của các phần để dành đã có trong kho mã):
+
+| Việc | Trạng thái | Trình bày |
+|---|---|---|
+| Tài liệu, RQ, tái hiện SemLoc, chuẩn hóa nhãn, so sánh chính | Đã xong | Lần 1 |
+| Rà soát nhãn, duyệt mù, RQ3, ablation, đóng góp và triết lý | Đang hoàn thiện | Lần 2 (25–26/11) |
+| Phân tích thất bại, kiểm chứng bằng bản sửa | Đang hoàn thiện | Bảo vệ |
+| Bài báo arXiv bản cuối | Chưa làm | 26/11–10/12 |
+
+Lần 2 cập nhật: hàng lần 2 thành "Đã xong", hàng bài báo ghi "Có bản nháp".
 
 ## Báo cáo final
 
