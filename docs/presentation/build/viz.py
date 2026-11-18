@@ -42,19 +42,28 @@ def _g(gid, x, y, w, h, body: list[str]) -> str:
 
 
 def code_block(gid, x, y, lines: list[str], highlight: set = frozenset(), first_no: int = 1, fs: float = 15,
-               width: float = 620, mark: dict | None = None) -> str:
-    """Line-numbered code; lines in `highlight` (by printed number) get a warm band; `mark` puts a note at a line's end."""
+               width: float = 620, mark: dict | None = None, inserted: dict | None = None) -> str:
+    """Line-numbered code; lines in `highlight` (by printed number) get a warm band; `mark` puts a note at a line's end;
+    `inserted` {line: text} adds an italic check line (what an instrumenting tool inserts) right after that line."""
     lh = fs * 1.45
-    h = lh * len(lines) + 16
+    extra = len(inserted or {})
+    h = lh * (len(lines) + extra) + 16
     body = [_r(x, y, width, h, "#FFFFFF", stroke=LAVENDER, rx=8)]
+    k = 0
     for i, line in enumerate(lines):
-        no, cy = first_no + i, y + 8 + lh * i
+        no, cy = first_no + i, y + 8 + lh * k
+        k += 1
         if no in highlight:
             body.append(_r(x + 2, cy, width - 4, lh, HILITE))
         body.append(_t(x + 34, cy + lh * 0.72, no, size=fs - 3, fill=GREY, anchor="end", family=MONO))
         body.append(_t(x + 44, cy + lh * 0.72, line.replace(" ", " ") or " ", size=fs, family=MONO))
         if mark and no in mark:
             body.append(_t(x + width - 10, cy + lh * 0.72, mark[no], size=fs - 2, fill=RED, weight="bold", anchor="end"))
+        if inserted and no in inserted:
+            cy2 = y + 8 + lh * k
+            k += 1
+            body.append(_r(x + 2, cy2, width - 4, lh, "#EEEDFC"))
+            body.append(_t(x + 44, cy2 + lh * 0.72, inserted[no], size=fs - 2, fill=NAVY, style="italic", family=MONO))
     return _g(gid, x, y, width, h, body)
 
 
@@ -219,3 +228,65 @@ def claim_vs_evidence(gid, x, y, w, rows: list[tuple], head=("Bài báo nói", "
                         f'fill="{INK}"><tspan x="{round(cx + 12, 1)}" dy="0">{escape(lines[0])}</tspan>{rest}</text>')
         body.append(_arrow(x + cw + 6, cy + (row_h - 10) / 2, x + cw + 34, cy + (row_h - 10) / 2, color=ORANGE))
     return _g(gid, x, y, w, 32 + row_h * len(rows), body)
+
+
+def section_band(gid, idx: int, label: str, x: float = 600, y: float = 14, w: float = 340) -> str:
+    """Small band at the top right naming the part of the talk (the teacher's five parts)."""
+    body = [_r(x, y, w, 26, CREAM, stroke=ORANGE, rx=13, sw=1.2),
+            _t(x + w / 2, y + 18, f"Phần {idx} · {label}", size=13, fill=INK, weight="bold", anchor="middle")]
+    return _g(gid, x, y, w, 26, body)
+
+
+def formula(gid, x, y, w, lines: list[str], size: float = 16) -> str:
+    """A boxed formula: first line bold (the formula), next lines the meaning of each symbol."""
+    lh = size * 1.5
+    h = lh * len(lines) + 18
+    body = [_r(x, y, w, h, "#FFFFFF", stroke=NAVY, rx=10, sw=1.8)]
+    for i, line in enumerate(lines):
+        body.append(_t(x + 16, y + 12 + lh * (i + 0.75), line, size=size if i == 0 else size - 2,
+                       weight="bold" if i == 0 else "normal", fill=NAVY if i == 0 else INK))
+    return _g(gid, x, y, w, h, body)
+
+
+def constraint_table(gid, x, y, w, rows: list[dict], row_h: float = 34) -> str:
+    """Constraint | where it is checked | expression | failing tests violating | passing tests violating | Ochiai |
+    region weight | score given to the line."""
+    cols = [("Ràng buộc", 0.09), ("Kiểm tra ở", 0.17), ("Điều kiện", 0.32), ("Test fail vi phạm", 0.1),
+            ("Test pass vi phạm", 0.1), ("Ochiai", 0.07), ("Hệ số", 0.06), ("Điểm dòng", 0.09)]
+    xs, cx = [], x
+    for _, f in cols:
+        xs.append(cx)
+        cx += w * f
+    body = [_r(x, y, w, 40, LAVENDER, rx=6)]
+    for (head, f), x0 in zip(cols, xs):
+        for k, part in enumerate(head.split(" vi ")):
+            body.append(_t(x0 + 6, y + 17 + 15 * k, part if k == 0 else "vi " + part, size=12, weight="bold"))
+    for i, r in enumerate(rows):
+        cy = y + 40 + i * row_h
+        if i % 2:
+            body.append(_r(x, cy, w, row_h, LIGHT))
+        vals = [r["id"], r["where"], r["expr"], str(r["fail"]), str(r["pass"]), _p(r["ochiai"], 2), _p(r["weight"], 1),
+                _p(r["score"], 2)]
+        for k, (v, x0) in enumerate(zip(vals, xs)):
+            body.append(_t(x0 + 6, cy + row_h * 0.64, v, size=12, family=MONO if k == 2 else BODY,
+                           weight="bold" if k == 7 else "normal"))
+    return _g(gid, x, y, w, 40 + row_h * len(rows), body)
+
+
+STATUS_FILL = {"Đã xong": "#DDEBDA", "Đang hoàn thiện": CREAM, "Chưa làm": "#F4DCD3", "Có bản nháp": CREAM}
+
+
+def progress_table(gid, x, y, w, rows: list[tuple], row_h: float = 44) -> str:
+    """Work item | status (coloured cell) | when it is presented or done."""
+    cw = [w * 0.55, w * 0.2, w * 0.25]
+    body = [_r(x, y, w, 36, LAVENDER, rx=6)]
+    for k, (head, x0) in enumerate(zip(("Việc", "Trạng thái", "Trình bày / thời gian"), (x, x + cw[0], x + cw[0] + cw[1]))):
+        body.append(_t(x0 + 10, y + 24, head, size=15, weight="bold"))
+    for i, (task, status, when) in enumerate(rows):
+        cy = y + 36 + i * row_h
+        body.append(_r(x, cy, w, row_h, "#FFFFFF", stroke=LAVENDER, sw=1))
+        body.append(_r(x + cw[0] + 4, cy + 6, cw[1] - 8, row_h - 12, STATUS_FILL.get(status, LIGHT), rx=10))
+        body.append(_t(x + 10, cy + row_h * 0.62, task, size=14))
+        body.append(_t(x + cw[0] + cw[1] / 2, cy + row_h * 0.62, status, size=13, weight="bold", anchor="middle"))
+        body.append(_t(x + cw[0] + cw[1] + 10, cy + row_h * 0.62, when, size=14))
+    return _g(gid, x, y, w, 36 + row_h * len(rows), body)

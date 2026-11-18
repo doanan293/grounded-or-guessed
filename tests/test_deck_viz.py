@@ -80,3 +80,36 @@ def test_claim_vs_evidence_keeps_every_claim_and_finding():
     joined = " ".join(_texts(el)).replace("  ", " ")
     for claim, found in rows:
         assert all(w in joined for w in claim.split()) and all(w in joined for w in found.split())
+
+
+def test_section_band_names_the_part():
+    el = _bounds_ok(viz.section_band("band", 2, "Phương pháp giải quyết"))
+    assert "Phần 2 · Phương pháp giải quyết" in _texts(el)
+
+
+def test_formula_box_keeps_every_line():
+    el = _bounds_ok(viz.formula("f", 40, 120, 400, ["Ochiai = a / √(b × c)", "a: số test fail chạy qua dòng"]))
+    assert _texts(el)[-2:] == ["Ochiai = a / √(b × c)", "a: số test fail chạy qua dòng"]
+
+
+def test_constraint_table_has_one_row_per_constraint():
+    rows = [{"id": "C1", "where": "dòng 73", "expr": "len(m) == len(l) + len(r)", "fail": 4, "pass": 0, "ochiai": 1.0,
+             "weight": 0.6, "score": 0.6},
+            {"id": "C2", "where": "cuối nhánh if dòng 72", "expr": "len(m) == len(l) + len(r)", "fail": 4, "pass": 0,
+             "ochiai": 1.0, "weight": 1.0, "score": 1.0}]
+    el = _bounds_ok(viz.constraint_table("ct", 40, 120, 880, rows))
+    t = _texts(el)
+    assert "C1" in t and "C2" in t and "0,60" in t and "1,00" in t
+
+
+def test_code_block_shows_inserted_checks():
+    el = _bounds_ok(viz.code_block("c", 40, 100, ["a = 1", "b = 2"], first_no=10, inserted={10: "kiểm tra C1: a > 0"}))
+    assert any("kiểm tra C1: a > 0" in t for t in _texts(el))
+
+
+def test_progress_table_rows_and_status_colours():
+    rows = [("Tái hiện SemLoc", "Đã xong", "Lần 1"), ("RQ3", "Đang hoàn thiện", "Lần 2"), ("Bài báo", "Chưa làm", "26/11–10/12")]
+    el = _bounds_ok(viz.progress_table("pt", 40, 120, 880, rows))
+    t = _texts(el)
+    assert all(x in t for r in rows for x in r)
+    assert len({r.get("fill") for r in el.iter("rect")}) >= 3
