@@ -18,7 +18,7 @@ def _texts(el):
 
 
 def test_code_block_numbers_every_line_and_highlights():
-    el = _bounds_ok(viz.code_block("c", 50, 100, ["def f(x):", "    return x + 1"], highlight={2}, first_no=9))
+    el = _bounds_ok(viz.code_block("c", 50, 100, ["def f(x):", "    return x + 1"], highlight={10}, first_no=9))
     assert sum(1 for t in _texts(el) if t.strip() in ("9", "10")) == 2
     assert any("return x + 1" in t.replace("\u00a0", " ") for t in _texts(el))  # indentation kept as no-break spaces
     assert any(r.get("fill") == viz.HILITE for r in el.iter("rect"))
