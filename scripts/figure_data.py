@@ -79,6 +79,63 @@ def pick_example(cov_dir: Path, gt: dict, guesses: dict, sources: dict, max_span
     return best[1]
 
 
+EXAMPLE_PROGRAMS = ("votes_apportion", "blend_orders")
+
+
+def _anchor_line(c: dict):
+    a = c.get("instrument", {}).get("anchor", {})
+    return a.get("line") or a.get("if_line")
+
+
+def semloc_example(run_dir: Path, program: str, failloc_rank: list[int]) -> dict:
+    """One running example: the program window, SemLoc's constraints with their violation counts and Ochiai, the
+    per-line scores split into spectrum and bonus, the counterfactual results, and FailLoc's prompt and answer."""
+    from flx._semloc import SEMLOC_ROOT
+    from flx.coverage import load
+    from flx.direct_cov import build_prompt, failing_tests
+    from flx.gt import load_variants
+    sc = json.loads((run_dir / "scores" / f"{program}.json").read_text())
+    cons = json.loads((run_dir / "constraints" / f"{program}.json").read_text())
+    cf = run_dir / "refined_base_cf" / f"{program}.json"
+    labels = load_variants()["repaired"][program]
+    status = next((v["status"] for v in json.loads((ROOT / "data" / "semfault_verified_gt.json").read_text())
+                   if v["program"] == program), "unverified")
+    prog = SEMLOC_ROOT / "benchmark" / "programs" / f"{program}.py"
+    test = SEMLOC_ROOT / "benchmark" / "testcases" / f"test_{program}.py"
+    src = prog.read_text()
+    rows = src.splitlines()
+    lo, hi = function_window(rows, labels[0])
+    cov = load(ROOT / "data" / "coverage" / "semfault" / f"{program}.json")
+    n_fail = sum(1 for t in cov["tests"] if not t["passed"])
+    return {
+        "program": program, "label_lines": labels, "label_status": status,
+        "code_lines": [{"no": i, "text": rows[i - 1]} for i in range(lo, hi + 1)],
+        "guess_line": sc.get("fault_line_pred"),
+        "constraints": [{"id": c["id"], "category": c.get("category"), "region": c["instrument"]["region"],
+                         "anchor_line": _anchor_line(c), "expr": c["spec"]["expr"], "intent": c.get("intent", ""),
+                         **{k: sc["constraint_scores"].get(c["id"], {}).get(k, 0) for k in ("ef", "ep")},
+                         "ochiai": round(sc["constraint_scores"].get(c["id"], {}).get("ochiai", 0.0), 4)}
+                        for c in cons["constraints"]],
+        "line_scores": [{"line": r["line"], "spectrum": r["spectrum"], "bonus": r["bonus"], "rank": r["rank"]}
+                        for r in sorted(line_scores_one(run_dir / "scores" / f"{program}.json"), key=lambda r: r["rank"])],
+        "cf_results": [{"cid": r["cid"], "patch": r["patch"]} for r in (json.loads(cf.read_text()) if cf.exists() else [])],
+        "failloc_top5": failloc_rank,
+        "failloc_prompt": build_prompt(src, failing_tests(src, prog, test), cov, coverage=False),
+        "n_fail": n_fail, "n_pass": len(cov["tests"]) - n_fail,
+    }
+
+
+def line_scores_one(path: Path) -> list[dict]:
+    d = path.parent
+    return [r for r in line_scores(d) if r["program"] == path.stem]
+
+
+def examples() -> dict:
+    run_dir = ROOT / "runs" / RUNS[0]
+    ranks = json.loads((ROOT / "data" / "rankings" / "direct_tests_test_gemini_r1.json").read_text())
+    return {p: semloc_example(run_dir, p, ranks[p]) for p in EXAMPLE_PROGRAMS}
+
+
 def main() -> None:
     from flx.gt import SEMLOC_ROOT, load_variants
     rows = []
@@ -97,7 +154,8 @@ def main() -> None:
     sources = {p: (SEMLOC_ROOT / "benchmark" / "programs" / f"{p}.py").read_text().splitlines() for p in guesses}
     ex = pick_example(ROOT / "data" / "coverage" / "semfault", gt, guesses, sources)
     (ROOT / "data" / "fig_example.json").write_text(json.dumps(ex, ensure_ascii=False, indent=1) + "\n")
-    print(f"{len(rows)} line scores; example {ex['program']} ({len(ex['code_lines'])} lines)")
+    (ROOT / "data" / "fig_semloc_examples.json").write_text(json.dumps(examples(), ensure_ascii=False, indent=1) + "\n")
+    print(f"{len(rows)} line scores; example {ex['program']} ({len(ex['code_lines'])} lines); fig_semloc_examples.json")
 
 
 if __name__ == "__main__":

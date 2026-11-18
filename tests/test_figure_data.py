@@ -40,3 +40,23 @@ def test_example_is_blind_for_sbfl():
     assert fail and fail <= passed
     assert ex["gt_line"] in fail
     assert 0 < len(ex["code_lines"]) <= 24
+
+
+EXAMPLES = ROOT / "data" / "fig_semloc_examples.json"
+
+
+@pytest.mark.skipif(not (ROOT / "runs" / "semloc_test_gemini_r1").exists(), reason="runs/ not present")
+def test_examples_match_runs():
+    ex = fd.examples()
+    va, bo = ex["votes_apportion"], ex["blend_orders"]
+    assert len(va["constraints"]) == 4 and all(c["ochiai"] == 0 for c in va["constraints"])
+    assert va["line_scores"] == [{"line": 26, "spectrum": 0.0, "bonus": 1.2, "rank": 1}]
+    assert va["guess_line"] == 26 and va["failloc_top5"] == [29, 25, 26, 28, 30]
+    assert va["label_lines"] == [29] and va["label_status"] == "unverified"
+    assert va["n_fail"] == 1 and va["n_pass"] == 4 and va["cf_results"] == []
+    sc = {r["line"]: r for r in bo["line_scores"]}
+    assert sc[72]["spectrum"] == 1.0 and abs(sc[73]["spectrum"] - 0.6) < 0.01 and sc[73]["bonus"] == 1.2
+    assert sc[73]["rank"] == 1 and bo["guess_line"] == 73
+    assert bo["failloc_top5"][0] == 72 and bo["label_status"] == "confirmed"
+    assert "exactly one faulty line" in va["failloc_prompt"] and "test_truncation_sum_equals_total_fail" in va["failloc_prompt"]
+    assert "[f=" not in va["failloc_prompt"]  # FailLoc: no coverage annotations
