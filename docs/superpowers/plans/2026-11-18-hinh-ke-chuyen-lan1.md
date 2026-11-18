@@ -146,7 +146,7 @@
 
 | # | stem | khung | Tiêu đề (câu kết luận) | Hình |
 |---|---|---|---|---|
-| 1 | slide_01 | 1 | **Grounded or Guessed:** Tái hiện và đánh giá việc định vị lỗi ngữ nghĩa bằng mô hình ngôn ngữ lớn | bìa: tên đề tài đúng như trang bìa báo cáo (`vi/frontmatter/bia.tex`), dòng phụ "Đề tài 02-KH · Nhóm M9 · GVHD: PGS. TS. Huỳnh Quyết Thắng · Báo cáo lần 1 · 18–19/11/2026" |
+| 1 | slide_01 | 1 | (to) **Bằng chứng hay phỏng đoán: Tái hiện và đánh giá việc định vị lỗi ngữ nghĩa trong mã nguồn bằng mô hình ngôn ngữ lớn**; (nhỏ, ở dưới) *Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization* | bìa: tên tiếng Việt thuần to ở trên, tên tiếng Anh thuần (đúng tên bài báo EN) nhỏ ở dưới; dòng phụ "Đề tài 02-KH · Nhóm M9 · GVHD: PGS. TS. Huỳnh Quyết Thắng · Báo cáo lần 1 · 18–19/11/2026" |
 | 2 | moc | 22 | Test fail. Dòng nào sai? | `code_block` ví dụ, chưa tô dòng |
 | 3 | sbfl_mu | 22 | SBFL mù với lỗi ngữ nghĩa: test pass và fail đi cùng đường | `matrix` phủ + Acc@1 SBFL `\RqOneSbflOchiaiFairAllAccOne`% |
 | 4 | semloc_hua | 22 | SemLoc hứa: neo LLM vào bằng chứng thực thi | `pipeline` 5 bước + `big_number` Acc@1 công bố |
@@ -167,7 +167,7 @@
 
 Bỏ khỏi lần 1: `nhom.svg`, `phan_cong.svg`, `slide_03` (mục lục), `slide_04/05/08/09/11/20/22`, `slide_14`, `ket_qua_thu`, `chuong0x`, `slide_21`. Chuyển trang không đổi (giữ nguồn). Không animation, không narration.
 
-- [ ] **Step 0: Test** `tests/test_deck_title.py::test_cover_matches_report`: hằng `TITLE` trong `build_deck.py` (hai dòng: "Grounded or Guessed:" và phần tiếng Việt) khớp tên đề tài trong `bia.tex` sau khi bỏ lệnh LaTeX, `\\` và so sánh không phân biệt hoa thường; áp cho cả ba deck.
+- [ ] **Step 0: Test** `tests/test_deck_title.py::test_cover_matches_report`: hằng `TITLE_VI` trong `build_deck.py` khớp tên đề tài trong `bia.tex` (bỏ lệnh LaTeX và `\\`, không phân biệt hoa thường) và `TITLE_EN` khớp `\title{}` của `paper-en/main.tex`; `TITLE_VI` không chứa từ tiếng Anh "Grounded"/"Guessed"; áp cho cả ba deck. Kèm sửa `bia.tex`: tên đề tài thuần Việt như trên (chữ hoa như hiện nay).
 - [ ] **Step 1:** Cập nhật `SOURCE`/`DECKS["lan1"]` theo bảng; bìa của mọi deck dùng `TITLE`; viết `story_pages()` (chỉ dùng khi `DECK=="lan1"`; lan2/baove giữ trang cũ cho tới kế hoạch sau, nhưng thay tên phương pháp ở mọi deck qua `name()`).
 - [ ] **Step 2:** `docs/presentation/build/make_decks.sh lan1` → in `lan1 -> docs/presentation/bao-cao-lan-1.pptx`, quality gate 0 lỗi.
 - [ ] **Step 3:** Render: `soffice --headless --convert-to pdf` rồi `pdftoppm -r 60`, xem từng trang: không tràn chữ, không chồng hình, mỗi trang đọc được tiêu đề + hình. Sửa đến khi sạch.
