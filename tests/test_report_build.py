@@ -55,6 +55,7 @@ def test_versions_contain_expected_chapters():
         assert "LLM hỏi thẳng" not in text and "LLM + kiểm thử thất bại" not in text, v
         assert "??" not in text, v
     assert "FailLoc+Cov" not in t["lan1"] and "nhãn đã rà soát" not in t["lan1"]
+    assert all("Cải tiến so với SemLoc" in t[v] for v in t)  # the improvement table, every version
     assert "Báo cáo tiến độ lần 1 (18–19/11/2026)" in t["lan1"]
     assert "Báo cáo tiến độ lần 2 (25–26/11/2026)" in t["lan2"]
     assert "Báo cáo tiến độ" not in t["full"] and "Kế hoạch đến bài nộp cuối" not in t["full"]

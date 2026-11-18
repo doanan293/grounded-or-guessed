@@ -18,7 +18,7 @@ from method_names import name  # noqa: E402
 # lần 1 roster: output stem -> template slide (22 = title + empty canvas)
 LAN1 = [("slide_01.svg", 1), ("moc.svg", 22), ("sbfl_mu.svg", 22), ("semloc_hua.svg", 22), ("cau_hoi.svg", 20),
         ("ba_bai.svg", 22), ("hop_den_1.svg", 22), ("hop_den_2.svg", 22), ("nhan_sai.svg", 22), ("failloc.svg", 22),
-        ("thiet_ke_l1.svg", 22), ("ket_qua.svg", 22), ("chi_phi.svg", 14), ("lan_sau.svg", 22),
+        ("thiet_ke_l1.svg", 22), ("ket_qua.svg", 22), ("cai_tien.svg", 22), ("lan_sau.svg", 22),
         ("cong_cu_ai.svg", 22), ("hien_trang.svg", 22), ("tien_do.svg", 22), ("slide_30.svg", 30)]
 
 # schedule shown on the Gantt page (dates of the course guide and the group's plan; not results)
@@ -51,26 +51,47 @@ def _card(gid, x, y, w, h, head, lines, color=NAVY) -> str:
     return viz._g(gid, x, y, w, h, body)
 
 
+def _unbold(bd, page: str, starts: str) -> None:
+    """Drop a template's bold on the <text> whose first line starts with `starts`."""
+    if not bd.has(page):
+        return
+    import re
+    p = bd.SVG / page
+    s = p.read_text()
+    m = re.search(r'<text\b[^>]*>(?:<tspan>)?' + re.escape(starts), s)
+    if not m:
+        raise SystemExit(f"{page}: no text starting with {starts!r}")
+    tag_end = s.index(">", m.start())
+    s = s[:m.start()] + s[m.start():tag_end].replace(' font-weight="bold"', "") + s[tag_end:]
+    p.write_text(s)
+
+
 def cover(bd, deck: str, occasion: str) -> None:
+    """Vietnamese title large; underneath, the English paper title small and italic, then topic, group, advisor, date."""
     bd.E("slide_01.svg", {
         "Introduction to Coding Workshop": ["Bằng chứng hay phỏng đoán:", "Tái hiện và đánh giá việc định vị",
                                             "lỗi ngữ nghĩa trong mã nguồn bằng", "mô hình ngôn ngữ lớn"],
-        "Here is where your presentation begins": [
-            "Grounded or Guessed: A Reproducibility Study", "of LLM-Based Semantic Fault Localization", "",
-            "Đề tài 02-KH · Nhóm M9", "GVHD: PGS. TS. Huỳnh Quyết Thắng", occasion],
     })
-    if bd.has("slide_01.svg"):
-        p = bd.SVG / "slide_01.svg"
-        s = p.read_text()
-        s = s.replace('y="217.42351706" text-anchor="start" xml:space="preserve" font-size="60"',
-                      'y="150" text-anchor="start" xml:space="preserve" font-size="36"', 1)
-        s = s.replace('font-size="36" fill="#0C0A9E" data-pptx-text-baseline="metrics-v1" data-pptx-text-model="lines" '
-                      'data-paragraph-line-height="72.0"', 'font-size="36" fill="#0C0A9E" data-pptx-text-baseline="metrics-v1" '
-                      'data-pptx-text-model="lines" data-paragraph-line-height="46"', 1)
-        s = s.replace('data-paragraph-line-height="25.6"', 'data-paragraph-line-height="20"', 1)
-        s = s.replace('y="395.12598425" text-anchor="start" xml:space="preserve" font-size="21.33"',
-                      'y="368" text-anchor="start" xml:space="preserve" font-size="15"', 1)
-        p.write_text(s)
+    if not bd.has("slide_01.svg"):
+        return
+    bd.D("slide_01.svg", "shape-1430")  # template subtitle box: hanging indent; replaced by our own frame
+    p = bd.SVG / "slide_01.svg"
+    s = p.read_text()
+    s = s.replace('y="217.42351706" text-anchor="start" xml:space="preserve" font-size="60"',
+                  'y="150" text-anchor="start" xml:space="preserve" font-size="36"', 1)
+    s = s.replace('font-size="36" fill="#0C0A9E" data-pptx-text-baseline="metrics-v1" data-pptx-text-model="lines" '
+                  'data-paragraph-line-height="72.0"', 'font-size="36" fill="#0C0A9E" data-pptx-text-baseline="metrics-v1" '
+                  'data-pptx-text-model="lines" data-paragraph-line-height="46"', 1)
+    p.write_text(s)
+    x = 124.75
+    rows = [("Grounded or Guessed: A Reproducibility Study", "italic", MUTED, 0),
+            ("of LLM-Based Semantic Fault Localization", "italic", MUTED, 22),
+            ("Đề tài 02-KH · Nhóm M9", "normal", INK, 34),
+            ("GVHD: PGS. TS. Huỳnh Quyết Thắng", "normal", INK, 22),
+            (occasion, "normal", INK, 22)]
+    body = "".join(f'<tspan x="{x}" dy="{dy}" font-style="{st}" fill="{c}">{t}</tspan>' for t, st, c, dy in rows)
+    bd.A("slide_01.svg", f'<g id="phu-de-bia" data-pptx-bounds="{x} 360 520 150"><text x="{x}" y="380" '
+                         f'font-family="{viz.BODY}" font-size="16">{body}</text></g>')
 
 
 def lan1(bd) -> None:
@@ -148,8 +169,9 @@ def lan1(bd) -> None:
         ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: số công bố còn đúng", "khi chấm công bằng, sửa nhãn?"]),
         ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM cần gì? FailLoc một lượt", "so với SemLoc nhiều bước"]),
         ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, mã đổi tên,", "các họ mô hình khác"]),
-        ("Saturn", "Lõi"), ("Saturn is a gas giant", ["Thứ hạng đến từ bằng chứng", "thực thi hay LLM tự đoán?"]),
+        ("Saturn", "Chung"), ("Saturn is a gas giant", ["Thứ hạng đến từ bằng chứng", "thực thi hay LLM tự đoán?"]),
     ])
+    _unbold(bd, "cau_hoi.svg", "LLM cần gì?")  # the template sets item 2 in bold; the four questions read alike
 
     # 6a. related work: many studies in five families, the three assigned papers highlighted
     _title(bd, "lien_quan.svg", "Nghiên cứu liên quan: năm hướng, ba bài tiêu biểu")
@@ -325,20 +347,21 @@ def lan1(bd) -> None:
                     "phần lớn hạng 1 của nó là dòng đoán."),
     ], size=13))
 
-    # 13. three big numbers (template metric page)
+    # 13. before -> after: what the group improves over SemLoc, same programs, same model
     ratio = float(m("CostSemlocTokensK").replace(",", ".")) / float(m("CostLlmTestsTokensK").replace(",", "."))
-    bd.E("chi_phi.svg", {
-        "9h 55m 23s": d1, "Jupiter’s rotation period": "điểm Acc@1 hơn SemLoc",
-        "333,000": f"{_p(ratio, 0)}×", "The Sun’s mass compared": "ít token hơn SemLoc",
-        "386,000 km": m("CostLlmTestsCalls").split(",")[0], "Distance between the Earth": "lượt gọi LLM mỗi chương trình",
-    })
-
-    bd.A("chi_phi.svg", _t(60, 52, "Ba con số của báo cáo lần 1", size=24, fill=INK, weight="bold", family="Arial, sans-serif"))
-    bd.A("chi_phi.svg", P("giai-thich-chi-phi", 560, 250, 360, [
-        ("Đo thế nào", "Nhãn đã sửa, 200 chương trình của tập test, Gemini 3.8 Flash, trung bình 3 lần chạy; token là tổng "
-                       "token vào và ra của mọi lượt gọi LLM cho một chương trình."),
-        ("Nghĩa là", "Cách hỏi thẳng có test thất bại vừa chính xác hơn vừa rẻ hơn quy trình nhiều bước."),
-    ], size=14))
+    _title(bd, "cai_tien.svg", "Cải tiến so với SemLoc: chính xác hơn, rẻ hơn, đánh giá chặt hơn")
+    rows = [("Acc@1, nhãn đã sửa", f"{a1('repaired', 'semloc')}%", f"{a1('repaired', 'llm_tests')}%", f"{d1} điểm"),
+            ("Acc@3, nhãn đã sửa", f"{a3('repaired', 'semloc')}%", f"{a3('repaired', 'llm_tests')}%",
+             f"{m('RqTwoRepairedAllLlmTestsDAccThree')} điểm"),
+            ("Acc@1, nhãn gốc", f"{a1('original', 'semloc')}%", f"{a1('original', 'llm_tests')}%",
+             f"{m('RqTwoOriginalAllLlmTestsDAccOne')} điểm"),
+            ("Token mỗi chương trình", f"{m('CostSemlocTokensK')}k", f"{m('CostLlmTestsTokensK')}k", f"ít hơn {_p(ratio, 0)}×"),
+            ("Lượt gọi LLM", m("CostSemlocCalls"), m("CostLlmTestsCalls"), "không pipeline"),
+            ("Nhãn dùng để chấm", f"{m('GtBlankN')} nhãn trống", "sửa bằng thực thi", f"{m('GtCorrectedN')} nhãn dời"),
+            ("Cách đánh giá", "chạy 1 lần", "3 lần, có CI", "kiểm định")]
+    bd.A("cai_tien.svg", viz.before_after("truoc-sau", 40, 100, 880, rows, row_h=50))
+    bd.A("cai_tien.svg", _note(40, 500, ["Cùng 200 chương trình của tập test, cùng Gemini 3.8 Flash, trung bình 3 lần chạy; "
+                                         "CI: khoảng tin cậy 95% bootstrap."], size=13, gid="dieu-kien-so-sanh", w=880))
 
     # 14. cliffhanger for report 2
     _title(bd, "lan_sau.svg", "Thắng thật hay nhờ nhãn? Và vì sao? (lần 2)")
@@ -422,9 +445,11 @@ def notes_lan1(bd) -> dict:
                    f"FailLoc đạt {a1('repaired', 'llm_tests')}%, SemLoc {a1('repaired', 'semloc')}%, tức hơn "
                    f"{m('RqTwoRepairedAllLlmTestsDAccOne')} điểm, và khoảng tin cậy không chạm 0. Bỏ điểm thưởng đi, SemLoc "
                    f"chỉ còn {a1('repaired', 'semloc_no_prior')}%.",
-        "chi_phi": f"Gói lại trong ba con số: FailLoc hơn SemLoc {m('RqTwoRepairedAllLlmTestsDAccOne')} điểm Acc@1, dùng ít "
-                   f"token hơn khoảng {_p(ratio, 0)} lần, và chỉ cần {m('CostLlmTestsCalls').split(',')[0]} lượt gọi LLM cho "
-                   "mỗi chương trình. Một quy trình nhiều bước chỉ đáng dùng khi nó thắng được cách hỏi thẳng này.",
+        "cai_tien": f"Gói lại những gì nhóm làm tốt hơn SemLoc, trên cùng chương trình và cùng mô hình. FailLoc hơn "
+                    f"{m('RqTwoRepairedAllLlmTestsDAccOne')} điểm Acc@1 và {m('RqTwoRepairedAllLlmTestsDAccThree')} điểm "
+                    f"Acc@3 trên nhãn đã sửa, và vẫn hơn trên nhãn gốc. Nó dùng ít token hơn khoảng {_p(ratio, 0)} lần và chỉ "
+                    "một lượt gọi LLM. Về cách đánh giá, nhóm chấm trên nhãn đã sửa bằng thực thi, chạy mỗi cấu hình ba lần "
+                    "và báo khoảng tin cậy, trong khi bài gốc chạy một lần.",
         "lan_sau": "Trước khi tin kết quả này, nhóm còn ba câu hỏi phải trả lời. Thứ nhất, nhãn đã sửa vẫn có thể còn sai, "
                    "nên nhóm rà soát lại cả 250 nhãn và cho hai người duyệt mù. Thứ hai, kết quả có giữ được trên lỗi thật, "
                    "trên mã đã đổi tên và trên các họ mô hình khác không. Thứ ba, thông tin nào trong prompt tạo ra khác biệt. "

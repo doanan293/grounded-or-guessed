@@ -91,6 +91,32 @@ kiểm thử của bộ dữ liệu đủ để \emph{gợi ý} lỗi nhưng qu�
 hiện (Docker, nhật ký và bộ đệm lượt gọi LLM, mọi con số sinh tự động).}
 \end{enumerate}
 
+Bảng~\ref{tab:cai-tien} tóm tắt những điểm nhóm làm tốt hơn SemLoc, so trên cùng 200 chương trình của tập test và cùng
+mô hình Gemini 3.8 Flash (trung bình ba lần chạy; chênh lệch kèm khoảng tin cậy \ConstCiLevel\% bootstrap).
+
+\begin{table}[H]
+\centering
+\caption{Cải tiến so với SemLoc trên cùng điều kiện (tập test, Gemini 3.8 Flash)}
+\label{tab:cai-tien}
+{\setstretch{1.15}\small
+\begin{tabularx}{\linewidth}{@{}Xccl@{}}
+\toprule
+Tiêu chí & SemLoc & FailLoc & Chênh lệch [CI \ConstCiLevel\%] \\
+\midrule
+Acc@1, nhãn đã sửa (\%) & \RqTwoRepairedAllSemlocAccOneMean & \textbf{\RqTwoRepairedAllLlmTestsAccOneMean} &
+  \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo; \RqTwoRepairedAllLlmTestsDAccOneHi] \\
+Acc@3, nhãn đã sửa (\%) & \RqTwoRepairedAllSemlocAccThreeMean & \textbf{\RqTwoRepairedAllLlmTestsAccThreeMean} &
+  \RqTwoRepairedAllLlmTestsDAccThree{} [\RqTwoRepairedAllLlmTestsDAccThreeLo; \RqTwoRepairedAllLlmTestsDAccThreeHi] \\
+Acc@1, nhãn gốc (\%) & \RqTwoOriginalAllSemlocAccOneMean & \textbf{\RqTwoOriginalAllLlmTestsAccOneMean} &
+  \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo; \RqTwoOriginalAllLlmTestsDAccOneHi] \\
+Nghìn token mỗi CT & \CostSemlocTokensK & \textbf{\CostLlmTestsTokensK} & -- \\
+Lượt gọi LLM mỗi CT & \CostSemlocCalls & \textbf{\CostLlmTestsCalls} & -- \\
+Nhãn dùng để chấm & nhãn gốc & gốc và đã sửa & -- \\
+Lặp và kiểm định & một lần chạy & ba lần, khoảng tin cậy & -- \\
+\bottomrule
+\end{tabularx}}
+\end{table}
+
 
 \IfBelow{lan2}{Các phần đang thực hiện cho lần báo cáo 2: rà soát toàn bộ nhãn của bộ dữ liệu; thí nghiệm loại bỏ để
 biết thông tin nào trong prompt tạo ra khác biệt; các cách bổ sung và công cụ phân tích tĩnh; câu hỏi RQ3 (lỗi thật, mã

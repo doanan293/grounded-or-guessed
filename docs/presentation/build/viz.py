@@ -151,22 +151,45 @@ def matrix(gid, x, y, rows: list[str], cols: list[str], cells: set, row_mark: di
 
 
 def panel(gid, x, y, w, blocks: list[tuple], size: float = 14, head_color: str = NAVY, fill: str = "#FFFFFF") -> str:
-    """Explanation box: blocks of (heading, text); text wraps to the box width (≈0.55 em per character)."""
+    """Explanation box: blocks of (heading, text) set as ONE editable text frame (one left edge for every line);
+    headings are bold coloured runs, text wraps to the box width (≈0.55 em per character)."""
     import textwrap
     per_line = max(10, int((w - 24) / (size * 0.55)))
-    lh = size * 1.4
-    body, cy = [], y + 14
+    lh = round(size * 1.4, 1)
+    rows = []  # (dy, markup)
     for head, text in blocks:
+        gap = round(size * 0.7, 1) if rows else 0
         if head:
-            cy += size * 1.25
-            body.append(_t(x + 12, cy, head, size=size + 1, fill=head_color, weight="bold"))
-        lines = textwrap.wrap(text, per_line)
-        if lines:  # one editable paragraph: first line direct, later lines as positioned tspans
-            cy += lh
-            rest = "".join(f'<tspan x="{x + 12}" dy="{round(lh, 1)}">{escape(l)}</tspan>' for l in lines[1:])
-            body.append(f'<text x="{x + 12}" y="{round(cy, 1)}" font-family="{BODY}" font-size="{size}" fill="{INK}">'
-                        f'{escape(lines[0])}{rest}</text>')
-            cy += lh * (len(lines) - 1)
-        cy += size * 0.6
-    h = cy - y + 8
-    return _g(gid, x, y, w, h, [_r(x, y, w, h, fill, stroke=LAVENDER, rx=10)] + body)
+            rows.append((lh + gap, f'<tspan font-weight="bold" fill="{head_color}">{escape(head)}</tspan>'))
+            gap = 0
+        for line in textwrap.wrap(text, per_line):
+            rows.append((lh + gap, escape(line)))
+            gap = 0
+    x0, y0 = x + 12, y + 14 + lh
+    first = rows[0][1]
+    rest = "".join(f'<tspan x="{x0}" dy="{dy}">{mk}</tspan>' for dy, mk in rows[1:])
+    text = (f'<text x="{x0}" y="{round(y0, 1)}" font-family="{BODY}" font-size="{size}" fill="{INK}">'
+            f'<tspan x="{x0}" dy="0">{first}</tspan>{rest}</text>')
+    h = 14 + lh + sum(dy for dy, _ in rows[1:]) + size * 0.8
+    return _g(gid, x, y, w, round(h, 1), [_r(x, y, w, round(h, 1), fill, stroke=LAVENDER, rx=10), text])
+
+
+def before_after(gid, x, y, w, rows: list[tuple], head=("Tiêu chí", "SemLoc / bài trước", "Nhóm (FailLoc)", "Chênh lệch"),
+                 row_h: float = 50) -> str:
+    """Before → after table: criterion | before (grey) → after (orange) | gain badge."""
+    cw = [w * 0.27, w * 0.24, w * 0.24, w * 0.25]
+    xs = [x, x + cw[0], x + cw[0] + cw[1], x + cw[0] + cw[1] + cw[2]]
+    body = []
+    for k, hd in enumerate(head):
+        body.append(_t(xs[k] + (12 if k == 0 else cw[k] / 2), y + 22, hd, size=15, fill=MUTED, weight="bold",
+                       anchor="start" if k == 0 else "middle"))
+    for i, (crit, before, after, delta) in enumerate(rows):
+        cy = y + 36 + i * row_h
+        body.append(_r(x, cy, w, row_h - 8, "#FFFFFF" if i % 2 else LIGHT, rx=8))
+        body.append(_t(xs[0] + 12, cy + row_h * 0.52, crit, size=16, weight="bold"))
+        body.append(_t(xs[1] + cw[1] / 2, cy + row_h * 0.52, before, size=17, fill=MUTED, anchor="middle"))
+        body.append(_arrow(xs[2] - 16, cy + (row_h - 8) / 2, xs[2] + 8, cy + (row_h - 8) / 2, color=ORANGE))
+        body.append(_t(xs[2] + cw[2] / 2, cy + row_h * 0.52, after, size=17, fill=ORANGE, weight="bold", anchor="middle"))
+        body.append(_r(xs[3] + 14, cy + 7, cw[3] - 28, row_h - 22, CREAM, stroke=ORANGE, rx=13, sw=1.2))
+        body.append(_t(xs[3] + cw[3] / 2, cy + row_h * 0.5, delta, size=14, fill=INK, weight="bold", anchor="middle"))
+    return _g(gid, x, y, w, 36 + row_h * len(rows), body)

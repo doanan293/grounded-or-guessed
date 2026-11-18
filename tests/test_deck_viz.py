@@ -48,11 +48,21 @@ def test_bars_stack_a_base_segment():
     assert viz.GREY in fills and viz.ORANGE in fills and "1,80" in _texts(el)
 
 
-def test_panel_wraps_to_its_width():
+def test_panel_is_one_text_frame_that_wraps_to_its_width():
     el = _bounds_ok(viz.panel("p", 600, 100, 300, [("Cách đọc", "mỗi hàng là một dòng mã, mỗi cột là một test, chấm "
-                                                                  "nghĩa là test chạy qua dòng đó")], size=14))
-    para = next(t for t in el.iter("text") if "".join(t.itertext()) != "Cách đọc")
-    lines = [para.text] + [ts.text for ts in para.iter("tspan")]
-    assert len(lines) >= 2 and all(len(t) * 14 * 0.55 <= 300 - 24 for t in lines)
-    x, y, w, h = map(float, el.get("data-pptx-bounds").split())
-    assert w == 300 and h > 0
+                                                                  "nghĩa là test chạy qua dòng đó"), ("Ý chính", "ngắn")], size=14))
+    texts = list(el.iter("text"))
+    assert len(texts) == 1
+    rows = [ts for ts in texts[0] if ts.tag == "tspan"]
+    assert {ts.get("x") for ts in rows} == {"612"}
+    plain = ["".join(ts.itertext()) for ts in rows]
+    assert plain[0] == "Cách đọc" and "Ý chính" in plain and len(plain) >= 5
+    assert all(len(r) * 14 * 0.55 <= 300 - 24 for r in plain)
+
+
+def test_before_after_has_one_row_per_criterion():
+    rows = [("Acc@1", "52,3%", "62,6%", "+10,2 điểm"), ("Token mỗi CT", "14,0k", "2,0k", "ít hơn 7×")]
+    el = _bounds_ok(viz.before_after("ba", 40, 120, 880, rows))
+    t = _texts(el)
+    for crit, before, after, delta in rows:
+        assert crit in t and before in t and after in t and delta in t
