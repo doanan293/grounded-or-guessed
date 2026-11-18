@@ -99,6 +99,38 @@ nhỏ hơn, vì bộ đã sửa bỏ các lỗi không kiểm chứng được. 
 
 }
 
+\subsection{Những chỗ tuyên bố quá mức (overclaim) nhóm phát hiện}
+\label{sec:overclaim}
+
+Gộp các phát hiện của RQ1 lại, bài báo SemLoc có những chỗ \emph{tuyên bố quá mức} (overclaim): các khẳng định chính mạnh hơn mức
+bằng chứng của chính nó cho phép. Bảng~\ref{tab:overclaim} đặt từng khẳng định cạnh điều nhóm kiểm tra được. Đây là một
+mục của bảng kiểm tra cho đánh giá định vị lỗi bằng LLM mà nhóm đề xuất: mỗi khẳng định về nguồn gốc độ chính xác cần
+một thí nghiệm bỏ thành phần tương ứng, chấm trên nhãn đã kiểm chứng và lặp nhiều lần.
+
+\begin{table}[H]
+\centering
+\caption{Khẳng định của bài báo SemLoc và kết quả kiểm tra của nhóm}
+\label{tab:overclaim}
+{\setstretch{1.15}\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+Bài báo khẳng định & Nhóm kiểm tra thấy \\
+\midrule
+Độ chính xác đến từ việc neo lập luận của LLM vào bằng chứng thực thi &
+  Dòng LLM tự đoán luôn đứng hạng 1 nhờ điểm thưởng \ConstPriorWeight{} không được mô tả trong bài báo; bỏ điểm thưởng,
+  Acc@1 (nhãn đã sửa) đi từ \RqTwoRepairedAllSemlocAccOneMean\% xuống \RqTwoRepairedAllSemlocNoPriorAccOneMean\% \\
+Bước kiểm chứng phản thực tế (vá thử) xác nhận dòng lỗi &
+  Kết quả vá thử không được dùng để xếp hạng: thứ hạng trùng nhau ở cả 250 chương trình, dù bước này chiếm
+  \CostCfSharePct\% lượt gọi LLM \\
+Acc@1 \RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% trên SemFault-250 &
+  Được chấm trên bộ nhãn có \GtBlankN{} nhãn nằm trên dòng trống và \GtNotExecutedN{} chương trình không kiểm thử thất bại
+  nào chạy tới nhãn \\
+Kết quả báo cáo từ một lần chạy &
+  Không có khoảng tin cậy hay kiểm định; nhóm lặp mỗi cấu hình ba lần và báo khoảng tin cậy \ConstCiLevel\% bootstrap \\
+\bottomrule
+\end{tabularx}}
+\end{table}
+
 \section{RQ2 -- LLM thật sự cần gì?}
 \label{sec:rq2}
 

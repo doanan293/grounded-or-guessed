@@ -71,3 +71,12 @@ def test_before_after_has_one_row_per_criterion():
 def test_matrix_column_sub_labels():
     el = _bounds_ok(viz.matrix("m", 50, 100, ["l1"], ["t1", "t2"], {(0, 0)}, col_sub=["pass", "fail"]))
     assert "pass" in _texts(el) and "fail" in _texts(el)
+
+
+def test_claim_vs_evidence_keeps_every_claim_and_finding():
+    rows = [("Độ chính xác đến từ bằng chứng thực thi", "Hạng 1 luôn là dòng LLM đoán, nhờ điểm thưởng không công bố"),
+            ("Vá thử kiểm chứng dòng nghi", "Không đổi thứ hạng nào")]
+    el = _bounds_ok(viz.claim_vs_evidence("ce", 40, 110, 880, rows))
+    joined = " ".join(_texts(el)).replace("  ", " ")
+    for claim, found in rows:
+        assert all(w in joined for w in claim.split()) and all(w in joined for w in found.split())

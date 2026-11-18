@@ -17,9 +17,8 @@ from method_names import name  # noqa: E402
 
 # lần 1 roster: output stem -> template slide (22 = title + empty canvas)
 LAN1 = [("slide_01.svg", 1), ("moc.svg", 22), ("sbfl_mu.svg", 22), ("semloc_hua.svg", 22), ("cau_hoi.svg", 20),
-        ("ba_bai.svg", 22), ("hop_den_1.svg", 22), ("hop_den_2.svg", 22), ("nhan_sai.svg", 22), ("failloc.svg", 22),
-        ("thiet_ke_l1.svg", 22), ("ket_qua.svg", 22), ("cai_tien.svg", 22), ("lan_sau.svg", 22),
-        ("cong_cu_ai.svg", 22), ("hien_trang.svg", 22), ("tien_do.svg", 22), ("slide_30.svg", 30)]
+        ("ba_bai.svg", 22), ("hop_den_1.svg", 22), ("hop_den_2.svg", 22), ("nhan_sai.svg", 22), ("overclaim.svg", 22), ("failloc.svg", 22),
+        ("thiet_ke_l1.svg", 22), ("ket_qua.svg", 22), ("cai_tien.svg", 22), ("tiep_theo.svg", 22), ("slide_30.svg", 30)]
 
 # schedule shown on the Gantt page (dates of the course guide and the group's plan; not results)
 SCHEDULE = [("Chốt nhóm, đề tài", "04/11", "05/11", True), ("Tài liệu, từ khóa", "05/11", "11/11", True),
@@ -103,6 +102,8 @@ def lan1(bd) -> None:
     n_pass = sum(t["passed"] for t in ex["tests"])
     m = bd._m
     P = viz.panel
+    rq2r = {r["method"]: r for r in _csv(ROOT / "data" / "rq2_ours.csv") if r["gt"] == "repaired" and r.get("subset", "all") == "all"}
+    a1x = lambda mm: _p(100 * float(rq2r[mm]["acc1_mean"]))
 
     # 2. hook: a failing test, which line is wrong?
     _title(bd, "moc.svg", "Một test fail. Dòng nào sai?")
@@ -213,7 +214,7 @@ def lan1(bd) -> None:
              ("EffiHolmes (2026)", [("Bài toán", "lỗi hiệu năng: test vẫn pass, không có lỗi để lần theo."),
                                      ("Cách làm", "so hai lần chạy dữ liệu nhỏ và lớn; hàm chậm hẳn đi thì bị nghi."),
                                      ("Kết quả", "thử trên 140 lỗi chạy chậm thật."),
-                                     ("Nhóm áp dụng", "ý tưởng so một lần chạy bình thường với một lần chạy có lỗi để tìm chỗ khác nhau; ở đề tài này là so test pass với test fail. Nhóm cũng học cách chia đề tài thành ba câu hỏi nghiên cứu.")]),
+                                     ("Nhóm áp dụng", "ý tưởng so một lần chạy bình thường với một lần chạy có lỗi để tìm chỗ khác nhau; ở đề tài này là so test pass với test fail.")]),
              ("Sự cố + LLM (2026)", [("Bài toán", "app Java lớn sập hàng nghìn lần mỗi tuần, mỗi lần có stack trace."),
                                       ("Cách làm", "gom stack trace thành bảng hàm đáng nghi, đưa bảng vào prompt."),
                                       ("Kết quả", "38 lỗi thật, chỉ đúng chỗ lỗi 71%."),
@@ -279,6 +280,26 @@ def lan1(bd) -> None:
         ("Bộ phán định sửa tối thiểu", "LLM chỉ đề xuất bản sửa nhỏ tại nhãn hoặc dòng lân cận; dòng nào sửa xong làm mọi "
                                        "test pass thì đó là dòng lỗi. Test quyết định, LLM không quyết định. Mọi kết quả sau "
                                        "đây được báo trên cả nhãn gốc lẫn nhãn đã sửa.")], size=14))
+
+    # 9b. overclaiming: what the SemLoc paper states vs what the group's check found
+    share, n_pairs = _guess_rank1_share()
+    _title(bd, "overclaim.svg", "Những chỗ overclaim nhóm phát hiện trong bài báo SemLoc")
+    bd.A("overclaim.svg", viz.claim_vs_evidence("tuyen-bo", 40, 100, 880, [
+        ("Độ chính xác đến từ việc neo LLM vào bằng chứng thực thi.",
+         f"Hạng 1 là dòng LLM tự đoán ở {_p(100 * share, 0)}% lần chạy, nhờ điểm thưởng +{m('ConstPriorWeight')} không "
+         f"được mô tả. Bỏ thưởng, Acc@1 rơi từ {a1x('semloc')}% xuống {a1x('semloc_no_prior')}%."),
+        ("Bước vá thử (kiểm chứng phản thực tế) xác nhận dòng lỗi.",
+         f"Kết quả vá thử không được dùng để xếp hạng: thứ hạng trùng nhau ở cả 250 chương trình, dù bước này tốn "
+         f"{m('CostCfSharePct')}% lượt gọi LLM."),
+        (f"Acc@1 {m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}% trên SemFault-250.",
+         f"Chấm trên nhãn có {m('GtBlankN')} nhãn nằm trên dòng trống và {m('GtNotExecutedN')} chương trình không test "
+         "fail nào chạy tới nhãn."),
+        ("Kết quả của một lần chạy.", "Không có khoảng tin cậy hay kiểm định thống kê; nhóm chạy lại 3 lần và báo khoảng "
+                                      "tin cậy 95%."),
+    ], row_h=82))
+    bd.A("overclaim.svg", _note(40, 462, ["Overclaim (tuyên bố quá mức): khẳng định mạnh hơn mức bằng chứng cho phép.", "Số liệu: lượt chạy lại "
+                                          "của nhóm với Gemini 3.8 Flash, nhãn đã sửa."], size=13, gid="dinh-nghia-overclaim",
+                                w=880))
 
     # 10. FailLoc next to SemLoc, with the prompt it sends
     _title(bd, "failloc.svg", f"Phương pháp {name('llm_tests')}: đưa thẳng test fail cho LLM, một lượt gọi")
@@ -365,20 +386,23 @@ def lan1(bd) -> None:
     bd.A("cai_tien.svg", _note(40, 500, ["Cùng 200 chương trình của tập test, cùng Gemini 3.8 Flash, trung bình 3 lần chạy; "
                                          "CI: khoảng tin cậy 95% bootstrap."], size=13, gid="dieu-kien-so-sanh", w=880))
 
-    # 14. cliffhanger for report 2
-    _title(bd, "lan_sau.svg", "Thắng thật hay nhờ nhãn? Và vì sao? (lần 2)")
-    for k, (head, lines) in enumerate((("Nhãn còn sai?", ["Rà soát cả 250 nhãn,", "duyệt mù độc lập", "bởi hai người"]),
-                                       ("Có bền không?", ["Lỗi thật BugsInPy,", "mã đổi tên định danh,", "năm họ mô hình"]),
-                                       ("Vì sao thắng?", ["Ablation: test fail", "hay độ phủ từng dòng", "tạo khác biệt?"]))):
-        bd.A("lan_sau.svg", _card(f"cau-hoi-{k}", 40 + k * 300, 130, 270, 200, head, lines, color=[RED, NAVY, ORANGE][k]))
-    bd.A("lan_sau.svg", P("hen-lan-2", 40, 360, 870, [
-        (None, "Dữ liệu và mã cho cả ba câu đã có; kết quả trình bày ở báo cáo lần 2 (25–26/11).")], size=15))
-
-    # 17. Gantt
-    _title(bd, "tien_do.svg", "Tiến độ")
-    bd.A("tien_do.svg", viz.gantt("gantt", 40, 140, 860, SCHEDULE, today="18/11", label_w=290, row_h=38))
-    bd.A("tien_do.svg", _note(40, 516, ["Xanh đậm: đã xong. Tím nhạt: đang làm hoặc sắp tới. Vạch đỏ: hôm nay."], size=14,
-                              gid="chu-thich-gantt", w=860))
+    # 14. what comes next: next week (report 2) and the rest until the defence
+    _title(bd, "tiep_theo.svg", "Việc tiếp theo")
+    bd.A("tiep_theo.svg", _t(40, 124, "Tuần sau, đến báo cáo lần 2 (25–26/11)", size=18, fill=ORANGE, weight="bold"))
+    bd.A("tiep_theo.svg", P("tuan-sau", 40, 136, 430, [
+        ("Nhãn còn sai?", "Rà soát lại cả 250 nhãn: LLM rà trước, thành viên nhóm duyệt, rồi hai người duyệt mù độc lập."),
+        ("Có bền không? (RQ3)", "Chạy lại trên lỗi thật BugsInPy, trên mã đã đổi tên định danh và trên năm họ mô hình."),
+        ("Vì sao thắng?", "Ablation: test fail hay độ phủ từng dòng tạo khác biệt; thử các cách bổ sung và công cụ phân tích "
+                          "tĩnh."),
+        ("Nội dung 3", "Viết đóng góp và triết lý khoa học của đề tài."),
+    ], size=14))
+    bd.A("tiep_theo.svg", _t(500, 124, "Còn lại đến buổi bảo vệ (12/2026)", size=18, fill=NAVY, weight="bold"))
+    bd.A("tiep_theo.svg", P("con-lai", 500, 136, 420, [
+        ("Phân tích thất bại", "Xem từng chương trình mà các phương pháp đoán sai để tìm nguyên nhân."),
+        ("Kiểm chứng bằng bản sửa", "Thử để test quyết định dòng lỗi: LLM đề xuất bản sửa, chạy test, xếp lại."),
+        ("Nội dung 4", "Hoàn thiện bài báo tiếng Anh để nộp arXiv, kèm gói tái hiện (mã, dữ liệu, nhật ký gọi LLM)."),
+        ("Bảo vệ", "Báo cáo đầy đủ và slide bảo vệ."),
+    ], size=14))
 
 
 def _bonus_rows() -> list[dict]:
@@ -437,6 +461,11 @@ def notes_lan1(bd) -> dict:
                     "dựng lại bộ nhãn bằng thực thi: LLM chỉ đề xuất bản sửa nhỏ, còn test quyết định. Kết quả là "
                     f"{m('GtConfirmedN')} nhãn được xác nhận, {m('GtCorrectedN')} nhãn được dời vị trí, và bộ nhãn đã sửa "
                     f"còn {m('GtRepairedN')} chương trình. Mọi kết quả sau đây đều báo trên cả hai bộ nhãn.",
+        "overclaim": "Gộp các phát hiện lại, nhóm thấy bài báo SemLoc có những chỗ overclaim, tức tuyên bố quá mức: "
+                     "khẳng định mạnh hơn mức bằng chứng cho phép. Bài báo nói độ chính xác đến từ bằng chứng thực thi, nhưng "
+                     f"hạng 1 là dòng LLM tự đoán ở {_p(100 * share, 0)}% lần chạy. Bước vá thử tốn {bd._m('CostCfSharePct')}% "
+                     "lượt gọi nhưng không đổi thứ hạng nào. Con số công bố được chấm trên bộ nhãn có nhiều nhãn sai, và chỉ từ "
+                     "một lần chạy.",
         "failloc": "Phương pháp nhóm đề xuất tên là FailLoc. Nó làm đúng việc lập trình viên vẫn làm với trợ lý AI: đưa mã "
                    "nguồn cùng tên và thông báo lỗi của các test fail cho LLM, hỏi một lần, nhận về năm dòng đáng nghi nhất. "
                    f"SemLoc tốn khoảng {m('CostSemlocTokensK')} nghìn token mỗi chương trình, FailLoc khoảng "
@@ -453,17 +482,10 @@ def notes_lan1(bd) -> dict:
                     f"Acc@3 trên nhãn đã sửa, và vẫn hơn trên nhãn gốc. Nó dùng ít token hơn khoảng {_p(ratio, 0)} lần và chỉ "
                     "một lượt gọi LLM. Về cách đánh giá, nhóm chấm trên nhãn đã sửa bằng thực thi, chạy mỗi cấu hình ba lần "
                     "và báo khoảng tin cậy, trong khi bài gốc chạy một lần.",
-        "lan_sau": "Trước khi tin kết quả này, nhóm còn ba câu hỏi phải trả lời. Thứ nhất, nhãn đã sửa vẫn có thể còn sai, "
-                   "nên nhóm rà soát lại cả 250 nhãn và cho hai người duyệt mù. Thứ hai, kết quả có giữ được trên lỗi thật, "
-                   "trên mã đã đổi tên và trên các họ mô hình khác không. Thứ ba, thông tin nào trong prompt tạo ra khác biệt. "
-                   "Nhóm sẽ trình bày cả ba ở báo cáo lần 2.",
-        "cong_cu_ai": "Về công cụ AI, Claude Code là trợ lý chính để đọc tài liệu, viết mã, chạy thực nghiệm và soạn báo cáo. "
-                      "Các LLM trong thực nghiệm đều được gọi qua một proxy có nhật ký và bộ đệm, nên mọi lượt chạy phát lại "
-                      "được. Nhóm trưởng duyệt mọi thay đổi, và mọi con số được sinh tự động từ dữ liệu.",
-        "hien_trang": "Theo yêu cầu, lần 1 cần xong ít nhất hai trong bốn nội dung. Nhóm đã xong phần tài liệu và phần chính "
-                      "của câu hỏi nghiên cứu và thực nghiệm. Đóng góp và triết lý khoa học sẽ trình bày ở lần 2, còn bài báo "
-                      "được viết khi đủ kết quả.",
-        "tien_do": "Về tiến độ, các thanh màu xanh đậm là phần đã xong. Từ nay đến báo cáo lần 2 ngày 25/11, nhóm hoàn thành "
-                   "rà soát nhãn, RQ3 và ablation, sau đó viết bài báo và chuẩn bị bảo vệ ngày 12/12.",
+        "tiep_theo": "Tuần sau, đến báo cáo lần 2, nhóm trả lời ba câu hỏi còn mở. Thứ nhất, nhãn còn sai không: nhóm rà soát "
+                     "lại cả 250 nhãn và cho hai người duyệt mù. Thứ hai, kết quả có bền trên lỗi thật, mã đổi tên và các họ "
+                     "mô hình khác không. Thứ ba, thông tin nào trong prompt tạo ra khác biệt; cùng lúc nhóm viết đóng góp và "
+                     "triết lý khoa học. Sau đó đến buổi bảo vệ là phân tích thất bại, kiểm chứng bằng bản sửa và hoàn thiện "
+                     "bài báo tiếng Anh.",
         "slide_30": "Nhóm xin cảm ơn thầy và các bạn đã lắng nghe, và rất mong nhận được câu hỏi và góp ý.",
     }

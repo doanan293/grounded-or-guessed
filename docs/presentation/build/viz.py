@@ -196,3 +196,26 @@ def before_after(gid, x, y, w, rows: list[tuple], head=("Tiêu chí", "Phương 
         body.append(_r(xs[3] + 14, cy + 7, cw[3] - 28, row_h - 22, CREAM, stroke=ORANGE, rx=13, sw=1.2))
         body.append(_t(xs[3] + cw[3] / 2, cy + row_h * 0.5, delta, size=14, fill=INK, weight="bold", anchor="middle"))
     return _g(gid, x, y, w, 36 + row_h * len(rows), body)
+
+
+def claim_vs_evidence(gid, x, y, w, rows: list[tuple], head=("Bài báo nói", "Nhóm kiểm tra thấy"), size: float = 14,
+                      row_h: float = 74) -> str:
+    """Two columns, one row per claim: what the paper states (grey) → what the group's check found (orange edge)."""
+    import textwrap
+    cw = (w - 40) / 2
+    per = max(10, int((cw - 24) / (size * 0.55)))
+    body = [_t(x + 12, y + 20, head[0], size=15, fill=MUTED, weight="bold"),
+            _t(x + cw + 52, y + 20, head[1], size=15, fill=ORANGE, weight="bold")]
+    for i, (claim, found) in enumerate(rows):
+        cy = y + 32 + i * row_h
+        for k, (txt, stroke, fill) in enumerate(((claim, LAVENDER, LIGHT), (found, ORANGE, "#FFFFFF"))):
+            cx = x + k * (cw + 40)
+            body.append(_r(cx, cy, cw, row_h - 10, fill, stroke=stroke, rx=8, sw=1.5))
+            lines = textwrap.wrap(txt, per)
+            lh = size * 1.35
+            ty = cy + (row_h - 10) / 2 - (len(lines) - 1) * lh / 2 + size * 0.35
+            rest = "".join(f'<tspan x="{round(cx + 12, 1)}" dy="{round(lh, 1)}">{escape(l)}</tspan>' for l in lines[1:])
+            body.append(f'<text x="{round(cx + 12, 1)}" y="{round(ty, 1)}" font-family="{BODY}" font-size="{size}" '
+                        f'fill="{INK}"><tspan x="{round(cx + 12, 1)}" dy="0">{escape(lines[0])}</tspan>{rest}</text>')
+        body.append(_arrow(x + cw + 6, cy + (row_h - 10) / 2, x + cw + 34, cy + (row_h - 10) / 2, color=ORANGE))
+    return _g(gid, x, y, w, 32 + row_h * len(rows), body)

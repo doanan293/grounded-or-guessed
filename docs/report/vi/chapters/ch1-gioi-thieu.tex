@@ -67,7 +67,8 @@ Mỗi kết quả dưới đây gắn với số liệu được sinh tự độ
 mọi điểm ràng buộc --- chi tiết không có trong bài báo --- nên dòng đầu tiên của SemLoc \emph{luôn} là dòng đoán. Bỏ
 điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã sửa\IfAtLeast{lan2}{ và
 \RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã rà soát}. Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM
-nhưng không đổi thứ hạng nào.
+nhưng không đổi thứ hạng nào. Nói cách khác, bài báo tuyên bố quá mức (overclaim) về nguồn gốc độ chính xác
+(Mục~\ref{sec:overclaim}).
 \IfAtLeastElse{lan2}{\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
 bị dời khi rà soát (\LabaudAllBlank{} nằm trên dòng trống, \LabaudAllOffByOne{} lệch một dòng). Nhóm công bố hai bộ nhãn
 mới: \emph{đã sửa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt, kiểm tra lại bằng
