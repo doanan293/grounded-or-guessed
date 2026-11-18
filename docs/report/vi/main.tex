@@ -42,7 +42,7 @@
 \RedeclareSectionCommand[beforeskip=0pt,afterskip=18pt]{chapter}
 \renewcommand*{\chapterformat}{\chapapp~\thechapter.\enskip}
 \setcounter{secnumdepth}{3}                      % tối đa 4 chữ số: 4.1.2.3
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{1}                      % mục lục đến cấp mục (giới hạn 45 trang)
 
 % Số trang ở giữa chân trang
 \usepackage[automark]{scrlayer-scrpage}
@@ -51,7 +51,6 @@
 \pagestyle{scrheadings}
 
 \newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
-% Phiên bản: lan1 (báo cáo lần 1, 18–19/11) < lan2 (lần 2, 25–26/11) < full (bài nộp).
 \input{../generated/numbers-vi}
 
 \begin{document}
@@ -59,9 +58,9 @@
 \pagenumbering{roman}
 \input{frontmatter/camket}
 \input{frontmatter/nhom}
-\tableofcontents
-\listoftables
-\listoffigures
+{\setstretch{1.1}\tableofcontents}
+{\setstretch{1.0}\listoftables
+\let\clearpage\relax\vspace{1em}\listoffigures}
 \input{frontmatter/vietat}
 
 \clearpage
@@ -74,10 +73,8 @@
 \input{chapters/ch6-phan-tich-that-bai}
 \input{chapters/ch7-dong-gop}        % nội dung 3: đóng góp, triết lý khoa học
 \input{chapters/ch8-ket-luan}
-%
-  \appendix
-  \input{chapters/phu-luc}
 
+{\setstretch{1.0}\small
 \bibliographystyle{../paper-en/IEEEtran}
-\bibliography{../references}
+\bibliography{../references}}
 \end{document}

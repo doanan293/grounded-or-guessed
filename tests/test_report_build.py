@@ -44,6 +44,9 @@ def test_final_report_is_complete():
     for ch in ("Mở đầu", "Kết quả thực nghiệm", "Phân tích thất bại và thảo luận", "Đóng góp, triết lý khoa học",
                "Phụ lục", "Danh sách hình vẽ", "Danh sách bảng"):
         assert ch in t, ch
+    pages = int(next(l for l in subprocess.run(["pdfinfo", str(ROOT / "docs" / "report" / "vi" / "main.pdf")],
+                                             capture_output=True, text=True).stdout.splitlines() if l.startswith("Pages")).split()[1])
+    assert pages <= 45, pages  # owner, 18/11: at most 45 pages in total
     for s in ("FailLoc", "nhãn đã chuẩn hóa", "Cải tiến so với SemLoc", "Hình 1.1"):
         assert s in t, s
     assert "tuyên bố quá mức (overclaim) nhóm phát hiện" in t.lower()
