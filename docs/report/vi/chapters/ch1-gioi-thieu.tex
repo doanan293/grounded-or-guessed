@@ -4,33 +4,16 @@
 \section{Đặt vấn đề}
 \label{sec:dat-van-de}
 
-Định vị lỗi là bước tốn công nhất của gỡ lỗi: khi chạy kiểm thử thấy thất bại --- trên máy cá nhân hay trên hệ thống
-tích hợp liên tục (CI) --- lập trình viên phải tìm ra dòng mã gây lỗi trong hàng trăm dòng có liên quan. Các công cụ
-phân tích tĩnh thông dụng như trình kiểm tra phong cách mã (lint) hay trình kiểm tra kiểu không giúp được ở bước này
-khi lỗi nằm ở logic: mã vẫn đúng cú pháp, đúng kiểu, chỉ cho ra kết quả sai. Thông tin duy nhất chỉ ra lỗi là chính
-các kiểm thử thất bại --- và với cách phát triển hướng kiểm thử (TDD)~\cite{beck2003tdd}, các kiểm thử đó được viết ra
-trước, mô tả ý định của mã.
-
-Trợ lý AI đã trở thành công cụ hằng ngày của lập trình viên: các khảo sát lớn năm 2025 cho thấy phần lớn lập trình viên
-đang dùng hoặc định dùng chúng~\cite{stackoverflow2025,jetbrains2025}, và gỡ lỗi là một trong các việc họ thường đem
-hỏi~\cite{xiao2024devgpt}. Nghiên cứu cũng cho thấy đưa thông tin lỗi cho LLM giúp nó định vị lỗi tốt hơn
-hẳn~\cite{wu2023llmfl}. Từ đó, một cách làm đơn giản --- chạy kiểm thử, đưa kết quả thất bại cho LLM, hỏi dòng nào sai ---
-nhiều khả năng đã gần với cách nhiều lập trình viên đang làm.
-
-Họ phương pháp kinh điển là định vị lỗi dựa trên phổ độ phủ (SBFL)~\cite{jones2002,abreu2009,wong2016survey}: một dòng
-càng hay được các kiểm thử thất bại chạy qua và càng ít được các kiểm thử thành công chạy qua thì càng đáng nghi. Với
-\emph{lỗi ngữ nghĩa} --- chương trình chạy đúng đường nhưng tính sai giá trị --- hai loại kiểm thử thường chạy qua cùng
-một tập dòng, và SBFL gần như mất tín hiệu.
-
-SemLoc~\cite{yang2026semloc} --- bài báo trung tâm trong ba bài được giảng viên giao --- đề xuất một quy trình nhiều bước
-cho lỗi ngữ nghĩa: LLM viết ra các ràng buộc ngữ nghĩa thực thi được, ràng buộc được chèn vào chương trình, kiểm thử
-được chạy để lấy phổ vi phạm, rồi LLM vá thử các dòng nghi ngờ để kiểm chứng. Bài báo tuyên bố độ chính xác đến từ việc
-\emph{neo lập luận của LLM vào bằng chứng thực thi} (structured grounding) và báo cáo Acc@1
-\RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% trên bộ dữ liệu SemFault-250. Câu hỏi tự nhiên với người làm phần mềm là:
-\textbf{quy trình phức tạp đó có thật sự cần không, khi so với cách làm đơn giản đó?}
-
-Hình~\ref{fig:tong-quan} đặt hai cách làm cạnh nhau: quy trình nhiều bước của SemLoc và một lượt gọi LLM có kiểm thử thất bại
-(FailLoc, phương pháp nhóm đề xuất).
+Định vị lỗi là bước tốn công nhất của gỡ lỗi. Khi lỗi nằm ở logic, lint hay trình kiểm tra kiểu không giúp được;
+thông tin duy nhất chỉ ra lỗi là các kiểm thử thất bại, vốn mô tả ý định của mã~\cite{beck2003tdd}. Phần lớn lập trình
+viên đã dùng trợ lý AI để gỡ lỗi~\cite{stackoverflow2025,xiao2024devgpt}, nên cách đưa kiểm thử thất bại cho LLM và hỏi
+dòng nào sai nhiều khả năng đã gần với thực tế. Với \emph{lỗi ngữ nghĩa} (chạy đúng đường nhưng tính sai giá trị), kiểm
+thử thành công và thất bại chạy qua cùng các dòng, nên SBFL~\cite{jones2002,abreu2009} gần như mất tín hiệu.
+SemLoc~\cite{yang2026semloc}, bài trung tâm trong ba bài được giao, dùng một quy trình nhiều bước: LLM viết ràng buộc ngữ
+nghĩa, ràng buộc được chèn vào chương trình để lấy phổ vi phạm khi chạy kiểm thử, rồi LLM vá thử dòng nghi ngờ để kiểm
+chứng. Bài báo quy độ chính xác (Acc@1 \RqOneSemlocClaudeTZeroEightAuthorAllAccOne\% trên SemFault-250) cho việc
+\emph{neo lập luận vào bằng chứng thực thi}. Câu hỏi của nhóm: \textbf{quy trình đó có cần không, khi so với cách làm
+đơn giản?} (Hình~\ref{fig:tong-quan}).
 
 \begin{figure}[H]
 \centering
@@ -39,95 +22,49 @@ Hình~\ref{fig:tong-quan} đặt hai cách làm cạnh nhau: quy trình nhiều 
 \label{fig:tong-quan}
 \end{figure}
 
-\section{Câu hỏi nghiên cứu}
+\section{Câu hỏi nghiên cứu và đóng góp}
 \label{sec:cau-hoi}
 
-Tiểu luận đặt câu hỏi ``grounded hay guessed?'' cho SemLoc --- độ chính xác đến từ bằng chứng thực thi hay từ việc LLM
-đoán --- và tách thành ba câu hỏi nghiên cứu:
-
-\begin{itemize}
-\item \textbf{RQ1 -- Tái hiện và kiểm tra cách đánh giá.} Kết quả công bố của SemLoc có tái hiện được không, và còn
-đứng vững khi chấm điểm công bằng, khi bỏ các thành phần không được mô tả trong bài báo, và khi kiểm tra lại chính các
-dòng lỗi chuẩn (nhãn) của bộ dữ liệu?
-\item \textbf{RQ2 -- LLM thật sự cần gì?} Một prompt duy nhất có kiểm thử thất bại so với quy trình nhiều bước của
-SemLoc thì sao, về độ chính xác và chi phí? Thông tin nào trong prompt tạo ra khác biệt (kiểm thử thất bại hay độ phủ
-từng dòng)? Các cách bổ sung --- gắn độ phủ vào SemLoc (CovGate), kiểm chứng dòng nghi ngờ bằng bản sửa và kiểm thử,
-biểu quyết nhiều câu trả lời --- và các công cụ phân tích tĩnh có thêm được gì không?
-\item \textbf{RQ3 -- Độ bền.} Các kết luận có giữ được trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã đổi tên
-định danh, trên năm họ mô hình, và trên cả ba bộ nhãn (gốc, đã chuẩn hóa, đã rà soát) không?
-\end{itemize}
-
-\section{Đóng góp chính}
-\label{sec:dong-gop-tom-tat}
-
-Mỗi kết quả dưới đây gắn với số liệu được sinh tự động từ mã nguồn công khai.
-
+Tiểu luận hỏi ``grounded hay guessed?'' qua ba câu hỏi nghiên cứu. \textbf{RQ1 (tái hiện):} kết quả SemLoc có tái
+hiện được và đứng vững khi chấm công bằng, khi bỏ thành phần không có trong bài báo và khi kiểm tra lại nhãn (dòng lỗi
+chuẩn) không? \textbf{RQ2 (LLM cần gì):} một prompt có kiểm thử thất bại so với SemLoc về độ chính xác và chi phí ra sao,
+và các cách bổ sung (CovGate, kiểm chứng bằng bản sửa, biểu quyết, phân tích tĩnh) thêm được gì? \textbf{RQ3 (độ bền):}
+kết luận có giữ trên lỗi thật (BugsInPy~\cite{widyasari2020}), mã đổi tên định danh, năm họ mô hình và ba bộ nhãn (gốc,
+đã chuẩn hóa, đã rà soát) không? Các đóng góp chính, với số liệu sinh tự động từ mã nguồn công khai:
 \begin{enumerate}
-\item \textbf{Hạng 1 của SemLoc là dòng LLM đoán.} Mã nguồn công bố cộng cho dòng LLM tự đoán một điểm thưởng lớn hơn
-mọi điểm ràng buộc --- chi tiết không có trong bài báo --- nên dòng đầu tiên của SemLoc \emph{luôn} là dòng đoán. Bỏ
-điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã chuẩn hóa và
-\RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã rà soát. Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM
-nhưng không đổi thứ hạng nào. Nói cách khác, bài báo tuyên bố quá mức (overclaim) về nguồn gốc độ chính xác
-(Mục~\ref{sec:overclaim}).
-\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
-bị dời khi rà soát (\LabaudAllBlank{} nằm trên dòng trống, \LabaudAllOffByOne{} lệch một dòng). Nhóm công bố hai bộ nhãn
-mới: \emph{đã chuẩn hóa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt, kiểm tra lại bằng
-duyệt mù). Trên nhãn đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc@3 biến mất (trên nhãn đã chuẩn hóa thì vẫn còn).
-\item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất, \textbf{FailLoc}
-(một lượt gọi LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi), hơn SemLoc \RqTwoRepairedAllLlmTestsDAccOne{} điểm Acc@1
-và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã chuẩn hóa, thắng ở Acc@1 trên cả ba bộ
-nhãn, và tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với
-\CostSemlocTokensK{} nghìn của SemLoc.
-\item \textbf{Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
-(Acc@3 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM-Direct), còn thêm độ phủ từng dòng làm Acc@1 đổi
-\AblRepairedAllCoverageEffectDAccOne{} điểm. CovGate chỉ giúp SemLoc một chút; kiểm chứng dòng nghi ngờ bằng bản
-sửa và biểu quyết (đánh giá trên tập dev) không cải thiện được prompt đơn giản; công cụ phân tích tĩnh (ruff, pyrefly) gần như không trúng dòng lỗi. Nguyên nhân chung:
-kiểm thử của bộ dữ liệu đủ để \emph{gợi ý} lỗi nhưng quá yếu để \emph{làm trọng tài} --- bản sửa nhỏ làm mọi kiểm thử
-đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng viên không có lỗi (tập dev).
-\item \textbf{Bảng kiểm tra bảy mục} cho đánh giá định vị lỗi bằng LLM, áp cho mọi phương pháp trong bài, và một gói tái
-hiện (Docker, nhật ký và bộ đệm lượt gọi LLM, mọi con số sinh tự động).
+\item \textbf{Hạng 1 của SemLoc là dòng LLM đoán:} mã nguồn cộng cho dòng LLM tự đoán một điểm thưởng lớn hơn mọi điểm
+ràng buộc mà bài báo không mô tả. Bỏ điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm (nhãn đã chuẩn
+hóa) và \RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm (đã rà soát); bước vá thử chiếm \CostCfSharePct\% lượt gọi mà không
+đổi thứ hạng nào. Bài báo tuyên bố quá mức (overclaim) về nguồn gốc độ chính xác (Mục~\ref{sec:overclaim}).
+\item \textbf{Gần một nửa nhãn không trỏ đúng dòng lỗi:} \LabaudAllMoved{}/\LabaudAllN{} nhãn gốc bị dời khi rà soát;
+trên nhãn đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc@3 biến mất.
+\item \textbf{FailLoc}, một lượt gọi LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi, hơn SemLoc ở Acc@1 trên
+cả ba bộ nhãn với chi phí thấp hơn nhiều (Bảng~\ref{tab:cai-tien}).
+\item \textbf{Thêm phức tạp không thu hẹp khoảng cách:} kiểm thử thất bại là tín hiệu chính (Acc@3
+\AblRepairedAllTestsEffectDAccThree{} điểm so với LLM-Direct) nhưng quá yếu để \emph{làm trọng tài}: bản sửa nhỏ làm
+mọi kiểm thử đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi.
+\item \textbf{Bảng kiểm tra bảy mục} cho đánh giá định vị lỗi bằng LLM và gói tái hiện (Docker, bộ đệm lượt gọi LLM).
 \end{enumerate}
-
-Bảng~\ref{tab:cai-tien} tóm tắt những điểm nhóm làm tốt hơn SemLoc, so trên cùng 200 chương trình của tập test và cùng
-mô hình Gemini 3.8 Flash (trung bình ba lần chạy; chênh lệch kèm khoảng tin cậy \ConstCiLevel\% bootstrap).
 
 \begin{table}[H]
 \centering
-\caption{Cải tiến so với SemLoc trên cùng điều kiện (tập test, Gemini 3.8 Flash)}
+\caption{Cải tiến so với SemLoc trên cùng 200 chương trình tập test, Gemini 3.8 Flash, trung bình ba lần chạy}
 \label{tab:cai-tien}
 {\setstretch{1.15}\small
 \begin{tabularx}{\linewidth}{@{}Xccl@{}}
 \toprule
 Tiêu chí & SemLoc & FailLoc & Chênh lệch [CI \ConstCiLevel\%] \\
 \midrule
-Acc@1, nhãn đã chuẩn hóa (\%) & \RqTwoRepairedAllSemlocAccOneMean & \textbf{\RqTwoRepairedAllLlmTestsAccOneMean} &
-  \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo; \RqTwoRepairedAllLlmTestsDAccOneHi] \\
-Acc@3, nhãn đã chuẩn hóa (\%) & \RqTwoRepairedAllSemlocAccThreeMean & \textbf{\RqTwoRepairedAllLlmTestsAccThreeMean} &
-  \RqTwoRepairedAllLlmTestsDAccThree{} [\RqTwoRepairedAllLlmTestsDAccThreeLo; \RqTwoRepairedAllLlmTestsDAccThreeHi] \\
-Acc@1, nhãn gốc (\%) & \RqTwoOriginalAllSemlocAccOneMean & \textbf{\RqTwoOriginalAllLlmTestsAccOneMean} &
-  \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo; \RqTwoOriginalAllLlmTestsDAccOneHi] \\
+Acc@1, nhãn đã chuẩn hóa (\%) & \RqTwoRepairedAllSemlocAccOneMean & \textbf{\RqTwoRepairedAllLlmTestsAccOneMean} & \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo; \RqTwoRepairedAllLlmTestsDAccOneHi] \\
+Acc@3, nhãn đã chuẩn hóa (\%) & \RqTwoRepairedAllSemlocAccThreeMean & \textbf{\RqTwoRepairedAllLlmTestsAccThreeMean} & \RqTwoRepairedAllLlmTestsDAccThree{} [\RqTwoRepairedAllLlmTestsDAccThreeLo; \RqTwoRepairedAllLlmTestsDAccThreeHi] \\
+Acc@1, nhãn gốc (\%) & \RqTwoOriginalAllSemlocAccOneMean & \textbf{\RqTwoOriginalAllLlmTestsAccOneMean} & \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo; \RqTwoOriginalAllLlmTestsDAccOneHi] \\
 Nghìn token mỗi CT & \CostSemlocTokensK & \textbf{\CostLlmTestsTokensK} & -- \\
 Lượt gọi LLM mỗi CT & \CostSemlocCalls & \textbf{\CostLlmTestsCalls} & -- \\
-Nhãn dùng để chấm & nhãn gốc & gốc và đã chuẩn hóa & -- \\
 Lặp và kiểm định & một lần chạy & ba lần, khoảng tin cậy & -- \\
 \bottomrule
 \end{tabularx}}
 \end{table}
 
-
-
-Chương~\ref{chap:that-bai} phân tích các ca thất bại và cơ chế khiến kiểm thử không làm được trọng tài;
-Chương~\ref{chap:dong-gop} trình bày quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ của kết quả.
-
-\section{Cấu trúc báo cáo}
-\label{sec:cau-truc}
-
-Chương~\ref{chap:tong-quan} tổng quan tài liệu và bộ từ khóa, trong đó phân tích ba bài báo được giao.
-Chương~\ref{chap:co-so} trình bày cơ sở lý thuyết về SBFL, lỗi ngữ nghĩa, SemLoc, phân tích tĩnh và động, và các công cụ
-thống kê. Chương~\ref{chap:phuong-phap} mô tả câu hỏi nghiên cứu, dữ liệu và các bộ nhãn, các phương pháp so sánh và thiết
-kế thực nghiệm. Chương~\ref{chap:ket-qua} trả lời ba câu hỏi nghiên cứu.
-Chương~\ref{chap:that-bai} phân tích các ca thất bại; Chương~\ref{chap:dong-gop} tổng hợp đóng góp,
-triết lý khoa học và các mối đe dọa.
-Chương~\ref{chap:ket-luan} kết luận và nêu hướng phát triển.
-Phụ lục hướng dẫn tái hiện toàn bộ kết quả và liệt kê các prompt.
-Mã nguồn, dữ liệu và nhật ký gọi LLM được công bố tại \url{https://github.com/doanan293/grounded-or-guessed}.
+Chương~\ref{chap:tong-quan}--\ref{chap:phuong-phap} trình bày tổng quan, cơ sở lý thuyết và thiết kế thực nghiệm;
+Chương~\ref{chap:ket-qua}--\ref{chap:ket-luan} trình bày kết quả, phân tích thất bại, đóng góp và kết luận. Mã nguồn, dữ
+liệu và nhật ký: \url{https://github.com/doanan293/grounded-or-guessed}.

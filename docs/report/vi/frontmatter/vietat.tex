@@ -2,7 +2,7 @@
 \addcontentsline{toc}{chapter}{Danh mục từ viết tắt và thuật ngữ}
 \def\GlossaryRowPav{FailLoc+Verify & Đề xuất rồi kiểm chứng: FailLoc đề xuất dòng nghi ngờ, bản sửa nhỏ và kiểm thử xác nhận \\}
 \def\GlossaryRowCov{FailLoc+Cov & FailLoc có thêm độ phủ từng dòng trong prompt \\}\def\GlossaryRowReviewed{SemFault-250 đã rà soát & Bộ dữ liệu trên với nhãn được LLM rà trước và thành viên nhóm duyệt \\}
-{\setstretch{1.2}
+{\setstretch{1.0}\small
 \begin{longtable}{@{}p{0.22\linewidth}p{0.73\linewidth}@{}}
 \toprule
 Viết tắt / thuật ngữ & Ý nghĩa \\
@@ -12,23 +12,18 @@ Bộ phán định & Quy trình tự động quyết định một dòng có ph�
 Bootstrap & Lấy mẫu lại có hoàn lại để ước lượng khoảng tin cậy; ở đây lấy mẫu theo chương trình, \ConstBootstrapDraws{} lần \\
 Grounded / guessed & Phần thứ hạng do bằng chứng thực thi quyết định / phần do LLM tự đoán \\
 Bản sửa hợp lệ bề ngoài & Bản sửa làm mọi kiểm thử đạt nhưng không sửa đúng chỗ lỗi (plausible patch) \\
-CI & Tích hợp liên tục: hệ thống tự chạy kiểm thử khi mã được đẩy lên kho \\
 Phân tích tĩnh / động & Phân tích mã không chạy chương trình / dựa trên việc chạy chương trình \\
 TDD & Phát triển hướng kiểm thử: viết kiểm thử trước khi viết mã \\
 Tuyên bố quá mức & Khẳng định mạnh hơn mức bằng chứng cho phép (overclaim) \\
-Phương pháp đối chứng & Phương pháp đơn giản dùng để so sánh (baseline) \\
 Prompt (lời nhắc) & Văn bản đầu vào gửi cho LLM \\
 Quy trình nhiều bước & Chuỗi các bước LLM và thực thi nối tiếp nhau (pipeline), như SemLoc \\
 Token & Đơn vị văn bản mà LLM xử lý và tính phí \\
 Acc@$k$ & Tỉ lệ chương trình có dòng lỗi nằm trong $k$ dòng bị nghi ngờ nhất (độ chính xác top-$k$) \\
-CF & Kiểm chứng phản thực tế (counterfactual verification): vá thử một dòng rồi chạy lại kiểm thử \\
 CI & Khoảng tin cậy (confidence interval), ở đây là khoảng \ConstCiLevel\% theo bootstrap \\
 CovGate & Cách bổ sung do nhóm thử: kết hợp độ phủ với điểm của SemLoc \\
 \GlossaryRowPav
-DD & Gỡ lỗi chia đôi (delta debugging) \\
 FailLoc & Phương pháp đề xuất (failure-guided localization): một lượt gọi LLM với mã nguồn và các kiểm thử thất bại \\
 \GlossaryRowCov
-GT & Dòng lỗi chuẩn (ground truth) của bộ dữ liệu \\
 LLM & Mô hình ngôn ngữ lớn (large language model) \\
 LLM-Direct & Chế độ dự đoán trực tiếp của SemLoc: một lượt gọi LLM chỉ có mã nguồn \\
 RQ & Câu hỏi nghiên cứu (research question) \\

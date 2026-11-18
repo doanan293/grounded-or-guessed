@@ -4,274 +4,133 @@
 \section{Câu hỏi nghiên cứu và giả thuyết}
 \label{sec:rq}
 
-\subsection{Ba câu hỏi nghiên cứu}
+\textbf{RQ1 (tái hiện):} số liệu của SemLoc có tái hiện được không, và đổi ra sao khi chấm công bằng, bỏ thành phần
+không có trong bài báo, kiểm tra lại dòng lỗi chuẩn và đổi mô hình? \textbf{RQ2 (LLM thật sự cần gì?):} một prompt có
+kiểm thử thất bại so với SemLoc thế nào về độ chính xác và chi phí; kiểm thử thất bại hay độ phủ tạo ra khác biệt; các
+cách bổ sung và phân tích tĩnh thêm được gì; độ chính xác của SemLoc đến từ bằng chứng thực thi hay dòng LLM tự đoán?
+\textbf{RQ3 (độ bền):} kết luận có giữ trên BugsInPy, khi đổi tên định danh, trên năm mô hình và cả ba bộ nhãn?
 
-\textbf{RQ1 (tái hiện và kiểm tra cách đánh giá):} các con số công bố của SemLoc có tái hiện được từ dữ liệu và mã nguồn
-của tác giả không; chúng thay đổi thế nào khi (a) chấm điểm công bằng, (b) bỏ các thành phần không được mô tả trong bài
-báo, (c) kiểm tra lại chính các dòng lỗi chuẩn của bộ dữ liệu, (d) chạy lại với mô hình khác?
-
-\textbf{RQ2 (LLM thật sự cần gì?):} trên cùng các chương trình và cùng mô hình, (a) một prompt duy nhất có kiểm thử thất
-bại so với quy trình nhiều bước SemLoc thế nào về độ chính xác và chi phí; (b) trong prompt đó, thông tin nào tạo ra khác
-biệt --- kiểm thử thất bại hay độ phủ từng dòng; (c) các cách bổ sung (CovGate cho SemLoc; kiểm chứng dòng nghi ngờ bằng
-bản sửa; biểu quyết nhiều câu trả lời) và công cụ phân tích tĩnh có thêm được gì; (d) bao nhiêu phần độ chính xác của
-SemLoc đến từ bằng chứng thực thi, bao nhiêu từ dòng LLM tự đoán?
-
-\textbf{RQ3 (độ bền):} các kết luận của RQ2 có còn đúng (a) trên lỗi thật của BugsInPy, (b) khi đổi tên mọi định danh
-và xóa chú thích của chương trình (kiểm tra ghi nhớ), (c) trên năm mô hình thuộc các họ khác nhau, (d) trên cả ba bộ nhãn?
-
-\subsection{Giả thuyết và tiêu chí bác bỏ}
-
-\textbf{H1:} \emph{ở hạng 1, độ chính xác của SemLoc đến từ dòng LLM tự đoán; bằng chứng thực thi đóng góp ở top-3}. Bác
-bỏ nếu riêng phổ vi phạm đạt Acc@1 không thấp hơn SemLoc, hoặc nếu ở top-3 phổ không làm tăng độ chính xác so với riêng
-dòng đoán. \textbf{H2:} \emph{một prompt có kiểm thử thất bại không kém quy trình nhiều bước}; bác bỏ nếu khoảng tin cậy
-của chênh lệch Acc@1 hoặc Acc@3 so với SemLoc nằm hẳn dưới 0. \textbf{H3:} \emph{thêm độ phủ từng dòng vào prompt cải
-thiện kết quả}; bác bỏ nếu khoảng tin cậy của chênh lệch không nằm hẳn trên 0. Mọi giả thuyết được kiểm trên cả ba bộ
-nhãn.
+\textbf{H1:} ở hạng 1, độ chính xác của SemLoc đến từ dòng LLM tự đoán, bằng chứng thực thi chỉ góp ở top-3 (bác bỏ nếu
+riêng phổ vi phạm đạt Acc@1 không thấp hơn SemLoc). \textbf{H2:} prompt có kiểm thử thất bại không kém SemLoc (bác bỏ nếu
+khoảng tin cậy của chênh lệch Acc@1 hoặc Acc@3 nằm hẳn dưới 0). \textbf{H3:} thêm độ phủ từng dòng vào prompt cải thiện
+kết quả (bác bỏ nếu khoảng tin cậy không nằm hẳn trên 0).
 
 \section{Dữ liệu}
 \label{sec:du-lieu}
 
-\subsection{SemFault-250 và cách chia tập}
+\textbf{SemFault-250}~\cite{yang2026semloc} gồm 250 chương trình Python một hàm, mỗi chương trình có một lỗi cài vào và
+khoảng mười kiểm thử; nhóm chia cố định 50 chương trình làm tập dev (chỉ để chọn tham số) và 200 làm tập test.
 
-SemFault-250~\cite{yang2026semloc} gồm 250 chương trình Python một hàm, mỗi chương trình có đúng một lỗi được cài vào và
-khoảng mười kiểm thử. Nhóm chia cố định 50 chương trình làm tập phát triển (dev) --- chỉ dùng để chọn tham số --- và 200
-chương trình làm tập kiểm tra (test) để báo cáo, phân tầng theo nhãn lỗi (mục~\ref{sec:loi-ngu-nghia}) với hạt giống cố
-định. Vì nhiều chương trình được sinh từ cùng một khuôn mẫu, nhóm gom các chương trình có cấu trúc giống nhau thành cụm
-(độ tương đồng 4-gram Jaccard từ bốn phần năm trở lên, trên dạng chuẩn hóa của mã) để dùng trong bootstrap theo cụm.
+\textbf{Bộ đã chuẩn hóa.} Có \GtBlankN{} dòng lỗi chuẩn là dòng trống và \GtNotExecutedN{} chương trình không có kiểm
+thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{bộ phán định sửa tối thiểu} (Hình~\ref{fig:sua-nhan}): một
+dòng là vị trí lỗi nếu một thay đổi nhỏ tại dòng đó làm \emph{mọi} kiểm thử đạt. LLM chỉ đề xuất bản sửa, kiểm thử quyết
+định; dòng lân cận chỉ được tìm khi dòng gốc không chạy tới được. Kết quả: \GtConfirmedN{} nhãn được xác nhận,
+\GtCorrectedN{} được dời vị trí, \GtUnverifiedN{} chưa kiểm chứng được (giữ vị trí gốc) và \GtUnverifiableN{} bị loại;
+bộ nhãn đã chuẩn hóa còn \GtRepairedN{} chương trình.
 
-\subsection{SemFault-250 đã chuẩn hóa: kiểm chứng dòng lỗi chuẩn bằng thực thi}
-
-Kiểm tra dòng lỗi chuẩn cho thấy \GtBlankN{} dòng là dòng trống và \GtNotExecutedN{} chương trình không có kiểm thử thất
-bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{bộ phán định sửa tối thiểu}: một dòng được coi là vị trí lỗi nếu thay nó
-bằng một dòng khác (hoặc chèn một dòng vào dòng trống, với lỗi thiếu mã) với \emph{thay đổi nhỏ} làm \emph{mọi} kiểm thử
-đạt. LLM chỉ đề xuất các bản sửa ứng viên (GPT-6 luna, hai rồi bốn lần thử ở $T = \ConstTemperature$; lượt thứ hai với
-Claude Sonnet 5.5 cho các dòng còn chưa kiểm chứng); kiểm thử quyết định. Bản sửa được coi là nhỏ khi khoảng cách chỉnh
-sửa theo từ tố (định danh, số, từng ký tự dấu) so với dòng gốc tối đa là hai hoặc tối đa một phần ba số từ tố của dòng.
-Các dòng lân cận (trong phạm vi bốn dòng) chỉ được tìm khi không kiểm thử thất bại nào chạy tới dòng chuẩn gốc; vì vậy
-bộ phán định không phát hiện được trường hợp hai dòng cùng sửa được lỗi. Kết quả: \GtConfirmedN{} chương trình được \emph{xác nhận} (sửa được ngay
-tại dòng chuẩn), \GtCorrectedN{} được \emph{sửa vị trí} (dòng chuẩn không chạy tới được nhưng một dòng gần đó sửa được),
-\GtUnverifiedN{} \emph{chưa kiểm chứng được} (dòng chuẩn chạy tới được nhưng không bản sửa đề xuất nào đạt) và
-\GtUnverifiableN{} \emph{không kiểm chứng được} (bị loại). Vị trí ``sửa'' nằm trên dòng trống không phải câu lệnh nào để xếp hạng
-nên bị loại; bộ nhãn đã chuẩn hóa còn \GtRepairedN{} chương trình. Mọi kết quả được báo cáo trên cả bộ gốc và bộ đã chuẩn hóa.
-Hình~\ref{fig:sua-nhan} tóm tắt quy trình.
-
-\begin{figure}[H]
-\centering
+\begin{figure}[H]\centering
 \input{figures/sua-nhan}
-\caption{Bộ phán định sửa tối thiểu: LLM chỉ đề xuất bản sửa, kiểm thử quyết định dòng nào là dòng lỗi. Nhãn được xác nhận hoặc dời vị trí khi một bản sửa nhỏ làm mọi kiểm thử đạt; nhãn chưa kiểm chứng giữ nguyên vị trí gốc}
-\label{fig:sua-nhan}
+\caption{Bộ phán định sửa tối thiểu: LLM chỉ đề xuất bản sửa, kiểm thử quyết định dòng nào là dòng lỗi. Nhãn được xác nhận hoặc dời vị trí khi một bản sửa nhỏ làm mọi kiểm thử đạt; nhãn chưa kiểm chứng giữ nguyên vị trí gốc}\label{fig:sua-nhan}
 \end{figure}
 
-%
-\subsection{SemFault-250 đã rà soát: LLM rà trước, nhóm duyệt}
+\textbf{Bộ đã rà soát và duyệt mù.} Một LLM (Claude Fable 5.1) đọc chương trình, kiểm thử và nhãn gốc của cả 250
+chương trình và nhận định nhãn đúng, sai (kèm dòng đề xuất) hay lỗi hai dòng. \ReviewReviewersN{} thành viên nhóm duyệt
+\ReviewHumanN{} nhãn (các nhãn đã dời và mọi nhãn LLM cho là sai), đồng ý với LLM ở \ReviewAgreeN{}/\ReviewHumanN{} ca;
+trưởng nhóm sửa thêm \ReviewOverrideN{} ca có bằng chứng chạy kiểm thử; \LabaudAllExtended{} nhãn được thêm dòng thứ hai
+chỉ theo LLM. Bộ \emph{đã rà soát} có đủ \LabaudAllN{} chương trình, \LabaudAllTwoLine{} nhãn hai dòng. Vòng \emph{duyệt
+mù} trên \BlindBlindAllPrograms{} chương trình ngẫu nhiên kiểm tra lại bộ này: hai thành viên chưa từng xem chương trình
+duyệt độc lập, dòng ứng viên được xáo và không kèm nhận định của LLM; \BlindAnswersExcluded{}/\BlindAnswersTotal{} câu
+dẫn lại tệp duyệt cũ bị loại theo quy tắc đặt trước. Bộ đã chuẩn hóa chỉ do kiểm thử quyết định nên dùng cho kết quả
+chính; bộ đã rà soát có nhãn do LLM đề xuất nên có thể có lợi cho phương pháp dùng LLM (Chương~\ref{chap:dong-gop}) và
+chỉ là góc nhìn độ nhạy (Bảng~\ref{tab:ba-bo-nhan}, Hình~\ref{fig:ra-soat}).
 
-Bộ phán định sửa tối thiểu chỉ có thể xác nhận một dòng khi tìm được bản sửa nhỏ, và chỉ tìm dòng lân cận khi dòng gốc
-không chạy tới được. Để kiểm tra \emph{mọi} nhãn, nhóm làm thêm một vòng rà soát hai bước. (1) Một LLM (Claude Fable 5.1,
-mức suy luận cao) đọc toàn bộ chương trình, kiểm thử và nhãn gốc của cả 250 chương trình và cho một nhận định: nhãn
-đúng, nhãn sai (kèm dòng đề xuất), hoặc lỗi trải trên hai dòng (cả hai đều chấp nhận được); với nhiều ca, LLM tự chạy
-kiểm thử trên bản sửa đề xuất để kiểm tra. (2) \ReviewReviewersN{} thành viên của nhóm duyệt lại \ReviewHumanN{} nhãn: \GtCorrectedN{} nhãn bộ phán định đã dời
-và mọi nhãn LLM cho là nằm sai dòng; mỗi ca có đoạn mã, liên kết tới chương trình và kiểm thử, các dòng ứng viên và nhận
-định của LLM để tham khảo. Người duyệt có xem gợi ý của LLM và đồng ý với gợi ý ở \ReviewAgreeN{}/\ReviewHumanN{} ca. Trưởng nhóm sửa thêm \ReviewOverrideN{} ca
-có bằng chứng chạy kiểm thử (hai ca lỗi hai dòng mà sửa một dòng không đủ, hai ca lỗi thiếu mã mà người duyệt chọn điểm
-chèn là dòng trống --- dùng câu lệnh \texttt{return} như các chương trình cùng họ --- và một ca LLM trích đúng câu lệnh
-nhưng ghi nhầm số dòng). Các nhãn LLM cho là đúng và \LabaudAllExtended{} nhãn được thêm dòng thứ hai (lỗi hai dòng) chỉ dựa trên
-nhận định của LLM, không qua người duyệt. Kết quả là bộ \emph{đã rà soát}: đủ \LabaudAllN{} chương trình, không nhãn nào trên dòng trống,
-\LabaudAllTwoLine{} nhãn hai dòng.
-
-\textbf{Duyệt mù.} Để kiểm tra lại bộ đã rà soát mà không bị gợi ý của LLM dẫn dắt, nhóm làm thêm một vòng duyệt mù trên
-\BlindBlindAllPrograms{} chương trình chọn ngẫu nhiên với hạt giống cố định: 15 nhãn bộ phán định đã dời, 15 nhãn LLM cho là
-sai (cả hai nhóm đã có người duyệt trước đó), 20 nhãn LLM giữ nguyên và 10 nhãn hai dòng (hai nhóm chưa ai duyệt). Mỗi
-chương trình do hai thành viên \emph{chưa từng xem} nó duyệt độc lập; các dòng ứng viên (hợp của nhãn gốc, dòng bộ phán
-định dời tới, dòng LLM đề xuất và nhãn đã rà soát, bổ sung dòng mã lân cận cho đủ bốn) được đánh chữ theo thứ tự ngẫu
-nhiên, không ghi dòng nào từ đâu, không có nhận định của LLM. Thiết kế mẫu và cách chia được cố định trong mã
-(\texttt{scripts/blind\_review.py}) trước khi có câu trả lời. Khi đọc câu trả lời, nhóm thấy
-\BlindAnswersExcluded{} trên \BlindAnswersTotal{} câu có ghi chú dẫn lại tệp duyệt lần trước (có gợi ý của LLM); các câu
-này không còn mù và bị loại khỏi thống kê duyệt mù (quy tắc loại ghi trong mã, đặt ra trước khi tính độ đồng thuận).
-
-Bảng~\ref{tab:ba-bo-nhan} tóm tắt ba bộ nhãn. Bộ \emph{đã chuẩn hóa} chỉ do kiểm thử quyết định nên được dùng cho kết quả
-chính; bộ \emph{đã rà soát} đầy đủ hơn nhưng nhãn do một LLM đề xuất, nên các phương pháp dùng LLM có thể được lợi (Chương~\ref{chap:dong-gop}) --- nó được dùng như một góc nhìn độ nhạy.
-
-\begin{table}[H]
-\centering
-\caption{Ba bộ dòng lỗi chuẩn dùng trong tiểu luận}
-\label{tab:ba-bo-nhan}
+\begin{table}[H]\centering
+\caption{Ba bộ dòng lỗi chuẩn dùng trong tiểu luận}\label{tab:ba-bo-nhan}
 \small
 \begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
-\toprule
-Bộ nhãn & Ai quyết định & Vai trò \\
-\midrule
+\toprule Bộ nhãn & Ai quyết định & Vai trò \\ \midrule
 Gốc & Tác giả SemLoc & So với bài báo gốc \\
 Đã chuẩn hóa & Kiểm thử (LLM chỉ đề xuất bản sửa) & Kết quả chính; LLM không phán đoán vị trí \\
 Đã rà soát & LLM rà trước, thành viên nhóm duyệt, trưởng nhóm sửa ca có bằng chứng chạy kiểm thử & Góc nhìn độ nhạy; đủ mọi chương trình \\
-\bottomrule
-\end{tabularx}
+\bottomrule\end{tabularx}
 \end{table}
-% lan2: reviewed labels, blind review, label-set table
 
-Hình~\ref{fig:ra-soat} tóm tắt hai bước rà soát và vòng duyệt mù.
-
-\begin{figure}[H]
-\centering
+\begin{figure}[H]\centering
 \input{figures/ra-soat-nhan}
-\caption{Rà soát nhãn hai bước (LLM rà trước, thành viên nhóm duyệt) và vòng duyệt mù kiểm tra lại bộ nhãn đã rà soát mà không có gợi ý của LLM}
-\label{fig:ra-soat}
+\caption{Rà soát nhãn hai bước (LLM rà trước, thành viên nhóm duyệt) và vòng duyệt mù kiểm tra lại bộ nhãn đã rà soát mà không có gợi ý của LLM}\label{fig:ra-soat}
 \end{figure}
 
-\subsection{Lỗi thật BugsInPy}
-
-Nhóm dựng môi trường cho các lỗi của dự án youtube-dl trong BugsInPy~\cite{widyasari2020} và giữ những lỗi thỏa đủ bốn
-điều kiện: môi trường cài được, kiểm thử của lỗi tái hiện được thất bại trên phiên bản lỗi, đạt trên phiên bản đã sửa,
-và đo được độ phủ --- được 31 lỗi. Hàm đích là hàm chứa dòng bị lập trình viên sửa mà kiểm thử thất bại được khai báo
-thực sự chạy qua; dòng lỗi chuẩn là các dòng bị sửa trong hàm đó. Kiểm thử thất bại do môi trường (không được BugsInPy
-khai báo) bị loại khỏi ma trận độ phủ.
-
-\subsection{Biến thể đổi tên định danh}
-
-Để kiểm tra khả năng mô hình ghi nhớ SemFault-250~\cite{ramos2024memorize,xu2024contam}, nhóm đổi tên mọi định danh do
-chương trình tự định nghĩa (hàm, tham số, biến, hằng) thành tên vô nghĩa, xóa chú thích và docstring nhưng \emph{giữ
-nguyên số dòng}, chỉ giữ các tên mà kiểm thử phụ thuộc. Mỗi biến thể được kiểm tra tự động: cùng số dòng, cùng kết quả
-đạt/không đạt của từng kiểm thử như bản gốc; chương trình nào lệch bị loại. Kết quả là 199 chương trình của tập test.
+\textbf{BugsInPy và biến thể đổi tên.} Từ dự án youtube-dl của BugsInPy~\cite{widyasari2020}, nhóm giữ 31 lỗi tái hiện
+được (kiểm thử thất bại trên bản lỗi, đạt trên bản sửa, đo được độ phủ); dòng lỗi chuẩn là các dòng bị sửa trong hàm mà
+kiểm thử thất bại chạy qua. Để kiểm tra ghi nhớ~\cite{ramos2024memorize,xu2024contam}, mọi định danh tự định nghĩa được
+đổi thành tên vô nghĩa và chú thích bị xóa, giữ nguyên số dòng và kết quả kiểm thử: còn 199 chương trình của tập test.
 
 \section{Các phương pháp so sánh}
 \label{sec:phuong-phap-so-sanh}
 
-Bảng~\ref{tab:phuong-phap} tóm tắt năm phương pháp của so sánh chính; Hình~\ref{fig:thiet-ke} là thiết kế thực nghiệm.
+Bảng~\ref{tab:phuong-phap} tóm tắt năm phương pháp của so sánh chính, Hình~\ref{fig:thiet-ke} là thiết kế thực nghiệm.
+LLM-Direct là chế độ dự đoán trực tiếp của SemLoc; SemLoc chạy bằng mã nguồn gốc của tác giả, chỉ thay lớp gọi LLM.
 
-\begin{table}[H]
-\centering
-\caption{Các phương pháp trong so sánh chính: đầu vào, số lượt gọi LLM trung bình mỗi chương trình (tập test, Gemini 3.8 Flash) và việc có chạy kiểm thử hay không}
-\label{tab:phuong-phap}
+\begin{table}[H]\centering
+\caption{Các phương pháp trong so sánh chính: đầu vào, số lượt gọi LLM trung bình mỗi chương trình (tập test, Gemini 3.8 Flash) và việc có chạy kiểm thử hay không}\label{tab:phuong-phap}
 {\setstretch{1.15}\small
 \begin{tabularx}{\linewidth}{@{}lXcc@{}}
-\toprule
-Phương pháp & Đầu vào & Lượt gọi LLM & Chạy kiểm thử \\
-\midrule
+\toprule Phương pháp & Đầu vào & Lượt gọi LLM & Chạy kiểm thử \\ \midrule
 SBFL (Ochiai) & Ma trận độ phủ kiểm thử $\times$ dòng & -- & có \\
 LLM-Direct & Chỉ mã nguồn & \CostLlmDirectCalls & không \\
 SemLoc & Mã nguồn; ràng buộc do LLM viết được chèn vào và chạy cùng kiểm thử & \CostSemlocCalls & có \\
 SemLoc−Bonus & Như SemLoc, bỏ điểm thưởng cho dòng LLM tự đoán & \CostSemlocCalls & có \\
 \textbf{FailLoc} & Mã nguồn, tên và dòng lỗi đầu tiên của từng kiểm thử thất bại & \CostLlmTestsCalls & có \\
-\bottomrule
-\end{tabularx}}
+\bottomrule\end{tabularx}}
 \end{table}
 
-\begin{figure}[H]
-\centering
+\begin{figure}[H]\centering
 \input{figures/thiet-ke}
-\caption{Thiết kế thực nghiệm của so sánh chính: mọi phương pháp chạy trên cùng các chương trình của tập test, cùng mô hình, trên hai bộ nhãn, mỗi cấu hình có LLM chạy ba lần}
-\label{fig:thiet-ke}
+\caption{Thiết kế thực nghiệm của so sánh chính: mọi phương pháp chạy trên cùng các chương trình của tập test, cùng mô hình, trên hai bộ nhãn, mỗi cấu hình có LLM chạy ba lần}\label{fig:thiet-ke}
 \end{figure}
 
-\subsection{Các phương pháp có sẵn}
+\textbf{FailLoc} (Failure-guided Localization), phương pháp đề xuất của nhóm, là một lượt gọi LLM
+($T = \ConstTemperature$) với mã nguồn đánh số dòng, số kiểm thử đạt/không đạt, câu ``chương trình có đúng một dòng
+lỗi'', tên và dòng thông báo lỗi đầu tiên của mỗi kiểm thử thất bại; LLM trả về năm dòng nghi ngờ nhất
+(Hình~\ref{fig:failloc-vd}; prompt trong kho mã, tệp \texttt{src/flx/direct\_cov.py}, cố định trước khi xem tập test).
+Ý tưởng này lấy từ thực tế công nghiệp~\cite{medeiros2026crash} và từ kết quả nhật ký lỗi giúp LLM định vị~\cite{wu2023llmfl}. Biến thể \textbf{FailLoc+Cov} chú thích thêm cho mỗi dòng số kiểm thử thất bại và thành công
+chạy qua nó: FailLoc so với LLM-Direct đo tác dụng của kiểm thử thất bại, FailLoc+Cov so với FailLoc đo tác dụng của độ phủ.
 
-\begin{itemize}
-\item \textbf{SBFL (Ochiai)}, \textbf{SBFL (DStar)} trên ma trận độ phủ do nhóm thu thập (mỗi kiểm thử một ngữ cảnh độ phủ).
-\item \textbf{LLM-Direct}: chế độ dự đoán trực tiếp của SemLoc --- một lượt gọi chỉ có mã nguồn chương trình, LLM
-trả về các dòng nghi ngờ; không có thông tin kiểm thử nào.
-\item \textbf{SemLoc} như phát hành, chạy qua mã nguồn gốc của tác giả, chỉ thay lớp gọi LLM bằng cổng của nhóm
-(cùng prompt, cùng logic).
-\item \textbf{SemLoc−Bonus}: SemLoc bỏ điểm thưởng \ConstPriorWeight{} mà mã nguồn công bố cộng cho dòng LLM tự đoán;
-chỉ còn điểm từ phổ vi phạm ràng buộc.
-\end{itemize}
-
-\subsection{FailLoc: phương pháp đề xuất}
-
-\textbf{FailLoc} (Failure-guided Localization --- định vị lỗi dẫn dắt bởi kiểm thử thất bại) là phương pháp chính của nhóm.
-Nó làm điều mà các khảo sát cho thấy nhiều lập trình viên đang làm: một lượt gọi LLM duy nhất (nhiệt độ
-$T = \ConstTemperature$) với mã nguồn đánh số dòng, số kiểm thử đạt/không đạt, câu ``chương trình có đúng một dòng lỗi'',
-và tên cùng dòng thông báo lỗi đầu tiên của mỗi kiểm thử thất bại; LLM trả về năm dòng nghi ngờ nhất dưới dạng JSON
-(nội dung prompt ở Phụ lục~\ref{chap:phu-luc}). Prompt được
-thiết kế trước khi xem kết quả trên tập test và không được tinh chỉnh. Ý tưởng đưa thông tin sẵn có vào prompt thay vì
-xây quy trình nhiều bước lấy từ báo cáo công nghiệp~\cite{medeiros2026crash} và các nghiên cứu cho thấy nhật ký lỗi
-giúp LLM định vị tốt hơn~\cite{wu2023llmfl}. Hình~\ref{fig:failloc-vd} là prompt thật và câu trả lời của FailLoc trên
-chương trình \texttt{votes\_apportion}.
-
-\begin{figure}[H]
-\centering
+\begin{figure}[H]\centering
 \input{../generated/vi/fig_failloc_votes_apportion}
-\caption{FailLoc trên \texttt{votes\_apportion} (lượt chạy 1, Gemini 3.8 Flash): prompt gửi cho LLM (các dòng ngoài hàm được lược bớt) và năm dòng LLM trả về; dòng lỗi theo nhãn đứng hạng 1}
-\label{fig:failloc-vd}
+\caption{FailLoc trên \texttt{votes\_apportion} (lượt chạy 1, Gemini 3.8 Flash): prompt gửi cho LLM (các dòng ngoài hàm được lược bớt) và năm dòng LLM trả về; dòng lỗi theo nhãn đứng hạng 1}\label{fig:failloc-vd}
 \end{figure}
 
-%
-\subsection{Ablation: tách độ phủ khỏi kiểm thử thất bại}
+\textbf{Các cách bổ sung.} \emph{CovGate} bổ sung bằng chứng độ phủ cho điểm dòng của SemLoc qua bốn thành phần bật/tắt
+được (cổng độ phủ, cộng $\lambda\cdot$Ochiai với $\lambda \in \{\ConstLambdaGrid\}$, xếp lại bằng kiểm chứng phản thực
+tế, chỉ thưởng dòng đoán khi có bằng chứng thực thi); cấu hình chọn trên tập dev chỉ còn là phá hòa bằng Ochiai
+($\lambda = \ConstLambdaOriginal$ trên bộ gốc, $\lambda = \ConstLambdaRepaired$ trên bộ đã chuẩn hóa).
+\emph{FailLoc+Verify} (Hình~\ref{fig:verify}) dùng kiểm thử làm trọng tài: với $k$ dòng đầu của FailLoc, LLM viết một bản
+sửa nhỏ tại dòng đó, và dòng có bản sửa làm mọi kiểm thử đạt được đưa lên đầu; lưới \PavGridSize{} cấu hình được đánh
+giá offline trên tập dev với quy tắc chọn cố định trước. \emph{FailLoc+Vote} gộp ba câu trả lời bằng tổng nghịch đảo hạng.
 
-Biến thể \emph{FailLoc+Cov} giữ nguyên prompt trên và chú thích thêm cho mỗi dòng số kiểm thử thất
-bại và thành công chạy qua nó (cùng một câu giải thích chú thích). Hai so sánh ghép cặp tách hai nguồn thông tin:
-(FailLoc) so với LLM-Direct đo tác dụng của kiểm thử thất bại; (FailLoc+Cov) so
-với (FailLoc) đo tác dụng của độ phủ.
-
-\subsection{Các cách bổ sung}
-
-\textbf{CovGate} lấy điểm dòng của SemLoc và bổ sung bằng chứng độ phủ qua bốn thành phần có thể bật/tắt:
-(1) \emph{cổng độ phủ} --- bỏ các dòng không kiểm thử thất bại nào chạy qua; (2) \emph{cộng} $\lambda\cdot$Ochiai vào điểm
-của dòng, với $\lambda \in \{\ConstLambdaGrid\}$; (3) \emph{xếp lại bằng kết quả kiểm chứng phản thực tế}; (4) \emph{chỉ
-thưởng khi có căn cứ} --- giữ điểm thưởng cho dòng LLM đoán chỉ khi dòng đó có bằng chứng thực thi. Tổ hợp tham số được
-chọn chỉ trên tập dev; cấu hình được chọn không bật cổng độ phủ, giữ nguyên điểm thưởng và dùng
-$\lambda = \ConstLambdaOriginal$ (bộ gốc) hoặc $\lambda = \ConstLambdaRepaired$ (bộ đã chuẩn hóa) --- tức là một bước \emph{phá
-hòa bằng Ochiai} cho SemLoc.
-
-\textbf{Đề xuất rồi kiểm chứng} dùng kiểm thử làm trọng tài cho vị trí lỗi: (1) FailLoc đề xuất các dòng
-nghi ngờ; (2) với $k$ dòng đầu, LLM viết một bản sửa nhỏ tại đúng dòng đó (cùng bộ đề xuất bản sửa và cùng tiêu chí
-``thay đổi nhỏ'' như bộ phán định nhãn), chương trình đã vá được chạy với bộ kiểm thử; dòng có bản sửa làm mọi kiểm thử
-đạt được đưa lên đầu. Tham số $k \in \{2, 3\}$, số lần thử mỗi dòng (1 hoặc 2), thứ tự giữa các dòng được xác nhận (theo
-LLM hoặc theo kích thước bản sửa) và giới hạn kích thước bản sửa (1, 2, 3 từ tố hoặc không giới hạn) tạo thành một lưới
-\PavGridSize{} cấu hình. Mọi lần thử được ghi lại, nên cả lưới được đánh giá offline từ một lượt chạy với cấu hình rộng
-nhất (3 dòng, 2 lần thử) trên \emph{tập dev}, 3 lần. Quy tắc chọn được cố định trong mã trước khi chạy: Acc@1 trung bình
-trên bộ nhãn gốc và bộ đã rà soát (không dùng bộ đã chuẩn hóa vì bộ đó được dựng bằng chính cơ chế sửa thử).
-
-\textbf{Biểu quyết}: gộp ba câu trả lời của FailLoc bằng tổng nghịch đảo hạng, cũng trên tập dev.
-
-Hình~\ref{fig:verify} là quy trình của FailLoc+Verify và lý do nó không cải thiện được FailLoc.
-
-\begin{figure}[H]
-\centering
+\begin{figure}[H]\centering
 \input{figures/de-xuat-kiem-chung}
-\caption{FailLoc+Verify (đề xuất rồi kiểm chứng): kiểm thử được dùng làm trọng tài cho vị trí lỗi; trên bộ dữ liệu này kiểm thử quá yếu nên bản sửa nhỏ ở dòng không lỗi cũng thường làm mọi kiểm thử đạt}
-\label{fig:verify}
+\caption{FailLoc+Verify (đề xuất rồi kiểm chứng): kiểm thử được dùng làm trọng tài cho vị trí lỗi; trên bộ dữ liệu này kiểm thử quá yếu nên bản sửa nhỏ ở dòng không lỗi cũng thường làm mọi kiểm thử đạt}\label{fig:verify}
 \end{figure}
 
-\subsection{Phân tích tĩnh}
-
-Ruff (luật mặc định và mọi luật) và pyrefly (kiểm tra kiểu), phiên bản cố định, được chạy trên cả 250 chương trình. Một
-chương trình được tính là ``trúng'' khi có cảnh báo nằm đúng dòng lỗi chuẩn. Để biết con số trúng có ý nghĩa không, nhóm
-tính số trúng kỳ vọng nếu các dòng có cảnh báo được rải ngẫu nhiên trên các dòng mã của chương trình.
-% lan2: ablation, additions, static analysis
+\textbf{Phân tích tĩnh.} Ruff và pyrefly (phiên bản cố định) chạy trên cả 250 chương trình; một chương trình ``trúng''
+khi có cảnh báo đúng dòng lỗi chuẩn, và số trúng được so với số trúng kỳ vọng nếu cảnh báo rải ngẫu nhiên.
 
 \section{Kiểm tra cách đánh giá và phân rã đóng góp}
 \label{sec:audit-phan-ra}
 
-\subsection{Kiểm tra cách đánh giá của SemLoc}
-
-Từ nhật ký công bố của tác giả, nhóm tính lại mọi cấu hình theo hai cách: \emph{cách chấm của tác giả} (phá hòa theo
-thứ tự dòng, gỡ lỗi chia đôi trúng bất kỳ dòng nào tính là hạng 1, chương trình chạy lỗi bị loại khỏi mẫu số) và
-\emph{cách chấm công bằng} (hạng trung bình khi hòa, mẫu số cố định, công thức~\eqref{eq:acck}). Nhóm cũng loại bỏ lần
-lượt các thành phần không được mô tả trong bài báo (điểm thưởng dòng đoán) và kiểm tra bước kiểm chứng phản thực tế có
-làm thay đổi thứ hạng hay không.
-
-\subsection{Phân rã ``grounded hay guessed''}
-
-Điểm dòng của SemLoc là tổng của hai tín hiệu: phổ vi phạm ràng buộc (bằng chứng thực thi) và điểm thưởng cho dòng LLM
-tự đoán. Nhóm định nghĩa trò chơi hai người chơi \{dòng đoán, phổ\}: $v(S)$ là Acc@$k$ khi chỉ giữ các tín hiệu trong
-$S$; khi giữ cả hai, điểm dòng trùng đúng với SemLoc như phát hành. Giá trị Shapley~\eqref{eq:shapley} chia Acc@$k$ của
-SemLoc cho hai tín hiệu; một trò chơi mở rộng bốn người chơi thêm độ phủ (Ochiai) và xếp lại bằng kiểm chứng phản thực tế.
+Từ nhật ký công bố của tác giả, nhóm tính lại mọi cấu hình theo \emph{cách chấm của tác giả} (phá hòa theo thứ tự dòng,
+chương trình chạy lỗi bị loại khỏi mẫu số) và \emph{cách chấm công bằng} (công thức~\eqref{eq:acck}), rồi bỏ lần lượt
+các thành phần không được mô tả. Để phân rã ``grounded hay guessed'', giá trị Shapley~\eqref{eq:shapley} chia Acc@$k$
+của SemLoc cho hai tín hiệu \{dòng đoán, phổ\} (bản mở rộng thêm Ochiai và kiểm chứng phản thực tế).
 
 \section{Thiết lập thực nghiệm}
 \label{sec:thiet-lap}
 
-\subsection{Mô hình và hạ tầng}
-
-Mô hình chính là Gemini 3.8 Flash; RQ3 thêm GPT-6 luna, Claude Sonnet 5.5, gpt-oss-120b (mã nguồn mở) và Gemini 3.5
-Flash-Lite trên một tập con cố định 50 chương trình của tập test; Claude Sonnet 4.6 chỉ dùng để đối chiếu với nhật ký của
-tác giả. Mọi mô hình chạy ở mức suy luận mặc định của nhà cung cấp, qua một cổng tương thích OpenAI; SemLoc chạy ở nhiệt
-độ $T = \ConstTemperature$ như cấu hình chính của bài báo. Mọi lượt gọi LLM được ghi nhật ký (mô hình thực sự trả lời,
-số token, thời gian, lỗi) và lưu đệm theo nội dung và mã lượt chạy, nên toàn bộ thực nghiệm phát lại được mà không gọi
-mạng.
-
-\subsection{Lặp, kiểm tra sức khỏe lượt chạy và thống kê}
-
-Mỗi cấu hình có LLM chạy 3 lần độc lập; mỗi lần là một mã lượt chạy và một thư mục làm việc riêng. Một lượt chạy chỉ
-được dùng khi đã chạy xong và qua kiểm tra sức khỏe: không còn lỗi gọi LLM chưa khắc phục, không có chương trình nào lỗi
-ở bước kiểm chứng phản thực tế. Kết quả báo cáo là trung bình $\pm$ độ lệch chuẩn qua 3 lần; so sánh cặp dùng chênh lệch
-$\Delta$ kèm khoảng tin cậy bootstrap theo cụm, McNemar cho từng lần chạy và Wilcoxon kèm $r_{rb}$
-(mục~\ref{sec:thong-ke}). Chi phí được đo bằng số lượt gọi, số token và thời gian trên mỗi chương trình.
+Mô hình chính là Gemini 3.8 Flash; RQ3 thêm GPT-6 luna, Claude Sonnet 5.5, gpt-oss-120b và Gemini 3.5 Flash-Lite trên
+50 chương trình cố định của tập test. SemLoc chạy ở $T = \ConstTemperature$ như bài báo; mọi lượt gọi LLM được ghi nhật ký
+và lưu đệm nên phát lại được. Mỗi cấu hình có LLM chạy 3 lần, chỉ dùng lượt qua kiểm tra sức khỏe (không còn lỗi gọi
+LLM hay lỗi ở bước kiểm chứng phản thực tế). Kết quả là trung bình $\pm$ độ lệch chuẩn qua 3 lần; so sánh cặp dùng
+$\Delta$ kèm khoảng tin cậy bootstrap theo cụm, McNemar và Wilcoxon (mục~\ref{sec:thong-ke}). Chi phí đo bằng số lượt
+gọi, số token và thời gian mỗi chương trình.

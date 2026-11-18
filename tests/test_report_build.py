@@ -42,7 +42,7 @@ def test_final_report_is_complete():
     """One final report (owner, 18/11): every chapter, the figure list, the new terms; no progress-report leftovers."""
     t = _build_final()
     for ch in ("Mở đầu", "Kết quả thực nghiệm", "Phân tích thất bại và thảo luận", "Đóng góp, triết lý khoa học",
-               "Phụ lục", "Danh sách hình vẽ", "Danh sách bảng"):
+               "Danh sách hình vẽ", "Danh sách bảng"):
         assert ch in t, ch
     pages = int(next(l for l in subprocess.run(["pdfinfo", str(ROOT / "docs" / "report" / "vi" / "main.pdf")],
                                              capture_output=True, text=True).stdout.splitlines() if l.startswith("Pages")).split()[1])

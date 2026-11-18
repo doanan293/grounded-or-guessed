@@ -1,5 +1,6 @@
 \chapter*{Cam kết về tính trung thực}
 \addcontentsline{toc}{chapter}{Cam kết về tính trung thực}
+{\setstretch{1.15}
 Nhóm M9 cam kết nội dung tiểu luận là kết quả làm việc của nhóm dưới sự hướng dẫn của PGS. TS. Huỳnh Quyết Thắng.
 Mọi số liệu trong báo cáo được sinh tự động từ mã nguồn và dữ liệu công khai tại
 \url{https://github.com/doanan293/grounded-or-guessed}; mỗi con số trong văn bản là một macro được tạo
@@ -15,7 +16,14 @@ thực nghiệm và soạn thảo; mọi kết quả đã được nhóm kiểm 
 soát: một LLM rà trước toàn bộ nhãn, sau đó các thành viên nhóm duyệt lại các nhãn bị dời hoặc bị nghi sai trong khi có
 xem gợi ý của LLM; quy trình và mọi câu trả lời được công bố kèm mã nguồn.
 
-\vspace{1cm}
+\textbf{Công cụ AI sử dụng.} Claude Code (Anthropic) là trợ lý chính để đọc tài liệu, viết mã và kiểm thử, chạy thực
+nghiệm, soạn báo cáo và slide; mọi thay đổi được nhóm trưởng duyệt. Các LLM là đối tượng thực nghiệm, gọi qua một proxy
+tương thích OpenAI: Gemini 3.8 Flash (mô hình chính), Claude Sonnet 4.6 (mô hình của bài báo gốc) và, cho RQ3, Gemini 3.5
+Flash-Lite, Claude Sonnet 5.5, GPT-6 luna và gpt-oss-120b. Mọi lượt gọi LLM được ghi nhật ký và lưu bộ đệm để chạy lại.
+Danh sách thành viên và phân công nằm trong \texttt{docs/phan-cong.md} của kho mã.
+
+}
+\vspace{0.6cm}
 \hfill Hà Nội, ngày \quad tháng 11 năm 2026\\
-\hfill Đại diện nhóm M9 (nhóm trưởng)\\[2cm]
+\hfill Đại diện nhóm M9 (nhóm trưởng)\\[1.2cm]
 \hfill Doãn Văn An
