@@ -12,7 +12,7 @@ from slidekit import texts  # noqa: E402
 
 pytestmark = pytest.mark.skipif(not build_deck.WS.exists(), reason="slide workspace (runs/slides) not present")
 FORBIDDEN = [r"\bCT\b", r"\bCI\b", r"\d k token", r"k token", r"\+thưởng", r"trượt", r"sửa nhãn", r"nhãn đã sửa", r"LLM hỏi thẳng"]
-DONE = {"lan1"}  # decks rebuilt under the 18/11 rules; the others are checked once their task lands
+DONE = {"lan1", "lan2"}  # decks rebuilt under the 18/11 rules; the others are checked once their task lands
 
 
 def _pages(deck):
@@ -36,3 +36,10 @@ def test_lan1_does_not_leak_report_2():
             continue
         for word in ("FailLoc+Cov", "BugsInPy", "duyệt mù", "rà soát", "FailLoc+Verify"):
             assert word not in t, (stem, word)
+
+
+def test_lan2_does_not_leak_the_defence():
+    for stem, t in _pages("lan2").items():
+        if stem == "tien_do_2":
+            continue
+        assert "phân loại thất bại" not in t.lower() and "sáu nhóm" not in t.lower(), stem
