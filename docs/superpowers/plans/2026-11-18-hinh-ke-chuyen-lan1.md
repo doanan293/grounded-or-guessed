@@ -105,7 +105,7 @@
 
 **Files:**
 - Modify: `docs/report/vi/chapters/ch1-gioi-thieu.tex` (F1 sau "Đặt vấn đề"), `ch3-co-so-ly-thuyet.tex` (F2 cạnh hình TikZ cũ; giữ hình cũ nếu khác ý), `ch4-phuong-phap.tex` (F4 ở "SemFault-250 đã sửa", F5 + bảng phương pháp ở mục thiết kế), `ch5-ket-qua.tex` (F3 ở "Kiểm chứng phản thực tế…", C1 trước/thay đoạn văn liệt kê số, C2 ở "Một prompt…")
-- Modify: `docs/report/vi/frontmatter/nhom.tex` (bỏ `\section*{Thành viên}`, `\section*{Phân công theo mảng việc}`; đổi tiêu đề chương thành "Công cụ AI và hiện trạng"); `docs/report/vi/main.tex` (thêm `\listoffigures` nếu chưa có)
+- Modify: `docs/report/vi/frontmatter/nhom.tex` (bỏ `\section*{Thành viên}`, `\section*{Phân công theo mảng việc}`; đổi tiêu đề chương thành "Công cụ AI và hiện trạng")
 - Test: `tests/test_report_build.py`
 
 - [ ] **Step 1: Test** sửa `test_report_build.py`: bỏ assert "Thành viên nhóm M9"/"Phân công công việc theo mảng"; thêm: mọi phiên bản *không* chứa "Phân công công việc theo mảng"; lan1 chứa "FailLoc", "Hình 1.1", "Danh mục hình vẽ" (hoặc tiêu đề `\listoffigures` thực tế); lan1 *không* chứa "FailLoc+Cov", "đã rà soát", "BugsInPy" trong caption hình (kiểm bằng `pdftotext` toàn văn — chỉ cấm "FailLoc+Cov" và "nhãn đã rà soát").
