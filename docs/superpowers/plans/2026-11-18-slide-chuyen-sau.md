@@ -74,6 +74,13 @@ F6 rà soát nhãn + duyệt mù (TikZ), C3 nhãn gốc đi đâu, C4 ablation, 
 - [ ] **Step 2:** FAIL → cài → PASS → chèn vào ch4/ch5/ch6, rút văn trùng hình; `make check`; xem ảnh.
 - [ ] **Step 3:** Commit theo nhóm (nhãn; RQ2 bổ sung; RQ3 và phân rã; ch6).
 
+### Task 4b: Báo cáo final tối đa 45 trang (bổ sung 18/11)
+
+**Files:** `docs/report/vi/main.tex`, `docs/report/vi/chapters/*.tex`, `docs/report/vi/frontmatter/*.tex`, `tests/test_report_build.py`.
+
+- [ ] **Step 1: Test** `test_final_report_is_complete` thêm: số trang PDF ≤ 45 (`pdfinfo`).
+- [ ] **Step 2:** FAIL → cắt cơ học (tocdepth mục, danh sách/tài liệu tham khảo giãn dòng đơn, bỏ phụ lục), đo lại; rồi rút thân bài từng chương (giữ hình, bảng chính, mọi macro số; cắt văn trùng hình; gộp ch6 vào ch5, ch7 vào ch8 nếu cần) tới khi ≤ 45 → PASS; `make check`; commit.
+
 ### Task 5: Thành phần slide dùng chung
 
 **Files:** `docs/presentation/build/viz.py`, Create `docs/presentation/build/story_common.py` (chuyển từ `story.py`: `_csv`, `_title`, `_note`, `_card`, `_unbold`, `cover`, `_bonus_rows`, `_guess_rank1_share`, dữ liệu ví dụ), `tests/test_deck_viz.py`, Create `tests/test_deck_text.py`.

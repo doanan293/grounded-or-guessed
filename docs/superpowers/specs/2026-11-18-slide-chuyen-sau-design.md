@@ -115,6 +115,8 @@ Lần 2 cập nhật: hàng lần 2 thành "Đã xong", hàng bài báo ghi "Có
 
 ## Báo cáo final
 
+- **Tối đa 45 trang, tính tất cả** (bìa, cam kết, mục lục, danh sách, thân bài, tài liệu tham khảo) — trưởng nhóm, 18/11. Mục lục chỉ đến cấp mục; danh sách và tài liệu tham khảo giãn dòng đơn; bỏ phụ lục (tái hiện ở `REPRODUCE.md`); thân bài giữ đủ hình và bảng chính, cắt chữ trùng ý với hình, gộp mục nhỏ, chi tiết kỹ thuật để ở bài báo tiếng Anh. Test chặn > 45 trang.
+
 - Bỏ cơ chế phiên bản: mọi `\IfAtLeast…` thành nội dung luôn có; `make` chỉ dựng bản final + bài báo; test phiên bản
   (`tests/test_report_build.py`) đổi thành kiểm tra bản final (đủ chương, không còn "Báo cáo tiến độ", không "??", có
   danh sách hình, thuật ngữ mới). Bảng "Hiện trạng bốn nội dung" trong báo cáo bỏ (tiến độ chỉ ở slide).
