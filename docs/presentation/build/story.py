@@ -17,7 +17,7 @@ from method_names import name  # noqa: E402
 
 # lần 1 roster: output stem -> template slide (22 = title + empty canvas)
 LAN1 = [("slide_01.svg", 1), ("moc.svg", 22), ("sbfl_mu.svg", 22), ("semloc_hua.svg", 22), ("cau_hoi.svg", 20),
-        ("slide_08.svg", 8), ("hop_den_1.svg", 22), ("hop_den_2.svg", 22), ("nhan_sai.svg", 22), ("failloc.svg", 22),
+        ("lien_quan.svg", 22), ("ba_bai.svg", 22), ("slide_22.svg", 22), ("hop_den_1.svg", 22), ("hop_den_2.svg", 22), ("nhan_sai.svg", 22), ("failloc.svg", 22),
         ("thiet_ke_l1.svg", 22), ("ket_qua.svg", 22), ("chi_phi.svg", 14), ("lan_sau.svg", 22),
         ("cong_cu_ai.svg", 22), ("hien_trang.svg", 22), ("tien_do.svg", 22), ("slide_30.svg", 30)]
 
@@ -79,19 +79,26 @@ def lan1(bd) -> None:
     gt_line = ex["gt_line"]
     body_from = gt_line - 7
     fail_test = next(t for t in ex["tests"] if not t["passed"])
+    n_pass = sum(t["passed"] for t in ex["tests"])
+    m = bd._m
+    P = viz.panel
 
     # 2. hook: a failing test, which line is wrong?
     _title(bd, "moc.svg", "Một test thất bại. Dòng nào sai?")
-    short = lambda t: t if len(t) <= 44 else t[:42].rstrip() + " …"
-    bd.A("moc.svg", viz.code_block("ma-vi-du", 70, 118, [short(code[n]) for n in range(body_from, gt_line + 2)],
-                                   first_no=body_from, fs=15, width=600))
-    bd.A("moc.svg", _card("test-truot", 695, 130, 225, 250, "Chạy test",
-                          ["", f"{sum(t['passed'] for t in ex['tests'])} test đạt", "", "1 test trượt:"], color=RED)
-         + _note(713, 300, [fail_test["id"][:22], fail_test["id"][22:44], fail_test["id"][44:66]], size=13, fill=RED,
-                 gid="ten-test", w=200))
-    bd.A("moc.svg", _note(70, 470, [f"Chương trình {ex['program']} trong SemFault-250 (250 chương trình Python, mỗi chương "
-                                    "trình một lỗi).", "Mã vẫn chạy, chỉ tính sai kết quả: đó là lỗi ngữ nghĩa."],
-                          size=15, gid="nguon-vi-du", w=840))
+    short = lambda t: t if len(t) <= 40 else t[:38].rstrip() + " …"
+    bd.A("moc.svg", viz.code_block("ma-vi-du", 50, 108, [short(code[n]) for n in range(body_from, gt_line + 2)],
+                                   first_no=body_from, fs=15, width=520))
+    bd.A("moc.svg", P("ket-qua-test", 50, 352, 520, [
+        ("Chạy bộ test", f"{n_pass} test đạt, 1 test trượt: {fail_test['id']}. Mã không lỗi cú pháp, không lỗi kiểu; "
+                         "chỉ kết quả bị tính sai.")], size=14, head_color=RED))
+    bd.A("moc.svg", P("bai-toan", 600, 108, 320, [
+        ("Bài toán định vị lỗi", "Đầu vào: mã nguồn và bộ test, trong đó có test trượt. Đầu ra: các dòng mã xếp theo "
+                                 "mức đáng nghi, dòng nghi nhất ở hạng 1."),
+        ("Lỗi ngữ nghĩa", "Chương trình chạy đúng đường nhưng tính sai giá trị, nên không công cụ kiểm tra cú pháp "
+                          "hay kiểu nào báo ra."),
+        ("Chỉ số Acc@1", "Tỉ lệ chương trình có dòng lỗi thật đứng ở hạng 1. Acc@3: nằm trong 3 dòng đầu."),
+        ("Ví dụ", f"Hàm {ex['program']}, một trong 250 chương trình Python của bộ SemFault-250."),
+    ], size=14))
 
     # 3. SBFL is blind on it: failing and passing tests run the same lines
     _title(bd, "sbfl_mu.svg", "SBFL mù: test đạt và test trượt đi qua cùng các dòng")
@@ -99,24 +106,41 @@ def lan1(bd) -> None:
     cols = [f"t{j + 1}" for j in range(len(ex["tests"]))]
     cells = {(i, j) for i, n in enumerate(rows) for j, t in enumerate(ex["tests"]) if n in t["lines"]}
     fail_cols = {j: RED for j, t in enumerate(ex["tests"]) if not t["passed"]}
-    bd.A("sbfl_mu.svg", viz.matrix("ma-tran-phu", 70, 112, [f"{n}  {code[n].strip()[:24]}" for n in rows], cols, cells,
-                                   row_mark={rows.index(gt_line): RED}, label_w=330, cell_w=52, row_h=34,
+    bd.A("sbfl_mu.svg", viz.matrix("ma-tran-phu", 40, 108, [f"{n}  {code[n].strip()[:20]}" for n in rows], cols, cells,
+                                   row_mark={rows.index(gt_line): RED}, label_w=280, cell_w=46, row_h=34,
                                    col_colors={**{j: NAVY for j in range(len(cols))}, **fail_cols}))
-    bd.A("sbfl_mu.svg", viz.big_number("sbfl-acc", 690, 140, f"{bd._m('RqOneSbflOchiaiFairAllAccOne')}%",
-                                       "SBFL (Ochiai) đúng\nngay hạng 1 trên\n250 chương trình", color=RED, size=60, w=240))
-    bd.A("sbfl_mu.svg", _note(690, 330, ["Cột đỏ: test trượt.", "Dòng tô màu: dòng lỗi.", "Mọi dòng có cùng điểm,",
-                                         "SBFL chỉ còn đoán mò."], size=16))
+    n_fail = len(fail_cols)
+    ochiai = 1 / ((n_fail * len(ex["tests"])) ** 0.5)
+    bd.A("sbfl_mu.svg", P("sbfl-giai-thich", 580, 108, 340, [
+        ("Cách đọc", "Mỗi hàng là một dòng mã, mỗi cột là một test; chấm nghĩa là test chạy qua dòng đó. Cột đỏ là test "
+                     f"trượt, hàng tô màu là dòng lỗi {gt_line}."),
+        ("SBFL tính điểm thế nào", "Dòng càng hay được test trượt chạy qua và càng ít được test đạt chạy qua thì càng "
+                                   "đáng nghi (công thức Ochiai, điểm từ 0 đến 1)."),
+        ("Ở ví dụ này", f"Mọi dòng đều được cả {len(ex['tests'])} test chạy qua, nên dòng nào cũng có điểm "
+                        f"{_p(ochiai, 2)}; dòng lỗi không nổi bật."),
+    ], size=14))
+    bd.A("sbfl_mu.svg", viz.big_number("sbfl-acc", 40, 400, f"{m('RqOneSbflOchiaiFairAllAccOne')}%",
+                                       "Acc@1 của SBFL trên\n250 chương trình", color=RED, size=44, w=340))
 
     # 4. SemLoc's promise
     _title(bd, "semloc_hua.svg", "SemLoc hứa: neo LLM vào bằng chứng thực thi")
-    bd.A("semloc_hua.svg", viz.pipeline("quy-trinh-semloc", 62, 140,
-                                        ["LLM viết\nràng buộc", "Chèn\nvào mã", "Chạy\ntest", "Phổ vi phạm\n(Ochiai)",
-                                         "LLM vá thử,\nchạy lại test"], box_w=144, gap=30, box_h=80))
-    bd.A("semloc_hua.svg", viz.big_number("acc-cong-bo", 70, 280, f"{bd._m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}%",
-                                          "Acc@1 SemLoc công bố\ntrên SemFault-250\n(Claude Sonnet 4.6)", size=64, w=300))
-    bd.A("semloc_hua.svg", _note(420, 330, ["Bài báo: độ chính xác đến từ việc neo lập luận",
-                                            "của LLM vào bằng chứng thực thi.", "",
-                                            "Câu hỏi của nhóm: thật vậy không?"], size=18, fill=INK, w=480))
+    steps = ["LLM viết\nràng buộc", "Chèn\nvào mã", "Chạy\ntest", "Phổ vi phạm\n(Ochiai)", "LLM vá thử,\nchạy lại test"]
+    bd.A("semloc_hua.svg", viz.pipeline("quy-trinh-semloc", 50, 108, steps, box_w=150, gap=28, box_h=72))
+    expl = ["Điều kiện phải đúng,\nví dụ tổng phần chia\nbằng tổng ban đầu", "Mỗi ràng buộc thành\nmột lệnh kiểm tra\ntại một dòng",
+            "Ghi ràng buộc nào\nbị vi phạm trong\ntest nào", "Ràng buộc vi phạm\nnhiều ở test trượt\nthì dòng của nó nghi",
+            "Vá dòng nghi; test\nđạt lại thì xác nhận\ndòng đó"]
+    body = []
+    for k, e in enumerate(expl):
+        for r, line in enumerate(e.split("\n")):
+            body.append(_t(50 + k * 178 + 75, 206 + 19 * r, line, size=13, fill=MUTED, anchor="middle"))
+    bd.A("semloc_hua.svg", viz._g("giai-thich-buoc", 50, 192, 878, 66, body))
+    bd.A("semloc_hua.svg", viz.big_number("acc-cong-bo", 50, 300, f"{m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}%",
+                                          "Acc@1 SemLoc công bố\ntrên SemFault-250\n(Claude Sonnet 4.6)", size=60, w=300))
+    bd.A("semloc_hua.svg", P("loi-hua", 380, 290, 540, [
+        ("Bài báo khẳng định", "Độ chính xác đến từ việc neo lập luận của LLM vào bằng chứng thực thi: LLM chỉ đề xuất, "
+                               "kết quả chạy test quyết định thứ hạng."),
+        ("Nhóm kiểm tra", "Thứ hạng thật sự đến từ bằng chứng thực thi (grounded), hay từ việc LLM tự đoán (guessed)?"),
+    ], size=15))
 
     # 5. the question and the three RQs (template list page)
     bd.E("cau_hoi.svg", [
@@ -127,120 +151,209 @@ def lan1(bd) -> None:
         ("Saturn", "Lõi"), ("Saturn is a gas giant", ["Thứ hạng đến từ bằng chứng", "thực thi hay LLM tự đoán?"]),
     ])
 
+    # 6a. related work: many studies in five families, the three assigned papers highlighted
+    _title(bd, "lien_quan.svg", "Nghiên cứu liên quan: năm hướng, ba bài tiêu biểu")
+    fams = [("Định vị theo phổ\nvà đột biến", ["Tarantula 2002", "Ochiai 2009", "DStar 2014", "MUSE 2014",
+                                                "Metallaxis 2015", "Pearson 2017"], NAVY),
+            ("Định vị bằng LLM", ["Wu 2023", "AutoFL 2024", "Agentless 2024", "AgentFL 2025", "FlexFL 2025",
+                                  "★ SemLoc 2026"], ORANGE),
+            ("So sánh lần chạy,\nbằng chứng thực thi", ["Delta debugging 2002", "Chuỗi nhân quả 2002", "Daikon 2007",
+                                                       "★ EffiHolmes 2026", "★ Sự cố + LLM 2026"], ORANGE),
+            ("Dữ liệu lỗi và\ntính hợp lệ", ["Defects4J 2014", "QuixBugs 2017", "BugsInPy 2020", "Nhãn sai 2021",
+                                              "Bản vá giả 2015", "Nhiễm dữ liệu 2024"], NAVY),
+            ("Thực tế lập\ntrình viên", ["Parnin, Orso 2011", "Kochhar 2016", "DevGPT 2024", "Stack Overflow 2025",
+                                          "JetBrains 2025"], NAVY)]
+    body = []
+    for k, (head, items, c) in enumerate(fams):
+        x = 40 + k * 180
+        body.append(_r(x, 108, 168, 330, "#FFFFFF", stroke=LAVENDER, rx=10))
+        for r, line in enumerate(head.split("\n")):
+            body.append(_t(x + 84, 132 + 19 * r, line, size=15, fill=NAVY, weight="bold", anchor="middle"))
+        for i, it in enumerate(items):
+            star = it.startswith("★")
+            yy = 178 + 42 * i
+            body.append(_r(x + 10, yy, 148, 32, viz.CREAM if star else viz.LIGHT, stroke=ORANGE if star else "none", rx=8))
+            body.append(_t(x + 84, yy + 21, it.replace("★ ", ""), size=13, anchor="middle", weight="bold" if star else "normal",
+                           fill=INK))
+    bd.A("lien_quan.svg", viz._g("ban-do-lien-quan", 40, 108, 888, 330, body))
+    bd.A("lien_quan.svg", _note(40, 470, ["Khung cam: ba bài giảng viên giao, trình bày ở trang sau. Danh sách đầy đủ "
+                                          "và cách chọn tài liệu: chương 2 của báo cáo."], size=14, gid="chu-thich-lien-quan",
+                                w=880))
+
+    # 6b. the three representative studies
+    _title(bd, "ba_bai.svg", "Ba nghiên cứu tiêu biểu và điều nhóm học được")
+    cards = [("SemLoc (2026)", [("Bài toán", "lỗi ngữ nghĩa trong hàm Python; test trượt nhưng không chỉ ra dòng."),
+                                 ("Cách làm", "LLM viết ràng buộc, chạy test lấy phổ vi phạm, vá thử để kiểm chứng."),
+                                 ("Kết quả", f"Acc@1 {m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}% trên SemFault-250."),
+                                 ("Nhóm học", "chạy lại đúng mã của tác giả, soát từng con số (RQ1).")]),
+             ("EffiHolmes (2026)", [("Bài toán", "lỗi hiệu năng: test vẫn đạt, không có lỗi để lần theo."),
+                                     ("Cách làm", "so hai lần chạy dữ liệu nhỏ và lớn; hàm chậm hẳn đi thì bị nghi."),
+                                     ("Kết quả", "thử trên 140 lỗi chạy chậm thật."),
+                                     ("Nhóm học", "đặt lần chạy đúng cạnh lần chạy lỗi; cách chia ba câu hỏi.")]),
+             ("Sự cố + LLM (2026)", [("Bài toán", "app Java lớn sập hàng nghìn lần mỗi tuần, mỗi lần có stack trace."),
+                                      ("Cách làm", "gom stack trace thành bảng hàm đáng nghi, đưa bảng vào prompt."),
+                                      ("Kết quả", "38 lỗi thật, chỉ đúng chỗ lỗi 71%."),
+                                      ("Nhóm học", "đưa bằng chứng sẵn có vào một prompt: ý tưởng của FailLoc.")])]
+    for k, (head, blocks) in enumerate(cards):
+        bd.A("ba_bai.svg", _t(40 + k * 300, 128, head, size=19, fill=ORANGE, weight="bold"))
+        bd.A("ba_bai.svg", P(f"bai-{k}", 40 + k * 300, 140, 284, [(a, b[0].upper() + b[1:]) for a, b in blocks], size=14))
+
     # 7-8. open the box: spectrum scores, then the +1.2 bonus on the guessed line
     rs = _bonus_rows()
     prog = rs[0]["program"]
-    gt_rows = [r for r in rs if r["is_gt_repaired"] == "1"]
+    gt_r = next(r for r in rs if r["is_gt_repaired"] == "1")
+    guess_r = next(r for r in rs if r["is_guess"] == "1")
     for page, with_bonus in (("hop_den_1.svg", False), ("hop_den_2.svg", True)):
         _title(bd, page, "Mở hộp SemLoc: điểm phổ của từng dòng" if not with_bonus else
-               f"Cộng +{bd._m('ConstPriorWeight')} cho dòng LLM đoán: nó luôn đứng hạng 1")
+               f"Cộng +{m('ConstPriorWeight')} cho dòng LLM đoán: nó luôn đứng hạng 1")
         ser = []
         for r in rs:
-            lab = f"dòng {r['line']}" + (" (lỗi)" if r in gt_rows else "") + (" (đoán)" if with_bonus and r["is_guess"] == "1" else "")
+            g, gs = r is gt_r, with_bonus and r is guess_r
+            lab = f"dòng {r['line']}" + (" (lỗi)" if g else "") + (" (đoán)" if gs else "")
             v = float(r["score"]) if with_bonus else float(r["spectrum"])
-            c = ORANGE if (with_bonus and r["is_guess"] == "1") else (NAVY if r in gt_rows else GREY)
-            ser.append((lab, v, c))
-        bd.A(page, viz.bars("diem-dong", 70, 115, 560, 330, ser, vmax=2.0, unit="", label_w=180, nd=2))
-        bd.A(page, f'<g id="nguong" data-pptx-bounds="{70 + 180 + (560 - 250) / 2} 112 2 336">'
-                   f'<line x1="{70 + 180 + (560 - 250) / 2}" y1="112" x2="{70 + 180 + (560 - 250) / 2}" y2="448" '
+            ser.append((lab, v, ORANGE if gs else (NAVY if g else GREY), float(r["spectrum"]) if gs else 0))
+        bd.A(page, viz.bars("diem-dong", 40, 108, 520, 330, ser, vmax=2.0, unit="", label_w=170, nd=2))
+        xline = 40 + 170 + (520 - 170 - 70) / 2
+        bd.A(page, f'<g id="nguong" data-pptx-bounds="{xline} 104 2 338"><line x1="{xline}" y1="104" x2="{xline}" y2="442" '
                    f'stroke="{MUTED}" stroke-width="1.5" stroke-dasharray="6 4"/></g>')
-        bd.A(page, _note(70, 478, [f"Chương trình {prog}, lượt chạy 1 với Gemini 3.8 Flash. Vạch đứt: điểm phổ tối đa (1)."],
-                         size=14, gid="nguon-diem", w=840))
-    bd.A("hop_den_1.svg", _note(660, 170, ["Dòng lỗi có điểm phổ", "cao nhất.", "", "Phổ vi phạm đã chỉ đúng."],
-                                size=19, fill=INK))
+        bd.A(page, _note(40, 470, [f"Chương trình {prog} (SemFault-250), lượt chạy 1 với Gemini 3.8 Flash."], size=13,
+                         gid="nguon-diem", w=520))
+    bd.A("hop_den_1.svg", P("doc-hinh-1", 590, 108, 330, [
+        ("Hình này cho thấy", f"Điểm SemLoc chấm cho {len(rs)} dòng ứng viên của một chương trình, trước khi xếp hạng."),
+        ("Điểm phổ là gì", "Với mỗi ràng buộc LLM viết, đếm test trượt và test đạt vi phạm nó rồi tính Ochiai (0 đến 1). "
+                           "Điểm của dòng là điểm cao nhất trong các ràng buộc gắn với dòng đó."),
+        ("Cách đọc", "Thanh dài là dòng đáng nghi hơn; xanh đậm là dòng lỗi thật; vạch đứt là mức tối đa 1."),
+        ("Ý chính", f"Chỉ với bằng chứng thực thi, dòng lỗi {gt_r['line']} đứng đầu: phổ vi phạm đã chỉ đúng."),
+    ], size=14))
     share, n_pairs = _guess_rank1_share()
-    bd.A("hop_den_2.svg", viz.big_number("ty-le-hang-1", 660, 140, f"{_p(100 * share, 0)}%",
-                                         f"trong {n_pairs} lần chạy có\ndòng đoán, hạng 1 của\nSemLoc là dòng LLM đoán.\nBài báo không nhắc tới\nđiểm thưởng này.",
-                                         color=ORANGE, size=60, w=260))
+    bd.A("hop_den_2.svg", P("doc-hinh-2", 590, 108, 330, [
+        ("Điều bài báo không nói", f"Mã công bố cộng +{m('ConstPriorWeight')} điểm cho dòng LLM tự đoán (trường "
+                                   "fault_line). Phần cam trên thanh là điểm thưởng đó."),
+        ("Vì sao luôn hạng 1", f"Điểm phổ tối đa là 1, nhỏ hơn {m('ConstPriorWeight')}, nên dòng đoán luôn vượt mọi dòng khác."),
+        ("Ở ví dụ này", f"Dòng {guess_r['line']} ({_p(float(guess_r['spectrum']), 2)} + {m('ConstPriorWeight')}) vượt dòng "
+                        f"lỗi {gt_r['line']} ({_p(float(gt_r['spectrum']), 2)}): đáp án đúng bị đẩy xuống hạng 2."),
+    ], size=14))
+    bd.A("hop_den_2.svg", viz.big_number("ty-le-hang-1", 590, 390, f"{_p(100 * share, 0)}%",
+                                         f"số lần chạy (trên {n_pairs}) mà hạng 1\ncủa SemLoc là dòng LLM đoán",
+                                         color=ORANGE, size=40, w=330))
 
     # 9. the labels themselves are wrong; the execution-repaired labels
     _title(bd, "nhan_sai.svg", "Chính nhãn của bộ dữ liệu cũng sai")
-    bd.A("nhan_sai.svg", viz.big_number("nhan-trong", 70, 118, bd._m("GtBlankN"), "nhãn gốc nằm trên\ndòng trống", color=RED, size=60))
-    bd.A("nhan_sai.svg", viz.big_number("nhan-khong-chay", 360, 118, bd._m("GtNotExecutedN"),
-                                        "chương trình: không test\nthất bại nào chạy tới nhãn", color=RED, size=60))
-    bd.A("nhan_sai.svg", viz.pipeline("sua-nhan", 70, 330, ["Nhãn gốc\n250 CT", "Sửa nhỏ một dòng,\nchạy lại test",
-                                                             f"Xác nhận {bd._m('GtConfirmedN')}\nDời {bd._m('GtCorrectedN')}",
-                                                             f"Nhãn đã sửa\n{bd._m('GtRepairedN')} CT"],
-                                      accent=3, box_w=180, gap=34, box_h=80))
-    bd.A("nhan_sai.svg", _note(70, 460, ["LLM chỉ đề xuất bản sửa; test quyết định dòng nào là dòng lỗi.",
-                                         "Mọi kết quả được báo trên cả nhãn gốc và nhãn đã sửa."], size=15,
-                               gid="ghi-chu-nhan", w=840))
+    bd.A("nhan_sai.svg", viz.big_number("nhan-trong", 40, 104, m("GtBlankN"), "nhãn gốc nằm trên dòng trống,\nnơi không thể có lỗi",
+                                        color=RED, size=52, w=280))
+    bd.A("nhan_sai.svg", viz.big_number("nhan-khong-chay", 330, 104, m("GtNotExecutedN"),
+                                        "chương trình: không test trượt\nnào chạy tới dòng được gán nhãn", color=RED, size=52, w=280))
+    bd.A("nhan_sai.svg", P("nhan-la-gi", 640, 104, 280, [
+        ("Nhãn là gì", "Dòng lỗi chuẩn mà bộ dữ liệu ghi cho mỗi chương trình; mọi phương pháp được chấm đúng sai theo nó."),
+        ("Vì sao quan trọng", "Nhãn sai thì một phương pháp chỉ đúng dòng vẫn bị chấm là trượt."),
+    ], size=14))
+    bd.A("nhan_sai.svg", viz.pipeline("sua-nhan", 40, 300, ["Nhãn gốc\n250 CT", "Sửa nhỏ một dòng,\nchạy lại test",
+                                                             f"Xác nhận {m('GtConfirmedN')}\nDời {m('GtCorrectedN')}",
+                                                             f"Nhãn đã sửa\n{m('GtRepairedN')} CT"],
+                                      accent=3, box_w=196, gap=34, box_h=74))
+    bd.A("nhan_sai.svg", P("bo-phan-dinh", 40, 392, 880, [
+        ("Bộ phán định sửa tối thiểu", "LLM chỉ đề xuất bản sửa nhỏ tại nhãn hoặc dòng lân cận; dòng nào sửa xong làm mọi "
+                                       "test đạt thì đó là dòng lỗi. Test quyết định, LLM không quyết định. Mọi kết quả sau "
+                                       "đây được báo trên cả nhãn gốc lẫn nhãn đã sửa.")], size=14))
 
-    # 10. FailLoc next to SemLoc
+    # 10. FailLoc next to SemLoc, with the prompt it sends
     _title(bd, "failloc.svg", f"{name('llm_tests')}: đưa thẳng test thất bại cho LLM, một lượt gọi")
-    bd.A("failloc.svg", _t(70, 132, "SemLoc", size=20, fill=NAVY, weight="bold"))
-    bd.A("failloc.svg", viz.pipeline("semloc-ngan", 70, 148, ["Ràng buộc", "Chèn, chạy", "Phổ vi phạm", "+ thưởng", "Vá thử"],
-                                     box_w=128, gap=24, box_h=56, dashed={3}))
-    bd.A("failloc.svg", _note(70, 240, [f"≈ {bd._m('CostSemlocTokensK')} nghìn token, {bd._m('CostSemlocCalls')} lượt gọi "
-                                        "mỗi chương trình"], size=15, gid="chi-phi-semloc", w=700))
-    bd.A("failloc.svg", _t(70, 300, name("llm_tests"), size=20, fill=ORANGE, weight="bold"))
-    bd.A("failloc.svg", viz.pipeline("failloc-ngan", 70, 316, ["Mã nguồn +\ntest thất bại", "Một lượt\ngọi LLM",
-                                                                "5 dòng\nnghi nhất"], accent=1, box_w=200, gap=40, box_h=70))
-    bd.A("failloc.svg", _note(70, 422, [f"≈ {bd._m('CostLlmTestsTokensK')} nghìn token, {bd._m('CostLlmTestsCalls')} lượt "
-                                        "gọi mỗi chương trình"], size=15, gid="chi-phi-failloc", w=700))
-    bd.A("failloc.svg", _note(70, 470, ["Prompt: mã đánh số dòng, tên và dòng lỗi đầu tiên của từng test thất bại. Đây là "
-                                        "cách lập trình viên", "vẫn hỏi trợ lý AI, được làm cho tái hiện được."],
-                              size=14, gid="mo-ta-failloc", w=840))
+    bd.A("failloc.svg", _t(40, 126, "SemLoc", size=18, fill=NAVY, weight="bold"))
+    bd.A("failloc.svg", viz.pipeline("semloc-ngan", 40, 138, ["Ràng\nbuộc", "Chèn,\nchạy", "Phổ", "+thưởng", "Vá thử"],
+                                     box_w=96, gap=16, box_h=56))
+    bd.A("failloc.svg", _note(40, 214, [f"≈ {m('CostSemlocTokensK')} nghìn token, {m('CostSemlocCalls')} lượt gọi mỗi CT"],
+                              size=14, gid="chi-phi-semloc", w=540))
+    bd.A("failloc.svg", _t(40, 276, name("llm_tests"), size=18, fill=ORANGE, weight="bold"))
+    bd.A("failloc.svg", viz.pipeline("failloc-ngan", 40, 288, ["Mã +\ntest trượt", "Một lượt\ngọi LLM", "5 dòng\nnghi nhất"],
+                                     accent=1, box_w=150, gap=30, box_h=64))
+    bd.A("failloc.svg", _note(40, 376, [f"≈ {m('CostLlmTestsTokensK')} nghìn token, {m('CostLlmTestsCalls')} lượt gọi mỗi CT"],
+                              size=14, gid="chi-phi-failloc", w=540))
+    bd.A("failloc.svg", P("vi-sao-failloc", 40, 400, 540, [
+        ("Vì sao làm vậy", "Đây là cách lập trình viên vẫn hỏi trợ lý AI khi test trượt; nhóm làm nó tái hiện được và "
+                           "dùng làm mốc mà quy trình nhiều bước phải vượt.")], size=14))
+    prompt = ["Mã nguồn đánh số dòng:", "  22 weight_sum = sum(weights)", "  …",
+              f"{n_fail} test trượt, {n_pass} test đạt;", "chương trình có đúng một dòng lỗi.", "Test trượt:",
+              f"  {fail_test['id'][:30]}", "  dòng lỗi đầu tiên của test", "Trả về 5 dòng nghi nhất (JSON)."]
+    body = [_r(610, 108, 310, 300, viz.LIGHT, stroke=ORANGE, rx=10), _t(626, 134, "Prompt của FailLoc (rút gọn)", size=15,
+                                                                         fill=ORANGE, weight="bold")]
+    body += [_t(626, 164 + 26 * k, line, size=13, family=viz.MONO) for k, line in enumerate(prompt)]
+    bd.A("failloc.svg", viz._g("prompt-failloc", 610, 108, 310, 300, body))
 
     # 11. design
     _title(bd, "thiet_ke_l1.svg", "Thiết kế: cùng chương trình, cùng mô hình, so trên hai bộ nhãn")
     cols = [("Dữ liệu", ["SemFault-250", "dev 50 / test 200", "chia phân tầng"], GREY),
-            ("Phương pháp", [name(m) for m in MAIN], NAVY),
-            ("Bộ nhãn", ["Nhãn gốc", "Nhãn đã sửa", f"({bd._m('GtRepairedN')} CT)"], ORANGE),
+            ("Phương pháp", [name(mm) for mm in MAIN], NAVY),
+            ("Bộ nhãn", ["Nhãn gốc", "Nhãn đã sửa", f"({m('GtRepairedN')} CT)"], ORANGE),
             ("Lặp, chỉ số", ["3 lần chạy", "Acc@1, Acc@3", "bootstrap"], GREY)]
     body = []
     for k, (head, items, c) in enumerate(cols):
-        x = 70 + k * 212
-        body.append(_r(x, 130, 180, 250, "#FFFFFF", stroke=c, rx=12, sw=2))
-        body.append(_t(x + 90, 162, head, size=18, fill=c if c != GREY else INK, weight="bold", anchor="middle"))
-        body += [_t(x + 90, 205 + 32 * i, it, size=16, anchor="middle",
+        x = 40 + k * 222
+        body.append(_r(x, 108, 190, 220, "#FFFFFF", stroke=c, rx=12, sw=2))
+        body.append(_t(x + 95, 138, head, size=18, fill=c if c != GREY else INK, weight="bold", anchor="middle"))
+        body += [_t(x + 95, 178 + 30 * i, it, size=16, anchor="middle",
                     weight="bold" if it == name("llm_tests") else "normal",
                     fill=ORANGE if it == name("llm_tests") else INK) for i, it in enumerate(items)]
         if k:
-            body.append(_t(x - 16, 262, "×", size=28, fill=MUTED, anchor="middle"))
-    bd.A("thiet_ke_l1.svg", viz._g("luoi-thiet-ke", 70, 130, 816, 250, body))
-    bd.A("thiet_ke_l1.svg", _note(70, 430, ["Mô hình: Gemini 3.8 Flash cho mọi phương pháp có LLM.",
-                                            "Tập dev chỉ dùng để chọn tham số; mọi số báo cáo là của tập test."],
-                                  size=15, gid="ghi-chu-thiet-ke", w=840))
+            body.append(_t(x - 16, 228, "×", size=28, fill=MUTED, anchor="middle"))
+    bd.A("thiet_ke_l1.svg", viz._g("luoi-thiet-ke", 40, 108, 856, 220, body))
+    bd.A("thiet_ke_l1.svg", P("giai-thich-thiet-ke", 40, 344, 880, [
+        ("Công bằng", "Mọi phương pháp có LLM dùng cùng Gemini 3.8 Flash trên cùng 200 chương trình của tập test; tập dev "
+                      "chỉ để chọn tham số."),
+        ("Chỉ số", "Acc@k là tỉ lệ chương trình có dòng lỗi nằm trong k dòng đầu. Mỗi cấu hình chạy 3 lần; khoảng tin cậy "
+                   "95% tính bằng bootstrap, lấy mẫu lại theo chương trình."),
+    ], size=14))
 
     # 12. results race
     rq2 = {(r["gt"], r["method"]): r for r in _csv(ROOT / "data" / "rq2_ours.csv") if r.get("subset", "all") == "all"}
     _title(bd, "ket_qua.svg", f"{name('llm_tests')} dẫn đầu ở Acc@1 trên cả hai bộ nhãn")
     for k, (gt, head) in enumerate((("original", "Nhãn gốc"), ("repaired", "Nhãn đã sửa"))):
-        x = 60 + k * 440
-        bd.A("ket_qua.svg", _t(x + 150, 128, f"{head}: Acc@1", size=18, fill=INK, weight="bold"))
-        ser = [(name(m), 100 * float(rq2[(gt, m)]["acc1_mean"]),
-                ORANGE if m == "llm_tests" else NAVY if m == "semloc" else GREY) for m in MAIN]
-        bd.A("ket_qua.svg", viz.bars(f"bars-{gt}", x, 140, 420, 290, ser, vmax=100, label_w=150))
-    d1 = bd._m("RqTwoRepairedAllLlmTestsDAccOne")
-    bd.A("ket_qua.svg", _note(70, 462, ["Tập test, Gemini 3.8 Flash, trung bình 3 lần chạy.",
-                                        f"Nhãn đã sửa: {name('llm_tests')} hơn SemLoc {d1} điểm Acc@1 "
-                                        f"[{bd._m('RqTwoRepairedAllLlmTestsDAccOneLo')}; "
-                                        f"{bd._m('RqTwoRepairedAllLlmTestsDAccOneHi')}],"
-                                        + f" Acc@3 {_p(100 * float(rq2[('repaired', 'llm_tests')]['acc3_mean']))}% so với "
-                                        f"{_p(100 * float(rq2[('repaired', 'semloc')]['acc3_mean']))}%."],
-                              size=14, gid="ghi-chu-ket-qua", w=840))
+        x = 30 + k * 300
+        bd.A("ket_qua.svg", _t(x + 140, 124, f"{head}: Acc@1", size=16, fill=INK, weight="bold"))
+        ser = [(name(mm), 100 * float(rq2[(gt, mm)]["acc1_mean"]),
+                ORANGE if mm == "llm_tests" else NAVY if mm == "semloc" else GREY) for mm in MAIN]
+        bd.A("ket_qua.svg", viz.bars(f"bars-{gt}", x, 134, 290, 300, ser, vmax=100, label_w=140))
+    d1 = m("RqTwoRepairedAllLlmTestsDAccOne")
+    a1 = lambda gt, mm: _p(100 * float(rq2[(gt, mm)]["acc1_mean"]))
+    a3 = lambda gt, mm: _p(100 * float(rq2[(gt, mm)]["acc3_mean"]))
+    bd.A("ket_qua.svg", P("doc-ket-qua", 640, 108, 290, [
+        ("Cách đọc", "Mỗi thanh là Acc@1: % chương trình có dòng lỗi ở hạng 1. Tập test, Gemini 3.8 Flash, trung bình 3 "
+                     "lần chạy."),
+        ("So với SemLoc", f"Nhãn đã sửa: {name('llm_tests')} hơn {d1} điểm Acc@1 (khoảng tin cậy "
+                          f"[{m('RqTwoRepairedAllLlmTestsDAccOneLo')}; {m('RqTwoRepairedAllLlmTestsDAccOneHi')}]); Acc@3 "
+                          f"{a3('repaired', 'llm_tests')}% so với {a3('repaired', 'semloc')}%."),
+        ("Ý chính", f"Bỏ điểm thưởng, SemLoc rơi từ {a1('repaired', 'semloc')}% xuống {a1('repaired', 'semloc_no_prior')}%: "
+                    "phần lớn hạng 1 của nó là dòng đoán."),
+    ], size=13))
 
     # 13. three big numbers (template metric page)
-    ratio = float(bd._m("CostSemlocTokensK").replace(",", ".")) / float(bd._m("CostLlmTestsTokensK").replace(",", "."))
+    ratio = float(m("CostSemlocTokensK").replace(",", ".")) / float(m("CostLlmTestsTokensK").replace(",", "."))
     bd.E("chi_phi.svg", {
-        "9h 55m 23s": d1, "Jupiter’s rotation period": f"điểm Acc@1 so với SemLoc (nhãn đã sửa)",
-        "333,000": f"{_p(ratio, 0)}×", "The Sun’s mass compared": "ít token hơn SemLoc mỗi chương trình",
-        "386,000 km": bd._m("CostLlmTestsCalls").split(",")[0], "Distance between the Earth": "lượt gọi LLM, không pipeline",
+        "9h 55m 23s": d1, "Jupiter’s rotation period": "điểm Acc@1 hơn SemLoc",
+        "333,000": f"{_p(ratio, 0)}×", "The Sun’s mass compared": "ít token hơn SemLoc",
+        "386,000 km": m("CostLlmTestsCalls").split(",")[0], "Distance between the Earth": "lượt gọi LLM mỗi chương trình",
     })
+
+    bd.A("chi_phi.svg", _t(60, 52, "Ba con số của báo cáo lần 1", size=24, fill=INK, weight="bold", family="Arial, sans-serif"))
+    bd.A("chi_phi.svg", P("giai-thich-chi-phi", 560, 250, 360, [
+        ("Đo thế nào", "Nhãn đã sửa, 200 chương trình của tập test, Gemini 3.8 Flash, trung bình 3 lần chạy; token là tổng "
+                       "token vào và ra của mọi lượt gọi LLM cho một chương trình."),
+        ("Nghĩa là", "Cách hỏi thẳng có test thất bại vừa chính xác hơn vừa rẻ hơn quy trình nhiều bước."),
+    ], size=14))
 
     # 14. cliffhanger for report 2
     _title(bd, "lan_sau.svg", "Thắng thật hay nhờ nhãn? Và vì sao? (lần 2)")
     for k, (head, lines) in enumerate((("Nhãn còn sai?", ["Rà soát cả 250 nhãn,", "duyệt mù độc lập", "bởi hai người"]),
                                        ("Có bền không?", ["Lỗi thật BugsInPy,", "mã đổi tên định danh,", "năm họ mô hình"]),
                                        ("Vì sao thắng?", ["Ablation: test thất bại", "hay độ phủ từng dòng", "tạo khác biệt?"]))):
-        bd.A("lan_sau.svg", _card(f"cau-hoi-{k}", 70 + k * 280, 140, 250, 200, head, lines, color=[RED, NAVY, ORANGE][k]))
-    bd.A("lan_sau.svg", _note(70, 420, ["Dữ liệu và mã cho cả ba câu đã có; kết quả trình bày ở báo cáo lần 2 (25–26/11)."],
-                              size=16, gid="hen-lan-2", w=840))
+        bd.A("lan_sau.svg", _card(f"cau-hoi-{k}", 40 + k * 300, 130, 270, 200, head, lines, color=[RED, NAVY, ORANGE][k]))
+    bd.A("lan_sau.svg", P("hen-lan-2", 40, 360, 870, [
+        (None, "Dữ liệu và mã cho cả ba câu đã có; kết quả trình bày ở báo cáo lần 2 (25–26/11).")], size=15))
 
     # 17. Gantt
     _title(bd, "tien_do.svg", "Tiến độ")
-    bd.A("tien_do.svg", viz.gantt("gantt", 70, 140, 820, SCHEDULE, today="18/11", label_w=290, row_h=38))
+    bd.A("tien_do.svg", viz.gantt("gantt", 40, 140, 860, SCHEDULE, today="18/11", label_w=290, row_h=38))
+    bd.A("tien_do.svg", _note(40, 516, ["Xanh đậm: đã xong. Tím nhạt: đang làm hoặc sắp tới. Vạch đỏ: hôm nay."], size=14,
+                              gid="chu-thich-gantt", w=860))
 
 
 def _bonus_rows() -> list[dict]:
@@ -282,10 +395,15 @@ def notes_lan1(bd) -> dict:
         "cau_hoi": "Từ đó nhóm đặt câu hỏi: thứ hạng của SemLoc đến từ bằng chứng thực thi hay từ việc LLM tự đoán. RQ1 tái "
                    "hiện kết quả công bố và kiểm tra cách chấm điểm, kể cả chính các nhãn. RQ2 so SemLoc với FailLoc, phương "
                    "pháp của nhóm chỉ dùng một lượt gọi LLM. RQ3 kiểm tra độ bền, nhóm sẽ trình bày ở lần sau.",
-        "slide_08": "Ba hướng liên quan nhất nhóm đọc là SemLoc, EffiHolmes cho lỗi chạy chậm, và một nghiên cứu công nghiệp "
-                    "đưa stack trace vào prompt cho LLM. Từ SemLoc, nhóm học cách chạy lại đúng mã của tác giả và soát từng "
-                    "con số. Nghiên cứu công nghiệp cho thấy đưa bằng chứng sẵn có vào prompt giúp LLM trúng hơn, và FailLoc "
-                    "đi theo ý tưởng đó.",
+        "lien_quan": "Đây là bản đồ các nghiên cứu nhóm đã đọc, chia thành năm hướng: định vị theo phổ và đột biến, định vị "
+                     "bằng LLM, so sánh các lần chạy, dữ liệu lỗi và tính hợp lệ của đánh giá, và thực tế của lập trình viên. "
+                     "Ba khung cam là ba bài thầy giao, cũng là ba bài tiêu biểu nhất cho đề tài. Trang sau đi vào từng bài.",
+        "ba_bai": "SemLoc là bài trung tâm: LLM viết ràng buộc, chạy test để lấy phổ vi phạm. EffiHolmes xử lý lỗi chạy chậm "
+                  "bằng cách so hai lần chạy, còn nghiên cứu công nghiệp đưa stack trace của các lần sập vào prompt. Từ SemLoc "
+                  "nhóm học cách tái hiện và soát số, từ hai bài kia nhóm lấy ý tưởng đặt bằng chứng sẵn có vào một prompt, "
+                  "tức là FailLoc.",
+        "slide_22": "Bảng này đặt hướng của nhóm cạnh ba bài tiêu biểu. Điểm khác là nhóm kiểm tra lại chính bộ dữ liệu bằng "
+                    "thực thi và lặp mỗi cấu hình nhiều lần, có kiểm định thống kê, điều mà các bài trước không làm.",
         "hop_den_1": f"Giờ nhóm mở hộp SemLoc trên một chương trình cụ thể, {rs[0]['program']}. Mỗi thanh là điểm phổ vi phạm "
                      f"của một dòng, cao nhất là 1. Dòng {gt_line}, dòng lỗi thật, có điểm cao nhất, nghĩa là phổ vi phạm "
                      "đã chỉ đúng.",

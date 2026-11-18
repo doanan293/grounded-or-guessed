@@ -59,7 +59,7 @@ def code_block(gid, x, y, lines: list[str], highlight: set = frozenset(), first_
 
 
 def bars(gid, x, y, w, h, series: list[tuple], vmax: float, unit: str = "%", label_w: float = 170, nd: int = 1) -> str:
-    """Horizontal bars: (label, value, colour[, faded]); value printed at the bar end."""
+    """Horizontal bars: (label, value, colour[, base]); value printed at the bar end; `base` draws a grey first part."""
     n = len(series)
     step = h / n
     bh = min(34, step * 0.66)
@@ -71,6 +71,8 @@ def bars(gid, x, y, w, h, series: list[tuple], vmax: float, unit: str = "%", lab
         body.append(_t(x + label_w - 10, cy + bh * 0.68, label, size=17, weight="bold" if c != GREY else "normal", anchor="end"))
         bw = max(2, span * v / vmax)
         body.append(_r(x + label_w, cy, bw, bh, c, rx=4))
+        if len(s) > 3 and s[3]:  # stacked: the first s[3] of the bar is a grey base (e.g. spectrum under a bonus)
+            body.append(_r(x + label_w, cy, span * s[3] / vmax, bh, GREY, rx=4))
         body.append(_t(x + label_w + bw + 8, cy + bh * 0.68, f"{_p(v, nd)}{unit}", size=17, fill=INK, weight="bold"))
     return _g(gid, x, y, w, h, body)
 
@@ -146,3 +148,25 @@ def matrix(gid, x, y, rows: list[str], cols: list[str], cells: set, row_mark: di
                 body.append(f'<circle cx="{round(x + label_w + cell_w * (j + 0.5), 1)}" cy="{round(cy + row_h / 2, 1)}" r="7" '
                             f'fill="{(col_colors or {}).get(j, NAVY)}"/>')
     return _g(gid, x, y, w, 30 + row_h * len(rows), body)
+
+
+def panel(gid, x, y, w, blocks: list[tuple], size: float = 14, head_color: str = NAVY, fill: str = "#FFFFFF") -> str:
+    """Explanation box: blocks of (heading, text); text wraps to the box width (≈0.55 em per character)."""
+    import textwrap
+    per_line = max(10, int((w - 24) / (size * 0.55)))
+    lh = size * 1.4
+    body, cy = [], y + 14
+    for head, text in blocks:
+        if head:
+            cy += size * 1.25
+            body.append(_t(x + 12, cy, head, size=size + 1, fill=head_color, weight="bold"))
+        lines = textwrap.wrap(text, per_line)
+        if lines:  # one editable paragraph: first line direct, later lines as positioned tspans
+            cy += lh
+            rest = "".join(f'<tspan x="{x + 12}" dy="{round(lh, 1)}">{escape(l)}</tspan>' for l in lines[1:])
+            body.append(f'<text x="{x + 12}" y="{round(cy, 1)}" font-family="{BODY}" font-size="{size}" fill="{INK}">'
+                        f'{escape(lines[0])}{rest}</text>')
+            cy += lh * (len(lines) - 1)
+        cy += size * 0.6
+    h = cy - y + 8
+    return _g(gid, x, y, w, h, [_r(x, y, w, h, fill, stroke=LAVENDER, rx=10)] + body)

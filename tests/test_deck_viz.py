@@ -40,3 +40,19 @@ def test_big_number_and_gantt_and_matrix():
     assert "Chốt nhóm" in _texts(el)
     el = _bounds_ok(viz.matrix("m", 50, 100, ["l1", "l2"], ["t1", "t2"], {(0, 0), (1, 1)}, row_mark={1: viz.ORANGE}))
     assert len(list(el.iter("circle"))) == 2
+
+
+def test_bars_stack_a_base_segment():
+    el = _bounds_ok(viz.bars("b", 50, 100, 600, 100, [("dòng 73", 1.8, viz.ORANGE, 0.6)], vmax=2, unit="", nd=2))
+    fills = [r.get("fill") for r in el.iter("rect")]
+    assert viz.GREY in fills and viz.ORANGE in fills and "1,80" in _texts(el)
+
+
+def test_panel_wraps_to_its_width():
+    el = _bounds_ok(viz.panel("p", 600, 100, 300, [("Cách đọc", "mỗi hàng là một dòng mã, mỗi cột là một test, chấm "
+                                                                  "nghĩa là test chạy qua dòng đó")], size=14))
+    para = next(t for t in el.iter("text") if "".join(t.itertext()) != "Cách đọc")
+    lines = [para.text] + [ts.text for ts in para.iter("tspan")]
+    assert len(lines) >= 2 and all(len(t) * 14 * 0.55 <= 300 - 24 for t in lines)
+    x, y, w, h = map(float, el.get("data-pptx-bounds").split())
+    assert w == 300 and h > 0
