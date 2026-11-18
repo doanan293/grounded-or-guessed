@@ -78,7 +78,14 @@ line off.
 \end{table}
 
 \subsection{RQ2: What does the LLM need?}
-\textbf{The simple prompt wins.} Table~\ref{tab:main} gives the main comparison. FailLoc beats SemLoc at
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../generated/fig_rq2_main.pdf}
+\caption{Main comparison on the test split (Gemini 3.8 Flash, mean of three runs): Acc@1 (solid) and Acc@3 (light) on the original and the execution-normalized labels; whiskers are the standard deviation across runs. FailLoc in orange, SemLoc in blue.}
+\label{fig:main}
+\end{figure*}
+
+\textbf{The simple prompt wins.} Table~\ref{tab:main} and Fig.~\ref{fig:main} give the main comparison. FailLoc beats SemLoc at
 Acc@1 on all three label sets: \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo,
 \RqTwoOriginalAllLlmTestsDAccOneHi] (original), \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo,
 \RqTwoRepairedAllLlmTestsDAccOneHi] (repaired) and \RqTwoReviewedAllLlmTestsDAccOne{} [\RqTwoReviewedAllLlmTestsDAccOneLo,
@@ -111,7 +118,14 @@ labeled line (header and first body line). This lifts Acc@1 on the repaired labe
 original labels), a narrower margin than under exact matching; LLM-Direct ties SemLoc
 (\RqtolRepairedLlmDirectDAccOneTol{} [\RqtolRepairedLlmDirectDAccOneTolLo, \RqtolRepairedLlmDirectDAccOneTolHi]).
 
-\textbf{What carries the signal.} The failing tests do: against LLM-Direct they change Acc@3 by
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../generated/fig_ablation.pdf}
+\caption{Prompt ablation (test split, three runs): change when failing tests are added (LLM-Direct to FailLoc) and when per-line coverage is added (FailLoc to FailLoc+Cov), with \ConstCiLevel\% bootstrap intervals, on the three label sets.}
+\label{fig:ablation}
+\end{figure*}
+
+\textbf{What carries the signal.} (Fig.~\ref{fig:ablation}) The failing tests do: against LLM-Direct they change Acc@3 by
 \AblRepairedAllTestsEffectDAccThree{} [\AblRepairedAllTestsEffectDAccThreeLo, \AblRepairedAllTestsEffectDAccThreeHi]
 points (repaired). Per-line coverage does not: adding it changes Acc@3 by \AblRepairedAllCoverageEffectDAccThree{}
 [\AblRepairedAllCoverageEffectDAccThreeLo, \AblRepairedAllCoverageEffectDAccThreeHi] and Acc@1 by
@@ -187,6 +201,15 @@ the two methods of one model.}
 \end{figure}
 
 \subsection{RQ3: Robustness}
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../generated/fig_improvement.pdf}
+\caption{FailLoc against SemLoc on the same programs and model: three label sets (test split) and real BugsInPy bugs.}
+\label{fig:improvement}
+\end{figure*}
+
+Fig.~\ref{fig:improvement} summarizes FailLoc against SemLoc across label sets and on real bugs.
+
 \textbf{Real bugs.} On the 31 youtube-dl bugs (Table~\ref{tab:bip}), SemLoc's top-1 is the guess by construction, and the
 guess's Acc@1 (\BipAllLlmGuessAccOneMean\%) is SemLoc's; the spectrum alone places \BipAllSemlocSpectrumAccOneMean\% first,
 close to SBFL (\BipAllSbflOchiaiAccOneMean\%). FailLoc points the same way as on SemFault-250 (Acc@3

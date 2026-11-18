@@ -16,7 +16,20 @@ OUT = ROOT / "docs" / "report" / "generated" / "vi"
 MAIN = ["sbfl_ochiai", "llm_direct", "semloc", "semloc_no_prior", "llm_tests"]
 COST_PREFIX = {"llm_direct": "direct_test_gemini_r", "semloc": "semloc_test_gemini_r", "llm_tests": "direct_tests_test_gemini_r"}
 GT_VI = {"original": "Nhãn gốc", "repaired": "Nhãn đã chuẩn hóa", "reviewed": "Nhãn đã rà soát"}
-fmt = st.fmt
+LANG = "vi"  # main_en() switches to English labels and decimal points for the paper
+WIDTH = st.WIDTH_IN
+EN = {"Nhãn gốc": "Original labels", "Nhãn đã chuẩn hóa": "Normalized labels", "Nhãn đã rà soát": "Reviewed labels",
+      "Độ chính xác (%)": "Accuracy (%)", "Chênh lệch (điểm %)": "Difference (points)", "Thêm kiểm thử thất bại": "Add failing tests",
+      "Thêm độ phủ": "Add coverage", "nhãn gốc": "original labels", "nhãn đã chuẩn hóa": "normalized labels",
+      "nhãn đã rà soát": "reviewed labels", "BugsInPy (lỗi thật)": "BugsInPy (real bugs)"}
+
+
+def tr(s: str) -> str:
+    return EN.get(s, s) if LANG == "en" else s
+
+
+def fmt(v: float, nd: int = 1) -> str:
+    return st.fmt(v, nd, LANG)
 
 
 def _rows(name_: str) -> list[dict]:
@@ -52,7 +65,7 @@ def cost_acc_data(gt: str = "repaired") -> list[dict]:
 def fig_rq2_main(path: Path) -> None:
     import matplotlib.pyplot as plt
     rows = rq2_main_data(("original", "repaired"))
-    fig, axes = plt.subplots(1, 2, figsize=(st.WIDTH_IN, 3.6), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH, 3.6), sharey=True)
     y = range(len(MAIN))
     for ax, gt in zip(axes, ("original", "repaired")):
         by = {r["method"]: r for r in rows if r["gt"] == gt}
@@ -62,10 +75,10 @@ def fig_rq2_main(path: Path) -> None:
             ax.barh(i - 0.19, r["acc1"], height=0.36, color=c, xerr=r["acc1_sd"], ecolor=st.MUTED, capsize=0)
             ax.text(r["acc1"] + r["acc1_sd"] + 1.2, i - 0.19, fmt(r["acc1"]), va="center", fontsize=11, color=st.INK)
             ax.text(r["acc3"] + r["acc3_sd"] + 1.2, i + 0.19, fmt(r["acc3"]), va="center", fontsize=11, color=st.MUTED)
-        ax.set_title(GT_VI[gt], fontsize=13, loc="left")
+        ax.set_title(tr(GT_VI[gt]), fontsize=13, loc="left")
         ax.set_xlim(0, 100)
         ax.set_xticks([0, 25, 50, 75, 100])
-        ax.set_xlabel("Độ chính xác (%)")
+        ax.set_xlabel(tr("Độ chính xác (%)"))
         ax.xaxis.grid(True, color=st.GRID, lw=0.6)
         ax.set_axisbelow(True)
         ax.tick_params(axis="y", length=0)
@@ -322,12 +335,12 @@ def decomposition_data() -> list[dict]:
 
 def improvement_data() -> list[dict]:
     rq2 = {(r["gt"], r["method"]): r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"}
-    out = [{"setting": GT_VI3[g], "semloc1": 100 * float(rq2[(g, "semloc")]["acc1_mean"]),
+    out = [{"setting": tr(GT_VI3[g]), "semloc1": 100 * float(rq2[(g, "semloc")]["acc1_mean"]),
             "failloc1": 100 * float(rq2[(g, "llm_tests")]["acc1_mean"]),
             "semloc3": 100 * float(rq2[(g, "semloc")]["acc3_mean"]), "failloc3": 100 * float(rq2[(g, "llm_tests")]["acc3_mean"])}
            for g in GT_ORDER]
     bip = {r["method"]: r for r in _rows("rq3_bugsinpy.csv") if r["subset"] == "all"}
-    out.append({"setting": "BugsInPy (lỗi thật)", "semloc1": 100 * float(bip["semloc_prior"]["acc1_mean"]),
+    out.append({"setting": tr("BugsInPy (lỗi thật)"), "semloc1": 100 * float(bip["semloc_prior"]["acc1_mean"]),
                 "failloc1": 100 * float(bip["llm_tests"]["acc1_mean"]),
                 "semloc3": 100 * float(bip["semloc_prior"]["acc3_mean"]), "failloc3": 100 * float(bip["llm_tests"]["acc3_mean"])})
     return out
@@ -381,7 +394,7 @@ def _forest(ax, rows, key, lo, hi, title):
             ax.plot(r[key], i, mk, mfc="white", mec=c, ms=7, mew=1.6)
     ax.axvline(0, color=st.MUTED, lw=1)
     ax.set_title(title, fontsize=13, loc="left")
-    ax.set_xlabel("Chênh lệch (điểm %)")
+    ax.set_xlabel(tr("Chênh lệch (điểm %)"))
     ax.xaxis.grid(True, color=st.GRID, lw=0.6)
     ax.set_axisbelow(True)
     ax.tick_params(axis="y", length=0)
@@ -394,8 +407,8 @@ def fig_ablation(path: Path) -> None:
         for gt in GT_ORDER:
             r = next(x for x in ablation_data() if x["gt"] == gt and x["contrast"] == contrast)
             rows.append({**r, "style": GT_MARK[gt]})
-            labels.append(f"{lab.splitlines()[0]}, {GT_VI3[gt].lower()}")
-    fig, axes = plt.subplots(1, 2, figsize=(st.WIDTH_IN, 3.4), sharey=True)
+            labels.append(f"{tr(lab.splitlines()[0])}, {tr(GT_VI3[gt].lower())}")
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH, 3.4), sharey=True)
     _forest(axes[0], rows, "d_acc1", "lo1", "hi1", "Acc@1")
     _forest(axes[1], rows, "d_acc3", "lo3", "hi3", "Acc@3")
     axes[0].set_yticks(range(len(rows)), labels, fontsize=11)
@@ -477,7 +490,7 @@ def fig_decomposition(path: Path) -> None:
 def fig_improvement(path: Path) -> None:
     import matplotlib.pyplot as plt
     rows = improvement_data()
-    fig, axes = plt.subplots(1, 2, figsize=(st.WIDTH_IN, 3.0), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH, 3.0), sharey=True)
     for ax, k, title in ((axes[0], "1", "Acc@1"), (axes[1], "3", "Acc@3")):
         for i, r in enumerate(rows):
             a, b = r["semloc" + k], r["failloc" + k]
@@ -489,7 +502,7 @@ def fig_improvement(path: Path) -> None:
         ax.set_xlim(0, 112)
         ax.xaxis.grid(True, color=st.GRID, lw=0.6)
         ax.set_axisbelow(True)
-        ax.set_xlabel("Độ chính xác (%)")
+        ax.set_xlabel(tr("Độ chính xác (%)"))
     axes[0].set_yticks(range(len(rows)), [r["setting"] for r in rows], fontsize=11)
     axes[0].invert_yaxis()
     from matplotlib.lines import Line2D
@@ -514,6 +527,20 @@ def fig_failures(path: Path) -> None:
     _save(fig, path)
 
 
+def main_en() -> None:
+    """English versions of the three headline figures for the paper (figure*, 18.2 cm, decimal points)."""
+    global LANG, WIDTH
+    st.apply("en")
+    LANG, WIDTH = "en", 18.2 / 2.54
+    out = ROOT / "docs" / "report" / "generated"
+    try:
+        fig_rq2_main(out / "fig_rq2_main.pdf")
+        fig_ablation(out / "fig_ablation.pdf")
+        fig_improvement(out / "fig_improvement.pdf")
+    finally:
+        LANG, WIDTH = "vi", st.WIDTH_IN
+
+
 def main() -> None:
     st.apply("vi")
     OUT.mkdir(parents=True, exist_ok=True)
@@ -534,3 +561,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    main_en()

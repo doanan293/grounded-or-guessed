@@ -114,3 +114,14 @@ def test_decomposition_and_improvement():
 def test_failure_categories_count_programs():
     d = dict(mf.failure_data())
     assert sum(d.values()) > 0 and "prior_hurts" in d
+
+
+def test_english_figures_for_the_paper():
+    mf.main_en()
+    out = ROOT / "docs" / "report" / "generated"
+    for name in ("fig_rq2_main", "fig_ablation", "fig_improvement"):
+        info = subprocess.run(["pdfinfo", str(out / f"{name}.pdf")], capture_output=True, text=True).stdout
+        w_pt = float(next(l for l in info.splitlines() if l.startswith("Page size")).split()[2])
+        assert abs(w_pt / 72 * 2.54 - 18.2) < 0.1, name
+        text = subprocess.run(["pdftotext", str(out / f"{name}.pdf"), "-"], capture_output=True, text=True).stdout
+        assert "nhãn" not in text.lower() and "," not in text.replace(", ", ""), name  # English labels, decimal points
