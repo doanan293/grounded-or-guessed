@@ -177,7 +177,7 @@ def panel(gid, x, y, w, blocks: list[tuple], size: float = 14, head_color: str =
     return _g(gid, x, y, w, round(h, 1), [_r(x, y, w, round(h, 1), fill, stroke=LAVENDER, rx=10), text])
 
 
-def before_after(gid, x, y, w, rows: list[tuple], head=("Tiêu chí", "SemLoc / bài trước", "Nhóm (FailLoc)", "Chênh lệch"),
+def before_after(gid, x, y, w, rows: list[tuple], head=("Tiêu chí", "Phương pháp SemLoc", "Phương pháp FailLoc", "Chênh lệch"),
                  row_h: float = 50) -> str:
     """Before → after table: criterion | before (grey) → after (orange) | gain badge."""
     cw = [w * 0.27, w * 0.24, w * 0.24, w * 0.25]

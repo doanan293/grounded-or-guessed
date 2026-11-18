@@ -146,7 +146,7 @@ def lan1(bd) -> None:
                                        "Acc@1 của phương pháp SBFL\ntrên 250 chương trình", color=RED, size=44, w=340))
 
     # 4. SemLoc's promise
-    _title(bd, "semloc_hua.svg", "SemLoc hứa: neo LLM vào bằng chứng thực thi")
+    _title(bd, "semloc_hua.svg", "Phương pháp SemLoc hứa: neo LLM vào bằng chứng thực thi")
     steps = ["LLM viết\nràng buộc", "Chèn\nvào mã", "Chạy\ntest", "Phổ vi phạm\n(Ochiai)", "LLM vá thử,\nchạy lại test"]
     bd.A("semloc_hua.svg", viz.pipeline("quy-trinh-semloc", 50, 108, steps, box_w=150, gap=28, box_h=72))
     expl = ["Điều kiện phải đúng,\nví dụ tổng phần chia\nbằng tổng ban đầu", "Mỗi ràng buộc thành\nmột lệnh kiểm tra\ntại một dòng",
@@ -158,7 +158,7 @@ def lan1(bd) -> None:
             body.append(_t(50 + k * 178 + 75, 206 + 19 * r, line, size=13, fill=MUTED, anchor="middle"))
     bd.A("semloc_hua.svg", viz._g("giai-thich-buoc", 50, 192, 878, 66, body))
     bd.A("semloc_hua.svg", viz.big_number("acc-cong-bo", 50, 300, f"{m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}%",
-                                          "Acc@1 SemLoc công bố\ntrên SemFault-250\n(Claude Sonnet 4.6)", size=60, w=300))
+                                          "Acc@1 phương pháp SemLoc\ncông bố trên SemFault-250\n(Claude Sonnet 4.6)", size=60, w=300))
     bd.A("semloc_hua.svg", P("loi-hua", 380, 290, 540, [
         ("Bài báo khẳng định", "Độ chính xác đến từ việc neo lập luận của LLM vào bằng chứng thực thi: LLM chỉ đề xuất, "
                                "kết quả chạy test quyết định thứ hạng."),
@@ -169,7 +169,7 @@ def lan1(bd) -> None:
     bd.E("cau_hoi.svg", [
         ("Popular programming languages", "Bằng chứng hay phỏng đoán? Ba câu hỏi"),
         ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: số công bố còn đúng", "khi chấm công bằng, sửa nhãn?"]),
-        ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM cần gì? FailLoc một lượt", "so với SemLoc nhiều bước"]),
+        ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM cần gì? Phương pháp FailLoc", "so với phương pháp SemLoc"]),
         ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, mã đổi tên,", "các họ mô hình khác"]),
         ("Saturn", "Chung"), ("Saturn is a gas giant", ["Thứ hạng đến từ bằng chứng", "thực thi hay LLM tự đoán?"]),
     ])
@@ -217,7 +217,7 @@ def lan1(bd) -> None:
              ("Sự cố + LLM (2026)", [("Bài toán", "app Java lớn sập hàng nghìn lần mỗi tuần, mỗi lần có stack trace."),
                                       ("Cách làm", "gom stack trace thành bảng hàm đáng nghi, đưa bảng vào prompt."),
                                       ("Kết quả", "38 lỗi thật, chỉ đúng chỗ lỗi 71%."),
-                                      ("Nhóm học", "đưa bằng chứng sẵn có vào một prompt: ý tưởng của FailLoc.")])]
+                                      ("Nhóm học", "đưa bằng chứng sẵn có vào một prompt: ý tưởng của phương pháp FailLoc.")])]
     for k, (head, blocks) in enumerate(cards):
         bd.A("ba_bai.svg", _t(40 + k * 300, 128, head, size=19, fill=ORANGE, weight="bold"))
         bd.A("ba_bai.svg", P(f"bai-{k}", 40 + k * 300, 140, 284, [(a, b[0].upper() + b[1:]) for a, b in blocks], size=14))
@@ -228,7 +228,7 @@ def lan1(bd) -> None:
     gt_r = next(r for r in rs if r["is_gt_repaired"] == "1")
     guess_r = next(r for r in rs if r["is_guess"] == "1")
     for page, with_bonus in (("hop_den_1.svg", False), ("hop_den_2.svg", True)):
-        _title(bd, page, "Mở hộp SemLoc: điểm phổ của từng dòng" if not with_bonus else
+        _title(bd, page, "Mở hộp phương pháp SemLoc: điểm phổ của từng dòng" if not with_bonus else
                f"Cộng +{m('ConstPriorWeight')} cho dòng LLM đoán: nó luôn đứng hạng 1")
         ser = []
         for r in rs:
@@ -243,7 +243,7 @@ def lan1(bd) -> None:
         bd.A(page, _note(40, 470, [f"Chương trình {prog} (SemFault-250), lượt chạy 1 với Gemini 3.8 Flash."], size=13,
                          gid="nguon-diem", w=520))
     bd.A("hop_den_1.svg", P("doc-hinh-1", 590, 108, 330, [
-        ("Hình này cho thấy", f"Điểm SemLoc chấm cho {len(rs)} dòng ứng viên của một chương trình, trước khi xếp hạng."),
+        ("Hình này cho thấy", f"Điểm phương pháp SemLoc chấm cho {len(rs)} dòng ứng viên của một chương trình, trước khi xếp hạng."),
         ("Điểm phổ là gì", "Với mỗi ràng buộc LLM viết, đếm test fail và test pass vi phạm nó rồi tính Ochiai (0 đến 1). "
                            "Điểm của dòng là điểm cao nhất trong các ràng buộc gắn với dòng đó."),
         ("Cách đọc", "Thanh dài là dòng đáng nghi hơn; xanh đậm là dòng lỗi thật; vạch đứt là mức tối đa 1."),
@@ -258,7 +258,7 @@ def lan1(bd) -> None:
                         f"lỗi {gt_r['line']} ({_p(float(gt_r['spectrum']), 2)}): đáp án đúng bị đẩy xuống hạng 2."),
     ], size=14))
     bd.A("hop_den_2.svg", viz.big_number("ty-le-hang-1", 590, 390, f"{_p(100 * share, 0)}%",
-                                         f"số lần chạy (trên {n_pairs}) mà hạng 1\ncủa SemLoc là dòng LLM đoán",
+                                         f"số lần chạy (trên {n_pairs}) mà hạng 1\ncủa phương pháp SemLoc\nlà dòng LLM đoán",
                                          color=ORANGE, size=40, w=330))
 
     # 9. the labels themselves are wrong; the execution-repaired labels
@@ -281,13 +281,13 @@ def lan1(bd) -> None:
                                        "đây được báo trên cả nhãn gốc lẫn nhãn đã sửa.")], size=14))
 
     # 10. FailLoc next to SemLoc, with the prompt it sends
-    _title(bd, "failloc.svg", f"{name('llm_tests')}: đưa thẳng test fail cho LLM, một lượt gọi")
-    bd.A("failloc.svg", _t(40, 126, "SemLoc", size=18, fill=NAVY, weight="bold"))
+    _title(bd, "failloc.svg", f"Phương pháp {name('llm_tests')}: đưa thẳng test fail cho LLM, một lượt gọi")
+    bd.A("failloc.svg", _t(40, 126, "Phương pháp SemLoc", size=18, fill=NAVY, weight="bold"))
     bd.A("failloc.svg", viz.pipeline("semloc-ngan", 40, 138, ["Ràng\nbuộc", "Chèn,\nchạy", "Phổ", "+thưởng", "Vá thử"],
                                      box_w=96, gap=16, box_h=56))
     bd.A("failloc.svg", _note(40, 214, [f"≈ {m('CostSemlocTokensK')} nghìn token, {m('CostSemlocCalls')} lượt gọi mỗi CT"],
                               size=14, gid="chi-phi-semloc", w=540))
-    bd.A("failloc.svg", _t(40, 276, name("llm_tests"), size=18, fill=ORANGE, weight="bold"))
+    bd.A("failloc.svg", _t(40, 276, f"Phương pháp {name('llm_tests')}", size=18, fill=ORANGE, weight="bold"))
     bd.A("failloc.svg", viz.pipeline("failloc-ngan", 40, 288, ["Mã +\ntest fail", "Một lượt\ngọi LLM", "5 dòng\nnghi nhất"],
                                      accent=1, box_w=150, gap=30, box_h=64))
     bd.A("failloc.svg", _note(40, 376, [f"≈ {m('CostLlmTestsTokensK')} nghìn token, {m('CostLlmTestsCalls')} lượt gọi mỗi CT"],
@@ -298,7 +298,7 @@ def lan1(bd) -> None:
     prompt = ["Mã nguồn đánh số dòng:", "  22 weight_sum = sum(weights)", "  …",
               f"{n_fail} test fail, {n_pass} test pass;", "chương trình có đúng một dòng lỗi.", "Test fail:",
               f"  {fail_test['id'][:30]}", "  dòng lỗi đầu tiên của test", "Trả về 5 dòng nghi nhất (JSON)."]
-    body = [_r(610, 108, 310, 300, viz.LIGHT, stroke=ORANGE, rx=10), _t(626, 134, "Prompt của FailLoc (rút gọn)", size=15,
+    body = [_r(610, 108, 310, 300, viz.LIGHT, stroke=ORANGE, rx=10), _t(626, 134, "Prompt gửi LLM (rút gọn)", size=15,
                                                                          fill=ORANGE, weight="bold")]
     body += [_t(626, 164 + 26 * k, line, size=13, family=viz.MONO) for k, line in enumerate(prompt)]
     bd.A("failloc.svg", viz._g("prompt-failloc", 610, 108, 310, 300, body))
@@ -329,7 +329,7 @@ def lan1(bd) -> None:
 
     # 12. results race
     rq2 = {(r["gt"], r["method"]): r for r in _csv(ROOT / "data" / "rq2_ours.csv") if r.get("subset", "all") == "all"}
-    _title(bd, "ket_qua.svg", f"{name('llm_tests')} dẫn đầu ở Acc@1 trên cả hai bộ nhãn")
+    _title(bd, "ket_qua.svg", f"Phương pháp {name('llm_tests')} dẫn đầu ở Acc@1 trên cả hai bộ nhãn")
     for k, (gt, head) in enumerate((("original", "Nhãn gốc"), ("repaired", "Nhãn đã sửa"))):
         x = 30 + k * 300
         bd.A("ket_qua.svg", _t(x + 140, 124, f"{head}: Acc@1", size=16, fill=INK, weight="bold"))
@@ -342,16 +342,16 @@ def lan1(bd) -> None:
     bd.A("ket_qua.svg", P("doc-ket-qua", 640, 108, 290, [
         ("Cách đọc", "Mỗi thanh là Acc@1: % chương trình có dòng lỗi ở hạng 1. Tập test, Gemini 3.8 Flash, trung bình 3 "
                      "lần chạy."),
-        ("So với SemLoc", f"Nhãn đã sửa: {name('llm_tests')} hơn {d1} điểm Acc@1 (khoảng tin cậy "
+        ("So với phương pháp SemLoc", f"Nhãn đã sửa: phương pháp {name('llm_tests')} hơn {d1} điểm Acc@1 (khoảng tin cậy "
                           f"[{m('RqTwoRepairedAllLlmTestsDAccOneLo')}; {m('RqTwoRepairedAllLlmTestsDAccOneHi')}]); Acc@3 "
                           f"{a3('repaired', 'llm_tests')}% so với {a3('repaired', 'semloc')}%."),
-        ("Ý chính", f"Bỏ điểm thưởng, SemLoc rơi từ {a1('repaired', 'semloc')}% xuống {a1('repaired', 'semloc_no_prior')}%: "
+        ("Ý chính", f"Bỏ điểm thưởng, phương pháp SemLoc rơi từ {a1('repaired', 'semloc')}% xuống {a1('repaired', 'semloc_no_prior')}%: "
                     "phần lớn hạng 1 của nó là dòng đoán."),
     ], size=13))
 
     # 13. before -> after: what the group improves over SemLoc, same programs, same model
     ratio = float(m("CostSemlocTokensK").replace(",", ".")) / float(m("CostLlmTestsTokensK").replace(",", "."))
-    _title(bd, "cai_tien.svg", "Cải tiến so với SemLoc: chính xác hơn, rẻ hơn, đánh giá chặt hơn")
+    _title(bd, "cai_tien.svg", "So với phương pháp SemLoc: chính xác hơn, rẻ hơn, chặt chẽ hơn")
     rows = [("Acc@1, nhãn đã sửa", f"{a1('repaired', 'semloc')}%", f"{a1('repaired', 'llm_tests')}%", f"{d1} điểm"),
             ("Acc@3, nhãn đã sửa", f"{a3('repaired', 'semloc')}%", f"{a3('repaired', 'llm_tests')}%",
              f"{m('RqTwoRepairedAllLlmTestsDAccThree')} điểm"),
@@ -413,18 +413,18 @@ def notes_lan1(bd) -> dict:
                    "được test pass chạy qua thì đáng nghi. Ở đây cột màu đỏ là test fail duy nhất, và nó chạy qua đúng những dòng mà "
                    f"các test pass cũng chạy qua. Mọi dòng vì thế nhận cùng một điểm, kể cả dòng {ex['gt_line']} là dòng lỗi "
                    f"thật. Trên cả 250 chương trình, phương pháp SBFL chỉ đúng ngay hạng 1 ở {m('RqOneSbflOchiaiFairAllAccOne')}%.",
-        "semloc_hua": "SemLoc, bài trung tâm trong ba bài thầy giao, đề xuất một quy trình nhiều bước. LLM viết ra các ràng "
+        "semloc_hua": "Phương pháp SemLoc, bài trung tâm trong ba bài thầy giao, đề xuất một quy trình nhiều bước. LLM viết ra các ràng "
                       "buộc ngữ nghĩa, ràng buộc được chèn vào mã, chạy test để biết ràng buộc nào bị vi phạm, rồi LLM vá thử "
                       f"để kiểm chứng. Tác giả báo cáo Acc@1 là {m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}% và cho rằng "
                       "độ chính xác này đến từ việc neo LLM vào bằng chứng thực thi. Nhóm muốn kiểm tra lại đúng điều đó.",
-        "cau_hoi": "Từ đó nhóm đặt câu hỏi: thứ hạng của SemLoc đến từ bằng chứng thực thi hay từ việc LLM tự đoán. RQ1 tái "
-                   "hiện kết quả công bố và kiểm tra cách chấm điểm, kể cả chính các nhãn. RQ2 so SemLoc với FailLoc, phương "
-                   "pháp của nhóm chỉ dùng một lượt gọi LLM. RQ3 kiểm tra độ bền, nhóm sẽ trình bày ở lần sau.",
+        "cau_hoi": "Từ đó nhóm đặt câu hỏi: thứ hạng của phương pháp SemLoc đến từ bằng chứng thực thi hay từ việc LLM tự đoán. RQ1 tái "
+                   "hiện kết quả công bố và kiểm tra cách chấm điểm, kể cả chính các nhãn. RQ2 so phương pháp SemLoc với phương pháp FailLoc "
+                   "của nhóm chỉ dùng một lượt gọi LLM. RQ3 kiểm tra độ bền, nhóm sẽ trình bày ở lần sau.",
         "ba_bai": "Trong nhiều nghiên cứu về định vị lỗi nhóm đã đọc, ba bài tiêu biểu nhất là ba bài thầy giao. SemLoc là bài trung tâm: LLM viết ràng buộc, chạy test để lấy phổ vi phạm. EffiHolmes xử lý lỗi chạy chậm "
                   "bằng cách so hai lần chạy, còn nghiên cứu công nghiệp đưa stack trace của các lần sập vào prompt. Từ SemLoc "
                   "nhóm học cách tái hiện và soát số, từ hai bài kia nhóm lấy ý tưởng đặt bằng chứng sẵn có vào một prompt, "
                   "tức là FailLoc.",
-        "hop_den_1": f"Giờ nhóm mở hộp SemLoc trên một chương trình cụ thể, {rs[0]['program']}. Mỗi thanh là điểm phổ vi phạm "
+        "hop_den_1": f"Giờ nhóm mở hộp phương pháp SemLoc trên một chương trình cụ thể, {rs[0]['program']}. Mỗi thanh là điểm phổ vi phạm "
                      f"của một dòng, cao nhất là 1. Dòng {gt_line}, dòng lỗi thật, có điểm cao nhất, nghĩa là phổ vi phạm "
                      "đã chỉ đúng.",
         "hop_den_2": f"Nhưng mã nguồn công bố có một bước bài báo không nhắc tới: dòng LLM tự đoán được cộng thêm "
@@ -443,11 +443,11 @@ def notes_lan1(bd) -> dict:
         "thiet_ke_l1": "Để so sánh công bằng, năm phương pháp chạy trên cùng 200 chương trình của tập test, cùng mô hình "
                        "Gemini 3.8 Flash. Mỗi phương pháp có LLM được chạy ba lần, kết quả báo trên cả nhãn gốc lẫn nhãn đã "
                        "sửa. Tập dev 50 chương trình chỉ dùng để chọn tham số.",
-        "ket_qua": f"Đây là kết quả chính. Trên cả nhãn gốc lẫn nhãn đã sửa, FailLoc đứng đầu ở Acc@1. Trên nhãn đã sửa, "
+        "ket_qua": f"Đây là kết quả chính. Trên cả nhãn gốc lẫn nhãn đã sửa, phương pháp FailLoc đứng đầu ở Acc@1. Trên nhãn đã sửa, "
                    f"FailLoc đạt {a1('repaired', 'llm_tests')}%, SemLoc {a1('repaired', 'semloc')}%, tức hơn "
                    f"{m('RqTwoRepairedAllLlmTestsDAccOne')} điểm, và khoảng tin cậy không chạm 0. Bỏ điểm thưởng đi, SemLoc "
                    f"chỉ còn {a1('repaired', 'semloc_no_prior')}%.",
-        "cai_tien": f"Gói lại những gì nhóm làm tốt hơn SemLoc, trên cùng chương trình và cùng mô hình. FailLoc hơn "
+        "cai_tien": f"Gói lại những gì nhóm làm tốt hơn phương pháp SemLoc, trên cùng chương trình và cùng mô hình. FailLoc hơn "
                     f"{m('RqTwoRepairedAllLlmTestsDAccOne')} điểm Acc@1 và {m('RqTwoRepairedAllLlmTestsDAccThree')} điểm "
                     f"Acc@3 trên nhãn đã sửa, và vẫn hơn trên nhãn gốc. Nó dùng ít token hơn khoảng {_p(ratio, 0)} lần và chỉ "
                     "một lượt gọi LLM. Về cách đánh giá, nhóm chấm trên nhãn đã sửa bằng thực thi, chạy mỗi cấu hình ba lần "
