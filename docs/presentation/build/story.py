@@ -17,7 +17,7 @@ from method_names import name  # noqa: E402
 
 # lần 1 roster: output stem -> template slide (22 = title + empty canvas)
 LAN1 = [("slide_01.svg", 1), ("moc.svg", 22), ("sbfl_mu.svg", 22), ("semloc_hua.svg", 22), ("cau_hoi.svg", 20),
-        ("lien_quan.svg", 22), ("ba_bai.svg", 22), ("slide_22.svg", 22), ("hop_den_1.svg", 22), ("hop_den_2.svg", 22), ("nhan_sai.svg", 22), ("failloc.svg", 22),
+        ("ba_bai.svg", 22), ("hop_den_1.svg", 22), ("hop_den_2.svg", 22), ("nhan_sai.svg", 22), ("failloc.svg", 22),
         ("thiet_ke_l1.svg", 22), ("ket_qua.svg", 22), ("chi_phi.svg", 14), ("lan_sau.svg", 22),
         ("cong_cu_ai.svg", 22), ("hien_trang.svg", 22), ("tien_do.svg", 22), ("slide_30.svg", 30)]
 
@@ -181,7 +181,7 @@ def lan1(bd) -> None:
                                 w=880))
 
     # 6b. the three representative studies
-    _title(bd, "ba_bai.svg", "Ba nghiên cứu tiêu biểu và điều nhóm học được")
+    _title(bd, "ba_bai.svg", "Nghiên cứu liên quan: ba bài tiêu biểu và điều nhóm học được")
     cards = [("SemLoc (2026)", [("Bài toán", "lỗi ngữ nghĩa trong hàm Python; test trượt nhưng không chỉ ra dòng."),
                                  ("Cách làm", "LLM viết ràng buộc, chạy test lấy phổ vi phạm, vá thử để kiểm chứng."),
                                  ("Kết quả", f"Acc@1 {m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}% trên SemFault-250."),
@@ -395,15 +395,10 @@ def notes_lan1(bd) -> dict:
         "cau_hoi": "Từ đó nhóm đặt câu hỏi: thứ hạng của SemLoc đến từ bằng chứng thực thi hay từ việc LLM tự đoán. RQ1 tái "
                    "hiện kết quả công bố và kiểm tra cách chấm điểm, kể cả chính các nhãn. RQ2 so SemLoc với FailLoc, phương "
                    "pháp của nhóm chỉ dùng một lượt gọi LLM. RQ3 kiểm tra độ bền, nhóm sẽ trình bày ở lần sau.",
-        "lien_quan": "Đây là bản đồ các nghiên cứu nhóm đã đọc, chia thành năm hướng: định vị theo phổ và đột biến, định vị "
-                     "bằng LLM, so sánh các lần chạy, dữ liệu lỗi và tính hợp lệ của đánh giá, và thực tế của lập trình viên. "
-                     "Ba khung cam là ba bài thầy giao, cũng là ba bài tiêu biểu nhất cho đề tài. Trang sau đi vào từng bài.",
-        "ba_bai": "SemLoc là bài trung tâm: LLM viết ràng buộc, chạy test để lấy phổ vi phạm. EffiHolmes xử lý lỗi chạy chậm "
+        "ba_bai": "Trong nhiều nghiên cứu về định vị lỗi nhóm đã đọc, ba bài tiêu biểu nhất là ba bài thầy giao. SemLoc là bài trung tâm: LLM viết ràng buộc, chạy test để lấy phổ vi phạm. EffiHolmes xử lý lỗi chạy chậm "
                   "bằng cách so hai lần chạy, còn nghiên cứu công nghiệp đưa stack trace của các lần sập vào prompt. Từ SemLoc "
                   "nhóm học cách tái hiện và soát số, từ hai bài kia nhóm lấy ý tưởng đặt bằng chứng sẵn có vào một prompt, "
                   "tức là FailLoc.",
-        "slide_22": "Bảng này đặt hướng của nhóm cạnh ba bài tiêu biểu. Điểm khác là nhóm kiểm tra lại chính bộ dữ liệu bằng "
-                    "thực thi và lặp mỗi cấu hình nhiều lần, có kiểm định thống kê, điều mà các bài trước không làm.",
         "hop_den_1": f"Giờ nhóm mở hộp SemLoc trên một chương trình cụ thể, {rs[0]['program']}. Mỗi thanh là điểm phổ vi phạm "
                      f"của một dòng, cao nhất là 1. Dòng {gt_line}, dòng lỗi thật, có điểm cao nhất, nghĩa là phổ vi phạm "
                      "đã chỉ đúng.",
