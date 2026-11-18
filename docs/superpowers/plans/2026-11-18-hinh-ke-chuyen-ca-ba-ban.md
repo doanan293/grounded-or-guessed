@@ -1,14 +1,16 @@
-# Hình, kể chuyện và FailLoc — lần 1 Implementation Plan
+# Hình, kể chuyện và FailLoc — cả ba bản (lần 1, lần 2, bảo vệ) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Báo cáo VI lần 1 và deck lần 1 có tên phương pháp chuẩn (FailLoc …), 5 sơ đồ + 3 biểu đồ phong cách nghiên cứu trong báo cáo, deck kể chuyện vẽ riêng có speaker notes, bỏ thành viên/phân công.
+**Goal:** Cả ba bản (báo cáo VI lần 1/lần 2/đầy đủ, bài báo EN, ba deck) có tên phương pháp chuẩn (FailLoc …), 5 sơ đồ + 3 biểu đồ phong cách nghiên cứu trong báo cáo, deck kể chuyện vẽ riêng có speaker notes, bỏ thành viên/phân công.
 
 **Architecture:** Một nguồn tên hiển thị (`scripts/method_names.py`) dùng chung cho bảng, hình, deck. Biểu đồ: `scripts/make_figures.py` (matplotlib, đọc `data/`) → `docs/report/generated/vi/fig_*.pdf`. Sơ đồ: TikZ trong `docs/report/vi/figures/*.tex`, số qua macro `numbers-vi.tex`. Deck: `build_deck.py` (ppt-master Edit Native PPTX, workspace `runs/slides/bao-cao-lan-1_20261108`) dựng trang mới trên khung `slide_22` (tiêu đề + nền trống) bằng SVG khối gốc, ghi `notes/<stem>.md`.
 
 **Tech Stack:** Python 3 (`.venv` cho scripts/tests; `/usr/bin/python3` có python-pptx cho deck), matplotlib, XeLaTeX + TikZ, ppt-master scripts trong `.claude/skills/ppt-master/scripts`.
 
 **Spec:** `docs/superpowers/specs/2026-11-18-hinh-va-ke-chuyen-design.md`
+
+**Thứ tự giao:** Phần A (Task 1–9) = lần 1, phát hành trước vì đến hạn 18–19/11. Phần B (Task 10–12) = lần 2, xong trước 25/11. Phần C (Task 13–15) = bảo vệ + bài báo EN. Hình của lần trước tự có trong bản sau (cùng nguồn LaTeX, `\IfAtLeast`). Đổi tên phương pháp và bìa áp cho cả ba bản ngay từ Phần A.
 
 ## Global Constraints
 
@@ -190,3 +192,63 @@ Bỏ khỏi lần 1: `nhom.svg`, `phan_cong.svg`, `slide_03` (mục lục), `sli
 - [ ] **Step 1:** `scripts/regenerate_all.sh && .venv/bin/pytest -q && make -C docs/report check` → tất cả PASS.
 - [ ] **Step 2:** Hỏi trưởng nhóm trước khi động tới nhánh: dựng lại `bao-cao-lan-1` như lần trước (reset về `main`, commit phát hành: `\Version` mặc định `lan1`, chỉ giữ `main-lan1.pdf` → `docs/report/bao-cao.pdf` và `bao-cao-lan-1.pptx`), rồi `git push --force-with-lease origin bao-cao-lan-1` và `git push origin main` qua remote SSH `github-personal`.
 - [ ] **Step 3:** Báo lại đường dẫn PDF + PPTX, số hình, và những gì (nếu có) dời sang lần 2.
+
+---
+
+## Phần B — lần 2 (25–26/11)
+
+### Task 10: Biểu đồ và sơ đồ lần 2 (F6, C3–C7)
+
+**Files:**
+- Modify: `scripts/make_figures.py` (hàm mới, cùng `fig_style`); Create: `docs/report/vi/figures/ra-soat-nhan.tex` (F6)
+- Test: `tests/test_make_figures.py`
+
+**Interfaces:** thêm `generated/vi/fig_label_flow.pdf` (C3), `fig_ablation.pdf` (C4), `fig_addons.pdf` (C5), `fig_rq3.pdf` (C6), `fig_pareto.pdf` (C6b, thay `pareto.pdf` cũ, tên mới), `fig_decomposition.pdf` (C7); mỗi hàm `*_data()` trả list dict để test.
+
+- [ ] **Step 1: Test** khớp số với CSV: C3 từ `label_audit.csv` (subset `all`: `same, blank, off_by_one, farther, two_line…` cộng lại = `n`); C4 từ `ablation_coverage.csv` (gt `repaired`/`reviewed`, `d_acc1/d_acc3` kèm `lo/hi`); C5 từ `ablation_coverage.csv` + `vote_dev.csv` + `static_tools.csv` (không PAV ở lan2); C6 từ `rq3_bugsinpy.csv` (subset `all`), `rq3_renamed.csv` (gốc → đổi tên), `rq3_families.csv` (5 họ); C6b từ `pareto.csv`; C7 từ `rq_decomposition.csv` (`phi_guess`, `phi_spectrum`, Acc@1/Acc@3, CI cụm). Mỗi PDF rộng 16 cm.
+- [ ] **Step 2:** FAIL → cài đặt (C3 thanh xếp chồng ngang "nhãn gốc đi đâu"; C4 dấu chấm + CI "LLM-Direct → FailLoc → FailLoc+Cov"; C5 forest plot Δ so với phương pháp gốc; C6 ba panel nhỏ; C7 thanh xếp chồng đóng góp dòng đoán vs phổ) → PASS; xem ảnh.
+- [ ] **Step 3:** F6 TikZ: LLM rà 250 → người duyệt `\ReviewHumanN` ca nghi → bộ đã rà soát → duyệt mù `\BlindBlindAllPrograms` CT, 2 người/CT, không gợi ý → mức đồng thuận.
+- [ ] **Step 4:** Commit `"hình lần 2: rà soát nhãn, nhãn gốc đi đâu, ablation, các cách bổ sung, độ bền RQ3, pareto, phân rã grounded/guessed"`.
+
+### Task 11: Chèn hình lần 2 vào báo cáo
+
+**Files:** `ch4` (F6 trong `\IfAtLeast{lan2}`), `ch5` (C3 ở "Chất lượng nhãn", C4 ở "Thông tin nào tạo ra khác biệt", C5 ở "Các cách bổ sung"/"Phân tích tĩnh", C6/C6b ở RQ3 + "Chi phí theo mô hình", C7 ở "Grounded hay guessed"), `ch7` (sơ đồ tóm tắt đóng góp nếu cần — Builder quyết); `tests/test_report_build.py`.
+
+- [ ] **Step 1: Test** lan2 chứa "FailLoc+Cov", tiêu đề các hình mới; lan1 vẫn không chứa; full chứa mọi thứ của lan2.
+- [ ] **Step 2:** Chèn (mọi hình lần 2 nằm trong `\IfAtLeast{lan2}{…}`, dấu `&` ngoài điều kiện), rút gọn văn trùng hình. Thay `pareto.pdf` bằng `fig_pareto.pdf`.
+- [ ] **Step 3:** `make -C docs/report check`; `pytest -m slow tests/test_report_build.py` → PASS; xem ảnh trang có hình.
+- [ ] **Step 4:** Commit `"báo cáo lần 2: hình rà soát nhãn, ablation, bổ sung, độ bền, phân rã"`.
+
+### Task 12: Deck lần 2 kể chuyện + notes
+
+**Files:** `build_deck.py` (`DECKS["lan2"]`, `story_pages()` nhánh lan2, `NOTES["lan2"]`), `tests/test_deck_notes.py` (tham số hóa theo deck).
+
+**Roster lần 2** (khung `slide_22` trừ khi ghi khác; mỗi trang một câu kết luận + một hình; ~22 trang): bìa (`TITLE_VI`/`TITLE_EN`, "Báo cáo lần 2 · 25–26/11/2026") · tóm tắt lần 1 (một hình: FailLoc vs SemLoc, hai câu hỏi còn mở) · **Thắng thật hay nhờ nhãn?** → rà soát nhãn hai bước (pipeline) · nhãn gốc đi đâu (thanh xếp chồng) · duyệt mù: mức đồng thuận (số lớn) · kết quả trên ba bộ nhãn (bars) · **Có bền không?** → lỗi thật BugsInPy (bars) · đổi tên định danh: dòng đoán giữ, phổ giảm (trước → sau) · năm họ mô hình (dải điểm) · chi phí – độ chính xác (scatter) · **Vì sao?** → ablation: test thất bại là tín hiệu chính (bậc thang) · thêm phức tạp không giúp: CovGate, FailLoc+Vote, ruff, pyrefly (Δ) · grounded hay guessed: phân rã (thanh) · đóng góp (4 thẻ) · triết lý khoa học · mối đe dọa (bảng gọn) · công cụ AI · hiện trạng bốn nội dung · tiến độ (Gantt) · cảm ơn. Không lộ phân tích thất bại và FailLoc+Verify.
+
+- [ ] **Step 1:** Trình roster cho trưởng nhóm (ppt-master §4.3) trước khi dựng; dựng; `make_decks.sh lan2` quality gate 0 lỗi; render xem từng trang.
+- [ ] **Step 2:** Notes mọi trang + humanizer; test notes PASS cho lan2.
+- [ ] **Step 3:** Commit `"deck lần 2: mạch kể chuyện, hình vẽ riêng, speaker notes"`; phát hành nhánh `bao-cao-lan-2` như Task 9 (hỏi trước khi force-push).
+
+## Phần C — bảo vệ (12/2026) + bài báo EN
+
+### Task 13: Hình bản đầy đủ (C8, F7) và chèn vào ch6 / ch5
+
+**Files:** `make_figures.py` (`fig_failures.pdf` từ `failure_cases.csv` theo `category` × phương pháp đúng/sai), `docs/report/vi/figures/de-xuat-kiem-chung.tex` (F7: đề xuất → sinh bản sửa → chạy test → xếp lại; nhánh "bản sửa nhỏ làm mọi test đạt ở dòng không lỗi: `\PavmechReviewedOtherLineFixable`%" từ `pav_mechanism.csv`); `ch6-phan-tich-that-bai.tex`, `ch5` (đề xuất rồi kiểm chứng, trong `\IfAtLeast{full}`).
+
+- [ ] **Step 1:** Test số C8 khớp `failure_cases.csv`; test lan2 không chứa "FailLoc+Verify", full chứa.
+- [ ] **Step 2:** Cài đặt, chèn, `make -C docs/report check`, xem ảnh. Commit `"bản đầy đủ: hình phân loại thất bại và FailLoc+Verify"`.
+
+### Task 14: Bài báo EN dùng cùng hình (nhãn tiếng Anh)
+
+**Files:** `fig_style.apply(lang="en")` (dấu chấm thập phân, font khớp IEEEtran), `make_figures.py` xuất thêm `generated/fig_*.pdf` (EN) ở chiều rộng cột (`\columnwidth` ≈ 8,9 cm) hoặc hai cột cho F1/C1; TikZ EN: `docs/report/paper-en/figures/*.tex` (bản dịch của F1, F2, F4, F6, F7); `paper-en/sections/*.tex` chèn hình (Fig. 1 = tổng quan).
+
+- [ ] **Step 1:** Test mỗi `generated/fig_*.pdf` tồn tại, rộng 8,9 cm hoặc 18,2 cm; `make -C docs/report paper` không cảnh báo tham chiếu.
+- [ ] **Step 2:** Cài đặt, xem ảnh trang PDF, commit `"paper EN: cùng bộ hình, nhãn tiếng Anh"`.
+
+### Task 15: Deck bảo vệ kể chuyện + notes
+
+**Roster bảo vệ** (~28 trang): bìa · móc (đoạn mã) · SBFL mù · lời hứa SemLoc · grounded hay guessed + ba câu hỏi · nghiên cứu liên quan · mở hộp (2 trang) · nhãn sai → nhãn đã sửa · FailLoc · thiết kế · kết quả (cuộc đua) · chi phí · thắng thật? rà soát + duyệt mù + ba bộ nhãn · bền? lỗi thật, đổi tên, họ mô hình · vì sao? ablation, bổ sung không giúp · phân tích thất bại (C8) · nhãn mơ hồ (một ví dụ mã) · FailLoc+Verify và "test đủ gợi ý, quá yếu để làm trọng tài" · đóng góp · triết lý khoa học · mối đe dọa · kết luận · cảm ơn.
+
+- [ ] **Step 1:** Trình roster (ppt-master §4.3), dựng, `make_decks.sh baove` 0 lỗi, render xem.
+- [ ] **Step 2:** Notes + humanizer, test notes PASS cho baove.
+- [ ] **Step 3:** Commit `"deck bảo vệ: mạch kể chuyện đầy đủ, speaker notes"`; `git push origin main` (hỏi trước).
