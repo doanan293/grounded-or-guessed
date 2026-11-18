@@ -13,6 +13,7 @@ from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
 from slidekit import append, drop_group, edit  # noqa: E402
+import story  # noqa: E402
 
 WS = Path(__file__).resolve().parents[3] / "runs" / "slides" / "bao-cao-lan-1_20261108"
 SVG = WS / "authoring-svg-flat"
@@ -33,6 +34,7 @@ SOURCE = {
     "triet_ly.svg": 19, "de_doa.svg": 9, "ket_luan.svg": 5,
     "chuong_nhom.svg": 4, "nhom.svg": 22, "phan_cong.svg": 22, "cong_cu_ai.svg": 22, "hien_trang.svg": 22,
 }
+SOURCE.update({n: src for n, src in story.LAN1 if n not in SOURCE})
 INTRO = ["slide_04.svg", "slide_05.svg", "slide_08.svg", "slide_25.svg", "slide_09.svg", "slide_22.svg", "slide_11.svg"]
 METHOD = ["chuong02.svg", "slide_20.svg", "slide_19.svg", "thiet_ke.svg"]
 RESULTS = ["slide_14.svg", "ket_qua_thu.svg", "ket_qua_rq3.svg", "pareto.svg"]
@@ -41,15 +43,18 @@ GROUP = ["chuong_nhom.svg", "nhom.svg", "phan_cong.svg", "cong_cu_ai.svg", "hien
 DECKS = {
     # report 1 (18–19/11): the group, its work split, AI tools; background, RQs, design, RQ1, repaired labels and the
     # main comparison; status of the four contents; no RQ3 / cross-model cost yet
-    "lan1": ["slide_01.svg", "nhom.svg", "phan_cong.svg", "cong_cu_ai.svg", "slide_03.svg", *INTRO, *METHOD,
-             "chuong03.svg", "slide_14.svg", "ket_qua_thu.svg", "hien_trang.svg", "slide_21.svg", "slide_30.svg"],
+    "lan1": [n for n, _ in story.LAN1],  # storytelling deck, see story.py
     # report 2 (25–26/11): + RQ3, cost, contributions; failure analysis waits for the final submission
     "lan2": ["slide_01.svg", "slide_03.svg", "slide_20.svg", *RESULTS, "chuong04.svg", "dong_gop.svg", "triet_ly.svg",
              "de_doa.svg", "hien_trang.svg", "slide_21.svg", "slide_30.svg"],
     "baove": ["slide_01.svg", "slide_03.svg", *INTRO, *METHOD, "chuong03.svg", *RESULTS, *ANALYSIS, "ket_luan.svg",
               "slide_30.svg"],
 }
-OCCASION = {"lan1": "Báo cáo lần 1 · 18/11/2026", "lan2": "Báo cáo lần 2 · 25/11/2026",
+# Cover: the Vietnamese title (report cover, bia.tex) large, the English title (paper) small underneath; never mixed.
+TITLE_VI = ("Bằng chứng hay phỏng đoán: Tái hiện và đánh giá việc định vị lỗi ngữ nghĩa trong mã nguồn "
+            "bằng mô hình ngôn ngữ lớn")
+TITLE_EN = "Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization"
+OCCASION = {"lan1": "Báo cáo lần 1 · 18–19/11/2026", "lan2": "Báo cáo lần 2 · 25–26/11/2026",
             "baove": "Bảo vệ tiểu luận · 12/2026"}
 OUT_NAME = {"lan1": "bao-cao-lan-1.pptx", "lan2": "bao-cao-lan-2.pptx", "baove": "bao-ve.pptx"}
 DECK = "lan1"
@@ -148,13 +153,13 @@ def results_pages() -> None:
     cost = _csv("llm_cost.csv")
     tok = lambda prefix: f"{round(sum(float(r['tokens_per_program']) for r in cost if r['run_id'].startswith(prefix)) / max(1, sum(r['run_id'].startswith(prefix) for r in cost)) / 1000, 1)}k".replace(".", ",")
     rev = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "reviewed" and r.get("subset", "all") == "all"}
-    names = [("sbfl_ochiai", "SBFL Ochiai", "0"), ("llm_direct", "LLM hỏi thẳng", tok("direct_test_gemini_r")),
+    names = [("sbfl_ochiai", "SBFL (Ochiai)", "0"), ("llm_direct", "LLM-Direct", tok("direct_test_gemini_r")),
              ("semloc", "SemLoc (bản gốc)", tok("semloc_test_gemini_r")),
-             ("semloc_no_prior", "SemLoc bỏ thưởng ẩn", tok("semloc_test_gemini_r")),
-             ("llm_tests", "1 prompt + test fail (nhóm)", tok("direct_tests_test_gemini_r")),
-             ("llm_coverage", "  … + độ phủ từng dòng", tok("direct_cov_test_gemini_r"))]
+             ("semloc_no_prior", "SemLoc−Bonus", tok("semloc_test_gemini_r")),
+             ("llm_tests", "FailLoc (nhóm)", tok("direct_tests_test_gemini_r")),
+             ("llm_coverage", "FailLoc+Cov", tok("direct_cov_test_gemini_r"))]
     orig = {r["method"]: r for r in _csv("rq2_ours.csv") if r["gt"] == "original" and r.get("subset", "all") == "all"}
-    head = f"Gemini 3.8 Flash, tập test, 3 lần chạy. 1 prompt + test fail vs SemLoc, Acc@1 (đã sửa): " \
+    head = f"Gemini 3.8 Flash, tập test, 3 lần chạy. FailLoc vs SemLoc, Acc@1 (đã sửa): " \
            f"{_m('RqTwoRepairedAllLlmTestsDAccOne')} [{_m('RqTwoRepairedAllLlmTestsDAccOneLo')}; {_m('RqTwoRepairedAllLlmTestsDAccOneHi')}].\n"
     if EARLY():  # report 1: original + repaired labels, no ablation / additions yet
         A("ket_qua_thu.svg", table("bang-rq2", 84, 128, [330, 115, 115, 115, 133], [
@@ -199,8 +204,8 @@ def results_pages() -> None:
            f'<g id="hinh-pareto" data-pptx-bounds="84 120 480 371"><image x="84" y="120" width="480" height="371" '
            f'href="../images/pareto_rq.png" preserveAspectRatio="xMidYMid meet"/></g>'
            + _para("ket-luan-pareto", 590, 150, 300, 300, [
-               (20, NAVY, "bold", ["1 prompt rẻ hơn ở", "mọi mô hình"]),
-               (16, INK, "normal", [f"Cùng {_csv('pareto.csv')[0]['n']} chương trình, ở cả 5 họ", "model: 1 prompt có Acc@3",
+               (20, NAVY, "bold", ["FailLoc+Cov rẻ hơn ở", "mọi mô hình"]),
+               (16, INK, "normal", [f"Cùng {_csv('pareto.csv')[0]['n']} chương trình, ở cả 5 họ", "model: FailLoc+Cov có Acc@3",
                                     "cao hơn SemLoc và tốn ít token hơn", "(với lỗi được test fail chạy tới)."]),
                (16, INK, "normal", [f"Bước vá thử (CF) chiếm {cf_share}% lượt", "gọi LLM nhưng không cải thiện có",
                                     "ý nghĩa thống kê."])]))
@@ -219,11 +224,7 @@ def _para(gid, x, y, w, h, paras) -> str:
 
 def build() -> None:
     fresh()
-    E("slide_01.svg", {
-        "Introduction to Coding Workshop": ["Grounded or", "Guessed?"],
-        "Here is where your presentation begins": ["Tái hiện và đánh giá định vị lỗi bằng LLM",
-                                                   f"Nhóm M9 · {OCCASION[DECK]}"],
-    })
+    story.cover(sys.modules[__name__], DECK, OCCASION[DECK])
     toc = {
         "lan1": [("Bối cảnh", ["Vấn đề, nghiên cứu liên quan,", "SemLoc"]),
                  ("Phương pháp", ["3 câu hỏi, đề xuất,", "thiết kế thực nghiệm"]),
@@ -287,8 +288,8 @@ def build() -> None:
                    ("Cách làm:", "gom stack trace, đếm hàm nào hay xuất hiện thành bảng xếp hạng hàm đáng nghi, rồi đưa "
                                  "bảng vào prompt hỏi LLM lỗi ở đâu."),
                    ("Kết quả:", "38 lỗi thật, chỉ đúng chỗ lỗi 71%."),
-                   ("Nhóm học được:", "đưa bằng chứng thật vào prompt giúp LLM trúng hơn. Nhóm thử 1 prompt có test fail "
-                                      "(+ độ phủ từng dòng) thay cho quy trình nhiều bước của SemLoc.")]))):
+                   ("Nhóm học được:", "đưa bằng chứng thật vào prompt giúp LLM trúng hơn. Nhóm thử FailLoc: 1 prompt có test fail "
+                                      "thay cho quy trình nhiều bước của SemLoc.")]))):
         out, y = [], 298
         for label, text in parts:
             lines = textwrap.wrap(f"{label} {text}", 36)
@@ -343,7 +344,7 @@ def build() -> None:
         ("Recommendations", "Thiết kế thực nghiệm"),
         ("Mars", "Benchmark"), ("Despite being red, Mars", ["SemFault-250, nhãn", "gốc + đã sửa"] if EARLY() else ["SemFault-250, 3 bộ", "nhãn; 31 BugsInPy"]),
         ("Venus", "Biến thể"), ("Venus is the second", ["Đổi tên, BugsInPy:", "lần báo cáo 2"] if EARLY() else ["Đổi tên, xóa docstring", "→ chống thuộc bài"]),
-        ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, LLM hỏi thẳng,", "SemLoc, 1 prompt"] if EARLY() else ["SBFL, ruff, SemLoc,", "1 prompt + test fail"]),
+        ("Neptune", "So sánh"), ("Neptune is the farthest", ["SBFL, LLM-Direct,", "SemLoc, FailLoc"] if EARLY() else ["SBFL, ruff, SemLoc,", "FailLoc"]),
         ("Mercury", "Mô hình"), ("Mercury is the closest", ["Gemini 3.8 Flash", "+ 4 họ model khác"]),
         ("Saturn", "Chỉ số"), ("Saturn is a gas giant", ["Acc@1/3/5, thứ hạng,", "%Susp, lượt gọi, token"]),
         ("Jupiter", "Thống kê"), ("Jupiter is the biggest", ["Lặp 3 lần, McNemar /", "Wilcoxon, effect size"]),
@@ -351,15 +352,15 @@ def build() -> None:
     E("slide_20.svg", [
         ("Popular programming languages", "Câu hỏi nghiên cứu"),
         ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: kết quả SemLoc còn đúng", "với log công bố và với Gemini?"]),
-        ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM thật sự cần gì? 1 prompt có", "test fail so với SemLoc?"]),
+        ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM thật sự cần gì? FailLoc", "so với SemLoc?"]),
         ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, code đổi tên,", "các họ model khác?"]),
         ("Saturn", "Lõi"), ("Saturn is a gas giant", ["Cách làm đơn giản (test fail", "→ LLM) có đủ tốt không?"]),
     ])
     E("slide_19.svg", [
-        ("Main topic and details", "Đề xuất: 1 prompt có test fail"),
+        ("Main topic and details", "Đề xuất: FailLoc"),
         ("Mars", "Đầu vào"), ("Despite being red", ["Mã nguồn,", "tên test fail,", "dòng lỗi đầu"]),
         *([("Neptune", "1 lượt gọi"), ("It’s the farthest", ["Không pipeline,", "không ràng buộc"]),
-           ("Jupiter", "So với"), ("Jupiter is the biggest", ["SemLoc, LLM", "hỏi thẳng, SBFL"]),
+           ("Jupiter", "So với"), ("Jupiter is the biggest", ["SemLoc, LLM-Direct,", "SBFL"]),
            ("Saturn", "Tiếp theo"), ("It’s a gas giant", ["Ablation, bổ", "sung (lần 2)"])] if EARLY() else
           [("Neptune", "Ablation"), ("It’s the farthest", ["Có / không", "độ phủ từng dòng"]),
            ("Jupiter", "Bổ sung"), ("Jupiter is the biggest", ["CovGate,", "kiểm chứng,", "biểu quyết"] if DECK == "baove"
@@ -374,7 +375,7 @@ def build() -> None:
         "9h 55m 23s": "13/13", "Jupiter’s rotation period": "cấu hình SemLoc tái hiện khớp từng số",
         "333,000": _m("GtBlankN") if EARLY() else f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')}",
         "The Sun’s mass compared": "nhãn gốc nằm trên dòng trống" if EARLY() else "nhãn gốc bị dời khi rà soát",
-        "386,000 km": _m("RqTwoRepairedAllLlmTestsDAccOne"), "Distance between the Earth": "Acc@1: 1 prompt có test fail so với SemLoc",
+        "386,000 km": _m("RqTwoRepairedAllLlmTestsDAccOne"), "Distance between the Earth": "Acc@1: FailLoc so với SemLoc",
     })
     E("slide_21.svg", [
         ("Sequences", "Tiến độ"),
@@ -497,7 +498,7 @@ def analysis_pages() -> None:
         ("Recommendations", "Đóng góp khoa học"),
         ("Mars", "C1 Đoán"), ("Despite being red, Mars", ["Hạng 1 = dòng đoán;", "CF không đổi hạng"]),
         ("Venus", "C2 Nhãn"), ("Venus is the second", [f"{_m('LabaudAllMoved')}/{_m('LabaudAllN')} nhãn bị dời;", "2 bộ nhãn mới"]),
-        ("Neptune", "C3 1 prompt"), ("Neptune is the farthest", [f"Acc@1 {_m('RqTwoRepairedAllLlmTestsDAccOne')} điểm,", "rẻ hơn ~7 lần"]),
+        ("Neptune", "C3 FailLoc"), ("Neptune is the farthest", [f"Acc@1 {_m('RqTwoRepairedAllLlmTestsDAccOne')} điểm,", "rẻ hơn ~7 lần"]),
         ("Mercury", "C4 Âm tính"), ("Mercury is the closest", ["Độ phủ, kiểm chứng", "(dev), ruff: không giúp"] if DECK == "baove"
                                                              else ["Độ phủ, CovGate,", "ruff: không giúp"]),
         ("Saturn", "Cơ chế"), ("Saturn is a gas giant", [f"Sửa lách: {_m('PavmechReviewedOtherLineFixable')}% lần thử", "ở dòng ứng viên sai"]
@@ -508,7 +509,7 @@ def analysis_pages() -> None:
         ("Main topic and details", "Triết lý khoa học"),
         ("Mars", "Test phán xử"), ("Despite being red", ["…khi test đủ", "chặt; nêu rõ", "ai quyết định"]),
         ("Neptune", "Đo đóng góp"), ("It’s the farthest", ["Phân rã, bỏ", "từng thành phần"]),
-        ("Jupiter", "Mốc đơn giản"), ("Jupiter is the biggest", ["Pipeline phải", "thắng 1 prompt"]),
+        ("Jupiter", "Mốc đơn giản"), ("Jupiter is the biggest", ["Pipeline phải", "thắng FailLoc"]),
         ("Saturn", "Chịu bác bỏ"), ("It’s a gas giant", ["Lặp 3 lần, CI,", "nêu cả âm tính"]),
     ])
     E("de_doa.svg", [
@@ -535,6 +536,8 @@ def main(deck: str) -> None:
     PAGES = [(SOURCE[n], n) for n in DECKS[deck]]
     build()
     analysis_pages()
+    if deck == "lan1":
+        story.lan1(sys.modules[__name__])
     json.dump({"schema": "ppt-master.roundtrip-page-plan.v1",
                "pages": [{"source_slide": s, **({} if n == f"slide_{s:02d}.svg" else {"svg": n})} for s, n in PAGES]},
               open(WS / "page_plan.json", "w"), indent=2)

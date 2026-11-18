@@ -111,7 +111,7 @@ def gantt(gid, x, y, w, rows: list[tuple], today: str | None = None, label_w: fl
     start = min(_d(r[1]) for r in rows)
     end = max(_d(r[2]) for r in rows)
     days = (end - start).days + 1
-    span = w - label_w
+    span = w - label_w - 95  # room for the date label after the last bar
     px = lambda s: x + label_w + span * (_d(s) - start).days / days
     body = []
     for i, (task, a, b, done) in enumerate(rows):

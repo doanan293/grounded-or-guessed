@@ -5,6 +5,9 @@ through ppt-master's Edit Native PPTX route. `make_decks.sh [lan1] [lan2] [baove
 them; each progress report shows a little more than the one before (lần 1, 18–19/11 = group, work split, AI tools, RQ1,
 main comparison, status; lần 2, 25–26/11 = + RQ3, contributions, status; bảo vệ = everything).
 
+Lần 1 is a storytelling deck (`story.py`: one claim per page as the title, one native-SVG picture from `viz.py` as the
+evidence); its cover carries the Vietnamese title large and the English paper title small, never mixed.
+
 ```bash
 S=.claude/skills/ppt-master/scripts; W=runs/slides/bao-cao-lan-1_20261108
 python3 $S/pptx_to_svg.py docs/presentation/template-vi.pptx -o $W --inheritance-mode both --roundtrip   # once

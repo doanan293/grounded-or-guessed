@@ -3,7 +3,7 @@
 Đề tài 02-KH: phát hiện lỗi và định vị lỗi, hướng nghiên cứu khoa học.
 Nhóm trưởng: **Doãn Văn An** (20252778M), đầu mối liên hệ với giảng viên và người giữ kho mã của nhóm.
 
-Nguồn chính thức nằm trong báo cáo: `docs/report/vi/frontmatter/nhom.tex`. Sửa ở đó thì sửa cả file này.
+Đây là nguồn duy nhất về thành viên và phân công; từ 18/11/2026 báo cáo và slide không chép lại phần này.
 
 ## Thành viên
 
