@@ -43,3 +43,27 @@ def test_lan2_does_not_leak_the_defence():
         if stem == "tien_do_2":
             continue
         assert "phân loại thất bại" not in t.lower() and "sáu nhóm" not in t.lower(), stem
+        assert "FailLoc+Verify" not in t, stem
+
+
+def test_bugsinpy_title_holds_on_the_metric_it_plots():
+    """The BugsInPy slide says FailLoc is highest: true for every bar it draws, including FailLoc+Cov."""
+    import story_lan2
+    t = _pages("lan2")["bugsinpy"]
+    d = story_lan2.mf.rq3_data()["bugsinpy3"]
+    assert "FailLoc+Cov" in t and "Acc@3" in t
+    assert d["llm_tests"] == max(d.values())
+
+
+def test_label_tree_counts_add_up():
+    """chuan_hoa: the 'no failing test reaches the label' branch must hold exactly GtNotExecutedN programs."""
+    import build_deck
+    t = _pages("lan1")["chuan_hoa"]
+    m = build_deck._m
+    import csv
+    import json
+    ver = {v["program"]: v["status"] for v in json.loads((ROOT / "data" / "semfault_verified_gt.json").read_text())}
+    not_exec = [r["program"] for r in csv.DictReader(open(ROOT / "data" / "semfault_labels.csv")) if r["category"] == "not_executed"]
+    confirmed_at_label = sum(ver.get(p) == "confirmed" for p in not_exec)
+    assert int(m("GtCorrectedN")) + int(m("GtUnverifiableN")) + confirmed_at_label == int(m("GtNotExecutedN"))
+    assert "Sửa nhỏ ngay tại nhãn" in t.split("Có test fail")[0]  # the first question is the fix at the label

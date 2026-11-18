@@ -45,7 +45,7 @@ def pages(bd) -> None:
     bd.A("muc_luc_bv.svg", viz._g("muc-luc", 60, 112, 840, 362, body))
 
     # FailLoc+Verify and why tests are too weak to be the arbiter
-    _title(bd, "verify_bv.svg", "FailLoc+Verify: để test làm trọng tài cũng không giúp")
+    _title(bd, "verify_bv.svg", "Phương pháp FailLoc+Verify: để test làm trọng tài cũng không giúp")
     band(bd, "verify_bv.svg", 5)
     bd.A("verify_bv.svg", viz.pipeline("verify", 30, 104, ["FailLoc đề xuất\n5 dòng nghi", "LLM viết bản\nsửa nhỏ mỗi dòng",
                                                             "Chạy bộ test\ntrên bản đã vá", "Dòng có bản sửa\npass lên trước"],
@@ -68,7 +68,7 @@ def pages(bd) -> None:
 
     # failure analysis
     rows = mf.failure_data()
-    _title(bd, "that_bai_bv.svg", "Phân tích thất bại: SemLoc sai ở đâu và vì sao")
+    _title(bd, "that_bai_bv.svg", "Phân tích thất bại: phương pháp SemLoc sai ở đâu và vì sao")
     band(bd, "that_bai_bv.svg", 5)
     short = {"guess_right": "Dòng LLM đoán đúng", "rescued_by_spectrum": "Đoán sai, phổ cứu vào top 3",
              "prior_hurts": "Phổ đúng, thưởng làm sai", "coverage_only_wins": "Chỉ FailLoc+Cov vào top 3",
@@ -92,7 +92,7 @@ def pages(bd) -> None:
     ], size=14))
     bd.A("ket_luan_bv.svg", P("ket-luan", 480, 104, 450, [
         ("Kết luận", "Hạng 1 của SemLoc là dòng LLM đoán, và bài báo quy công cho bằng chứng thực thi (overclaim). Một prompt "
-                     "có test fail (FailLoc) chính xác hơn và rẻ hơn trên mọi điều kiện đã thử. Test đủ để gợi ý lỗi nhưng "
+                     "có test fail (FailLoc) chính xác hơn và rẻ hơn trên cả ba bộ nhãn và trên lỗi thật (Acc@3). Test đủ để gợi ý lỗi nhưng "
                      "quá yếu để làm trọng tài, nên thêm bước kiểm chứng không giúp."),
         ("Hướng tiếp", "Bộ dữ liệu có nhãn kiểm chứng tốt hơn và test mạnh hơn; lỗi thật nhiều dự án; giấu tên test để đo "
                        "phần LLM dựa vào tên."),
@@ -116,7 +116,7 @@ def notes(bd) -> dict:
                           "đúng; thanh cam là chương trình mà phổ vi phạm đúng nhưng điểm thưởng làm sai. Đọc từng ca, nhóm "
                           "tìm ra năm nguyên nhân sai, liệt kê bên phải.")
     out["ket_luan_bv"] = ("Tóm lại, hạng 1 của SemLoc là dòng LLM đoán và bài báo overclaim về nguồn gốc độ chính xác. FailLoc "
-                          "chính xác hơn và rẻ hơn trên mọi điều kiện đã thử. Hạn chế lớn nhất là chất lượng nhãn và test của "
+                          "chính xác hơn và rẻ hơn trên cả ba bộ nhãn và trên lỗi thật. Hạn chế lớn nhất là chất lượng nhãn và test của "
                           "bộ dữ liệu, cũng là hướng tiếp theo.")
     out["dong_gop_2"] = ("Nhóm có năm đóng góp, từ việc chỉ ra hạng 1 của SemLoc là dòng đoán đến bảng kiểm tra và gói tái "
                          "hiện. Triết lý khoa học: bằng chứng thực thi là trọng tài, nhưng phải đo nó đóng góp bao nhiêu, luôn "

@@ -287,7 +287,7 @@ def pages(bd) -> None:
     _title(bd, "overclaim.svg", "Hạng 1 luôn là dòng LLM đoán, bài báo lại quy công cho bằng chứng")
     band(bd, "overclaim.svg", 3)
     bd.A("overclaim.svg", viz.big_number("ty-le", 40, 104, f"{_p(100 * share, 0)}%",
-                                         f"số lần chạy (trên {n_pairs}) mà hạng 1\ncủa phương pháp SemLoc là dòng LLM đoán",
+                                         f"trong {n_pairs} lượt (chương trình × lần chạy),\nhạng 1 của SemLoc là dòng LLM đoán",
                                          color=ORANGE, size=48, w=380))
     bd.A("overclaim.svg", viz.bars("bo-thuong", 40, 260, 420, 100,
                                    [("SemLoc", 100 * float(rq2[("repaired", "semloc")]["acc1_mean"]), NAVY),
@@ -325,8 +325,8 @@ def pages(bd) -> None:
     q = lambda gid, x, y, w, t, c=NAVY: viz._g(gid, x, y, w, 52, [_r(x, y, w, 52, "#FFFFFF", stroke=c, rx=10, sw=1.8)] +
                                                [_t(x + w / 2, y + 22 + 18 * i, l, size=14, anchor="middle")
                                                 for i, l in enumerate(t.split("\n"))])
-    bd.A("chuan_hoa.svg", q("q1", 330, 104, 300, "Có test fail nào chạy\ntới dòng nhãn gốc?"))
-    bd.A("chuan_hoa.svg", q("q2", 120, 196, 300, "Sửa nhỏ ngay tại nhãn\ncó làm mọi test pass?"))
+    bd.A("chuan_hoa.svg", q("q1", 120, 104, 300, "Sửa nhỏ ngay tại nhãn\ncó làm mọi test pass?"))
+    bd.A("chuan_hoa.svg", q("q2", 540, 104, 300, "Có test fail nào chạy\ntới dòng nhãn gốc?"))
     bd.A("chuan_hoa.svg", q("q3", 540, 196, 300, "Sửa nhỏ ở dòng lân cận\ncó làm mọi test pass?"))
     leaves = [("Xác nhận", m("GtConfirmedN"), ORANGE, 40), ("Chưa kiểm chứng\n(giữ nhãn gốc)", m("GtUnverifiedN"), GREY, 250),
               ("Dời vị trí", m("GtCorrectedN"), ORANGE, 460), ("Không kiểm chứng\nđược (loại)", m("GtUnverifiableN"), GREY, 670)]
@@ -336,16 +336,16 @@ def pages(bd) -> None:
                                                                  _t(x + 95, 318, f"{n} nhãn", size=20, weight="bold", anchor="middle",
                                                                     fill=NAVY)] +
                                      [_t(x + 95, 340 + 15 * i, l, size=13, anchor="middle") for i, l in enumerate(lab.split("\n"))]))
-    lines = (f'<line x1="400" y1="156" x2="270" y2="196" stroke="{MUTED}" stroke-width="2"/>'
-             f'<line x1="560" y1="156" x2="690" y2="196" stroke="{MUTED}" stroke-width="2"/>'
-             f'<line x1="200" y1="248" x2="135" y2="290" stroke="{MUTED}" stroke-width="2"/>'
-             f'<line x1="340" y1="248" x2="345" y2="290" stroke="{MUTED}" stroke-width="2"/>'
+    lines = (f'<line x1="200" y1="156" x2="135" y2="290" stroke="{MUTED}" stroke-width="2"/>'
+             f'<line x1="420" y1="130" x2="540" y2="130" stroke="{MUTED}" stroke-width="2"/>'
+             f'<line x1="620" y1="156" x2="345" y2="290" stroke="{MUTED}" stroke-width="2"/>'
+             f'<line x1="760" y1="156" x2="760" y2="196" stroke="{MUTED}" stroke-width="2"/>'
              f'<line x1="620" y1="248" x2="555" y2="290" stroke="{MUTED}" stroke-width="2"/>'
              f'<line x1="760" y1="248" x2="765" y2="290" stroke="{MUTED}" stroke-width="2"/>')
     lab_yn = "".join(_t(x, y, t, size=13, fill=MUTED, weight="bold") for x, y, t in
-                     ((300, 172, "có"), (640, 172, "không"), (140, 272, "có"), (348, 272, "không"), (560, 272, "có"),
+                     ((150, 230, "có"), (455, 124, "không"), (450, 200, "có"), (768, 182, "không"), (560, 272, "có"),
                       (762, 272, "không")))
-    bd.A("chuan_hoa.svg", f'<g id="nhanh" data-pptx-bounds="135 156 680 134">{lines}{lab_yn}</g>')
+    bd.A("chuan_hoa.svg", f'<g id="nhanh" data-pptx-bounds="135 110 680 180">{lines}{lab_yn}</g>')
     bd.A("chuan_hoa.svg", P("ket-qua-chuan-hoa", 40, 380, 890, [
         (f"Bộ nhãn đã chuẩn hóa: {m('GtRepairedN')} chương trình", "LLM chỉ đề xuất các bản sửa nhỏ; dòng nào sửa xong làm mọi "
                                                                   "test pass thì đó là dòng lỗi. Bỏ nhãn không kiểm chứng được "

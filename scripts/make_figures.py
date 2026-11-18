@@ -306,25 +306,29 @@ def addons_data(gt: str = "repaired") -> list[dict]:
                 "d3": 100 * (float(v["vote_acc3"]) - float(v["single_acc3"]))})
     params = json.loads((DATA / "pav_params.json").read_text())
     grid = _rows("pav_dev_grid.csv")
+    base = next(r for r in grid if r["k"] == "0")  # k = 0: FailLoc's own ranking, no verification
     ch = next(r for r in grid if r["order"] == params["order"] and int(r["k"]) == params["k"]
               and int(r["attempts"]) == params["attempts"]
               and r["max_size"] == ("" if params["max_size"] is None else str(params["max_size"])))
     out.append({"name": "FailLoc+Verify (so với FailLoc), tập dev",
-                "d1": 100 * (float(ch[f"{gt}_acc1"]) - float(grid[0][f"{gt}_acc1"])),
-                "d3": 100 * (float(ch[f"{gt}_acc3"]) - float(grid[0][f"{gt}_acc3"]))})
+                "d1": 100 * (float(ch[f"{gt}_acc1"]) - float(base[f"{gt}_acc1"])),
+                "d3": 100 * (float(ch[f"{gt}_acc3"]) - float(base[f"{gt}_acc3"]))})
     return out
 
 
 def rq3_data(gt: str = "repaired") -> dict:
-    bip = {r["method"]: 100 * float(r["acc1_mean"]) for r in _rows("rq3_bugsinpy.csv") if r["subset"] == "all"}
+    bip_rows = [r for r in _rows("rq3_bugsinpy.csv") if r["subset"] == "all"]
+    bip = {r["method"]: 100 * float(r["acc1_mean"]) for r in bip_rows}
+    bip3 = {r["method"]: 100 * float(r["acc3_mean"]) for r in bip_rows
+            if r["method"] in ("sbfl_ochiai", "semloc_spectrum", "llm_guess", "semloc_prior", "llm_tests", "llm_coverage")}
     ren = {r["method"]: (100 * float(r["orig_acc3_mean"]), 100 * float(r["renamed_acc3_mean"]))
            for r in _rows("rq3_renamed.csv") if r["gt"] == gt}
-    fam = {}
+    fam, n_fam = {}, 0
     for r in _rows("rq3_families.csv"):
         if r["gt"] == gt and r["method"] in ("semloc", "semloc_no_prior"):
             fam.setdefault(r["family"], {})[r["method"]] = 100 * float(r["acc1_mean"])
             n_fam = int(r["n"])
-    return {"bugsinpy": bip, "renamed": ren, "families": fam, "n_families": n_fam}
+    return {"bugsinpy": bip, "bugsinpy3": bip3, "renamed": ren, "families": fam, "n_families": n_fam}
 
 
 def decomposition_data() -> list[dict]:
@@ -348,7 +352,7 @@ def improvement_data() -> list[dict]:
 
 FAIL_VI = {"guess_right": "Dòng LLM đoán là dòng lỗi", "rescued_by_spectrum": "Đoán sai, phổ vi phạm cứu vào top 3",
            "prior_hurts": "Phổ đúng hạng 1, điểm thưởng đẩy xuống", "coverage_only_wins": "Chỉ FailLoc+Cov trúng top 3",
-           "gt_suspect": "Mọi phương pháp trượt, nhãn đáng ngờ", "all_miss": "Mọi phương pháp trượt top 3"}
+           "gt_suspect": "Mọi phương pháp sai, nhãn đáng ngờ", "all_miss": "Mọi phương pháp sai ngoài top 3"}
 
 
 def failure_data() -> list[tuple[str, int]]:

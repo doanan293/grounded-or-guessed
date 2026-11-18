@@ -121,7 +121,7 @@ def pages(bd) -> None:
     ], size=15))
 
     # 6. Shapley decomposition: what it is
-    _title(bd, "shapley.svg", "Phân rã Shapley: chia độ chính xác của SemLoc cho hai nguồn")
+    _title(bd, "shapley.svg", "Phân rã Shapley: độ chính xác của phương pháp SemLoc đến từ đâu")
     band(bd, "shapley.svg", 1)
     combos = [("Không nguồn nào", "Acc = 0"), ("Chỉ dòng LLM đoán", "xếp riêng dòng đoán"),
               ("Chỉ phổ vi phạm", "xếp theo điểm phổ"), ("Cả hai (SemLoc)", "điểm phổ + thưởng")]
@@ -253,7 +253,7 @@ def pages(bd) -> None:
     ], size=13))
 
     # 13. results on three label sets
-    _title(bd, "ba_bo_nhan.svg", "Trên cả ba bộ nhãn, phương pháp FailLoc hơn SemLoc ở Acc@1")
+    _title(bd, "ba_bo_nhan.svg", "Ba bộ nhãn: phương pháp FailLoc hơn SemLoc ở Acc@1")
     band(bd, "ba_bo_nhan.svg", 3)
     for k, g in enumerate(("original", "repaired", "reviewed")):
         x = 30 + k * 305
@@ -269,16 +269,16 @@ def pages(bd) -> None:
 
     # 14. BugsInPy
     r3 = mf.rq3_data()
-    _title(bd, "bugsinpy.svg", "Lỗi thật BugsInPy: phương pháp FailLoc vẫn cao nhất")
+    _title(bd, "bugsinpy.svg", "Lỗi thật BugsInPy: phương pháp FailLoc cao nhất ở Acc@3")
     band(bd, "bugsinpy.svg", 5)
     meths = [("sbfl_ochiai", "SBFL (Ochiai)", GREY), ("semloc_spectrum", "Chỉ phổ vi phạm", GREY), ("llm_guess", "Chỉ dòng LLM đoán", GREY),
-             ("semloc_prior", "SemLoc", NAVY), ("llm_tests", "FailLoc", ORANGE)]
-    bd.A("bugsinpy.svg", viz.bars("bip", 30, 104, 560, 300, [(l, r3["bugsinpy"][k], c) for k, l, c in meths], vmax=100, label_w=190))
+             ("semloc_prior", "SemLoc", NAVY), ("llm_coverage", "FailLoc+Cov", GREY), ("llm_tests", "FailLoc", ORANGE)]
+    bd.A("bugsinpy.svg", viz.bars("bip", 30, 104, 560, 320, [(l, r3["bugsinpy3"][k], c) for k, l, c in meths], vmax=100, label_w=190))
     bd.A("bugsinpy.svg", P("bip-giai-thich", 610, 104, 320, [
-        ("Thí nghiệm", f"{m('BipAllSemlocPriorN')} lỗi thật của youtube-dl, Acc@1, Gemini 3.8 Flash, ba lần chạy."),
-        ("Ý chính", "Mọi lần SemLoc đúng ở hạng 1 đều là dòng LLM đoán: SemLoc và \"chỉ dòng đoán\" bằng nhau. Riêng phổ vi "
-                    "phạm gần bằng phương pháp SBFL."),
-        ("Lưu ý", "Mẫu nhỏ: khoảng tin cậy rộng."),
+        ("Thí nghiệm", f"{m('BipAllSemlocPriorN')} lỗi thật của youtube-dl, Acc@3, Gemini 3.8 Flash, ba lần chạy."),
+        ("Ý chính", "FailLoc cao nhất ở Acc@3. Ở Acc@1, mọi lần SemLoc đúng ở hạng 1 đều là dòng LLM đoán; riêng phổ vi phạm "
+                    "gần bằng phương pháp SBFL."),
+        ("Lưu ý", "Mẫu nhỏ, khoảng tin cậy rộng: ở Acc@1 FailLoc và FailLoc+Cov ngang nhau."),
     ], size=14))
 
     # 15. renaming
@@ -303,7 +303,7 @@ def pages(bd) -> None:
 
     # 16. model families
     n_drop = sum(v["semloc_no_prior"] < v["semloc"] for v in r3["families"].values())
-    _title(bd, "ho_mo_hinh.svg", f"Năm họ mô hình: bỏ điểm thưởng thì SemLoc giảm ở {n_drop} trên {len(r3['families'])} họ")
+    _title(bd, "ho_mo_hinh.svg", f"Năm họ mô hình: bỏ thưởng, phương pháp SemLoc giảm ở {n_drop}/{len(r3['families'])} họ")
     band(bd, "ho_mo_hinh.svg", 5)
     body = []
     for i, (fam, v) in enumerate(r3["families"].items()):
@@ -331,7 +331,7 @@ def pages(bd) -> None:
             r = next(x for x in ab if x["gt"] == g and x["contrast"] == contrast)
             rows.append((f"{lab}, {dict(original='nhãn gốc', repaired='chuẩn hóa', reviewed='rà soát')[g]}", r["d_acc3"], r["lo3"],
                          r["hi3"], GT_COL[g]))
-    _title(bd, "ablation_kq.svg", "Vì sao FailLoc thắng: test fail giúp, độ phủ từng dòng thì không")
+    _title(bd, "ablation_kq.svg", "Vì sao phương pháp FailLoc thắng: nhờ test fail, không nhờ độ phủ")
     band(bd, "ablation_kq.svg", 5)
     bd.A("ablation_kq.svg", _forest("rung-ablation", 30, 110, 590, rows, vmin=-10, vmax=40, row_h=42, label_w=250))
     bd.A("ablation_kq.svg", P("ablation-kq-giai-thich", 640, 104, 290, [
@@ -343,14 +343,14 @@ def pages(bd) -> None:
 
     # 18. additions do not help
     rows = [(r["name"].split(" (")[0] + (" (dev)" if "dev" in r["name"] else ""), r["d1"], r.get("lo1"), r.get("hi1"),
-             NAVY if "CovGate" in r["name"] else ORANGE) for r in mf.addons_data()]
+             NAVY if "CovGate" in r["name"] else ORANGE) for r in mf.addons_data() if "Verify" not in r["name"]]
     _title(bd, "bo_sung_kq.svg", "Thêm phức tạp không thu hẹp được khoảng cách")
     band(bd, "bo_sung_kq.svg", 5)
     bd.A("bo_sung_kq.svg", _forest("rung-bo-sung", 30, 110, 590, rows, vmin=-15, vmax=15, row_h=46, label_w=250))
     st = {r["tool"]: r for r in _csv(ROOT / "data" / "static_tools.csv") if r["gt"] == "repaired"}
     bd.A("bo_sung_kq.svg", P("bo-sung-kq-giai-thich", 640, 104, 290, [
         ("Đọc thế nào", "Chênh lệch Acc@1 so với phương pháp được bổ sung, nhãn đã chuẩn hóa. Chấm rỗng: tập dev, một cấu hình."),
-        ("Ý chính", "CovGate giữ nguyên Acc@1 của SemLoc; FailLoc+Cov giảm; FailLoc+Vote và FailLoc+Verify không cải thiện."),
+        ("Ý chính", "CovGate giữ nguyên Acc@1 của SemLoc; FailLoc+Cov giảm; FailLoc+Vote không cải thiện."),
         ("Phân tích tĩnh", f"ruff với mọi luật cảnh báo {st['ruff_all']['diagnostics']} lần nhưng chỉ {st['ruff_all']['on_fault_line']} lần "
                            "trúng dòng lỗi; pyrefly không trúng lần nào."),
     ], size=13))
@@ -383,7 +383,7 @@ def pages(bd) -> None:
              f"{'+' if r['failloc1'] >= r['semloc1'] else ''}{_p(r['failloc1'] - r['semloc1'])} điểm") for r in imp]
     ratio = float(m("CostSemlocTokensK").replace(",", ".")) / float(m("CostLlmTestsTokensK").replace(",", "."))
     rows.append(("Token mỗi chương trình", f"{m('CostSemlocTokensK')} nghìn", f"{m('CostLlmTestsTokensK')} nghìn", f"ít hơn {_p(ratio, 0)} lần"))
-    _title(bd, "cai_tien_2.svg", "Cải tiến giữ được trên mọi điều kiện đã thử")
+    _title(bd, "cai_tien_2.svg", "Cải tiến giữ được trên ba bộ nhãn và trên lỗi thật")
     band(bd, "cai_tien_2.svg", 5)
     bd.A("cai_tien_2.svg", viz.before_after("truoc-sau-2", 30, 98, 900, rows, row_h=56))
     bd.A("cai_tien_2.svg", _note(30, 420, ["Cùng chương trình, cùng Gemini 3.8 Flash, trung bình 3 lần chạy; BugsInPy là lỗi thật."],
@@ -467,7 +467,7 @@ def notes(bd) -> dict:
         "ba_bo_nhan": f"Trên cả ba bộ nhãn, FailLoc đều hơn SemLoc ở Acc@1: {m('RqTwoOriginalAllLlmTestsDAccOne')} điểm trên nhãn "
                       f"gốc, {m('RqTwoRepairedAllLlmTestsDAccOne')} trên nhãn đã chuẩn hóa và {m('RqTwoReviewedAllLlmTestsDAccOne')} "
                       "trên nhãn đã rà soát. Số tuyệt đối thay đổi theo bộ nhãn, nhưng chiều của kết luận thì không.",
-        "bugsinpy": f"Trên {m('BipAllSemlocPriorN')} lỗi thật, FailLoc vẫn cao nhất. Mọi lần SemLoc đúng ở hạng 1 đều là dòng LLM "
+        "bugsinpy": f"Trên {m('BipAllSemlocPriorN')} lỗi thật, FailLoc cao nhất ở Acc@3. Mọi lần SemLoc đúng ở hạng 1 đều là dòng LLM "
                     "đoán, còn riêng phổ vi phạm thì gần bằng phương pháp SBFL.",
         "doi_ten": "Khi đổi tên mọi định danh, dòng LLM đoán gần như giữ nguyên, nhưng SemLoc bỏ điểm thưởng giảm mạnh: ràng buộc "
                    "LLM viết dựa vào tên gợi ý. FailLoc+Cov gần như không đổi.",
@@ -475,8 +475,8 @@ def notes(bd) -> dict:
                       "các họ. Riêng Gemini 3.8 Flash trên tập con này thì gần như không đổi.",
         "ablation_kq": "Ablation trả lời vì sao FailLoc thắng. Thêm test fail vào prompt tăng Acc@3 trên cả ba bộ nhãn; thêm độ "
                        "phủ từng dòng thì không tăng. LLM không cần thông tin mà phương pháp SBFL dùng.",
-        "bo_sung_kq": "Các cách bổ sung đều không giúp: CovGate giữ nguyên Acc@1 của SemLoc, FailLoc+Cov giảm, FailLoc+Vote và "
-                      "FailLoc+Verify không cải thiện. Công cụ phân tích tĩnh gần như không trúng dòng lỗi.",
+        "bo_sung_kq": "Các cách bổ sung đều không giúp: CovGate giữ nguyên Acc@1 của SemLoc, FailLoc+Cov giảm, FailLoc+Vote "
+                      "không cải thiện. Công cụ phân tích tĩnh gần như không trúng dòng lỗi.",
         "phan_ra": "Phân rã Shapley cho thấy ở Acc@1, phần lớn độ chính xác của SemLoc đến từ dòng LLM đoán; bằng chứng thực thi "
                    "chỉ chiếm phần lớn ở Acc@3. Điều này khớp với giả thuyết H1 nhóm đặt ra từ đầu.",
         "cai_tien_2": "Gói lại, mức hơn của FailLoc so với SemLoc giữ được trên cả ba bộ nhãn và trên lỗi thật, với chi phí thấp "
