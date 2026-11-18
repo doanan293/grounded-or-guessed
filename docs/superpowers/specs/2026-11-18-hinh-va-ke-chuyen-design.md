@@ -38,6 +38,29 @@ làm gì để kiểm tra, (4) kết quả ra sao.
 3. **Slide: hình phong cách kể chuyện**, vẽ riêng, **không** bắt buộc giống hình báo cáo.
 4. Giữ cơ chế hé mở: mỗi phiên bản chỉ hiện hình của nội dung đã đến hạn.
 
+## Mạch cải tiến (bổ sung 18/11, theo yêu cầu trưởng nhóm)
+
+Trưởng nhóm: "Story telling cần thể hiện rõ sự cải tiến của mình so với các paper cũ, kết quả tuyệt vời hơn." Mọi bản
+(slide và báo cáo) phải làm nổi rõ **nhóm làm tốt hơn các bài trước ở đâu và bao nhiêu**, bằng hình trước/sau:
+
+- **Kết quả:** FailLoc so với SemLoc trên cùng chương trình, cùng mô hình, cùng bộ nhãn: Acc@1, Acc@3 cao hơn (kèm khoảng
+  tin cậy), token ít hơn khoảng 7 lần, 1 lượt gọi LLM. Lần 2 thêm: giữ được trên ba bộ nhãn, lỗi thật BugsInPy, mã đổi
+  tên và năm họ mô hình. Lần 1 cũng nhắc SBFL (Ochiai) làm mốc kinh điển.
+- **Cách đánh giá:** các bài trước chạy một lần, không kiểm định, không kiểm tra nhãn; nhóm sửa nhãn bằng thực thi (lần 2:
+  rà soát cả 250 nhãn, duyệt mù), lặp 3 lần, khoảng tin cậy bootstrap, công bố gói tái hiện.
+- **Minh bạch:** nhóm chỉ ra điểm thưởng ẩn và tách phần "grounded" khỏi "guessed" (phân rã Shapley ở lần 2).
+
+Hình thức: slide "Trước → Sau" (mỗi hàng một tiêu chí: SemLoc / bài trước bên trái, nhóm bên phải, phần chênh nổi bật)
+ngay sau slide kết quả, thay trang ba con số; một slide tổng kết cải tiến ở cuối deck lần 2 và bảo vệ. Báo cáo có một
+bảng "Cải tiến so với SemLoc" ở chương 1 (mục kết quả/đóng góp) và hình trước/sau (dumbbell SemLoc → FailLoc theo bộ
+nhãn và họ mô hình) ở lần 2.
+
+**Chống mục tiêu — không phóng đại:** chỉ so trên cùng điều kiện (cùng mô hình, cùng chương trình, cùng bộ nhãn); không
+đặt Acc@1 công bố của SemLoc (Claude, nhãn gốc) cạnh số của FailLoc (Gemini, nhãn đã sửa) như một phép so trực tiếp;
+mức hơn luôn kèm khoảng tin cậy; FailLoc vẫn trình bày là "cách lập trình viên vẫn làm, được làm cho tái hiện được",
+không tuyên bố tính mới về kỹ thuật. Cải tiến chính của nhóm là cách đánh giá và bằng chứng, cùng một phương pháp đơn
+giản thắng được quy trình phức tạp.
+
 ## Không làm / chống mục tiêu
 
 - Không chạy lại thí nghiệm, không đổi số liệu, không đổi id trong `data/`.

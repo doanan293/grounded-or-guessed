@@ -26,6 +26,8 @@
 - Speaker notes: tiếng Việt, 2–5 câu văn nói/trang nội dung, 1–2 câu cho bìa/kết; không đề mục, không `[tag]`, không gạch ngang dài; không thêm khẳng định mà trang không có; qua humanizer.
 - Ưu tiên khi thiếu giờ: F1 → C1 → F3 → F4 → F2 → C2 → F5 → Gantt → bảng phương pháp; mỗi task kết thúc ở trạng thái dựng được PDF + deck.
 
+- **Mạch cải tiến (spec, bổ sung 18/11):** mỗi deck có slide "Trước → Sau" so nhóm với SemLoc/bài trước trên cùng điều kiện (kết quả, chi phí, cách đánh giá, minh bạch); báo cáo có bảng "Cải tiến so với SemLoc" ở chương 1 và hình dumbbell ở lần 2. Không so số công bố khác mô hình/bộ nhãn như so trực tiếp.
+
 ## Review Focus
 
 1. Số trên hình lệch số trong bảng/văn bản (vd. Acc@1 của FailLoc trên C1 khác `\RqTwoRepairedAllLlmTestsAccOneMean`) → test so khớp trong Task 3.
@@ -160,7 +162,7 @@
 | 10 | failloc | 22 | FailLoc: đưa thẳng test fail cho LLM, một lượt | hai `pipeline` song song, token mỗi bên |
 | 11 | thiet_ke | 22 | Thiết kế: 200 chương trình × 5 phương pháp × 2 bộ nhãn × 3 lần | `matrix` |
 | 12 | ket_qua | 22 | FailLoc dẫn đầu cả hai bộ nhãn | `bars` Acc@1/Acc@3 (gốc, đã sửa) |
-| 13 | chi_phi | 14 | Hơn `ΔAcc@1` điểm, rẻ hơn ~7 lần | `big_number` ×3 |
+| 13 | cai_tien | 22 | Cải tiến so với SemLoc: chính xác hơn, rẻ hơn, đánh giá chặt hơn | bảng "Trước → Sau" (thay trang ba con số, 18/11) |
 | 14 | lan_sau | 22 | Thắng thật hay nhờ nhãn? Vì sao? | ba câu hỏi mở cho lần 2 |
 | 15 | cong_cu_ai | 22 | Công cụ AI nhóm dùng | bảng gọn (giữ) |
 | 16 | hien_trang | 22 | Hiện trạng bốn nội dung | bảng (giữ, tên mới) |
@@ -187,6 +189,13 @@ Bỏ khỏi lần 1: `nhom.svg`, `phan_cong.svg`, `slide_03` (mục lục), `sli
 - [ ] **Step 3:** `make_decks.sh lan1`; `python3 .claude/skills/ppt-master/scripts/source_to_md/ppt_to_md.py docs/presentation/bao-cao-lan-1.pptx -o runs/slides/bao-cao-lan-1_20261108/validation/readback.md` → 18 trang, có notes mỗi trang.
 - [ ] **Step 4:** Commit `"deck lần 1: speaker notes cho từng trang"`.
 
+### Task 8b: Mạch cải tiến cho lần 1 (bổ sung 18/11)
+
+**Files:** `docs/presentation/build/viz.py` (`before_after(gid, x, y, w, rows: list[tuple[str, str, str, str]])` — tiêu chí, trước, sau, ghi chú chênh lệch), `story.py` (trang `cai_tien.svg` thay `chi_phi.svg`, notes), `docs/report/vi/chapters/ch1-gioi-thieu.tex` (bảng `tab:cai-tien` ở mục kết quả, số qua macro), `tests/test_deck_viz.py`, `tests/test_report_build.py`.
+
+- [ ] **Step 1: Test** `before_after` trả một nhóm có đủ `len(rows)` hàng, mỗi hàng chứa cả giá trị trước và sau; lan1 PDF chứa "Cải tiến so với SemLoc".
+- [ ] **Step 2:** cài đặt, dựng deck (quality gate 0 lỗi), xem ảnh, `make -C docs/report check`; commit.
+
 ### Task 9: Phát hành lần 1
 
 - [ ] **Step 1:** `scripts/regenerate_all.sh && .venv/bin/pytest -q && make -C docs/report check` → tất cả PASS.
@@ -205,6 +214,7 @@ Bỏ khỏi lần 1: `nhom.svg`, `phan_cong.svg`, `slide_03` (mục lục), `sli
 
 **Interfaces:** thêm `generated/vi/fig_label_flow.pdf` (C3), `fig_ablation.pdf` (C4), `fig_addons.pdf` (C5), `fig_rq3.pdf` (C6), `fig_pareto.pdf` (C6b, thay `pareto.pdf` cũ, tên mới), `fig_decomposition.pdf` (C7); mỗi hàm `*_data()` trả list dict để test.
 
+- [ ] **Step 0:** thêm C9 `fig_improvement.pdf`: dumbbell SemLoc → FailLoc (Acc@1, Acc@3) theo ba bộ nhãn và năm họ mô hình (`rq2_ours.csv`, `rq3_families.csv`), test khớp số.
 - [ ] **Step 1: Test** khớp số với CSV: C3 từ `label_audit.csv` (subset `all`: `same, blank, off_by_one, farther, two_line…` cộng lại = `n`); C4 từ `ablation_coverage.csv` (gt `repaired`/`reviewed`, `d_acc1/d_acc3` kèm `lo/hi`); C5 từ `ablation_coverage.csv` + `vote_dev.csv` + `static_tools.csv` (không PAV ở lan2); C6 từ `rq3_bugsinpy.csv` (subset `all`), `rq3_renamed.csv` (gốc → đổi tên), `rq3_families.csv` (5 họ); C6b từ `pareto.csv`; C7 từ `rq_decomposition.csv` (`phi_guess`, `phi_spectrum`, Acc@1/Acc@3, CI cụm). Mỗi PDF rộng 16 cm.
 - [ ] **Step 2:** FAIL → cài đặt (C3 thanh xếp chồng ngang "nhãn gốc đi đâu"; C4 dấu chấm + CI "LLM-Direct → FailLoc → FailLoc+Cov"; C5 forest plot Δ so với phương pháp gốc; C6 ba panel nhỏ; C7 thanh xếp chồng đóng góp dòng đoán vs phổ) → PASS; xem ảnh.
 - [ ] **Step 3:** F6 TikZ: LLM rà 250 → người duyệt `\ReviewHumanN` ca nghi → bộ đã rà soát → duyệt mù `\BlindBlindAllPrograms` CT, 2 người/CT, không gợi ý → mức đồng thuận.
@@ -223,7 +233,7 @@ Bỏ khỏi lần 1: `nhom.svg`, `phan_cong.svg`, `slide_03` (mục lục), `sli
 
 **Files:** `build_deck.py` (`DECKS["lan2"]`, `story_pages()` nhánh lan2, `NOTES["lan2"]`), `tests/test_deck_notes.py` (tham số hóa theo deck).
 
-**Roster lần 2** (khung `slide_22` trừ khi ghi khác; mỗi trang một câu kết luận + một hình; ~22 trang): bìa (`TITLE_VI`/`TITLE_EN`, "Báo cáo lần 2 · 25–26/11/2026") · tóm tắt lần 1 (một hình: FailLoc vs SemLoc, hai câu hỏi còn mở) · **Thắng thật hay nhờ nhãn?** → rà soát nhãn hai bước (pipeline) · nhãn gốc đi đâu (thanh xếp chồng) · duyệt mù: mức đồng thuận (số lớn) · kết quả trên ba bộ nhãn (bars) · **Có bền không?** → lỗi thật BugsInPy (bars) · đổi tên định danh: dòng đoán giữ, phổ giảm (trước → sau) · năm họ mô hình (dải điểm) · chi phí – độ chính xác (scatter) · **Vì sao?** → ablation: test thất bại là tín hiệu chính (bậc thang) · thêm phức tạp không giúp: CovGate, FailLoc+Vote, ruff, pyrefly (Δ) · grounded hay guessed: phân rã (thanh) · đóng góp (4 thẻ) · triết lý khoa học · mối đe dọa (bảng gọn) · công cụ AI · hiện trạng bốn nội dung · tiến độ (Gantt) · cảm ơn. Không lộ phân tích thất bại và FailLoc+Verify.
+**Roster lần 2** (khung `slide_22` trừ khi ghi khác; mỗi trang một câu kết luận + một hình + khung giải thích; ~22 trang; kết thúc phần kết quả bằng slide "Trước → Sau" mở rộng: ba bộ nhãn, BugsInPy, đổi tên, năm họ mô hình): bìa (`TITLE_VI`/`TITLE_EN`, "Báo cáo lần 2 · 25–26/11/2026") · tóm tắt lần 1 (một hình: FailLoc vs SemLoc, hai câu hỏi còn mở) · **Thắng thật hay nhờ nhãn?** → rà soát nhãn hai bước (pipeline) · nhãn gốc đi đâu (thanh xếp chồng) · duyệt mù: mức đồng thuận (số lớn) · kết quả trên ba bộ nhãn (bars) · **Có bền không?** → lỗi thật BugsInPy (bars) · đổi tên định danh: dòng đoán giữ, phổ giảm (trước → sau) · năm họ mô hình (dải điểm) · chi phí – độ chính xác (scatter) · **Vì sao?** → ablation: test thất bại là tín hiệu chính (bậc thang) · thêm phức tạp không giúp: CovGate, FailLoc+Vote, ruff, pyrefly (Δ) · grounded hay guessed: phân rã (thanh) · đóng góp (4 thẻ) · triết lý khoa học · mối đe dọa (bảng gọn) · công cụ AI · hiện trạng bốn nội dung · tiến độ (Gantt) · cảm ơn. Không lộ phân tích thất bại và FailLoc+Verify.
 
 - [ ] **Step 1:** Trình roster cho trưởng nhóm (ppt-master §4.3) trước khi dựng; dựng; `make_decks.sh lan2` quality gate 0 lỗi; render xem từng trang.
 - [ ] **Step 2:** Notes mọi trang + humanizer; test notes PASS cho lan2.
@@ -247,7 +257,7 @@ Bỏ khỏi lần 1: `nhom.svg`, `phan_cong.svg`, `slide_03` (mục lục), `sli
 
 ### Task 15: Deck bảo vệ kể chuyện + notes
 
-**Roster bảo vệ** (~28 trang): bìa · móc (đoạn mã) · SBFL mù · lời hứa SemLoc · grounded hay guessed + ba câu hỏi · nghiên cứu liên quan · mở hộp (2 trang) · nhãn sai → nhãn đã sửa · FailLoc · thiết kế · kết quả (cuộc đua) · chi phí · thắng thật? rà soát + duyệt mù + ba bộ nhãn · bền? lỗi thật, đổi tên, họ mô hình · vì sao? ablation, bổ sung không giúp · phân tích thất bại (C8) · nhãn mơ hồ (một ví dụ mã) · FailLoc+Verify và "test đủ gợi ý, quá yếu để làm trọng tài" · đóng góp · triết lý khoa học · mối đe dọa · kết luận · cảm ơn.
+**Roster bảo vệ** (~28 trang): bìa · móc (đoạn mã) · SBFL mù · lời hứa SemLoc · grounded hay guessed + ba câu hỏi · nghiên cứu liên quan · mở hộp (2 trang) · nhãn sai → nhãn đã sửa · FailLoc · thiết kế · kết quả (cuộc đua) · chi phí · thắng thật? rà soát + duyệt mù + ba bộ nhãn · bền? lỗi thật, đổi tên, họ mô hình · vì sao? ablation, bổ sung không giúp · phân tích thất bại (C8) · nhãn mơ hồ (một ví dụ mã) · FailLoc+Verify và "test đủ gợi ý, quá yếu để làm trọng tài" · cải tiến so với các bài trước (Trước → Sau, toàn bộ) · đóng góp · triết lý khoa học · mối đe dọa · kết luận · cảm ơn.
 
 - [ ] **Step 1:** Trình roster (ppt-master §4.3), dựng, `make_decks.sh baove` 0 lỗi, render xem.
 - [ ] **Step 2:** Notes + humanizer, test notes PASS cho baove.
