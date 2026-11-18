@@ -66,3 +66,8 @@ def test_before_after_has_one_row_per_criterion():
     t = _texts(el)
     for crit, before, after, delta in rows:
         assert crit in t and before in t and after in t and delta in t
+
+
+def test_matrix_column_sub_labels():
+    el = _bounds_ok(viz.matrix("m", 50, 100, ["l1"], ["t1", "t2"], {(0, 0)}, col_sub=["pass", "fail"]))
+    assert "pass" in _texts(el) and "fail" in _texts(el)

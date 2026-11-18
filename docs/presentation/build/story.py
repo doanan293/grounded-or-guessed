@@ -105,15 +105,15 @@ def lan1(bd) -> None:
     P = viz.panel
 
     # 2. hook: a failing test, which line is wrong?
-    _title(bd, "moc.svg", "Một test thất bại. Dòng nào sai?")
+    _title(bd, "moc.svg", "Một test fail. Dòng nào sai?")
     short = lambda t: t if len(t) <= 40 else t[:38].rstrip() + " …"
     bd.A("moc.svg", viz.code_block("ma-vi-du", 50, 108, [short(code[n]) for n in range(body_from, gt_line + 2)],
                                    first_no=body_from, fs=15, width=520))
     bd.A("moc.svg", P("ket-qua-test", 50, 352, 520, [
-        ("Chạy bộ test", f"{n_pass} test đạt, 1 test trượt: {fail_test['id']}. Mã không lỗi cú pháp, không lỗi kiểu; "
+        ("Chạy bộ test", f"{n_pass} test pass, 1 test fail: {fail_test['id']}. Mã không lỗi cú pháp, không lỗi kiểu; "
                          "chỉ kết quả bị tính sai.")], size=14, head_color=RED))
     bd.A("moc.svg", P("bai-toan", 600, 108, 320, [
-        ("Bài toán định vị lỗi", "Đầu vào: mã nguồn và bộ test, trong đó có test trượt. Đầu ra: các dòng mã xếp theo "
+        ("Bài toán định vị lỗi", "Đầu vào: mã nguồn và bộ test, trong đó có test fail. Đầu ra: các dòng mã xếp theo "
                                  "mức đáng nghi, dòng nghi nhất ở hạng 1."),
         ("Lỗi ngữ nghĩa", "Chương trình chạy đúng đường nhưng tính sai giá trị, nên không công cụ kiểm tra cú pháp "
                           "hay kiểu nào báo ra."),
@@ -122,34 +122,36 @@ def lan1(bd) -> None:
     ], size=14))
 
     # 3. SBFL is blind on it: failing and passing tests run the same lines
-    _title(bd, "sbfl_mu.svg", "SBFL mù: test đạt và test trượt đi qua cùng các dòng")
+    _title(bd, "sbfl_mu.svg", "Phương pháp SBFL mù: test pass và test fail đi qua cùng các dòng")
     rows = [n for n in range(body_from, gt_line + 1) if code[n].strip()]
     cols = [f"t{j + 1}" for j in range(len(ex["tests"]))]
     cells = {(i, j) for i, n in enumerate(rows) for j, t in enumerate(ex["tests"]) if n in t["lines"]}
     fail_cols = {j: RED for j, t in enumerate(ex["tests"]) if not t["passed"]}
     bd.A("sbfl_mu.svg", viz.matrix("ma-tran-phu", 40, 108, [f"{n}  {code[n].strip()[:20]}" for n in rows], cols, cells,
                                    row_mark={rows.index(gt_line): RED}, label_w=280, cell_w=46, row_h=34,
-                                   col_colors={**{j: NAVY for j in range(len(cols))}, **fail_cols}))
+                                   col_colors={**{j: NAVY for j in range(len(cols))}, **fail_cols},
+                                   col_sub=["fail" if j in fail_cols else "pass" for j in range(len(cols))]))
     n_fail = len(fail_cols)
     ochiai = 1 / ((n_fail * len(ex["tests"])) ** 0.5)
     bd.A("sbfl_mu.svg", P("sbfl-giai-thich", 580, 108, 340, [
-        ("Cách đọc", "Mỗi hàng là một dòng mã, mỗi cột là một test; chấm nghĩa là test chạy qua dòng đó. Cột đỏ là test "
-                     f"trượt, hàng tô màu là dòng lỗi {gt_line}."),
-        ("SBFL tính điểm thế nào", "Dòng càng hay được test trượt chạy qua và càng ít được test đạt chạy qua thì càng "
+        ("Cách đọc", "Mỗi hàng là một dòng mã, mỗi cột là một test; chấm nghĩa là test chạy qua dòng đó. "
+                     f"Cột {', '.join(cols[j] for j in fail_cols)} (đỏ) là test fail duy nhất, các cột xanh là test pass. "
+                     f"Hàng tô màu là dòng lỗi {gt_line}."),
+        ("Phương pháp SBFL tính điểm", "SBFL (định vị lỗi dựa trên phổ): dòng càng hay được test fail chạy qua và càng ít được test pass chạy qua thì càng "
                                    "đáng nghi (công thức Ochiai, điểm từ 0 đến 1)."),
         ("Ở ví dụ này", f"Mọi dòng đều được cả {len(ex['tests'])} test chạy qua, nên dòng nào cũng có điểm "
                         f"{_p(ochiai, 2)}; dòng lỗi không nổi bật."),
     ], size=14))
     bd.A("sbfl_mu.svg", viz.big_number("sbfl-acc", 40, 400, f"{m('RqOneSbflOchiaiFairAllAccOne')}%",
-                                       "Acc@1 của SBFL trên\n250 chương trình", color=RED, size=44, w=340))
+                                       "Acc@1 của phương pháp SBFL\ntrên 250 chương trình", color=RED, size=44, w=340))
 
     # 4. SemLoc's promise
     _title(bd, "semloc_hua.svg", "SemLoc hứa: neo LLM vào bằng chứng thực thi")
     steps = ["LLM viết\nràng buộc", "Chèn\nvào mã", "Chạy\ntest", "Phổ vi phạm\n(Ochiai)", "LLM vá thử,\nchạy lại test"]
     bd.A("semloc_hua.svg", viz.pipeline("quy-trinh-semloc", 50, 108, steps, box_w=150, gap=28, box_h=72))
     expl = ["Điều kiện phải đúng,\nví dụ tổng phần chia\nbằng tổng ban đầu", "Mỗi ràng buộc thành\nmột lệnh kiểm tra\ntại một dòng",
-            "Ghi ràng buộc nào\nbị vi phạm trong\ntest nào", "Ràng buộc vi phạm\nnhiều ở test trượt\nthì dòng của nó nghi",
-            "Vá dòng nghi; test\nđạt lại thì xác nhận\ndòng đó"]
+            "Ghi ràng buộc nào\nbị vi phạm trong\ntest nào", "Ràng buộc vi phạm\nnhiều ở test fail\nthì dòng của nó nghi",
+            "Vá dòng nghi; test\npass lại thì xác nhận\ndòng đó"]
     body = []
     for k, e in enumerate(expl):
         for r, line in enumerate(e.split("\n")):
@@ -204,11 +206,11 @@ def lan1(bd) -> None:
 
     # 6b. the three representative studies
     _title(bd, "ba_bai.svg", "Nghiên cứu liên quan: ba bài tiêu biểu và điều nhóm học được")
-    cards = [("SemLoc (2026)", [("Bài toán", "lỗi ngữ nghĩa trong hàm Python; test trượt nhưng không chỉ ra dòng."),
+    cards = [("SemLoc (2026)", [("Bài toán", "lỗi ngữ nghĩa trong hàm Python; test fail nhưng không chỉ ra dòng."),
                                  ("Cách làm", "LLM viết ràng buộc, chạy test lấy phổ vi phạm, vá thử để kiểm chứng."),
                                  ("Kết quả", f"Acc@1 {m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}% trên SemFault-250."),
                                  ("Nhóm học", "chạy lại đúng mã của tác giả, soát từng con số (RQ1).")]),
-             ("EffiHolmes (2026)", [("Bài toán", "lỗi hiệu năng: test vẫn đạt, không có lỗi để lần theo."),
+             ("EffiHolmes (2026)", [("Bài toán", "lỗi hiệu năng: test vẫn pass, không có lỗi để lần theo."),
                                      ("Cách làm", "so hai lần chạy dữ liệu nhỏ và lớn; hàm chậm hẳn đi thì bị nghi."),
                                      ("Kết quả", "thử trên 140 lỗi chạy chậm thật."),
                                      ("Nhóm học", "đặt lần chạy đúng cạnh lần chạy lỗi; cách chia ba câu hỏi.")]),
@@ -242,7 +244,7 @@ def lan1(bd) -> None:
                          gid="nguon-diem", w=520))
     bd.A("hop_den_1.svg", P("doc-hinh-1", 590, 108, 330, [
         ("Hình này cho thấy", f"Điểm SemLoc chấm cho {len(rs)} dòng ứng viên của một chương trình, trước khi xếp hạng."),
-        ("Điểm phổ là gì", "Với mỗi ràng buộc LLM viết, đếm test trượt và test đạt vi phạm nó rồi tính Ochiai (0 đến 1). "
+        ("Điểm phổ là gì", "Với mỗi ràng buộc LLM viết, đếm test fail và test pass vi phạm nó rồi tính Ochiai (0 đến 1). "
                            "Điểm của dòng là điểm cao nhất trong các ràng buộc gắn với dòng đó."),
         ("Cách đọc", "Thanh dài là dòng đáng nghi hơn; xanh đậm là dòng lỗi thật; vạch đứt là mức tối đa 1."),
         ("Ý chính", f"Chỉ với bằng chứng thực thi, dòng lỗi {gt_r['line']} đứng đầu: phổ vi phạm đã chỉ đúng."),
@@ -264,10 +266,10 @@ def lan1(bd) -> None:
     bd.A("nhan_sai.svg", viz.big_number("nhan-trong", 40, 104, m("GtBlankN"), "nhãn gốc nằm trên dòng trống,\nnơi không thể có lỗi",
                                         color=RED, size=52, w=280))
     bd.A("nhan_sai.svg", viz.big_number("nhan-khong-chay", 330, 104, m("GtNotExecutedN"),
-                                        "chương trình: không test trượt\nnào chạy tới dòng được gán nhãn", color=RED, size=52, w=280))
+                                        "chương trình: không test fail\nnào chạy tới dòng được gán nhãn", color=RED, size=52, w=280))
     bd.A("nhan_sai.svg", P("nhan-la-gi", 640, 104, 280, [
         ("Nhãn là gì", "Dòng lỗi chuẩn mà bộ dữ liệu ghi cho mỗi chương trình; mọi phương pháp được chấm đúng sai theo nó."),
-        ("Vì sao quan trọng", "Nhãn sai thì một phương pháp chỉ đúng dòng vẫn bị chấm là trượt."),
+        ("Vì sao quan trọng", "Nhãn sai thì một phương pháp chỉ đúng dòng vẫn bị chấm là sai."),
     ], size=14))
     bd.A("nhan_sai.svg", viz.pipeline("sua-nhan", 40, 300, ["Nhãn gốc\n250 CT", "Sửa nhỏ một dòng,\nchạy lại test",
                                                              f"Xác nhận {m('GtConfirmedN')}\nDời {m('GtCorrectedN')}",
@@ -275,26 +277,26 @@ def lan1(bd) -> None:
                                       accent=3, box_w=196, gap=34, box_h=74))
     bd.A("nhan_sai.svg", P("bo-phan-dinh", 40, 392, 880, [
         ("Bộ phán định sửa tối thiểu", "LLM chỉ đề xuất bản sửa nhỏ tại nhãn hoặc dòng lân cận; dòng nào sửa xong làm mọi "
-                                       "test đạt thì đó là dòng lỗi. Test quyết định, LLM không quyết định. Mọi kết quả sau "
+                                       "test pass thì đó là dòng lỗi. Test quyết định, LLM không quyết định. Mọi kết quả sau "
                                        "đây được báo trên cả nhãn gốc lẫn nhãn đã sửa.")], size=14))
 
     # 10. FailLoc next to SemLoc, with the prompt it sends
-    _title(bd, "failloc.svg", f"{name('llm_tests')}: đưa thẳng test thất bại cho LLM, một lượt gọi")
+    _title(bd, "failloc.svg", f"{name('llm_tests')}: đưa thẳng test fail cho LLM, một lượt gọi")
     bd.A("failloc.svg", _t(40, 126, "SemLoc", size=18, fill=NAVY, weight="bold"))
     bd.A("failloc.svg", viz.pipeline("semloc-ngan", 40, 138, ["Ràng\nbuộc", "Chèn,\nchạy", "Phổ", "+thưởng", "Vá thử"],
                                      box_w=96, gap=16, box_h=56))
     bd.A("failloc.svg", _note(40, 214, [f"≈ {m('CostSemlocTokensK')} nghìn token, {m('CostSemlocCalls')} lượt gọi mỗi CT"],
                               size=14, gid="chi-phi-semloc", w=540))
     bd.A("failloc.svg", _t(40, 276, name("llm_tests"), size=18, fill=ORANGE, weight="bold"))
-    bd.A("failloc.svg", viz.pipeline("failloc-ngan", 40, 288, ["Mã +\ntest trượt", "Một lượt\ngọi LLM", "5 dòng\nnghi nhất"],
+    bd.A("failloc.svg", viz.pipeline("failloc-ngan", 40, 288, ["Mã +\ntest fail", "Một lượt\ngọi LLM", "5 dòng\nnghi nhất"],
                                      accent=1, box_w=150, gap=30, box_h=64))
     bd.A("failloc.svg", _note(40, 376, [f"≈ {m('CostLlmTestsTokensK')} nghìn token, {m('CostLlmTestsCalls')} lượt gọi mỗi CT"],
                               size=14, gid="chi-phi-failloc", w=540))
     bd.A("failloc.svg", P("vi-sao-failloc", 40, 400, 540, [
-        ("Vì sao làm vậy", "Đây là cách lập trình viên vẫn hỏi trợ lý AI khi test trượt; nhóm làm nó tái hiện được và "
+        ("Vì sao làm vậy", "Đây là cách lập trình viên vẫn hỏi trợ lý AI khi test fail; nhóm làm nó tái hiện được và "
                            "dùng làm mốc mà quy trình nhiều bước phải vượt.")], size=14))
     prompt = ["Mã nguồn đánh số dòng:", "  22 weight_sum = sum(weights)", "  …",
-              f"{n_fail} test trượt, {n_pass} test đạt;", "chương trình có đúng một dòng lỗi.", "Test trượt:",
+              f"{n_fail} test fail, {n_pass} test pass;", "chương trình có đúng một dòng lỗi.", "Test fail:",
               f"  {fail_test['id'][:30]}", "  dòng lỗi đầu tiên của test", "Trả về 5 dòng nghi nhất (JSON)."]
     body = [_r(610, 108, 310, 300, viz.LIGHT, stroke=ORANGE, rx=10), _t(626, 134, "Prompt của FailLoc (rút gọn)", size=15,
                                                                          fill=ORANGE, weight="bold")]
@@ -367,7 +369,7 @@ def lan1(bd) -> None:
     _title(bd, "lan_sau.svg", "Thắng thật hay nhờ nhãn? Và vì sao? (lần 2)")
     for k, (head, lines) in enumerate((("Nhãn còn sai?", ["Rà soát cả 250 nhãn,", "duyệt mù độc lập", "bởi hai người"]),
                                        ("Có bền không?", ["Lỗi thật BugsInPy,", "mã đổi tên định danh,", "năm họ mô hình"]),
-                                       ("Vì sao thắng?", ["Ablation: test thất bại", "hay độ phủ từng dòng", "tạo khác biệt?"]))):
+                                       ("Vì sao thắng?", ["Ablation: test fail", "hay độ phủ từng dòng", "tạo khác biệt?"]))):
         bd.A("lan_sau.svg", _card(f"cau-hoi-{k}", 40 + k * 300, 130, 270, 200, head, lines, color=[RED, NAVY, ORANGE][k]))
     bd.A("lan_sau.svg", P("hen-lan-2", 40, 360, 870, [
         (None, "Dữ liệu và mã cho cả ba câu đã có; kết quả trình bày ở báo cáo lần 2 (25–26/11).")], size=15))
@@ -405,12 +407,12 @@ def notes_lan1(bd) -> dict:
         "slide_01": "Chào thầy và các bạn, nhóm M9 xin trình bày báo cáo tiến độ lần 1 của đề tài: bằng chứng hay phỏng đoán, "
                     "tái hiện và đánh giá việc định vị lỗi ngữ nghĩa trong mã nguồn bằng mô hình ngôn ngữ lớn.",
         "moc": f"Nhóm bắt đầu bằng một tình huống quen thuộc. Đây là hàm {ex['program']} trong bộ dữ liệu SemFault-250: chạy "
-               "bộ test thì có một test trượt, các test còn lại đều đạt. Mã vẫn chạy bình thường, chỉ có kết quả bị tính sai, "
+               "bộ test thì có một test fail, các test còn lại đều pass. Mã vẫn chạy bình thường, chỉ có kết quả bị tính sai, "
                "nên các công cụ kiểm tra cú pháp hay kiểu không báo gì. Câu hỏi là dòng nào sai.",
-        "sbfl_mu": "Cách kinh điển là định vị lỗi dựa trên phổ, gọi tắt là SBFL: dòng nào hay được test trượt chạy qua mà ít "
-                   "được test đạt chạy qua thì đáng nghi. Ở đây cột màu đỏ là test trượt, và nó chạy qua đúng những dòng mà "
-                   f"các test đạt cũng chạy qua. Mọi dòng vì thế nhận cùng một điểm, kể cả dòng {ex['gt_line']} là dòng lỗi "
-                   f"thật. Trên cả 250 chương trình, SBFL chỉ đúng ngay hạng 1 ở {m('RqOneSbflOchiaiFairAllAccOne')}%.",
+        "sbfl_mu": "Cách kinh điển là định vị lỗi dựa trên phổ, gọi là phương pháp SBFL: dòng nào hay được test fail chạy qua mà ít "
+                   "được test pass chạy qua thì đáng nghi. Ở đây cột màu đỏ là test fail duy nhất, và nó chạy qua đúng những dòng mà "
+                   f"các test pass cũng chạy qua. Mọi dòng vì thế nhận cùng một điểm, kể cả dòng {ex['gt_line']} là dòng lỗi "
+                   f"thật. Trên cả 250 chương trình, phương pháp SBFL chỉ đúng ngay hạng 1 ở {m('RqOneSbflOchiaiFairAllAccOne')}%.",
         "semloc_hua": "SemLoc, bài trung tâm trong ba bài thầy giao, đề xuất một quy trình nhiều bước. LLM viết ra các ràng "
                       "buộc ngữ nghĩa, ràng buộc được chèn vào mã, chạy test để biết ràng buộc nào bị vi phạm, rồi LLM vá thử "
                       f"để kiểm chứng. Tác giả báo cáo Acc@1 là {m('RqOneSemlocClaudeTZeroEightAuthorAllAccOne')}% và cho rằng "
@@ -430,12 +432,12 @@ def notes_lan1(bd) -> dict:
                      f"ở đây là dòng {guess_line} đứng trên dòng lỗi. Trong {n_pairs} lần chạy có dòng đoán, tỉ lệ này là "
                      f"{_p(100 * share, 0)}%.",
         "nhan_sai": f"Kiểm tra kỹ hơn, nhóm thấy chính nhãn của bộ dữ liệu cũng có vấn đề: {m('GtBlankN')} nhãn nằm trên dòng "
-                    f"trống, và ở {m('GtNotExecutedN')} chương trình không test trượt nào chạy tới dòng được gán nhãn. Nhóm "
+                    f"trống, và ở {m('GtNotExecutedN')} chương trình không test fail nào chạy tới dòng được gán nhãn. Nhóm "
                     "dựng lại bộ nhãn bằng thực thi: LLM chỉ đề xuất bản sửa nhỏ, còn test quyết định. Kết quả là "
                     f"{m('GtConfirmedN')} nhãn được xác nhận, {m('GtCorrectedN')} nhãn được dời vị trí, và bộ nhãn đã sửa "
                     f"còn {m('GtRepairedN')} chương trình. Mọi kết quả sau đây đều báo trên cả hai bộ nhãn.",
         "failloc": "Phương pháp nhóm đề xuất tên là FailLoc. Nó làm đúng việc lập trình viên vẫn làm với trợ lý AI: đưa mã "
-                   "nguồn cùng tên và thông báo lỗi của các test trượt cho LLM, hỏi một lần, nhận về năm dòng đáng nghi nhất. "
+                   "nguồn cùng tên và thông báo lỗi của các test fail cho LLM, hỏi một lần, nhận về năm dòng đáng nghi nhất. "
                    f"SemLoc tốn khoảng {m('CostSemlocTokensK')} nghìn token mỗi chương trình, FailLoc khoảng "
                    f"{m('CostLlmTestsTokensK')} nghìn.",
         "thiet_ke_l1": "Để so sánh công bằng, năm phương pháp chạy trên cùng 200 chương trình của tập test, cùng mô hình "

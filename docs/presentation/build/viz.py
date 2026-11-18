@@ -131,15 +131,18 @@ def gantt(gid, x, y, w, rows: list[tuple], today: str | None = None, label_w: fl
 
 
 def matrix(gid, x, y, rows: list[str], cols: list[str], cells: set, row_mark: dict | None = None, cell_w: float = 56,
-           row_h: float = 30, label_w: float = 120, col_colors: dict | None = None) -> str:
+           row_h: float = 30, label_w: float = 120, col_colors: dict | None = None, col_sub: list | None = None) -> str:
     """Dot matrix: rows × cols, a dot in each (row, col) of `cells`; row_mark {row: colour} paints a band."""
     body = []
     w = label_w + cell_w * len(cols)
     for j, c in enumerate(cols):
         body.append(_t(x + label_w + cell_w * (j + 0.5), y + 18, c, size=15, anchor="middle", weight="bold",
                        fill=(col_colors or {}).get(j, INK)))
+        if col_sub:  # a small second header line, e.g. pass / fail
+            body.append(_t(x + label_w + cell_w * (j + 0.5), y + 34, col_sub[j], size=12, anchor="middle",
+                           fill=(col_colors or {}).get(j, INK)))
     for i, r in enumerate(rows):
-        cy = y + 30 + i * row_h
+        cy = y + (44 if col_sub else 30) + i * row_h
         if row_mark and i in row_mark:
             body.append(_r(x, cy, w, row_h, HILITE))
         body.append(_t(x + label_w - 10, cy + row_h * 0.68, r, size=15, anchor="end", family=MONO))
@@ -147,7 +150,7 @@ def matrix(gid, x, y, rows: list[str], cols: list[str], cells: set, row_mark: di
             if (i, j) in cells:
                 body.append(f'<circle cx="{round(x + label_w + cell_w * (j + 0.5), 1)}" cy="{round(cy + row_h / 2, 1)}" r="7" '
                             f'fill="{(col_colors or {}).get(j, NAVY)}"/>')
-    return _g(gid, x, y, w, 30 + row_h * len(rows), body)
+    return _g(gid, x, y, w, (44 if col_sub else 30) + row_h * len(rows), body)
 
 
 def panel(gid, x, y, w, blocks: list[tuple], size: float = 14, head_color: str = NAVY, fill: str = "#FFFFFF") -> str:
