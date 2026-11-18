@@ -51,13 +51,13 @@ Tiểu luận đặt câu hỏi ``grounded hay guessed?'' cho SemLoc --- độ c
 dòng lỗi chuẩn (nhãn) của bộ dữ liệu?
 \item \textbf{RQ2 -- LLM thật sự cần gì?} Một prompt duy nhất có kiểm thử thất bại so với quy trình nhiều bước của
 SemLoc thì sao, về độ chính xác và chi phí? Thông tin nào trong prompt tạo ra khác biệt (kiểm thử thất bại hay độ phủ
-từng dòng)? Các cách bổ sung --- gắn độ phủ vào SemLoc (CovGate),\IfAtLeast{full}{ kiểm chứng dòng nghi ngờ bằng bản sửa và kiểm thử,}
+từng dòng)? Các cách bổ sung --- gắn độ phủ vào SemLoc (CovGate), kiểm chứng dòng nghi ngờ bằng bản sửa và kiểm thử,
 biểu quyết nhiều câu trả lời --- và các công cụ phân tích tĩnh có thêm được gì không?
 \item \textbf{RQ3 -- Độ bền.} Các kết luận có giữ được trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã đổi tên
-định danh, trên năm họ mô hình, và trên \IfAtLeastElse{lan2}{cả ba bộ nhãn (gốc, đã chuẩn hóa, đã rà soát)}{các bộ nhãn khác nhau} không?
+định danh, trên năm họ mô hình, và trên cả ba bộ nhãn (gốc, đã chuẩn hóa, đã rà soát) không?
 \end{itemize}
 
-\section{\IfAtLeastElse{lan2}{Đóng góp chính}{Kết quả đến thời điểm báo cáo}}
+\section{Đóng góp chính}
 \label{sec:dong-gop-tom-tat}
 
 Mỗi kết quả dưới đây gắn với số liệu được sinh tự động từ mã nguồn công khai.
@@ -65,31 +65,27 @@ Mỗi kết quả dưới đây gắn với số liệu được sinh tự độ
 \begin{enumerate}
 \item \textbf{Hạng 1 của SemLoc là dòng LLM đoán.} Mã nguồn công bố cộng cho dòng LLM tự đoán một điểm thưởng lớn hơn
 mọi điểm ràng buộc --- chi tiết không có trong bài báo --- nên dòng đầu tiên của SemLoc \emph{luôn} là dòng đoán. Bỏ
-điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã chuẩn hóa\IfAtLeast{lan2}{ và
-\RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã rà soát}. Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM
+điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã chuẩn hóa và
+\RqTwoReviewedAllSemlocNoPriorDAccOne{} điểm trên bộ nhãn đã rà soát. Bước vá thử chiếm \CostCfSharePct\% lượt gọi LLM
 nhưng không đổi thứ hạng nào. Nói cách khác, bài báo tuyên bố quá mức (overclaim) về nguồn gốc độ chính xác
 (Mục~\ref{sec:overclaim}).
-\IfAtLeastElse{lan2}{\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
+\item \textbf{Gần một nửa nhãn của bộ dữ liệu không trỏ đúng dòng lỗi.} Trong \LabaudAllN{} nhãn gốc, \LabaudAllMoved{}
 bị dời khi rà soát (\LabaudAllBlank{} nằm trên dòng trống, \LabaudAllOffByOne{} lệch một dòng). Nhóm công bố hai bộ nhãn
 mới: \emph{đã chuẩn hóa} (chỉ kiểm thử quyết định) và \emph{đã rà soát} (LLM rà trước, thành viên nhóm duyệt, kiểm tra lại bằng
-duyệt mù). Trên nhãn đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc@3 biến mất (trên nhãn đã chuẩn hóa thì vẫn còn).}{%
-\item \textbf{Nhãn của bộ dữ liệu có vấn đề.} \GtBlankN{} nhãn gốc nằm trên dòng trống và \GtNotExecutedN{} chương trình
-không có kiểm thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm dựng bộ nhãn \emph{đã chuẩn hóa} bằng thực thi: \GtConfirmedN{}
-nhãn được xác nhận, \GtCorrectedN{} nhãn được dời vị trí.}
+duyệt mù). Trên nhãn đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc@3 biến mất (trên nhãn đã chuẩn hóa thì vẫn còn).
 \item \textbf{Một prompt có kiểm thử thất bại thắng quy trình nhiều bước.} Phương pháp do nhóm đề xuất, \textbf{FailLoc}
 (một lượt gọi LLM với mã nguồn, tên kiểm thử thất bại và thông báo lỗi), hơn SemLoc \RqTwoRepairedAllLlmTestsDAccOne{} điểm Acc@1
-và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã chuẩn hóa, thắng ở Acc@1 trên \IfAtLeastElse{lan2}{cả ba bộ
-nhãn}{cả bộ nhãn gốc lẫn bộ đã chuẩn hóa}, và tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với
+và \RqTwoRepairedAllLlmTestsDAccThree{} điểm Acc@3 trên nhãn đã chuẩn hóa, thắng ở Acc@1 trên cả ba bộ
+nhãn, và tốn \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với
 \CostSemlocTokensK{} nghìn của SemLoc.
-\IfAtLeast{lan2}{\item \textbf{Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
+\item \textbf{Thêm phức tạp không thu hẹp được khoảng cách --- và vì sao.} Ablation cho thấy kiểm thử thất bại là tín hiệu chính
 (Acc@3 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM-Direct), còn thêm độ phủ từng dòng làm Acc@1 đổi
-\AblRepairedAllCoverageEffectDAccOne{} điểm. CovGate chỉ giúp SemLoc một chút;\IfAtLeastElse{full}{ kiểm chứng dòng nghi ngờ bằng bản
-sửa và biểu quyết (đánh giá trên tập dev) không cải thiện được prompt đơn giản;}{ biểu quyết (đánh giá trên tập dev) không
-cải thiện được prompt đơn giản;} công cụ phân tích tĩnh (ruff, pyrefly) gần như không trúng dòng lỗi. Nguyên nhân chung:
-kiểm thử của bộ dữ liệu đủ để \emph{gợi ý} lỗi nhưng quá yếu để \emph{làm trọng tài}\IfAtLeastElse{full}{ --- bản sửa nhỏ làm mọi kiểm thử
-đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng viên không có lỗi (tập dev).}{.}
+\AblRepairedAllCoverageEffectDAccOne{} điểm. CovGate chỉ giúp SemLoc một chút; kiểm chứng dòng nghi ngờ bằng bản
+sửa và biểu quyết (đánh giá trên tập dev) không cải thiện được prompt đơn giản; công cụ phân tích tĩnh (ruff, pyrefly) gần như không trúng dòng lỗi. Nguyên nhân chung:
+kiểm thử của bộ dữ liệu đủ để \emph{gợi ý} lỗi nhưng quá yếu để \emph{làm trọng tài} --- bản sửa nhỏ làm mọi kiểm thử
+đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng viên không có lỗi (tập dev).
 \item \textbf{Bảng kiểm tra bảy mục} cho đánh giá định vị lỗi bằng LLM, áp cho mọi phương pháp trong bài, và một gói tái
-hiện (Docker, nhật ký và bộ đệm lượt gọi LLM, mọi con số sinh tự động).}
+hiện (Docker, nhật ký và bộ đệm lượt gọi LLM, mọi con số sinh tự động).
 \end{enumerate}
 
 Bảng~\ref{tab:cai-tien} tóm tắt những điểm nhóm làm tốt hơn SemLoc, so trên cùng 200 chương trình của tập test và cùng
@@ -119,11 +115,9 @@ Lặp và kiểm định & một lần chạy & ba lần, khoảng tin cậy & -
 \end{table}
 
 
-\IfBelow{lan2}{Các phần đang thực hiện cho lần báo cáo 2: rà soát toàn bộ nhãn của bộ dữ liệu; thí nghiệm loại bỏ để
-biết thông tin nào trong prompt tạo ra khác biệt; các cách bổ sung và công cụ phân tích tĩnh; câu hỏi RQ3 (lỗi thật, mã
-đổi tên, các họ mô hình); đóng góp và triết lý khoa học.}
-\IfAtLeast{lan2}{\IfAtLeast{full}{Chương~\ref{chap:that-bai} phân tích các ca thất bại và cơ chế khiến kiểm thử không làm được trọng tài;}
-Chương~\ref{chap:dong-gop} trình bày quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ của kết quả.}
+
+Chương~\ref{chap:that-bai} phân tích các ca thất bại và cơ chế khiến kiểm thử không làm được trọng tài;
+Chương~\ref{chap:dong-gop} trình bày quan điểm khoa học cùng các mối đe dọa đến tính hợp lệ của kết quả.
 
 \section{Cấu trúc báo cáo}
 \label{sec:cau-truc}
@@ -132,8 +126,8 @@ Chương~\ref{chap:tong-quan} tổng quan tài liệu và bộ từ khóa, trong
 Chương~\ref{chap:co-so} trình bày cơ sở lý thuyết về SBFL, lỗi ngữ nghĩa, SemLoc, phân tích tĩnh và động, và các công cụ
 thống kê. Chương~\ref{chap:phuong-phap} mô tả câu hỏi nghiên cứu, dữ liệu và các bộ nhãn, các phương pháp so sánh và thiết
 kế thực nghiệm. Chương~\ref{chap:ket-qua} trả lời ba câu hỏi nghiên cứu.
-\IfAtLeast{lan2}{\IfAtLeast{full}{Chương~\ref{chap:that-bai} phân tích các ca thất bại;} Chương~\ref{chap:dong-gop} tổng hợp đóng góp,
-triết lý khoa học và các mối đe dọa.}
+Chương~\ref{chap:that-bai} phân tích các ca thất bại; Chương~\ref{chap:dong-gop} tổng hợp đóng góp,
+triết lý khoa học và các mối đe dọa.
 Chương~\ref{chap:ket-luan} kết luận và nêu hướng phát triển.
-\IfAtLeast{full}{Phụ lục hướng dẫn tái hiện toàn bộ kết quả và liệt kê các prompt.}
+Phụ lục hướng dẫn tái hiện toàn bộ kết quả và liệt kê các prompt.
 Mã nguồn, dữ liệu và nhật ký gọi LLM được công bố tại \url{https://github.com/doanan293/grounded-or-guessed}.
