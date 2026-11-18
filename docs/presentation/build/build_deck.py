@@ -16,6 +16,7 @@ from slidekit import append, drop_group, edit  # noqa: E402
 import story_common  # noqa: E402
 import story_lan1  # noqa: E402
 import story_lan2  # noqa: E402
+import story_baove  # noqa: E402
 
 WS = Path(__file__).resolve().parents[3] / "runs" / "slides" / "bao-cao-lan-1_20261108"
 SVG = WS / "authoring-svg-flat"
@@ -36,7 +37,7 @@ SOURCE = {
     "triet_ly.svg": 19, "de_doa.svg": 9, "ket_luan.svg": 5,
     "chuong_nhom.svg": 4, "nhom.svg": 22, "phan_cong.svg": 22, "cong_cu_ai.svg": 22, "hien_trang.svg": 22,
 }
-SOURCE.update({n: src for n, src in story_lan1.LAN1 + story_lan2.LAN2 if n not in SOURCE})
+SOURCE.update({n: src for n, src in story_lan1.LAN1 + story_lan2.LAN2 + story_baove.BAOVE if n not in SOURCE})
 INTRO = ["slide_04.svg", "slide_05.svg", "slide_08.svg", "slide_25.svg", "slide_09.svg", "slide_22.svg", "slide_11.svg"]
 METHOD = ["chuong02.svg", "slide_20.svg", "slide_19.svg", "thiet_ke.svg"]
 RESULTS = ["slide_14.svg", "ket_qua_thu.svg", "ket_qua_rq3.svg", "pareto.svg"]
@@ -48,8 +49,7 @@ DECKS = {
     "lan1": [n for n, _ in story_lan1.LAN1],  # storytelling deck, see story_lan1.py
     # report 2 (25–26/11): + RQ3, cost, contributions; failure analysis waits for the final submission
     "lan2": [n for n, _ in story_lan2.LAN2],  # storytelling deck, see story_lan2.py
-    "baove": ["slide_01.svg", "slide_03.svg", *INTRO, *METHOD, "chuong03.svg", *RESULTS, *ANALYSIS, "ket_luan.svg",
-              "slide_30.svg"],
+    "baove": [n for n, _ in story_baove.BAOVE],  # storytelling deck, see story_baove.py
 }
 # Cover: the Vietnamese title (report cover, bia.tex) large, the English title (paper) small underneath; never mixed.
 TITLE_VI = ("Bằng chứng hay phỏng đoán: Tái hiện và đánh giá việc định vị lỗi ngữ nghĩa trong mã nguồn "
@@ -549,7 +549,7 @@ def main(deck: str) -> None:
     PAGES = [(SOURCE[n], n) for n in DECKS[deck]]
     build()
     analysis_pages()
-    story = {"lan1": story_lan1, "lan2": story_lan2}.get(deck)
+    story = {"lan1": story_lan1, "lan2": story_lan2, "baove": story_baove}.get(deck)
     if story:
         story.pages(sys.modules[__name__])
     write_notes(story.notes(sys.modules[__name__]) if story else {})

@@ -19,7 +19,7 @@ def _sentences(t: str) -> int:
     return len([s for s in re.split(r"(?<=[.?!])\s+", t.strip()) if s])
 
 
-@pytest.mark.parametrize("deck", ["lan1", "lan2"])
+@pytest.mark.parametrize("deck", ["lan1", "lan2", "baove"])
 def test_every_page_has_a_spoken_note(deck):
     build_deck.main(deck)
     plan = json.loads((build_deck.WS / "page_plan.json").read_text())["pages"]

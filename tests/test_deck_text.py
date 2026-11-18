@@ -12,7 +12,7 @@ from slidekit import texts  # noqa: E402
 
 pytestmark = pytest.mark.skipif(not build_deck.WS.exists(), reason="slide workspace (runs/slides) not present")
 FORBIDDEN = [r"\bCT\b", r"\bCI\b", r"\d k token", r"k token", r"\+thưởng", r"trượt", r"sửa nhãn", r"nhãn đã sửa", r"LLM hỏi thẳng"]
-DONE = {"lan1", "lan2"}  # decks rebuilt under the 18/11 rules; the others are checked once their task lands
+DONE = {"lan1", "lan2", "baove"}  # decks rebuilt under the 18/11 rules; the others are checked once their task lands
 
 
 def _pages(deck):
