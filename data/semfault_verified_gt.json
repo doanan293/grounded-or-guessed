@@ -753,11 +753,14 @@
  },
  {
   "program": "feature_flag_rollout",
-  "status": "confirmed",
+  "status": "corrected",
   "lines": [
+   63
+  ],
+  "original": [
    62
   ],
-  "edit_size": 4,
+  "edit_size": 1,
   "kind": "replace",
   "code": "return bucket < percentage"
  },
@@ -1151,13 +1154,16 @@
  },
  {
   "program": "memory_moving_mean",
-  "status": "confirmed",
+  "status": "corrected",
   "lines": [
+   65
+  ],
+  "original": [
    66
   ],
-  "edit_size": 8,
+  "edit_size": 4,
   "kind": "replace",
-  "code": "    avg = total / len(tail)"
+  "code": "avg = total / len(tail)"
  },
  {
   "program": "message_counter",
@@ -1170,15 +1176,14 @@
   "program": "metric_rolling_avg",
   "status": "corrected",
   "lines": [
-   71,
-   73
+   70
   ],
   "original": [
    69
   ],
-  "edit_size": 8,
+  "edit_size": 4,
   "kind": "replace",
-  "code": "    avg = total / len(tail)"
+  "code": "avg = total / len(tail)"
  },
  {
   "program": "model_confidence_clamp",
@@ -1214,14 +1219,14 @@
   "program": "optimizer_step_guard",
   "status": "corrected",
   "lines": [
-   65
+   62
   ],
   "original": [
    61
   ],
-  "edit_size": 5,
+  "edit_size": 2,
   "kind": "replace",
-  "code": "return loss_value == loss_value"
+  "code": "if loss_value != loss_value or loss_value > max_loss:"
  },
  {
   "program": "packets_window_avg",
@@ -1415,13 +1420,16 @@
  },
  {
   "program": "queue_window_avg",
-  "status": "confirmed",
+  "status": "corrected",
   "lines": [
+   66
+  ],
+  "original": [
    65
   ],
-  "edit_size": 9,
+  "edit_size": 4,
   "kind": "replace",
-  "code": "total *= window / len(tail)"
+  "code": "mean = total / len(tail)"
  },
  {
   "program": "quota_allocator_service",
@@ -1653,11 +1661,14 @@
  },
  {
   "program": "rolling_retries",
-  "status": "confirmed",
+  "status": "corrected",
   "lines": [
+   62
+  ],
+  "original": [
    63
   ],
-  "edit_size": 8,
+  "edit_size": 4,
   "kind": "replace",
   "code": "mean = total / len(tail)"
  },
@@ -1665,15 +1676,14 @@
   "program": "rolling_usage",
   "status": "corrected",
   "lines": [
-   68,
-   70
+   67
   ],
   "original": [
    66
   ],
-  "edit_size": 8,
+  "edit_size": 4,
   "kind": "replace",
-  "code": "    avg = total / len(tail)"
+  "code": "avg = total / len(tail)"
  },
  {
   "program": "room_reservation",
@@ -1902,12 +1912,12 @@
   "program": "smooth_cpu",
   "status": "corrected",
   "lines": [
-   69
+   68
   ],
   "original": [
    67
   ],
-  "edit_size": 8,
+  "edit_size": 4,
   "kind": "replace",
   "code": "mean = total / len(tail)"
  },
@@ -1952,14 +1962,14 @@
   "program": "storage_quota_split",
   "status": "corrected",
   "lines": [
-   64
+   66
   ],
   "original": [
    67
   ],
-  "edit_size": 9,
+  "edit_size": 6,
   "kind": "replace",
-  "code": "    total, fee = total - fee, 0"
+  "code": "shares = [(r / total_ratio) * (total - fee) + fee for r in ratios]"
  },
  {
   "program": "stream_joiner",
@@ -1983,13 +1993,16 @@
  },
  {
   "program": "summary_memo",
-  "status": "confirmed",
+  "status": "corrected",
   "lines": [
+   73
+  ],
+  "original": [
    72
   ],
-  "edit_size": 8,
-  "kind": "insert_after",
-  "code": "    if adjusted_now >= expires_at: return None"
+  "edit_size": 1,
+  "kind": "replace",
+  "code": "if adjusted_now >= expires_at:"
  },
  {
   "program": "task_tally",
@@ -2017,13 +2030,16 @@
  },
  {
   "program": "temperature_window_avg",
-  "status": "confirmed",
+  "status": "corrected",
   "lines": [
+   67
+  ],
+  "original": [
    68
   ],
-  "edit_size": 8,
+  "edit_size": 4,
   "kind": "replace",
-  "code": "    mean = total / len(tail)"
+  "code": "mean = total / len(tail)"
  },
  {
   "program": "tensor_slice_pad",
@@ -2166,13 +2182,16 @@
  },
  {
   "program": "txn_dedup_merge",
-  "status": "confirmed",
+  "status": "corrected",
   "lines": [
+   76
+  ],
+  "original": [
    75
   ],
-  "edit_size": 2,
+  "edit_size": 1,
   "kind": "replace",
-  "code": "    return merged"
+  "code": "if merged and left and right and merged[-1] != left[-1] == right[-1]:"
  },
  {
   "program": "upload_gate",
@@ -2216,13 +2235,16 @@
  },
  {
   "program": "volume_moving_mean",
-  "status": "confirmed",
+  "status": "corrected",
   "lines": [
+   60
+  ],
+  "original": [
    61
   ],
-  "edit_size": 8,
+  "edit_size": 4,
   "kind": "replace",
-  "code": "    mean = total / len(recent)"
+  "code": "mean = total / len(recent)"
  },
  {
   "program": "votes_apportion",

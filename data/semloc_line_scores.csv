@@ -337,7 +337,7 @@ semloc_test_gemini_r1,feature_cache,67,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r1,feature_cache,65,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r1,feature_cache,68,0.15,0.0,0.15,5,0,0
 semloc_test_gemini_r1,feature_cache,64,1.0,0.0,1.0,3,0,0
-semloc_test_gemini_r1,feature_flag_rollout,63,0.212132,1.2,1.412132,1,1,0
+semloc_test_gemini_r1,feature_flag_rollout,63,0.212132,1.2,1.412132,1,1,1
 semloc_test_gemini_r1,fee_splitter,61,0.866025,1.2,2.066025,1,1,0
 semloc_test_gemini_r1,fee_splitter,62,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r1,fee_splitter,60,0.285788,0.0,0.285788,5,0,0
@@ -502,7 +502,7 @@ semloc_test_gemini_r1,machine_booking,63,0.3,0.0,0.3,5,0,0
 semloc_test_gemini_r1,machine_booking,59,0.15,0.0,0.15,7,0,0
 semloc_test_gemini_r1,machine_booking,56,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r1,machine_booking,66,0.3,0.0,0.3,6,0,0
-semloc_test_gemini_r1,memory_moving_mean,65,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r1,memory_moving_mean,65,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r1,memory_moving_mean,66,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r1,memory_moving_mean,64,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r1,memory_moving_mean,67,0.866025,0.0,0.866025,2,0,0
@@ -513,7 +513,7 @@ semloc_test_gemini_r1,message_counter,62,0.269444,0.0,0.269444,3,0,0
 semloc_test_gemini_r1,message_counter,60,0.816497,0.0,0.816497,2,0,1
 semloc_test_gemini_r1,message_counter,63,0.122474,0.0,0.122474,4,0,0
 semloc_test_gemini_r1,message_counter,59,0.122474,0.0,0.122474,5,0,0
-semloc_test_gemini_r1,metric_rolling_avg,70,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r1,metric_rolling_avg,70,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r1,metric_rolling_avg,71,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r1,metric_rolling_avg,69,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r1,metric_rolling_avg,72,0.866025,0.0,0.866025,2,0,0
@@ -538,7 +538,7 @@ semloc_test_gemini_r1,offer_expiry,65,0.33,0.0,0.33,5,0,0
 semloc_test_gemini_r1,offer_expiry,68,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r1,offer_expiry,64,1.0,0.0,1.0,3,0,0
 semloc_test_gemini_r1,offer_expiry,60,0.3,0.0,0.3,6,0,0
-semloc_test_gemini_r1,optimizer_step_guard,62,0.707107,1.2,1.907107,1,1,0
+semloc_test_gemini_r1,optimizer_step_guard,62,0.707107,1.2,1.907107,1,1,1
 semloc_test_gemini_r1,optimizer_step_guard,63,0.707107,0.0,0.707107,2,0,0
 semloc_test_gemini_r1,optimizer_step_guard,61,0.33,0.0,0.33,5,0,0
 semloc_test_gemini_r1,optimizer_step_guard,64,0.3,0.0,0.3,6,0,0
@@ -596,7 +596,7 @@ semloc_test_gemini_r1,priority_mix,61,0.377964,1.2,1.577964,1,1,1
 semloc_test_gemini_r1,probability_rebalance,57,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r1,probability_rebalance,59,1.0,1.2,2.2,1,1,1
 semloc_test_gemini_r1,probability_rebalance,55,1.0,0.0,1.0,3,0,0
-semloc_test_gemini_r1,queue_window_avg,66,0.894427,1.2,2.094427,1,1,0
+semloc_test_gemini_r1,queue_window_avg,66,0.894427,1.2,2.094427,1,1,1
 semloc_test_gemini_r1,queue_window_avg,67,0.295161,0.0,0.295161,4,0,0
 semloc_test_gemini_r1,queue_window_avg,65,0.295161,0.0,0.295161,5,0,0
 semloc_test_gemini_r1,queue_window_avg,68,0.894427,0.0,0.894427,2,0,0
@@ -690,7 +690,7 @@ semloc_test_gemini_r1,rolling_requests,67,0.866025,0.0,0.866025,2,0,0
 semloc_test_gemini_r1,rolling_requests,63,0.129904,0.0,0.129904,7,0,0
 semloc_test_gemini_r1,rolling_requests,74,0.866025,0.0,0.866025,3,0,0
 semloc_test_gemini_r1,rolling_requests,73,0.3,0.0,0.3,4,0,0
-semloc_test_gemini_r1,rolling_usage,67,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r1,rolling_usage,67,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r1,rolling_usage,68,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r1,rolling_usage,66,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r1,rolling_usage,69,0.866025,0.0,0.866025,2,0,0
@@ -804,7 +804,7 @@ semloc_test_gemini_r1,stream_joiner,72,1.0,0.0,1.0,2,0,1
 semloc_test_gemini_r1,stream_joiner,75,0.15,0.0,0.15,5,0,0
 semloc_test_gemini_r1,stream_joiner,71,0.15,0.0,0.15,6,0,0
 semloc_test_gemini_r1,stream_joiner,78,0.3,0.0,0.3,4,0,0
-semloc_test_gemini_r1,summary_memo,73,0.6,1.2,1.8,1,1,0
+semloc_test_gemini_r1,summary_memo,73,0.6,1.2,1.8,1,1,1
 semloc_test_gemini_r1,summary_memo,74,0.33,0.0,0.33,3,0,0
 semloc_test_gemini_r1,summary_memo,72,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r1,summary_memo,75,1.0,0.0,1.0,2,0,0
@@ -820,7 +820,7 @@ semloc_test_gemini_r1,task_throttle,63,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r1,task_throttle,61,0.33,0.0,0.33,5,0,0
 semloc_test_gemini_r1,task_throttle,64,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r1,task_throttle,60,1.0,0.0,1.0,3,0,0
-semloc_test_gemini_r1,temperature_window_avg,67,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r1,temperature_window_avg,67,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r1,temperature_window_avg,68,0.285788,0.0,0.285788,2,0,0
 semloc_test_gemini_r1,temperature_window_avg,66,0.285788,0.0,0.285788,3,0,0
 semloc_test_gemini_r1,temperature_window_avg,69,0.129904,0.0,0.129904,4,0,0
@@ -891,7 +891,7 @@ semloc_test_gemini_r1,ttl_snapshot_store,70,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r1,ttl_snapshot_store,66,1.0,0.0,1.0,3,0,0
 semloc_test_gemini_r1,txn_dedup_merge,77,0.6,1.2,1.8,1,1,0
 semloc_test_gemini_r1,txn_dedup_merge,78,0.33,0.0,0.33,4,0,0
-semloc_test_gemini_r1,txn_dedup_merge,76,1.0,0.0,1.0,2,0,0
+semloc_test_gemini_r1,txn_dedup_merge,76,1.0,0.0,1.0,2,0,1
 semloc_test_gemini_r1,txn_dedup_merge,79,0.15,0.0,0.15,5,0,0
 semloc_test_gemini_r1,txn_dedup_merge,75,0.15,0.0,0.15,6,0,0
 semloc_test_gemini_r1,txn_dedup_merge,62,0.734847,0.0,0.734847,3,0,0
@@ -913,7 +913,7 @@ semloc_test_gemini_r1,view_tally,69,0.33,0.0,0.33,3,0,0
 semloc_test_gemini_r1,view_tally,67,1.0,0.0,1.0,2,0,1
 semloc_test_gemini_r1,view_tally,70,0.15,0.0,0.15,4,0,0
 semloc_test_gemini_r1,view_tally,66,0.15,0.0,0.15,5,0,0
-semloc_test_gemini_r1,volume_moving_mean,60,0.894427,1.2,2.094427,1,1,0
+semloc_test_gemini_r1,volume_moving_mean,60,0.894427,1.2,2.094427,1,1,1
 semloc_test_gemini_r1,volume_moving_mean,61,0.295161,0.0,0.295161,4,0,0
 semloc_test_gemini_r1,volume_moving_mean,59,0.295161,0.0,0.295161,5,0,0
 semloc_test_gemini_r1,volume_moving_mean,62,0.894427,0.0,0.894427,2,0,0
@@ -1264,7 +1264,7 @@ semloc_test_gemini_r2,feature_cache,65,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r2,feature_cache,68,0.15,0.0,0.15,5,0,0
 semloc_test_gemini_r2,feature_cache,64,0.15,0.0,0.15,6,0,0
 semloc_test_gemini_r2,feature_cache,71,1.0,0.0,1.0,2,0,0
-semloc_test_gemini_r2,feature_flag_rollout,63,0.0,1.2,1.2,1,1,0
+semloc_test_gemini_r2,feature_flag_rollout,63,0.0,1.2,1.2,1,1,1
 semloc_test_gemini_r2,fee_splitter,61,0.866025,1.2,2.066025,1,1,0
 semloc_test_gemini_r2,fee_splitter,62,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r2,fee_splitter,60,0.285788,0.0,0.285788,5,0,0
@@ -1430,7 +1430,7 @@ semloc_test_gemini_r2,lru_evictor,63,1.0,0.0,1.0,4,0,0
 semloc_test_gemini_r2,lru_evictor,59,0.367423,0.0,0.367423,5,0,0
 semloc_test_gemini_r2,lru_evictor,65,0.3,0.0,0.3,8,0,0
 semloc_test_gemini_r2,machine_booking,59,0.0,1.2,1.2,1,1,0
-semloc_test_gemini_r2,memory_moving_mean,65,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r2,memory_moving_mean,65,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r2,memory_moving_mean,66,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r2,memory_moving_mean,64,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r2,memory_moving_mean,67,0.866025,0.0,0.866025,2,0,0
@@ -1442,7 +1442,7 @@ semloc_test_gemini_r2,message_counter,60,0.816497,0.0,0.816497,2,0,1
 semloc_test_gemini_r2,message_counter,63,0.122474,0.0,0.122474,5,0,0
 semloc_test_gemini_r2,message_counter,59,0.122474,0.0,0.122474,6,0,0
 semloc_test_gemini_r2,message_counter,58,0.534522,0.0,0.534522,3,0,0
-semloc_test_gemini_r2,metric_rolling_avg,70,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r2,metric_rolling_avg,70,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r2,metric_rolling_avg,71,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r2,metric_rolling_avg,69,0.285788,0.0,0.285788,6,0,0
 semloc_test_gemini_r2,metric_rolling_avg,72,0.866025,0.0,0.866025,2,0,0
@@ -1464,7 +1464,7 @@ semloc_test_gemini_r2,offer_expiry,67,0.33,0.0,0.33,3,0,0
 semloc_test_gemini_r2,offer_expiry,65,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r2,offer_expiry,68,0.15,0.0,0.15,5,0,0
 semloc_test_gemini_r2,offer_expiry,64,1.0,0.0,1.0,2,0,0
-semloc_test_gemini_r2,optimizer_step_guard,62,0.707107,1.2,1.907107,1,1,0
+semloc_test_gemini_r2,optimizer_step_guard,62,0.707107,1.2,1.907107,1,1,1
 semloc_test_gemini_r2,optimizer_step_guard,63,0.707107,0.0,0.707107,2,0,0
 semloc_test_gemini_r2,optimizer_step_guard,61,0.33,0.0,0.33,5,0,0
 semloc_test_gemini_r2,optimizer_step_guard,64,0.3,0.0,0.3,6,0,0
@@ -1514,7 +1514,7 @@ semloc_test_gemini_r2,priority_mix,61,0.377964,1.2,1.577964,1,1,1
 semloc_test_gemini_r2,probability_rebalance,57,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r2,probability_rebalance,59,1.0,1.2,2.2,1,1,1
 semloc_test_gemini_r2,probability_rebalance,55,1.0,0.0,1.0,3,0,0
-semloc_test_gemini_r2,queue_window_avg,66,0.894427,1.2,2.094427,1,1,0
+semloc_test_gemini_r2,queue_window_avg,66,0.894427,1.2,2.094427,1,1,1
 semloc_test_gemini_r2,queue_window_avg,67,0.295161,0.0,0.295161,4,0,0
 semloc_test_gemini_r2,queue_window_avg,65,0.295161,0.0,0.295161,5,0,0
 semloc_test_gemini_r2,queue_window_avg,68,0.894427,0.0,0.894427,2,0,0
@@ -1731,7 +1731,7 @@ semloc_test_gemini_r2,task_throttle,63,0.33,0.0,0.33,2,0,0
 semloc_test_gemini_r2,task_throttle,61,0.33,0.0,0.33,3,0,0
 semloc_test_gemini_r2,task_throttle,64,0.3,0.0,0.3,4,0,0
 semloc_test_gemini_r2,task_throttle,60,0.15,0.0,0.15,5,0,0
-semloc_test_gemini_r2,temperature_window_avg,67,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r2,temperature_window_avg,67,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r2,temperature_window_avg,68,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r2,temperature_window_avg,66,0.285788,0.0,0.285788,6,0,0
 semloc_test_gemini_r2,temperature_window_avg,69,0.866025,0.0,0.866025,2,0,0
@@ -1806,7 +1806,7 @@ semloc_test_gemini_r2,ttl_snapshot_store,69,0.33,0.0,0.33,3,0,0
 semloc_test_gemini_r2,ttl_snapshot_store,67,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r2,ttl_snapshot_store,70,0.15,0.0,0.15,5,0,0
 semloc_test_gemini_r2,ttl_snapshot_store,66,1.0,0.0,1.0,2,0,0
-semloc_test_gemini_r2,txn_dedup_merge,76,1.0,1.2,2.2,1,1,0
+semloc_test_gemini_r2,txn_dedup_merge,76,1.0,1.2,2.2,1,1,1
 semloc_test_gemini_r2,txn_dedup_merge,77,0.33,0.0,0.33,3,0,0
 semloc_test_gemini_r2,txn_dedup_merge,75,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r2,txn_dedup_merge,78,0.3,0.0,0.3,5,0,0
@@ -1829,7 +1829,7 @@ semloc_test_gemini_r2,view_tally,69,0.33,0.0,0.33,2,0,0
 semloc_test_gemini_r2,view_tally,67,0.33,0.0,0.33,3,0,1
 semloc_test_gemini_r2,view_tally,70,0.15,0.0,0.15,4,0,0
 semloc_test_gemini_r2,view_tally,66,0.15,0.0,0.15,5,0,0
-semloc_test_gemini_r2,volume_moving_mean,60,0.894427,1.2,2.094427,1,1,0
+semloc_test_gemini_r2,volume_moving_mean,60,0.894427,1.2,2.094427,1,1,1
 semloc_test_gemini_r2,volume_moving_mean,61,0.295161,0.0,0.295161,4,0,0
 semloc_test_gemini_r2,volume_moving_mean,59,0.295161,0.0,0.295161,5,0,0
 semloc_test_gemini_r2,volume_moving_mean,62,0.894427,0.0,0.894427,2,0,0
@@ -2212,7 +2212,7 @@ semloc_test_gemini_r3,feature_cache,65,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r3,feature_cache,68,0.15,0.0,0.15,5,0,0
 semloc_test_gemini_r3,feature_cache,64,0.15,0.0,0.15,6,0,0
 semloc_test_gemini_r3,feature_cache,71,1.0,0.0,1.0,2,0,0
-semloc_test_gemini_r3,feature_flag_rollout,63,0.212132,1.2,1.412132,1,1,0
+semloc_test_gemini_r3,feature_flag_rollout,63,0.212132,1.2,1.412132,1,1,1
 semloc_test_gemini_r3,fee_splitter,61,0.866025,1.2,2.066025,1,1,0
 semloc_test_gemini_r3,fee_splitter,62,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r3,fee_splitter,60,0.285788,0.0,0.285788,5,0,0
@@ -2360,7 +2360,7 @@ semloc_test_gemini_r3,lru_evictor,54,0.15,0.0,0.15,7,0,0
 semloc_test_gemini_r3,lru_evictor,59,0.367423,0.0,0.367423,2,0,0
 semloc_test_gemini_r3,lru_evictor,65,0.3,0.0,0.3,5,0,0
 semloc_test_gemini_r3,machine_booking,59,0.0,1.2,1.2,1,1,0
-semloc_test_gemini_r3,memory_moving_mean,65,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r3,memory_moving_mean,65,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r3,memory_moving_mean,66,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r3,memory_moving_mean,64,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r3,memory_moving_mean,67,0.866025,0.0,0.866025,2,0,0
@@ -2371,7 +2371,7 @@ semloc_test_gemini_r3,message_counter,62,0.269444,0.0,0.269444,3,0,0
 semloc_test_gemini_r3,message_counter,60,0.816497,0.0,0.816497,2,0,1
 semloc_test_gemini_r3,message_counter,63,0.122474,0.0,0.122474,4,0,0
 semloc_test_gemini_r3,message_counter,59,0.122474,0.0,0.122474,5,0,0
-semloc_test_gemini_r3,metric_rolling_avg,70,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r3,metric_rolling_avg,70,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r3,metric_rolling_avg,71,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r3,metric_rolling_avg,69,0.285788,0.0,0.285788,6,0,0
 semloc_test_gemini_r3,metric_rolling_avg,72,0.866025,0.0,0.866025,2,0,0
@@ -2394,7 +2394,7 @@ semloc_test_gemini_r3,offer_expiry,67,0.33,0.0,0.33,3,0,0
 semloc_test_gemini_r3,offer_expiry,65,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r3,offer_expiry,68,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r3,offer_expiry,64,0.15,0.0,0.15,5,0,0
-semloc_test_gemini_r3,optimizer_step_guard,62,1.0,1.2,2.2,1,1,0
+semloc_test_gemini_r3,optimizer_step_guard,62,1.0,1.2,2.2,1,1,1
 semloc_test_gemini_r3,optimizer_step_guard,63,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r3,optimizer_step_guard,61,0.33,0.0,0.33,5,0,0
 semloc_test_gemini_r3,optimizer_step_guard,64,0.3,0.0,0.3,6,0,0
@@ -2458,7 +2458,7 @@ semloc_test_gemini_r3,priority_mix,59,0.377964,0.0,0.377964,3,0,0
 semloc_test_gemini_r3,priority_mix,61,0.377964,1.2,1.577964,1,1,1
 semloc_test_gemini_r3,probability_rebalance,57,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r3,probability_rebalance,59,1.0,1.2,2.2,1,1,1
-semloc_test_gemini_r3,queue_window_avg,66,0.894427,1.2,2.094427,1,1,0
+semloc_test_gemini_r3,queue_window_avg,66,0.894427,1.2,2.094427,1,1,1
 semloc_test_gemini_r3,queue_window_avg,67,0.295161,0.0,0.295161,4,0,0
 semloc_test_gemini_r3,queue_window_avg,65,0.295161,0.0,0.295161,5,0,0
 semloc_test_gemini_r3,queue_window_avg,68,0.894427,0.0,0.894427,2,0,0
@@ -2556,7 +2556,7 @@ semloc_test_gemini_r3,rolling_requests,67,0.866025,0.0,0.866025,2,0,0
 semloc_test_gemini_r3,rolling_requests,63,0.129904,0.0,0.129904,7,0,0
 semloc_test_gemini_r3,rolling_requests,74,0.866025,0.0,0.866025,3,0,0
 semloc_test_gemini_r3,rolling_requests,73,0.3,0.0,0.3,4,0,0
-semloc_test_gemini_r3,rolling_usage,67,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r3,rolling_usage,67,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r3,rolling_usage,68,0.285788,0.0,0.285788,4,0,0
 semloc_test_gemini_r3,rolling_usage,66,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r3,rolling_usage,69,0.866025,0.0,0.866025,2,0,0
@@ -2681,7 +2681,7 @@ semloc_test_gemini_r3,stream_joiner,69,0.612372,0.0,0.612372,7,0,0
 semloc_test_gemini_r3,stream_joiner,70,0.612372,0.0,0.612372,8,0,0
 semloc_test_gemini_r3,stream_joiner,76,0.612372,0.0,0.612372,9,0,0
 semloc_test_gemini_r3,stream_joiner,78,0.612372,0.0,0.612372,10,0,0
-semloc_test_gemini_r3,summary_memo,73,1.0,1.2,2.2,1,1,0
+semloc_test_gemini_r3,summary_memo,73,1.0,1.2,2.2,1,1,1
 semloc_test_gemini_r3,summary_memo,74,0.33,0.0,0.33,4,0,0
 semloc_test_gemini_r3,summary_memo,72,0.33,0.0,0.33,5,0,0
 semloc_test_gemini_r3,summary_memo,75,1.0,0.0,1.0,2,0,0
@@ -2699,7 +2699,7 @@ semloc_test_gemini_r3,task_throttle,61,0.33,0.0,0.33,6,0,0
 semloc_test_gemini_r3,task_throttle,64,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r3,task_throttle,60,1.0,0.0,1.0,3,0,0
 semloc_test_gemini_r3,task_throttle,58,1.0,0.0,1.0,4,0,0
-semloc_test_gemini_r3,temperature_window_avg,67,0.866025,1.2,2.066025,1,1,0
+semloc_test_gemini_r3,temperature_window_avg,67,0.866025,1.2,2.066025,1,1,1
 semloc_test_gemini_r3,temperature_window_avg,68,0.285788,0.0,0.285788,5,0,0
 semloc_test_gemini_r3,temperature_window_avg,66,0.285788,0.0,0.285788,6,0,0
 semloc_test_gemini_r3,temperature_window_avg,69,0.866025,0.0,0.866025,2,0,0
@@ -2782,7 +2782,7 @@ semloc_test_gemini_r3,ttl_snapshot_store,70,1.0,0.0,1.0,2,0,0
 semloc_test_gemini_r3,ttl_snapshot_store,66,1.0,0.0,1.0,3,0,0
 semloc_test_gemini_r3,txn_dedup_merge,77,0.6,1.2,1.8,1,1,0
 semloc_test_gemini_r3,txn_dedup_merge,78,0.33,0.0,0.33,3,0,0
-semloc_test_gemini_r3,txn_dedup_merge,76,1.0,0.0,1.0,2,0,0
+semloc_test_gemini_r3,txn_dedup_merge,76,1.0,0.0,1.0,2,0,1
 semloc_test_gemini_r3,txn_dedup_merge,79,0.15,0.0,0.15,4,0,0
 semloc_test_gemini_r3,txn_dedup_merge,75,0.15,0.0,0.15,5,0,0
 semloc_test_gemini_r3,upload_gate,74,1.0,1.2,2.2,1,1,1
@@ -2808,7 +2808,7 @@ semloc_test_gemini_r3,view_tally,69,0.33,0.0,0.33,3,0,0
 semloc_test_gemini_r3,view_tally,67,1.0,0.0,1.0,2,0,1
 semloc_test_gemini_r3,view_tally,70,0.15,0.0,0.15,4,0,0
 semloc_test_gemini_r3,view_tally,66,0.15,0.0,0.15,5,0,0
-semloc_test_gemini_r3,volume_moving_mean,60,0.894427,1.2,2.094427,1,1,0
+semloc_test_gemini_r3,volume_moving_mean,60,0.894427,1.2,2.094427,1,1,1
 semloc_test_gemini_r3,volume_moving_mean,61,0.295161,0.0,0.295161,4,0,0
 semloc_test_gemini_r3,volume_moving_mean,59,0.295161,0.0,0.295161,5,0,0
 semloc_test_gemini_r3,volume_moving_mean,62,0.134164,0.0,0.134164,6,0,0

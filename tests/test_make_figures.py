@@ -87,7 +87,7 @@ def test_label_flow_sums_to_n():
 def test_ablation_rows_match_csv():
     rows = mf.ablation_data()
     r = next(x for x in rows if x["gt"] == "repaired" and x["contrast"] == "tests_effect")
-    assert abs(r["d_acc1"] - 5.77) < 1e-6 and abs(r["lo1"] - 1.70) < 1e-6
+    assert abs(r["d_acc1"] - 5.44) < 1e-6 and abs(r["lo1"] - 1.68) < 1e-6
     assert {x["gt"] for x in rows} == {"original", "repaired", "reviewed"}
 
 
@@ -100,15 +100,15 @@ def test_rq3_panels():
     d = mf.rq3_data()
     assert abs(d["bugsinpy"]["llm_tests"] - 50.54) < 1e-6
     assert len(d["families"]) == 5
-    assert abs(d["renamed"]["semloc_no_prior"][1] - 55.06) < 1e-6  # Acc@3 after renaming, normalized labels
+    assert abs(d["renamed"]["semloc_no_prior"][1] - 55.91) < 1e-6  # Acc@3 after renaming, normalized labels
 
 
 def test_decomposition_and_improvement():
     d = mf.decomposition_data()
     r = next(x for x in d if x["gt"] == "repaired" and x["metric"] == "acc1")
-    assert abs(r["guess"] - 30.73) < 1e-6 and abs(r["spectrum"] - 21.6) < 1e-6
+    assert abs(r["guess"] - 32.28) < 1e-6 and abs(r["spectrum"] - 21.58) < 1e-6
     imp = {r["setting"]: r for r in mf.improvement_data()}
-    assert abs(imp["Nhãn đã chuẩn hóa"]["failloc1"] - 62.6) < 0.05 and "BugsInPy (lỗi thật)" in imp
+    assert abs(imp["Nhãn đã chuẩn hóa"]["failloc1"] - 64.2) < 0.05 and "BugsInPy (lỗi thật)" in imp
 
 
 def test_failure_categories_count_programs():

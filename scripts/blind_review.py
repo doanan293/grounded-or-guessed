@@ -87,7 +87,8 @@ def build() -> list[dict]:
     """The sample with everything needed to make and score the packets (deterministic from SEED)."""
     rng = random.Random(SEED)
     rev = {r["program"]: r for r in json.loads((ROOT / "data" / "semfault_reviewed_gt.json").read_text())}
-    oracle = {r["program"]: r for r in json.loads((ROOT / "data" / "semfault_verified_gt.json").read_text())}
+    # the oracle as it was when the sample was drawn (2026-11-10): later oracle runs must not change who reviewed what
+    oracle = {r["program"]: r for r in json.loads((ROOT / "data" / "semfault_verified_gt_v1.json").read_text())}
     llm = {}
     for f in sorted(REV.glob("llm_verdicts*.json")):
         for v in json.loads(f.read_text()):

@@ -37,8 +37,8 @@ ground truth). "Before" and "after" are the two sides of each check.
 | SBFL Ochiai | scoring: author → fair | acc1 | 6.4 | 4.0 | -2.4 |
 | SBFL Ochiai | scoring: author → fair | acc3 | 13.2 | 16.0 | +2.8 |
 | SBFL Ochiai | scoring: author → fair | acc5 | 30.4 | 48.0 | +17.6 |
-| SBFL Ochiai | ground truth: original → repaired | acc1 | 3.0 | 3.9 | +0.9 |
-| SBFL Ochiai | ground truth: original → repaired | acc3 | 15.5 | 19.0 | +3.5 |
+| SBFL Ochiai | ground truth: original → repaired | acc1 | 3.0 | 3.7 | +0.7 |
+| SBFL Ochiai | ground truth: original → repaired | acc3 | 15.5 | 18.4 | +2.9 |
 | SBFL Ochiai | repeats (ours) | n | – | 3 | – |
 | SBFL Ochiai | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.000 | – |
 | SBFL Ochiai | cost | LLM tokens / program | – | 0 | – |
@@ -49,29 +49,29 @@ ground truth). "Before" and "after" are the two sides of each check.
 | LLM direct | scoring: author → fair | acc1 | 35.2 | 35.2 | +0.0 |
 | LLM direct | scoring: author → fair | acc3 | 41.2 | 41.2 | +0.0 |
 | LLM direct | scoring: author → fair | acc5 | 41.2 | 41.2 | +0.0 |
-| LLM direct | ground truth: original → repaired | acc1 | 40.0 | 56.8 | +16.8 |
-| LLM direct | ground truth: original → repaired | acc3 | 43.0 | 62.8 | +19.8 |
+| LLM direct | ground truth: original → repaired | acc1 | 40.0 | 58.8 | +18.8 |
+| LLM direct | ground truth: original → repaired | acc3 | 43.0 | 64.9 | +21.9 |
 | LLM direct | repeats (ours) | n | – | 3 | – |
-| LLM direct | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.002 | – |
+| LLM direct | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.012 | – |
 | LLM direct | cost | LLM tokens / program | – | 2,506 | – |
-| LLM + coverage (ours) | ground truth: original → repaired | acc1 | 40.2 | 57.2 | +17.0 |
-| LLM + coverage (ours) | ground truth: original → repaired | acc3 | 68.2 | 92.0 | +23.8 |
+| LLM + coverage (ours) | ground truth: original → repaired | acc1 | 40.2 | 58.6 | +18.4 |
+| LLM + coverage (ours) | ground truth: original → repaired | acc3 | 68.2 | 92.5 | +24.3 |
 | LLM + coverage (ours) | repeats (ours) | n | – | 3 | – |
 | LLM + coverage (ours) | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.000 | – |
 | LLM + coverage (ours) | cost | LLM tokens / program | – | 2,572 | – |
 | SemLoc | scoring: author → fair | acc1 | 42.8 | 42.8 | +0.0 |
 | SemLoc | scoring: author → fair | acc3 | 68.0 | 65.6 | -2.4 |
 | SemLoc | scoring: author → fair | acc5 | 76.8 | 76.8 | +0.0 |
-| SemLoc | ground truth: original → repaired | acc1 | 36.8 | 52.3 | +15.5 |
-| SemLoc | ground truth: original → repaired | acc3 | 60.3 | 75.4 | +15.1 |
+| SemLoc | ground truth: original → repaired | acc1 | 36.8 | 53.9 | +17.0 |
+| SemLoc | ground truth: original → repaired | acc3 | 60.3 | 76.0 | +15.6 |
 | SemLoc | repeats (ours) | n | – | 3 | – |
 | SemLoc | hidden component: remove fault-line prior | acc1 | 42.8 | 30.0 | -12.8 |
-| SemLoc | hidden component: remove fault-line prior (ours, repaired) | acc1 | 52.3 | 43.2 | -9.1 |
+| SemLoc | hidden component: remove fault-line prior (ours, repaired) | acc1 | 53.9 | 43.2 | -10.7 |
 | SemLoc | hidden component: remove fault-line prior | acc3 | 65.6 | 55.6 | -10.0 |
-| SemLoc | hidden component: remove fault-line prior (ours, repaired) | acc3 | 75.4 | 70.8 | -4.7 |
+| SemLoc | hidden component: remove fault-line prior (ours, repaired) | acc3 | 76.0 | 71.4 | -4.6 |
 | SemLoc | cost | LLM tokens / program | – | 14,005 | – |
-| CovGate (ours) | ground truth: original → repaired | acc1 | 36.8 | 52.3 | +15.5 |
-| CovGate (ours) | ground truth: original → repaired | acc3 | 61.3 | 79.3 | +18.0 |
+| CovGate (ours) | ground truth: original → repaired | acc1 | 36.8 | 53.9 | +17.0 |
+| CovGate (ours) | ground truth: original → repaired | acc3 | 61.3 | 79.7 | +18.3 |
 | CovGate (ours) | repeats (ours) | n | – | 3 | – |
 | CovGate (ours) | McNemar vs SemLoc (max p over repeats) | p (Acc@3) | – | 0.031 | – |
 | CovGate (ours) | cost | LLM tokens / program | – | 14,005 | – |

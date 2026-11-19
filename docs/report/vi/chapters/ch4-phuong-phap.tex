@@ -24,7 +24,8 @@ khoảng mười kiểm thử; nhóm chia cố định 50 chương trình làm t
 \textbf{Bộ đã chuẩn hóa.} Có \GtBlankN{} dòng lỗi chuẩn là dòng trống và \GtNotExecutedN{} chương trình không có kiểm
 thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{bộ phán định sửa tối thiểu} (Hình~\ref{fig:sua-nhan}): một
 dòng là vị trí lỗi nếu một thay đổi nhỏ tại dòng đó làm \emph{mọi} kiểm thử đạt. LLM chỉ đề xuất bản sửa, kiểm thử quyết
-định; dòng lân cận chỉ được tìm khi dòng gốc không chạy tới được. Kết quả: \GtConfirmedN{} nhãn được xác nhận,
+định; dòng lân cận chỉ được tìm khi dòng gốc không chạy tới được. Bản sửa ``nhỏ'' đổi tối đa bốn token hoặc một phần ba
+dòng; câu lệnh được thử trước dòng trống, vì điền vào dòng trống thường chỉ ghi đè câu lệnh lỗi ngay trên nó. Kết quả: \GtConfirmedN{} nhãn được xác nhận,
 \GtCorrectedN{} được dời vị trí, \GtUnverifiedN{} chưa kiểm chứng được (giữ vị trí gốc) và \GtUnverifiableN{} bị loại;
 bộ nhãn đã chuẩn hóa còn \GtRepairedN{} chương trình.
 

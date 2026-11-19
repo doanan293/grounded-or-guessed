@@ -5,6 +5,7 @@ from flx.verify_gt import candidates, try_patch, verify
 FX = Path(__file__).parent / "fixtures"
 ONE = (FX / "onebug/programs/add.py", FX / "onebug/testcases/test_add.py")
 OMI = (FX / "omission/programs/norm.py", FX / "omission/testcases/test_norm.py")
+BLANK = (FX / "blankgt/programs/mean.py", FX / "blankgt/testcases/test_mean.py")
 
 
 def test_try_patch_fixes_onebug():
@@ -44,8 +45,31 @@ def test_edit_size_counts_tokens():
     assert edit_size("    c = 0", "c = 2 * b") == 3  # 0→2, +*, +b
 
 
+def test_blank_label_prefers_fixing_a_code_line():
+    # ground truth on blank line 4; filling it with "m = t / len(xs)" overrides line 3 and passes, but the fault is the
+    # statement on line 3 → a fix there wins over a compensating insert on the blank line
+    def propose(src, line, failing):
+        return [{"kind": "replace", "code": "m = t / len(xs)"}] if line in (3, 4) else []
+    r = verify("mean", BLANK[0], BLANK[1], "mean", [4], propose, executable=False)
+    assert r["status"] == "corrected" and r["lines"] == [3]
+
+
+def test_blank_label_still_confirmed_for_an_omission():
+    # no statement nearby can be fixed: the fault is a missing line, and filling the blank line confirms it
+    propose = lambda src, line, failing: [{"kind": "replace", "code": "if t == 0: return xs"}] if line == 3 else []
+    r = verify("norm", OMI[0], OMI[1], "norm", [3], propose, executable=False)
+    assert r["status"] == "confirmed" and r["lines"] == [3]
+
+
+def test_minimal_allows_an_expression_swap():
+    # SemFault injects swaps such as len(tail) → window: 4 token edits on a short line
+    from flx.verify_gt import is_minimal
+    assert is_minimal("    avg = total / window", "avg = total / len(tail)")
+    assert not is_minimal("    avg = total / window", "avg = sum(xs) / max(len(xs), 1)")
+
+
 def test_rejects_compensating_rewrite():
-    # line 2 "c = 2 * b" also makes every test pass, but it is not a minimal fix → the real fault (3) wins
+    # line 2 "c = 2 * b" also makes every test pass (3 token edits); the real fault (3) wins on the smaller edit
     def propose(src, line, failing):
         return {2: [{"kind": "replace", "code": "c = 2 * b"}], 3: [{"kind": "replace", "code": "return a + b + c"}]}.get(line, [])
     r = verify("add", ONE[0], ONE[1], "add", [1], propose, executable=False)

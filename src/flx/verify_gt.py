@@ -2,7 +2,8 @@
 
 A line is a verified fault location if replacing it with one line (or filling a blank line, which is
 how an omission fault is fixed) makes every test pass. The LLM only proposes candidate lines of code;
-the test suite decides. Statuses:
+the test suite decides. Statements are tried before blank lines: a blank line is a fault location only when
+no statement nearby can be fixed, since filling it otherwise just overrides the faulty statement. Statuses:
   confirmed    a minimal one-line fix (few tokens, see is_minimal) at an original ground-truth line passes all tests
   corrected    the original line could not be fixed, but a minimal fix at nearby line(s) inside the target
                function passes all tests (searched only when the original line is not executed by
@@ -107,12 +108,13 @@ def edit_size(original: str, patched: str) -> int:
 
 
 def is_minimal(original: str, patched: str) -> bool:
-    """Injected faults change a few tokens: accept ≤ 2 token edits or ≤ 1/3 of the line; on a blank
-    line (omission fault) accept one short statement (≤ 12 tokens)."""
+    """Injected faults change a few tokens: accept ≤ 4 token edits (SemFault swaps whole small expressions such as
+    len(tail) → window) or ≤ 1/3 of the line; on a blank line (omission fault) accept one short statement
+    (≤ 12 tokens)."""
     if not original.strip():
         return len(_tokens(patched)) <= 12
     e = edit_size(original, patched)
-    return e <= 2 or e <= max(len(_tokens(original)), len(_tokens(patched))) / 3
+    return e <= 4 or e <= max(len(_tokens(original)), len(_tokens(patched))) / 3
 
 
 def verify(program: str, prog_path: Path, test_path: Path, fn: str, gt_lines: list[int], propose: Propose,
@@ -141,16 +143,29 @@ def verify(program: str, prog_path: Path, test_path: Path, fn: str, gt_lines: li
         best = sorted(ln for ln, f in fixes.items() if f[0] == e)
         return best, e, fixes[best[0]][1]
 
-    hit = pick(list(gt_lines))
+    def code(lines: list[int]) -> list[int]:
+        return [ln for ln in lines if 0 < ln <= len(src_lines) and src_lines[ln - 1].strip()
+                and not src_lines[ln - 1].strip().startswith("#")]
+
+    blank = lambda lines: [ln for ln in lines if ln not in code(lines)]
+    confirmed = lambda h: {"program": program, "status": "confirmed", "lines": h[0], "edit_size": h[1], **h[2]}
+    corrected = lambda h: {"program": program, "status": "corrected", "lines": h[0], "original": list(gt_lines),
+                           "edit_size": h[1], **h[2]}
+    hit = pick(code(gt_lines))
     if hit:
-        return {"program": program, "status": "confirmed", "lines": hit[0], "edit_size": hit[1], **hit[2]}
+        return confirmed(hit)
     if executable:
         return {"program": program, "status": "unverified", "lines": list(gt_lines)}
     near = sorted({c for g in gt_lines for c in candidates(src, fn, g, radius) if c not in gt_lines})
-    hit = pick(near)
+    hit = pick(code(near))
     if hit:
-        return {"program": program, "status": "corrected", "lines": hit[0], "original": list(gt_lines),
-                "edit_size": hit[1], **hit[2]}
+        return corrected(hit)
+    hit = pick(blank(gt_lines))  # omission fault: nothing nearby could be fixed, the line itself is missing
+    if hit:
+        return confirmed(hit)
+    hit = pick(blank(near))
+    if hit:
+        return corrected(hit)
     return {"program": program, "status": "unverifiable", "lines": list(gt_lines)}
 
 

@@ -36,8 +36,8 @@ khác khuôn mẫu) cho năm mẫu nguyên nhân:
 \item \textbf{Dòng điều kiện và câu lệnh được bảo vệ} (phổ biến nhất): nhãn ở \texttt{if}, LLM chỉ câu lệnh bên trong
   hoặc ngược lại; đúng về ngữ nghĩa nhưng lệch một dòng.
 \item \textbf{Khối lỗi nhiều dòng}: xóa dòng nào cũng sửa được; nhãn nêu một dòng, LLM chỉ dòng kia (phần lớn \texttt{prior\_hurts}).
-\item \textbf{Bộ phán định chấp nhận bản sửa bù trừ}: bản sửa làm mọi kiểm thử đạt ở một dòng không có lỗi. Bản sửa trên
-  dòng trống đã bị loại (\GtBlankFixDroppedN{} chương trình); vòng rà soát bác \ReviewCorrectedOverturnedN{} trong
+\item \textbf{Bộ phán định chấp nhận bản sửa bù trừ}: bản sửa làm mọi kiểm thử đạt ở một dòng không có lỗi. Bộ phán định
+  thử câu lệnh trước dòng trống nên không còn ghi đè kiểu này trên dòng trống; vòng rà soát bác \ReviewCorrectedOverturnedN{} trong
   \GtCorrectedN{} lần bộ phán định dời nhãn.
 \item \textbf{Nguyên nhân và triệu chứng trên cùng luồng dữ liệu}: nhãn ở nơi tính giá trị, LLM chỉ nơi dùng (hoặc ngược
   lại), hay lỗi là \emph{thiếu} một bước, không có ``dòng sai'' duy nhất.

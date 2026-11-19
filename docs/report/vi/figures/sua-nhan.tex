@@ -20,8 +20,8 @@
 \draw[farr] (q3) -- node[lab, left] {có} (l3);
 \draw[farr] (q3) -- node[lab, right] {không} (l4);
 \node[fbox=failloc, text width=95mm] (out) at (-2.6, -7.4)
-  {\textbf{SemFault-250 đã chuẩn hóa: \GtRepairedN{} chương trình}\\\small bỏ nhãn không kiểm chứng được và
-   \GtBlankFixDroppedN{} vị trí sửa nằm trên dòng trống};
+  {\textbf{SemFault-250 đã chuẩn hóa: \GtRepairedN{} chương trình}\\\small bỏ \GtUnverifiableN{} nhãn không kiểm
+   chứng được};
 \draw[farr] (l1.south) -- (l1.south |- out.north); \draw[farr] (l2.south) -- (l2.south |- out.north);
 \draw[farr] (l3.south) -- ++(0,-4mm) -| ($(out.north east)+(-8mm,0)$);
 \end{tikzpicture}}

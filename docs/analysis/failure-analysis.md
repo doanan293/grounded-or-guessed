@@ -4,14 +4,14 @@ Nguồn: `data/failure_signals.csv` (mỗi chương trình test có ground truth
 
 ## 1. Phân nhóm tự động
 
-Trên 179 [`\FailProgramsN`] chương trình test có ground truth đã sửa:
+Trên 190 [`\FailProgramsN`] chương trình test có ground truth đã sửa:
 
 | Nhóm | Định nghĩa | Số chương trình |
 |---|---|---|
-| `guess_right` | dòng LLM tự đoán (`fault_line`) là dòng ground truth | 94 [`\FailGuessRightN`] |
-| `coverage_only_wins` | SemLoc trượt top-3, LLM + độ phủ trúng top-3 | 32 [`\FailCoverageOnlyWinsN`] |
+| `guess_right` | dòng LLM tự đoán (`fault_line`) là dòng ground truth | 103 [`\FailGuessRightN`] |
+| `coverage_only_wins` | SemLoc trượt top-3, LLM + độ phủ trúng top-3 | 33 [`\FailCoverageOnlyWinsN`] |
 | `rescued_by_spectrum` | đoán sai nhưng SemLoc vẫn có dòng lỗi trong top-3 | 25 [`\FailRescuedBySpectrumN`] |
-| `prior_hurts` | phổ ngữ nghĩa xếp dòng lỗi hạng 1, điểm thưởng đẩy dòng đoán sai lên trên | 19 [`\FailPriorHurtsN`] |
+| `prior_hurts` | phổ ngữ nghĩa xếp dòng lỗi hạng 1, điểm thưởng đẩy dòng đoán sai lên trên | 20 [`\FailPriorHurtsN`] |
 | `gt_suspect` | ground truth chưa kiểm chứng được và mọi phương pháp trượt top-3 | 6 [`\FailGtSuspectN`] |
 | `all_miss` | còn lại: mọi phương pháp trượt | 3 [`\FailAllMissN`] |
 
@@ -19,11 +19,11 @@ Khoảng một nửa số chương trình được giải quyết bởi chính d
 
 ## 2. Phát hiện chính: phần lớn "thất bại" là dòng kề cạnh
 
-**Độ lệch dòng top-1 − ground truth gần nhất**, gộp 3 lần chạy (`data/failure_offsets.csv`). Dòng LLM tự đoán: 0 → 281 [`\OffLlmGuessZeroCount`]; +1 → 99 [`\OffLlmGuessOneCount`]; +2 → 61 [`\OffLlmGuessTwoCount`]; −1 → 28 [`\OffLlmGuessMinusOneCount`]; −2 → 26 [`\OffLlmGuessMinusTwoCount`]; |lệch| > 3 → 28 [`\OffLlmGuessFarCount`]. LLM + độ phủ lệch cùng hướng: +1 → 113 [`\OffLlmCoverageOneCount`] so với −1 → 24 [`\OffLlmCoverageMinusOneCount`]. Lần đoán sai lệch hẳn **xuống dưới** ground truth.
+**Độ lệch dòng top-1 − ground truth gần nhất**, gộp 3 lần chạy (`data/failure_offsets.csv`). Dòng LLM tự đoán: 0 → 307 [`\OffLlmGuessZeroCount`]; +1 → 101 [`\OffLlmGuessOneCount`]; +2 → 61 [`\OffLlmGuessTwoCount`]; −1 → 28 [`\OffLlmGuessMinusOneCount`]; −2 → 26 [`\OffLlmGuessMinusTwoCount`]; |lệch| > 3 → 32 [`\OffLlmGuessFarCount`]. LLM + độ phủ lệch cùng hướng: +1 → 116 [`\OffLlmCoverageOneCount`] so với −1 → 24 [`\OffLlmCoverageMinusOneCount`]. Lần đoán sai lệch hẳn **xuống dưới** ground truth.
 
-**Quan hệ cú pháp** giữa dòng đoán (đa số) và ground truth, trên 85 [`\FailWrongGuessN`] chương trình đoán sai (`line_relation`, `src/flx/failures.py`): 44 [`\FailRelationHeaderBodyN`] là cặp đầu câu lệnh ghép (`if`/`for`/`while`/…) và câu lệnh nó bảo vệ; 41 [`\FailRelationOtherN`] là quan hệ khác (chủ yếu cùng luồng dữ liệu, xem P4).
+**Quan hệ cú pháp** giữa dòng đoán (đa số) và ground truth, trên 87 [`\FailWrongGuessN`] chương trình đoán sai (`line_relation`, `src/flx/failures.py`): 45 [`\FailRelationHeaderBodyN`] là cặp đầu câu lệnh ghép (`if`/`for`/`while`/…) và câu lệnh nó bảo vệ; 42 [`\FailRelationOtherN`] là quan hệ khác (chủ yếu cùng luồng dữ liệu, xem P4).
 
-**Độ nhạy của Acc@1** (`data/failure_tolerance.csv`) khi chấp nhận cả đầu khối lẫn câu lệnh được bảo vệ. SemLoc: 52,3 [`\TolSemlocAccOneExact`] (chặt chẽ) → 73,9 [`\TolSemlocAccOneGuardStrict`] (chỉ dòng đầu khối và dòng đầu tiên của thân) → 76,2 [`\TolSemlocAccOneGuardOrBody`] (cận trên: cả câu lệnh đầu tiên của thân, tối đa 3 dòng, kể cả khối lồng nhau). LLM + độ phủ: 57,2 [`\TolLlmCoverageAccOneExact`] → 79,3 [`\TolLlmCoverageAccOneGuardStrict`] → 81,6 [`\TolLlmCoverageAccOneGuardOrBody`]. Hơn 20 điểm Acc@1 phụ thuộc vào việc người gán nhãn chọn dòng điều kiện hay dòng thân — lớn hơn mọi khác biệt giữa các phương pháp dùng LLM trong RQ2. Thứ tự giữa các phương pháp không đổi.
+**Độ nhạy của Acc@1** (`data/failure_tolerance.csv`) khi chấp nhận cả đầu khối lẫn câu lệnh được bảo vệ. SemLoc: 53,9 [`\TolSemlocAccOneExact`] (chặt chẽ) → 74,6 [`\TolSemlocAccOneGuardStrict`] (chỉ dòng đầu khối và dòng đầu tiên của thân) → 76,7 [`\TolSemlocAccOneGuardOrBody`] (cận trên: cả câu lệnh đầu tiên của thân, tối đa 3 dòng, kể cả khối lồng nhau). LLM + độ phủ: 58,6 [`\TolLlmCoverageAccOneExact`] → 80,0 [`\TolLlmCoverageAccOneGuardStrict`] → 82,1 [`\TolLlmCoverageAccOneGuardOrBody`]. Hơn 20 điểm Acc@1 phụ thuộc vào việc người gán nhãn chọn dòng điều kiện hay dòng thân — lớn hơn mọi khác biệt giữa các phương pháp dùng LLM trong RQ2. Thứ tự giữa các phương pháp không đổi.
 
 ## 3. Đọc các ca: năm mẫu nguyên nhân
 
@@ -41,7 +41,7 @@ Ca do `select(per_category=4, seed=20261108)` chọn, ưu tiên các cụm templ
 **P3 — Oracle của nhóm nhận một bản sửa *bù trừ*** — 2/19 (cộng 2 ca của P2). Giới hạn của oracle "sửa tối thiểu một dòng làm mọi test pass" (`flx.verify_gt`):
 - `gradient_clip_budget`: GT gốc 64 (dòng trống) được "sửa" thành 62 với `norm = _compute_global_norm(gradients) - 1`; lỗi thật là `max_norm / (norm + 1)` ở dòng 66 — LLM chỉ đúng 66 cả 3 lần.
 - `energy_window_avg`: "xác nhận" dòng 72 bằng cách thay một lời gọi `_log.debug(...)` bằng `window = len(recent)`; lỗi thật ở phép chia dòng 74 (LLM chỉ 74).
-- Bản sửa ở **dòng trống** cùng loại (ví dụ chèn `return merged` trước khối lỗi) đã bị loại khỏi ground truth đã sửa (`flx.gt.repaired_gt`, 13 [`\GtBlankFixDroppedN`] chương trình); bản sửa bù trừ ở dòng có mã thì chưa phát hiện tự động được.
+- Bản sửa ở **dòng trống** cùng loại (ví dụ chèn `return merged` trước khối lỗi) đã bị loại khỏi ground truth đã sửa (`flx.gt.repaired_gt`, 0 [`\GtBlankFixDroppedN`] chương trình); bản sửa bù trừ ở dòng có mã thì chưa phát hiện tự động được.
 
 **P4 — Nguyên nhân và triệu chứng trên cùng luồng dữ liệu, hoặc lỗi thiếu mã** — 4/19.
 - `allocate_bounty_cut`: GT `return [_clamp_payout(share - fee) …]` (trừ phí trên từng phần), LLM chỉ dòng tính `base` — cả hai đều có thể là chỗ sửa.
