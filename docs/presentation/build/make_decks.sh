@@ -14,6 +14,7 @@ for deck in "${@:-lan1 lan2 baove}"; do
       grep "\[ERROR\]" "$W/validation/qc_$d.txt" | head -20; echo "quality gate failed for $d"; exit 1; fi
     out=$($PY $S/svg_to_pptx.py $W --roundtrip 2>&1 | grep -o "runs/slides/[^ ]*\.pptx" | tail -1)
     cp "$out" "docs/presentation/${OUT[$d]}"
+    $PY docs/presentation/build/strip_credits.py "docs/presentation/${OUT[$d]}"
     # PDF next to the deck, for reading in an editor (LibreOffice render; PowerPoint is the reference)
     soffice --headless --convert-to pdf --outdir docs/presentation "docs/presentation/${OUT[$d]}" > /dev/null 2>&1
     echo "$d -> docs/presentation/${OUT[$d]} + ${OUT[$d]%.pptx}.pdf"

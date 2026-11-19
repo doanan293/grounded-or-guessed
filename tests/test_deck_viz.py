@@ -54,10 +54,10 @@ def test_panel_is_one_text_frame_that_wraps_to_its_width():
     texts = list(el.iter("text"))
     assert len(texts) == 1
     rows = [ts for ts in texts[0] if ts.tag == "tspan"]
-    assert {ts.get("x") for ts in rows} == {"612"}
+    assert {ts.get("x") for ts in rows} == {"620"}  # 16 px padding after the 4 px coloured rule
     plain = ["".join(ts.itertext()) for ts in rows]
     assert plain[0] == "Cách đọc" and "Ý chính" in plain and len(plain) >= 5
-    assert all(len(r) * 14 * 0.55 <= 300 - 24 for r in plain)
+    assert all(viz.text_w(r, 14) <= 300 - 2 * 16 - 4 for r in plain)  # measured with the real font
 
 
 def test_before_after_has_one_row_per_criterion():

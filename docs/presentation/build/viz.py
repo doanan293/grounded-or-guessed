@@ -15,9 +15,53 @@ def _p(v: float, nd: int = 1) -> str:
     return f"{v:.{nd}f}".replace(".", ",")
 
 
+def _frame(x, y, size, w, anchor="start", lines=1, lh=None) -> str:
+    """A fixed text frame (data-pptx-frame) around a label: exported as a box that does not auto-grow, so LibreOffice
+    and PowerPoint both keep the text exactly where the SVG puts it (an auto-growing box drifts sideways)."""
+    w = max(w, size)
+    fx = x if anchor == "start" else x - w / 2 if anchor == "middle" else x - w
+    h = size * 0.35 + (lh or size * 1.2) * (lines - 1) + size * 1.25
+    return f' data-pptx-frame="{round(fx, 1)} {round(y - size * 1.1, 1)} {round(w, 1)} {round(h, 1)}"'
+
+
+def text_w(s: str, size: float, family: str = BODY, bold: bool = False) -> float:
+    """Rendered width of one line in px, from the real font when it is installed (fallback: 0.56 em per character)."""
+    font = _font(size, family, bold)
+    if font is None:
+        return len(s) * size * (0.6 if family == MONO else 0.56)
+    return font.getlength(s)
+
+
+_FONTS: dict = {}
+
+
+def _font(size, family, bold):
+    key = (round(size * 4), family, bold)
+    if key not in _FONTS:
+        try:
+            from PIL import ImageFont
+            from pathlib import Path
+            d = Path.home() / ".local/share/fonts/QA-VN"
+            name = ("IBMPlexMono" if family == MONO else "BeVietnamPro") + ("-Bold" if bold else "-Regular") + ".ttf"
+            _FONTS[key] = ImageFont.truetype(str(d / name), size=max(1, round(size * 4))) if (d / name).exists() else None
+        except Exception:
+            _FONTS[key] = None
+    f = _FONTS[key]
+    return None if f is None else _Scaled(f)
+
+
+class _Scaled:
+    def __init__(self, f):
+        self.f = f
+
+    def getlength(self, s):
+        return self.f.getlength(s) / 4
+
+
 def _t(x, y, s, size=16, fill=INK, weight="normal", anchor="start", family=BODY, style="normal") -> str:
+    w = text_w(str(s), size, family, weight == "bold") * 1.2 + 12
     return (f'<text x="{round(x, 1)}" y="{round(y, 1)}" font-family="{family}" font-size="{size}" font-weight="{weight}" '
-            f'font-style="{style}" fill="{fill}" text-anchor="{anchor}">{escape(str(s))}</text>')
+            f'font-style="{style}" fill="{fill}" text-anchor="{anchor}"{_frame(x, y, size, w, anchor)}>{escape(str(s))}</text>')
 
 
 def _r(x, y, w, h, fill, stroke="none", rx=0, sw=1.5) -> str:
@@ -44,9 +88,10 @@ def _g(gid, x, y, w, h, body: list[str]) -> str:
 def code_block(gid, x, y, lines: list[str], highlight: set = frozenset(), first_no: int = 1, fs: float = 15,
                width: float = 620, mark: dict | None = None, inserted: dict | None = None) -> str:
     """Line-numbered code; lines in `highlight` (by printed number) get a warm band; `mark` puts a note at a line's end;
-    `inserted` {line: text} adds an italic check line (what an instrumenting tool inserts) right after that line."""
+    `inserted` {line: text or [texts]} adds italic check line(s) (what an instrumenting tool inserts) right after that line."""
     lh = fs * 1.45
-    extra = len(inserted or {})
+    inserted = {k: [v] if isinstance(v, str) else list(v) for k, v in (inserted or {}).items()}
+    extra = sum(len(v) for v in inserted.values())
     h = lh * (len(lines) + extra) + 16
     body = [_r(x, y, width, h, "#FFFFFF", stroke=LAVENDER, rx=8)]
     k = 0
@@ -59,11 +104,11 @@ def code_block(gid, x, y, lines: list[str], highlight: set = frozenset(), first_
         body.append(_t(x + 44, cy + lh * 0.72, line.replace(" ", " ") or " ", size=fs, family=MONO))
         if mark and no in mark:
             body.append(_t(x + width - 10, cy + lh * 0.72, mark[no], size=fs - 2, fill=RED, weight="bold", anchor="end"))
-        if inserted and no in inserted:
+        for text in inserted.get(no, []):
             cy2 = y + 8 + lh * k
             k += 1
             body.append(_r(x + 2, cy2, width - 4, lh, "#EEEDFC"))
-            body.append(_t(x + 44, cy2 + lh * 0.72, inserted[no], size=fs - 2, fill=NAVY, style="italic", family=MONO))
+            body.append(_t(x + 44, cy2 + lh * 0.72, text, size=fs - 2, fill=NAVY, style="italic", family=MONO))
     return _g(gid, x, y, width, h, body)
 
 
@@ -154,7 +199,12 @@ def matrix(gid, x, y, rows: list[str], cols: list[str], cells: set, row_mark: di
         cy = y + (44 if col_sub else 30) + i * row_h
         if row_mark and i in row_mark:
             body.append(_r(x, cy, w, row_h, HILITE))
-        body.append(_t(x + label_w - 10, cy + row_h * 0.68, r, size=15, anchor="end", family=MONO))
+        no, _, code = r.partition("  ")
+        if no.isdigit():  # "NN  code": right-aligned line number, then the code left-aligned like an editor
+            body.append(_t(x + 30, cy + row_h * 0.68, no, size=13, anchor="end", family=MONO, fill=GREY))
+            body.append(_t(x + 40, cy + row_h * 0.68, code, size=15, family=MONO))
+        else:
+            body.append(_t(x + label_w - 10, cy + row_h * 0.68, r, size=15, anchor="end", family=MONO))
         for j in range(len(cols)):
             if (i, j) in cells:
                 body.append(f'<circle cx="{round(x + label_w + cell_w * (j + 0.5), 1)}" cy="{round(cy + row_h / 2, 1)}" r="7" '
@@ -162,28 +212,49 @@ def matrix(gid, x, y, rows: list[str], cols: list[str], cells: set, row_mark: di
     return _g(gid, x, y, w, (44 if col_sub else 30) + row_h * len(rows), body)
 
 
-def panel(gid, x, y, w, blocks: list[tuple], size: float = 14, head_color: str = NAVY, fill: str = "#FFFFFF") -> str:
-    """Explanation box: blocks of (heading, text) set as ONE editable text frame (one left edge for every line);
-    headings are bold coloured runs, text wraps to the box width (≈0.55 em per character)."""
-    import textwrap
-    per_line = max(10, int((w - 24) / (size * 0.55)))
-    lh = round(size * 1.4, 1)
+def wrap(text: str, width: float, size: float, family: str = BODY, bold: bool = False) -> list[str]:
+    """Greedy word wrap measured with the real font, so a line fills the box instead of a character-count guess."""
+    lines, cur = [], ""
+    for word in text.split():
+        cand = (cur + " " + word).strip()
+        if cur and text_w(cand, size, family, bold) > width:
+            lines.append(cur)
+            cur = word
+        else:
+            cur = cand
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def panel(gid, x, y, w, blocks: list[tuple], size: float = 14, head_color: str = NAVY, fill: str = "#FFFFFF",
+          h: float | None = None, rule: str | None = None) -> str:
+    """Explanation text beside a picture: a white sheet with a thin coloured rule on the left, blocks of (heading, text)
+    set as ONE editable text frame. A heading is optional (None/"" = plain paragraph); `h` stretches the sheet so its
+    bottom lines up with the picture next to it."""
+    pad = 16
+    inner = w - 2 * pad - 4
+    lh = round(size * 1.42, 1)
     rows = []  # (dy, markup)
     for head, text in blocks:
-        gap = round(size * 0.7, 1) if rows else 0
+        gap = round(size * 0.75, 1) if rows else 0
         if head:
             rows.append((lh + gap, f'<tspan font-weight="bold" fill="{head_color}">{escape(head)}</tspan>'))
             gap = 0
-        for line in textwrap.wrap(text, per_line):
+        for line in wrap(text, inner * 0.93, size):  # head-room: the quality checker measures wider than the font
             rows.append((lh + gap, escape(line)))
             gap = 0
-    x0, y0 = x + 12, y + 14 + lh
+    x0, y0 = x + pad + 4, y + pad + size
     first = rows[0][1]
     rest = "".join(f'<tspan x="{x0}" dy="{dy}">{mk}</tspan>' for dy, mk in rows[1:])
-    text = (f'<text x="{x0}" y="{round(y0, 1)}" font-family="{BODY}" font-size="{size}" fill="{INK}">'
+    text_h = size * 1.3 + sum(dy for dy, _ in rows[1:])
+    need = round(pad * 2 + text_h, 1)
+    h = max(need, h or 0)
+    frame = f' data-pptx-frame="{x0} {round(y + pad - 4, 1)} {round(x + w - 2 - x0, 1)} {round(text_h + 8, 1)}"'
+    text = (f'<text x="{x0}" y="{round(y0, 1)}" font-family="{BODY}" font-size="{size}" fill="{INK}"{frame}>'
             f'<tspan x="{x0}" dy="0">{first}</tspan>{rest}</text>')
-    h = 14 + lh + sum(dy for dy, _ in rows[1:]) + size * 0.8
-    return _g(gid, x, y, w, round(h, 1), [_r(x, y, w, round(h, 1), fill, stroke=LAVENDER, rx=10), text])
+    return _g(gid, x, y, w, h, [_r(x, y, w, h, fill, stroke="#E4E3F6", rx=6, sw=1),
+                                _r(x, y, 4, h, rule or head_color, rx=0), text])
 
 
 def before_after(gid, x, y, w, rows: list[tuple], head=("Tiêu chí", "Phương pháp SemLoc", "Phương pháp FailLoc", "Chênh lệch"),
@@ -230,10 +301,14 @@ def claim_vs_evidence(gid, x, y, w, rows: list[tuple], head=("Bài báo nói", "
     return _g(gid, x, y, w, 32 + row_h * len(rows), body)
 
 
-def section_band(gid, idx: int, label: str, x: float = 600, y: float = 14, w: float = 340) -> str:
-    """Small band at the top right naming the part of the talk (the teacher's five parts)."""
+def section_band(gid, idx: int, label: str, x: float = 600, y: float = 14, w: float = 340, content: int | None = None) -> str:
+    """Small band at the top right naming the part of the talk (the teacher's five parts) and, where a page answers one
+    of the teacher's four required contents, that content's number."""
+    s = f"Phần {idx} · {label}" + (f" · Nội dung {content}" if content else "")
+    w = max(w, text_w(s, 13, bold=True) + 40)
+    x = min(x, 940 - w)
     body = [_r(x, y, w, 26, CREAM, stroke=ORANGE, rx=13, sw=1.2),
-            _t(x + w / 2, y + 18, f"Phần {idx} · {label}", size=13, fill=INK, weight="bold", anchor="middle")]
+            _t(x + w / 2, y + 18, s, size=13, fill=INK, weight="bold", anchor="middle")]
     return _g(gid, x, y, w, 26, body)
 
 
@@ -251,7 +326,7 @@ def formula(gid, x, y, w, lines: list[str], size: float = 16) -> str:
 def constraint_table(gid, x, y, w, rows: list[dict], row_h: float = 34) -> str:
     """Constraint | where it is checked | expression | failing tests violating | passing tests violating | Ochiai |
     region weight | score given to the line."""
-    cols = [("Ràng buộc", 0.09), ("Kiểm tra ở", 0.17), ("Điều kiện", 0.32), ("Test fail vi phạm", 0.1),
+    cols = [("Ràng buộc", 0.09), ("Chỗ đặt → dòng", 0.17), ("Điều kiện", 0.32), ("Test fail vi phạm", 0.1),
             ("Test pass vi phạm", 0.1), ("Ochiai", 0.07), ("Hệ số", 0.06), ("Điểm dòng", 0.09)]
     xs, cx = [], x
     for _, f in cols:

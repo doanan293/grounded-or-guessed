@@ -1,4 +1,4 @@
-"""Bảo vệ (~25 phút, 28 trang, no progress part): the whole story. Pages of lần 1 and lần 2 are reused by building
+"""Bảo vệ (~25 phút, 27 trang, no progress part): the whole story. Pages of lần 1 and lần 2 are reused by building
 both page sets (their E/A calls are no-ops for pages this deck lacks); four pages are new: the agenda, FailLoc+Verify
 and why tests are too weak to be the arbiter, the failure analysis, limitations and conclusion."""
 import story_lan1
@@ -11,7 +11,7 @@ import make_figures as mf  # noqa: E402
 
 BAOVE = [("slide_01.svg", 1), ("muc_luc_bv.svg", 22),
          ("bai_toan.svg", 22), ("vi_du.svg", 22), ("sbfl_mu.svg", 22), ("lien_quan.svg", 22),
-         ("semloc_tong_quan.svg", 22), ("semloc_rang_buoc.svg", 22), ("semloc_diem.svg", 22), ("semloc_thuong.svg", 22),
+         ("semloc_tong_quan.svg", 22), ("semloc_rang_buoc.svg", 22), ("semloc_diem.svg", 22),
          ("cau_hoi.svg", 20),
          ("overclaim.svg", 22), ("chuan_hoa.svg", 22), ("nhan_di_dau.svg", 22),
          ("failloc_y_tuong.svg", 22), ("failloc_vd.svg", 22), ("phuong_phap.svg", 22),
@@ -45,30 +45,30 @@ def pages(bd) -> None:
     bd.A("muc_luc_bv.svg", viz._g("muc-luc", 60, 112, 840, 362, body))
 
     # FailLoc+Verify and why tests are too weak to be the arbiter
-    _title(bd, "verify_bv.svg", "Phương pháp FailLoc+Verify: để test làm trọng tài cũng không giúp")
+    _title(bd, "verify_bv.svg", "Để test làm trọng tài (FailLoc+Verify) cũng không giúp")
     band(bd, "verify_bv.svg", 5)
     bd.A("verify_bv.svg", viz.pipeline("verify", 30, 104, ["FailLoc đề xuất\n5 dòng nghi", "LLM viết bản\nsửa nhỏ mỗi dòng",
                                                             "Chạy bộ test\ntrên bản đã vá", "Dòng có bản sửa\npass lên trước"],
                                        accent=0, box_w=200, gap=30, box_h=74))
     bd.A("verify_bv.svg", viz.big_number("sai-cung-pass", 30, 210, f"{m('PavmechReviewedOtherLineFixable')}%",
-                                         "lần thử ở dòng KHÔNG có lỗi mà\nbản sửa nhỏ vẫn làm mọi test pass", color=RED, size=48, w=330))
-    bd.A("verify_bv.svg", viz.big_number("dung-pass", 330, 210, f"{m('PavmechReviewedFaultLineFixable')}%",
-                                         "lần thử ở dòng lỗi thật\nlàm mọi test pass", color=NAVY, size=48, w=280))
+                                         "lần thử ở dòng không có lỗi mà\nbản sửa nhỏ vẫn làm mọi test pass", color=RED, size=48, w=300))
+    bd.A("verify_bv.svg", viz.big_number("dung-pass", 345, 210, f"{m('PavmechReviewedFaultLineFixable')}%",
+                                         "lần thử ở dòng lỗi thật\nlàm mọi test pass", color=NAVY, size=48, w=265))
     cf = bo["cf_results"][0] if bo["cf_results"] else None
     bd.A("verify_bv.svg", P("verify-giai-thich", 630, 200, 300, [
-        ("Vì sao", "Mỗi chương trình chỉ có khoảng mười test. Đổi một hằng số ở dòng khác thường đủ bù cho phép tính sai, "
-                   "nên test pass dù dòng đó không có lỗi."),
-        ("Cùng hiện tượng ở SemLoc", f"Ở {bo['program']}, bản vá ở dòng 73 (dòng sai) cũng làm mọi test pass."
-         if cf and cf["patch"] == "pass" else "Bước vá thử của SemLoc không đổi thứ hạng nào."),
-        ("Kết luận", "Test đủ để gợi ý lỗi ở đâu, nhưng quá yếu để chứng minh lỗi ở đâu."),
-    ], size=13))
+        ("", "Mỗi chương trình chỉ có khoảng mười test. Đổi một hằng số ở dòng khác thường đủ bù cho phép tính sai, nên test "
+             "pass dù dòng đó không có lỗi."),
+        ("", f"SemLoc gặp đúng chuyện này: ở {bo['program']}, bản vá ở dòng 73 (dòng sai) cũng làm mọi test pass."
+         if cf and cf["patch"] == "pass" else "Bước vá thử của SemLoc cũng không đổi thứ hạng nào."),
+        ("", "Với bộ test cỡ này, test đủ để gợi ý lỗi ở đâu nhưng quá yếu để chứng minh lỗi ở đâu."),
+    ], size=14, h=280))
     bd.A("verify_bv.svg", viz._g("ghi-chu-verify", 30, 360, 580, 40, [
         _t(30, 372, "Tập dev, nhãn đã rà soát. Cấu hình tốt nhất của FailLoc+Verify", size=13, fill=MUTED),
         _t(30, 390, "trên tập dev vẫn không hơn FailLoc.", size=13, fill=MUTED)]))
 
     # failure analysis
     rows = mf.failure_data()
-    _title(bd, "that_bai_bv.svg", "Phân tích thất bại: phương pháp SemLoc sai ở đâu và vì sao")
+    _title(bd, "that_bai_bv.svg", "Phương pháp SemLoc sai ở đâu và vì sao")
     band(bd, "that_bai_bv.svg", 5)
     short = {"guess_right": "Dòng LLM đoán đúng", "rescued_by_spectrum": "Đoán sai, phổ cứu vào top 3",
              "prior_hurts": "Phổ đúng, thưởng làm sai", "coverage_only_wins": "Chỉ FailLoc+Cov vào top 3",
@@ -77,26 +77,27 @@ def pages(bd) -> None:
     bd.A("that_bai_bv.svg", viz.bars("sau-nhom", 20, 104, 560, 300, ser, vmax=max(n for _, n in rows) * 1.15, unit="",
                                      label_w=280, nd=0))
     bd.A("that_bai_bv.svg", P("nam-mau", 600, 104, 330, [
-        ("Đọc thế nào", "Mỗi chương trình của tập test xếp vào một nhóm (nhãn đã chuẩn hóa, đa số ba lần chạy)."),
-        ("Năm nguyên nhân sai", "Dòng điều kiện và câu lệnh nó bảo vệ; lỗi trải nhiều dòng; bộ phán định chấp nhận bản sửa "
-                                "bù trừ; nguyên nhân và triệu chứng trên cùng luồng dữ liệu; nhãn đáng ngờ."),
-        ("Ý chính", "Thanh cam là chương trình mà phổ vi phạm đã đúng nhưng điểm thưởng đẩy dòng đoán sai lên trên."),
-    ], size=13))
+        ("", "Mỗi chương trình của tập test được xếp vào một nhóm (nhãn đã chuẩn hóa, lấy đa số ba lần chạy). Thanh cam là "
+             "những chương trình mà phổ vi phạm đã đúng nhưng điểm thưởng đẩy dòng đoán sai lên trên."),
+        ("Năm nguyên nhân sai", "Nhầm dòng điều kiện với câu lệnh nó bảo vệ; lỗi trải nhiều dòng; bộ phán định chấp nhận "
+                                "bản sửa bù trừ; nguyên nhân và triệu chứng nằm trên cùng luồng dữ liệu; nhãn đáng ngờ."),
+    ], size=14, h=300))
 
     # limitations and conclusion
     _title(bd, "ket_luan_bv.svg", "Hạn chế và kết luận")
     bd.A("ket_luan_bv.svg", P("han-che", 30, 104, 430, [
-        ("Hạn chế", "Bộ phán định chấp nhận bản sửa bù trừ nên nhãn đã chuẩn hóa còn nhiễu; nhãn đã rà soát do LLM gợi ý "
-                    "(đã kiểm tra bằng duyệt mù); tên test của SemFault-250 nói gần như thẳng ý định; lỗi thật chỉ từ một dự "
-                    "án; một mô hình chính."),
-    ], size=14))
+        ("Hạn chế", "Bộ phán định chấp nhận bản sửa bù trừ, nên nhãn đã chuẩn hóa còn nhiễu."),
+        ("", "Nhãn đã rà soát bắt đầu từ gợi ý của LLM; duyệt mù giảm nhưng không xóa hết rủi ro này."),
+        ("", "Tên test của SemFault-250 gần như nói thẳng ý định của hàm."),
+        ("", "Lỗi thật chỉ lấy từ một dự án, và phần lớn thí nghiệm dùng một mô hình chính."),
+    ], size=14, h=300))
     bd.A("ket_luan_bv.svg", P("ket-luan", 480, 104, 450, [
-        ("Kết luận", "Hạng 1 của SemLoc là dòng LLM đoán, và bài báo quy công cho bằng chứng thực thi (overclaim). Một prompt "
-                     "có test fail (FailLoc) chính xác hơn và rẻ hơn trên cả ba bộ nhãn và trên lỗi thật (Acc@3). Test đủ để gợi ý lỗi nhưng "
-                     "quá yếu để làm trọng tài, nên thêm bước kiểm chứng không giúp."),
-        ("Hướng tiếp", "Bộ dữ liệu có nhãn kiểm chứng tốt hơn và test mạnh hơn; lỗi thật nhiều dự án; giấu tên test để đo "
+        ("Kết luận", "Hạng 1 của SemLoc là dòng LLM đoán, trong khi bài báo quy công cho bằng chứng thực thi (overclaim)."),
+        ("", "Một prompt có test fail (FailLoc) chính xác hơn và rẻ hơn trên cả ba bộ nhãn, và trên lỗi thật ở Acc@3."),
+        ("", "Test đủ để gợi ý lỗi nhưng quá yếu để làm trọng tài, nên thêm bước kiểm chứng không giúp."),
+        ("Hướng tiếp", "Bộ dữ liệu có nhãn kiểm chứng tốt hơn và test mạnh hơn; lỗi thật từ nhiều dự án; giấu tên test để đo "
                        "phần LLM dựa vào tên."),
-    ], size=14))
+    ], size=14, h=300))
 
 
 def notes(bd) -> dict:

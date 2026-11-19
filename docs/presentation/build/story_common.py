@@ -23,8 +23,8 @@ def examples() -> dict:
     return json.loads((ROOT / "data" / "fig_semloc_examples.json").read_text())
 
 
-def band(bd, page: str, part: int) -> None:
-    bd.A(page, viz.section_band(f"phan-{part}", part, PARTS[part]))
+def band(bd, page: str, part: int, content: int | None = None) -> None:
+    bd.A(page, viz.section_band(f"phan-{part}", part, PARTS[part], content=content))
 
 
 def _csv(path: Path) -> list[dict]:

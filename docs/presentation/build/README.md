@@ -1,6 +1,6 @@
 # Building the decks (`bao-cao-lan-1/2.pptx`, `bao-ve.pptx`)
 
-The deck fills `docs/presentation/template-vi.pptx` (Slidesgo template — not redistributed here; download it from Slidesgo and keep its credits slide)
+The deck fills `docs/presentation/template-vi.pptx` (Slidesgo template — not redistributed here; download it from Slidesgo; the CREDITS line on the last page is removed from the exported deck by `strip_credits.py`)
 through ppt-master's Edit Native PPTX route. `make_decks.sh [lan1] [lan2] [baove]` builds, checks and exports
 them; each progress report shows a little more than the one before (lần 1, 18–19/11 = group, work split, AI tools, RQ1,
 main comparison, status; lần 2, 25–26/11 = + RQ3, contributions, status; bảo vệ = everything).

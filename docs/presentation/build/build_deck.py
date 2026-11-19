@@ -120,8 +120,10 @@ def table(gid: str, x: float, y: float, widths: list, rows: list, highlight_col=
             lh = size * 1.25
             ty = cy + rh / 2 - (len(lines) - 1) * lh / 2 + size * 0.35
             first, rest = escape(lines[0]), "".join(f'<tspan x="{cx + 8}" dy="{lh}">{escape(l)}</tspan>' for l in lines[1:])
+            frame = (f' data-pptx-frame="{cx + 8} {round(ty - size * 1.1, 1)} {widths[c] - 12} '
+                     f'{round(size * 1.6 + lh * (len(lines) - 1), 1)}"')
             out.append(f'<text x="{cx + 8}" y="{round(ty, 2)}" font-family="{family}" font-size="{size}" '
-                       f'font-weight="{weight}" fill="{INK}">{first}{rest}</text>')
+                       f'font-weight="{weight}" fill="{INK}"{frame}>{first}{rest}</text>')
             cx += widths[c]
         cy += rh
     for k, line in enumerate(note_lines):
@@ -396,6 +398,8 @@ def build() -> None:
         "Do you have any questions?": ["Câu hỏi?", "Góp ý?"],
         "Please keep this slide for attribution": f"Nhóm M9 · {OCCASION[DECK]}",
     })
+    for gid in ("shape-2414", "shape-2417", "shape-2424"):  # the template's three social-media icon boxes (no links)
+        D("slide_30.svg", gid)
     results_pages()
     group_pages()
 
