@@ -25,8 +25,8 @@ docs/report/**/main-*.pdf
 # proxy config holds API keys
 infra/proxy/config.yaml
 
-# Not redistributed (course material, third-party template)
-docs/requirement/
+# Course material: the PDFs stay out of the repo; their markdown conversions (with images) are committed
+docs/requirement/**/*.pdf
 docs/presentation/template-vi.pptx
 dist/
 
