@@ -686,13 +686,10 @@
  },
  {
   "program": "energy_window_avg",
-  "status": "confirmed",
+  "status": "unverified",
   "lines": [
    72
-  ],
-  "edit_size": 6,
-  "kind": "insert_after",
-  "code": "window = len(recent)"
+  ]
  },
  {
   "program": "error_meter",
@@ -786,13 +783,10 @@
  },
  {
   "program": "fuel_moving_mean",
-  "status": "confirmed",
+  "status": "unverified",
   "lines": [
    63
-  ],
-  "edit_size": 6,
-  "kind": "insert_after",
-  "code": "window = len(recent)"
+  ]
  },
  {
   "program": "gain_trendline",
@@ -1363,13 +1357,10 @@
  },
  {
   "program": "price_cache",
-  "status": "confirmed",
+  "status": "unverified",
   "lines": [
    59
-  ],
-  "edit_size": 8,
-  "kind": "insert_after",
-  "code": "    if adjusted_now == ttl: return None"
+  ]
  },
  {
   "program": "prices_stream",

@@ -12,8 +12,8 @@ Trên 190 [`\FailProgramsN`] chương trình test có ground truth đã sửa:
 | `coverage_only_wins` | SemLoc trượt top-3, LLM + độ phủ trúng top-3 | 33 [`\FailCoverageOnlyWinsN`] |
 | `rescued_by_spectrum` | đoán sai nhưng SemLoc vẫn có dòng lỗi trong top-3 | 25 [`\FailRescuedBySpectrumN`] |
 | `prior_hurts` | phổ ngữ nghĩa xếp dòng lỗi hạng 1, điểm thưởng đẩy dòng đoán sai lên trên | 20 [`\FailPriorHurtsN`] |
-| `gt_suspect` | ground truth chưa kiểm chứng được và mọi phương pháp trượt top-3 | 6 [`\FailGtSuspectN`] |
-| `all_miss` | còn lại: mọi phương pháp trượt | 3 [`\FailAllMissN`] |
+| `gt_suspect` | ground truth chưa kiểm chứng được và mọi phương pháp trượt top-3 | 7 [`\FailGtSuspectN`] |
+| `all_miss` | còn lại: mọi phương pháp trượt | 2 [`\FailAllMissN`] |
 
 Khoảng một nửa số chương trình được giải quyết bởi chính dòng đoán; 25 [`\FailRescuedBySpectrumN`] chương trình là nơi bằng chứng thực thi thật sự "cứu" SemLoc — phiên bản theo chương trình của phân rã Shapley (`data/rq_decomposition.csv`).
 
@@ -41,7 +41,7 @@ Ca do `select(per_category=4, seed=20261108)` chọn, ưu tiên các cụm templ
 **P3 — Oracle của nhóm nhận một bản sửa *bù trừ*** — 2/19 (cộng 2 ca của P2). Giới hạn của oracle "sửa tối thiểu một dòng làm mọi test pass" (`flx.verify_gt`):
 - `gradient_clip_budget`: GT gốc 64 (dòng trống) được "sửa" thành 62 với `norm = _compute_global_norm(gradients) - 1`; lỗi thật là `max_norm / (norm + 1)` ở dòng 66 — LLM chỉ đúng 66 cả 3 lần.
 - `energy_window_avg`: "xác nhận" dòng 72 bằng cách thay một lời gọi `_log.debug(...)` bằng `window = len(recent)`; lỗi thật ở phép chia dòng 74 (LLM chỉ 74).
-- Bản sửa ở **dòng trống** cùng loại (ví dụ chèn `return merged` trước khối lỗi) đã bị loại khỏi ground truth đã sửa (`flx.gt.repaired_gt`, 0 [`\GtBlankFixDroppedN`] chương trình); bản sửa bù trừ ở dòng có mã thì chưa phát hiện tự động được.
+- Bản sửa bù trừ ở **dòng trống** (ví dụ chèn `return merged` trước khối lỗi) không còn được chấp nhận: bộ phán định thử câu lệnh trước, chỉ điền dòng trống khi không câu lệnh nào gần đó sửa được (`flx.verify_gt.verify`); bản sửa bù trừ ở dòng có mã thì chưa phát hiện tự động được.
 
 **P4 — Nguyên nhân và triệu chứng trên cùng luồng dữ liệu, hoặc lỗi thiếu mã** — 4/19.
 - `allocate_bounty_cut`: GT `return [_clamp_payout(share - fee) …]` (trừ phí trên từng phần), LLM chỉ dòng tính `base` — cả hai đều có thể là chỗ sửa.

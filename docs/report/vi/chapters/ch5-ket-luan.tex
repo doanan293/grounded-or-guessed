@@ -1,8 +1,26 @@
-\chapter{Đóng góp, triết lý khoa học và các mối đe dọa}
-\label{chap:dong-gop}
+\chapter{Kết luận}
+\label{chap:ket-luan}
 
+\section{Kết luận}
+\label{sec:ket-luan}
+
+Tiểu luận đặt câu hỏi ``grounded hay guessed?'' cho SemLoc~\cite{yang2026semloc} và so nó với cách làm đơn giản của nhiều
+lập trình viên: chạy kiểm thử, đưa kết quả thất bại cho LLM. Bằng cách tính lại từ nhật ký, chạy lại mã của tác giả, kiểm
+tra lại nhãn, lặp ba lần có kiểm định và tách đóng góp từng tín hiệu, nhóm rút ra bốn kết luận. Thứ nhất, dòng hạng 1 của
+SemLoc --- theo một lựa chọn thiết kế không có trong bài báo --- luôn là dòng LLM tự đoán, và bước vá thử không đổi thứ hạng
+nào. Thứ hai, \LabaudAllMoved{} trên \LabaudAllN{} nhãn của SemFault-250 không trỏ đúng dòng lỗi. Thứ ba, FailLoc --- một
+prompt có kiểm thử thất bại --- thắng quy trình nhiều bước ở Acc@1 trên cả ba bộ nhãn và rẻ hơn khoảng bảy lần. Thứ tư, mọi
+cách thêm phức tạp đã thử và các công cụ phân tích tĩnh đều không thu hẹp được khoảng cách, vì kiểm thử đủ để gợi ý lỗi
+nhưng quá yếu để chứng minh vị trí lỗi. Các kết luận đến từ một mô hình chính, chương trình một hàm có kiểm thử rõ ý định,
+và 31 lỗi thật của một dự án. Nhóm đề xuất mọi đánh giá định vị lỗi bằng LLM áp dụng bảng kiểm tra bảy mục ở
+Mục~\ref{sec:dong-gop}.
+
+Nội dung chính của báo cáo được viết lại thành bài báo tiếng Anh (\texttt{docs/report/paper.pdf} trong kho mã) để
+nộp arXiv, cùng gói tái hiện.
+
+% nội dung 3 của thầy: đóng góp, triết lý khoa học
 \section{Các đóng góp khoa học}
-\label{sec:dong-gop}
+\label{sec:dong-gop}\label{chap:dong-gop}
 
 Mỗi đóng góp có bằng chứng là tệp dữ liệu trong kho mã (\texttt{data/}) và điều kiện bác bỏ đi kèm.
 \begin{itemize}
@@ -19,7 +37,7 @@ Mỗi đóng góp có bằng chứng là tệp dữ liệu trong kho mã (\textt
 \item \textbf{C4. Thêm phức tạp không thu hẹp được khoảng cách, và vì sao}: kiểm thử thất bại là tín hiệu chính (Acc@3
   \AblRepairedAllTestsEffectDAccThree{} so với LLM-Direct); FailLoc+Cov, FailLoc+Vote, FailLoc+Verify, ruff và pyrefly
   không giúp, CovGate chỉ thêm \RqTwoRepairedAllCovgateDAccThree{} điểm Acc@3 cho SemLoc. Cơ chế: kiểm thử ``sửa được''
-  \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi (Chương~\ref{chap:that-bai}).
+  \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi (Mục~\ref{chap:that-bai}).
 \item \textbf{C5. Bảng kiểm tra bảy mục và gói tái hiện}: phá hòa, mẫu số, dòng lỗi kiểm chứng, loại bỏ thành phần ẩn, lặp và
   kiểm định, chi phí, so với một prompt có kiểm thử thất bại; Docker chạy không cần mạng, bộ đệm lượt gọi LLM để phát lại,
   tệp duyệt nhãn và macro sinh tự động cho mọi con số.
@@ -49,3 +67,10 @@ có thể sai, và cả bộ phán định lẫn vòng rà soát của nhóm đ�
 \item \textbf{Lỗi thật}: chỉ 31 lỗi của một dự án (youtube-dl), hàm đích lấy từ bản sửa nên định vị cấp hàm chưa được đánh giá.
 \item \textbf{Mô hình}: một mô hình chính; FailLoc+Verify và FailLoc+Vote chỉ đánh giá trên tập dev.
 \end{itemize}
+
+\section{Hướng phát triển}
+\label{sec:huong-phat-trien}
+
+(i) Định vị lỗi cấp dự án: thu hẹp từ kho mã xuống một hàm trước khi hỏi LLM; (ii) thí nghiệm giấu tên kiểm thử để đo phần
+thông tin tên kiểm thử ``nói hộ''; (iii) bộ kiểm thử chặt hơn (sinh kiểm thử phân biệt các bản sửa) để kiểm chứng vị trí lỗi
+bằng thực thi có ý nghĩa; (iv) chuẩn đánh giá trên lỗi thật của nhiều dự án, lấy FailLoc làm mốc so sánh bắt buộc.

@@ -54,6 +54,14 @@ def test_blank_label_prefers_fixing_a_code_line():
     assert r["status"] == "corrected" and r["lines"] == [3]
 
 
+def test_insert_after_a_statement_does_not_confirm_it():
+    # inserting "return a + b + c" after line 2 overrides the real fault on line 3 and passes every test, but says
+    # nothing about line 2: an executed label with no passing replacement stays unverified
+    propose = lambda src, line, failing: [{"kind": "insert_after", "code": "return a + b + c"}]
+    r = verify("add", ONE[0], ONE[1], "add", [2], propose, executable=True)
+    assert r["status"] == "unverified" and r["lines"] == [2]
+
+
 def test_blank_label_still_confirmed_for_an_omission():
     # no statement nearby can be fixed: the fault is a missing line, and filling the blank line confirms it
     propose = lambda src, line, failing: [{"kind": "replace", "code": "if t == 0: return xs"}] if line == 3 else []

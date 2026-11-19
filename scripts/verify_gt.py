@@ -32,6 +32,8 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--attempts", type=int, default=2)
     ap.add_argument("--retry-status", default="", help="comma list: re-run programs whose status is one of these")
+    ap.add_argument("--force", action="store_true", help="keep the new result even if it downgrades a verified one "
+                    "(after an oracle rule change)")
     args = ap.parse_args()
     os.environ.setdefault("FLX_RUN_ID", "verify_gt")
     labels = {r["program"]: r["category"] for r in csv.DictReader(open(ROOT / "data" / "semfault_labels.csv"))}
@@ -45,7 +47,8 @@ def main() -> None:
     with ProcessPoolExecutor(max_workers=args.workers) as pool:
         for r in pool.map(_one, jobs):
             prev = done.get(r["program"])
-            if prev and prev["status"] in ("confirmed", "corrected") and r["status"] not in ("confirmed", "corrected"):
+            if (not args.force and prev and prev["status"] in ("confirmed", "corrected")
+                    and r["status"] not in ("confirmed", "corrected")):
                 continue  # a retry never downgrades an earlier verified result
             done[r["program"]] = r
             args.out.write_text(json.dumps(sorted(done.values(), key=lambda x: x["program"]), indent=1))

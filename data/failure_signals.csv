@@ -61,7 +61,7 @@ downtime_booking,semantic,unverified,60,False,False,False,,True,coverage_only_wi
 draft_cache,semantic,confirmed,61,True,True,True,1.0,True,guess_right,same
 email_send_quota,semantic,corrected,62,True,True,True,1.0,True,guess_right,same
 embedding_lookup_cache,semantic,confirmed,63,True,True,True,2.0,True,guess_right,same
-energy_window_avg,semantic,confirmed,64,False,False,False,6.5,False,all_miss,other
+energy_window_avg,semantic,unverified,64,False,False,False,6.5,False,gt_suspect,other
 error_meter,semantic,confirmed,65,True,True,True,2.0,True,guess_right,same
 estimate_reliability,semantic,confirmed,66,True,True,True,1.0,True,guess_right,same
 estimate_supply,coverage_revealed,unverified,77,False,False,True,2.5,True,rescued_by_spectrum,header_body
@@ -70,7 +70,7 @@ event_gate,semantic,confirmed,179,True,True,True,1.0,True,guess_right,same
 feature_flag_rollout,semantic,corrected,69,True,True,True,1.0,True,guess_right,same
 fee_splitter,semantic,corrected,70,False,False,False,6.0,True,coverage_only_wins,other
 file_chunk_stitch,coverage_revealed,unverified,71,False,False,False,,True,coverage_only_wins,other
-fuel_moving_mean,semantic,confirmed,72,False,False,False,6.5,True,coverage_only_wins,other
+fuel_moving_mean,semantic,unverified,72,False,False,False,6.5,True,coverage_only_wins,other
 gain_trendline,coverage_revealed,unverified,73,False,False,True,2.5,True,rescued_by_spectrum,header_body
 gpu_memory_pool,semantic,corrected,74,True,True,True,,True,guess_right,same
 grades_union,semantic,confirmed,75,False,False,True,1.0,True,prior_hurts,header_body

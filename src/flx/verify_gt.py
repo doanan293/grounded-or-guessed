@@ -2,8 +2,9 @@
 
 A line is a verified fault location if replacing it with one line (or filling a blank line, which is
 how an omission fault is fixed) makes every test pass. The LLM only proposes candidate lines of code;
-the test suite decides. Statements are tried before blank lines: a blank line is a fault location only when
-no statement nearby can be fixed, since filling it otherwise just overrides the faulty statement. Statuses:
+the test suite decides. A statement is confirmed only by replacing it, and replacements are tried before filling a
+blank line or inserting a line: a filled or inserted line can override a faulty statement elsewhere, so it counts only
+when no statement nearby can be fixed (an omission). Statuses:
   confirmed    a minimal one-line fix (few tokens, see is_minimal) at an original ground-truth line passes all tests
   corrected    the original line could not be fixed, but a minimal fix at nearby line(s) inside the target
                function passes all tests (searched only when the original line is not executed by
@@ -124,19 +125,25 @@ def verify(program: str, prog_path: Path, test_path: Path, fn: str, gt_lines: li
     numbered = "\n".join(f"{i + 1}: {l}" for i, l in enumerate(src_lines))
     failing = failing_summary(prog_path, test_path)
 
-    def best_fix(line: int):
-        """Smallest passing minimal fix proposed for `line`, as (edit_size, proposal) or None."""
+    proposals: dict = {}  # one LLM round per line, whichever kinds a step accepts
+
+    def best_fix(line: int, kinds: tuple):
+        """Smallest passing minimal fix of one of `kinds` proposed for `line`, as (edit_size, proposal) or None."""
         original = src_lines[line - 1] if line - 1 < len(src_lines) else ""
+        if line not in proposals:
+            proposals[line] = propose(numbered, line, failing)
         found = []
-        for prop in propose(numbered, line, failing):
+        for prop in proposals[line]:
             code, kind = prop.get("code", ""), prop.get("kind", "replace")
+            if kind not in kinds:
+                continue
             base = "" if kind == "insert_after" else original
             if is_minimal(base, code) and try_patch(src, line, kind, code, prog_path, test_path):
                 found.append((edit_size(base, code) if base.strip() else len(_tokens(code)), prop))
         return min(found, key=lambda x: x[0]) if found else None
 
-    def pick(lines: list[int]):
-        fixes = {ln: f for ln in lines if (f := best_fix(ln))}
+    def pick(lines: list[int], kinds: tuple = ("replace", "insert_after")):
+        fixes = {ln: f for ln in lines if (f := best_fix(ln, kinds))}
         if not fixes:
             return None
         e = min(f[0] for f in fixes.values())
@@ -151,19 +158,21 @@ def verify(program: str, prog_path: Path, test_path: Path, fn: str, gt_lines: li
     confirmed = lambda h: {"program": program, "status": "confirmed", "lines": h[0], "edit_size": h[1], **h[2]}
     corrected = lambda h: {"program": program, "status": "corrected", "lines": h[0], "original": list(gt_lines),
                            "edit_size": h[1], **h[2]}
-    hit = pick(code(gt_lines))
+    # a statement is confirmed only by replacing it: inserting a line after it can override a fault elsewhere
+    hit = pick(code(gt_lines), ("replace",))
     if hit:
         return confirmed(hit)
     if executable:
         return {"program": program, "status": "unverified", "lines": list(gt_lines)}
     near = sorted({c for g in gt_lines for c in candidates(src, fn, g, radius) if c not in gt_lines})
-    hit = pick(code(near))
+    hit = pick(code(near), ("replace",))
     if hit:
         return corrected(hit)
-    hit = pick(blank(gt_lines))  # omission fault: nothing nearby could be fixed, the line itself is missing
+    # omission fault: no statement nearby could be fixed, so the missing line is filled in or inserted
+    hit = pick(blank(gt_lines))
     if hit:
         return confirmed(hit)
-    hit = pick(blank(near))
+    hit = pick(blank(near)) or pick(code(near), ("insert_after",))
     if hit:
         return corrected(hit)
     return {"program": program, "status": "unverifiable", "lines": list(gt_lines)}

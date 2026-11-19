@@ -1,17 +1,17 @@
 program,label,gt_status,cluster,guess_hit,semloc_top1,semloc_top3,spectrum_rank,llmcov_top3,category,guess_relation,gt_lines,guesses,semloc_top5_r1,llmcov_top5_r1,top_constraint_r1,code
-energy_window_avg,semantic,confirmed,64,False,False,False,6.5,False,all_miss,other,[72],"[74, 74, 74]","[74, 78, 75, 73, 76]","[74, 68, 69, 70, 35]",C3@None: abs(mean__1 - (total__1 / len(recent__1))) < 1e-6,"66:     _validate_readings(values)
-67: 
-68:     effective_window = _clamp_window(window, len(values))
-69:     recent = values[-effective_window:]
-70:     total = sum(recent)
-71: 
-72:     _log.debug(""Window %d, recent count %d, total %.4f"", window, len(recent), total)
-73: 
-74:     mean = total / window
-75: 
-76:     if len(recent) < warmup_min:
-77:         return None
-78:     return mean"
+gradient_clip_budget,semantic,corrected,76,False,False,False,,False,all_miss,other,[62],"[66, 66, 66]","[66, 67, 65, 68, 64]","[66, 67, 65, 30, 27]",C1@66: abs(scale * norm - max_norm) < 1e-6,"56:     """"""
+57:     _validate_max_norm(max_norm)
+58: 
+59:     if not gradients:
+60:         return []
+61: 
+62:     norm = _compute_global_norm(gradients)
+63:     _log.debug(""Global gradient norm: %.6f (budget: %.6f)"", norm, max_norm)
+64: 
+65:     if norm > max_norm:
+66:         scale = max_norm / (norm + 1)
+67:         return [g * scale for g in gradients]
+68:     return list(gradients)"
 latencies_merge,semantic,confirmed,84,False,False,False,6.0,False,all_miss,other,[83],"[87, 87, 87]","[87, 86, 70, 72, 73]","[87, 86, 80, 79, 89]",C1@87: len(merged__1) == len(left) + len(right),"77:             j += 1
 78:         else:
 79:             merged.append(a)
@@ -26,19 +26,6 @@ latencies_merge,semantic,confirmed,84,False,False,False,6.0,False,all_miss,other
 88: 
 89:     merged = _cap_capacity(merged)
 90:     return merged"
-gradient_clip_budget,semantic,corrected,76,False,False,False,,False,all_miss,other,[62],"[66, 66, 66]","[66, 67, 65, 68, 64]","[66, 67, 65, 30, 27]",C1@66: abs(scale * norm - max_norm) < 1e-6,"56:     """"""
-57:     _validate_max_norm(max_norm)
-58: 
-59:     if not gradients:
-60:         return []
-61: 
-62:     norm = _compute_global_norm(gradients)
-63:     _log.debug(""Global gradient norm: %.6f (budget: %.6f)"", norm, max_norm)
-64: 
-65:     if norm > max_norm:
-66:         scale = max_norm / (norm + 1)
-67:         return [g * scale for g in gradients]
-68:     return list(gradients)"
 file_chunk_stitch,coverage_revealed,unverified,71,False,False,False,,True,coverage_only_wins,other,[78],"[80, 80, 80]",[80],"[80, 78, 77, 76, 75]",C1@80: __cbfl_result == data,"72:     if separator:
 73:         return _build_payload(chunk_list, separator)
 74: 
@@ -48,51 +35,57 @@ file_chunk_stitch,coverage_revealed,unverified,71,False,False,False,,True,covera
 78:         data += part
 79: 
 80:     return data[:-1]"
-search_result_pager,semantic,confirmed,158,False,False,False,,True,coverage_only_wins,other,[70],"[72, 72, 72]",[72],"[72, 70, 69, 67, 43]",C4@None: len(__cbfl_result) <= page_size,"64:         ValueError: If *page* < 1 or *page_size* <= 0.
-65:     """"""
-66:     _validate_page_number(page)
-67:     page_size = _clamp_page_size(page_size)
-68: 
-69:     start = (page - 1) * page_size
-70:     end = start + page_size
-71: 
-72:     return results[start:end + 1]"
-rebate_splitter,semantic,corrected,187,False,False,False,,True,coverage_only_wins,other,[62],"[64, 62, 64]",[64],"[64, 62]",C2@None: fee == 0 or len(base__1) == 1,"56:     if amount < 0:
-57:         raise ValueError(""negative amount"")
+ledger_balance_rollup,coverage_revealed,unverified,86,False,False,False,,True,coverage_only_wins,header_body,[65],"[66, 66, 66]","[66, 63, 70]","[66, 65, 64, 63, 60]",C3@None: abs(balance - sum(e[0] if e[1] == 'credit' else -e[0] for e in entries[:idx + 1])) < 1e-5,"59:     """"""
+60:     balance = 0.0
+61:     for idx, (amount, kind) in enumerate(entries):
+62:         _validate_entry(amount, kind, idx)
+63:         if kind == ""credit"":
+64:             balance += amount
+65:         elif kind == ""debit"":
+66:             balance += amount
+67:         else:
+68:             raise ValueError(""unknown kind"")
+69:     _log.debug(""Computed ledger balance: %.2f over %d entries"", balance, len(entries))
+70:     return _round_balance(balance)"
+shift_trust,semantic,confirmed,166,False,False,False,5.0,True,coverage_only_wins,other,[58],"[60, 60, 60]","[60, 62, 61, 59, 58]","[62, 60, 58, 25, 23]",C1@60: abs(sum(adjusted__2) - 1.0) < 1e-5,"52:                     or *damping* is outside [0, 1].
+53:     """"""
+54:     _validate_inputs(current, target, damping)
+55: 
+56:     _log.debug(""Shifting allocation with damping=%.4f across %d positions"", damping, len(current))
+57: 
+58:     adjusted = [c + (t - c) * damping for c, t in zip(current, target)]
+59: 
+60:     adjusted = [_clamp_allocation(v) for v in adjusted]
+61: 
+62:     return adjusted"
+shift_risk,semantic,corrected,164,False,False,False,,True,coverage_only_wins,other,[61],"[65, 65, 65]","[65, 63, 61]","[65, 61, 63, 59, 24]",C2@None: abs(sum(adjusted__2) - 1.0) < 1e-6,"55: 
+56:     _validate_allocation(current, ""current"")
+57:     _validate_allocation(target, ""target"")
 58: 
-59:     _log.debug(""Splitting %.4f among %d recipients (fee=%.4f)"", amount, len(ratios), fee)
+59:     adjusted = [c + (t - c) * damping for c, t in zip(current, target)]
 60: 
-61:     total_ratio = sum(ratios)
-62:     base = [(r / total_ratio) * amount for r in ratios]
-63: 
-64:     return [_clamp_payout(share - fee) for share in base]"
-request_token_bucket,semantic,unverified,134,False,False,False,,True,coverage_only_wins,header_body,[62],"[61, 61, 61]",[61],"[62, 61, 64, 59, 58]",C1@61: available__2 >= 1 or available__2 <= 0,"55:     _validate_bucket_params(rate, capacity)
-56: 
-57:     available = tokens.get(TOKEN_KEY_AVAILABLE, capacity)
-58:     last = tokens.get(TOKEN_KEY_LAST, now)
-59:     available = _compute_refill(now, last, rate, capacity, available)
-60: 
-61:     if available <= 0:
-62:         return False
-63:     tokens[TOKEN_KEY_AVAILABLE] = available - 1
-64:     tokens[TOKEN_KEY_LAST] = now
-65:     _log.debug(""Token consumed: %d remaining"", available - 1)
-66:     return True"
-confidence_trendline,coverage_revealed,unverified,46,False,False,False,5.5,False,gt_suspect,other,[79],"[77, 77, 77]","[77, 84, 78, 76, 86]","[77, 84, 78, 79, 81]","C1@77: min(y0, y1) <= y__1 <= max(y0, y1)","71: 
-72:     ratio = _compute_interpolation_ratio(x0, x1, x)
-73:     y = y0 + ratio * (y1 - y0)
-74: 
-75:     _log.debug(""Interpolated confidence at x=%s: raw_y=%s, clamp=%s"", x, y, clamp)
-76: 
-77:     if not clamp:
-78:         lo, hi = (min(y0, y1), max(y0, y1))
-79:         if y < lo:
-80:             y = lo
-81:         elif y > hi:
-82:             y = hi
-83: 
-84:     y = max(DEFAULT_CONFIDENCE_FLOOR, min(DEFAULT_CONFIDENCE_CEILING, y))
-85: "
+61:     adjusted = [_clamp(v) for v in adjusted]
+62: 
+63:     _log.debug(""Adjusted allocation before normalization: %s"", adjusted)
+64: 
+65:     return adjusted"
+room_reservation,semantic,unverified,147,False,False,False,,False,gt_suspect,other,[69],"[65, None, 70]",[65],"[70, 75, 73, 74, 8]","C1@65: all(interval[1] <= s or interval[0] >= e for s, e in existing)","59:             configured minimum duration.
+60:         OverflowError: If the room already has the maximum number of
+61:             reservations for the day.
+62:     """"""
+63:     start, end = interval
+64:     _validate_interval(start, end)
+65:     _check_capacity(existing)
+66: 
+67:     _log.debug(""Checking interval (%d, %d) against %d existing bookings"", start, end, len(existing))
+68: 
+69:     for s, e in existing:
+70:         if not (end <= s or start >= e):
+71:             return False, existing
+72: 
+73:     updated = existing + [interval]
+74:     updated.sort()
+75:     return True, updated"
 time_range_filter,semantic,unverified,185,False,False,False,,False,gt_suspect,other,[73],"[75, 75, 75]",[75],[75],C4@None: all(p[0] < end for p in __cbfl_result),"67:     _validate_timestamp(end, ""end"")
 68:     _validate_points(points)
 69: 
@@ -102,6 +95,19 @@ time_range_filter,semantic,unverified,185,False,False,False,,False,gt_suspect,ot
 73:     _log.debug(""Filtering %d points for window [%s, %s)"", len(points), start, end)
 74: 
 75:     return [p for p in points if start <= p[0] <= end]"
+energy_window_avg,semantic,unverified,64,False,False,False,6.5,False,gt_suspect,other,[72],"[74, 74, 74]","[74, 78, 75, 73, 76]","[74, 68, 69, 70, 35]",C3@None: abs(mean__1 - (total__1 / len(recent__1))) < 1e-6,"66:     _validate_readings(values)
+67: 
+68:     effective_window = _clamp_window(window, len(values))
+69:     recent = values[-effective_window:]
+70:     total = sum(recent)
+71: 
+72:     _log.debug(""Window %d, recent count %d, total %.4f"", window, len(recent), total)
+73: 
+74:     mean = total / window
+75: 
+76:     if len(recent) < warmup_min:
+77:         return None
+78:     return mean"
 reserve_slot,semantic,unverified,139,False,False,False,,False,gt_suspect,other,[60],"[57, 57, 57]",[57],"[61, 65, 56, 57, 69]",C1@57: not (_CONFLICT_STRICT and _ADJACENCY_BUFFER > 0 and _ADJACENCY_BUFFER <= _MIN_SLOT_DURATION),"51:         raise ValueError(""start must be before end"")
 52: 
 53:     if len(existing) >= _MAX_SLOTS_PER_RESOURCE:
@@ -118,28 +124,6 @@ reserve_slot,semantic,unverified,139,False,False,False,,False,gt_suspect,other,[
 64:         _validate_slot(slot)
 65:         if overlaps(slot, effective_candidate):
 66:             _log.debug(""Candidate %s conflicts with existing slot %s"", candidate, slot)"
-schedule_call,semantic,unverified,150,False,False,False,,False,gt_suspect,other,[71],"[62, 62, 69]","[62, 67, 72, 77, 81]","[72, 75, 76, 8, 11]",C4@None: not __cbfl_result[0] or len(__cbfl_result[1]) == len(existing) + 1,"56:         candidate was added and *schedule* is the resulting list of windows.
-57: 
-58:     Raises:
-59:         ValueError: If the candidate start is not strictly before its end.
-60:         TypeError: If the candidate is not a valid 2-element sequence.
-61:     """"""
-62:     if candidate[0] >= candidate[1]:
-63:         raise ValueError(""start must be before end"")
-64: 
-65:     if len(existing) >= _MAX_CALLS_PER_DAY:
-66:         _log.debug(""Daily call limit of %d reached"", _MAX_CALLS_PER_DAY)
-67:         return False, list(existing)
-68: 
-69:     _validate_time_slot(candidate, label=""candidate"")
-70: 
-71:     def overlaps(a: Tuple[int, int], b: Tuple[int, int]) -> bool:
-72:         return not (b[1] <= a[0] or b[0] >= a[1])
-73: 
-74:     for slot in existing:
-75:         effective = _apply_adjacency_buffer(slot) if _CONFLICT_STRICT else slot
-76:         if overlaps(effective, candidate):
-77:             return False, list(existing)"
 combine_offsets,semantic,confirmed,43,False,False,True,1.0,True,prior_hurts,header_body,[70],"[71, 71, 71]","[71, 70, 73, 60, 61]","[71, 70, 68, 67, 65]",C1@71: len(merged) == len(left) + len(right),"64:         else:
 65:             merged.append(right[ri])
 66:             ri += 1
@@ -150,40 +134,52 @@ combine_offsets,semantic,confirmed,43,False,False,True,1.0,True,prior_hurts,head
 71:         merged.pop()
 72: 
 73:     return merged"
-histogram_bucket_merge,semantic,confirmed,78,False,False,True,1.0,True,prior_hurts,header_body,[77],"[78, 78, 78]","[78, 77, 62, 79, 81]","[78, 77]",C1@78: len(merged__1) == len(left) + len(right),"71:             i += 1
-72:             j += 1
-73: 
-74:     merged.extend(left[i:])
-75:     merged.extend(right[j:])
-76: 
-77:     if merged and left and right and merged[-1] == left[-1] == right[-1]:
-78:         merged.pop()
-79: 
-80:     merged = _clamp_bucket_count(merged)
-81:     return merged"
-combine_depths,semantic,confirmed,42,False,False,True,1.0,True,prior_hurts,header_body,[77],"[77, 78, 78]","[77, 78, 76, 83, 79]","[78, 77, 70, 71, 80]",C1@77: not (bool(merged__1) and bool(left) and bool(right) and merged__1[-1] == left[-1] == right[-1]),"71:             merged.append(_truncate_precision(b))
-72:             i += 1
-73:             j += 1
-74:     merged.extend(_truncate_precision(v) for v in left[i:])
-75:     merged.extend(_truncate_precision(v) for v in right[j:])
-76: 
-77:     if merged and left and right and merged[-1] == left[-1] == right[-1]:
-78:         merged.pop()
-79: 
-80:     if len(merged) > MAX_DEPTH_LEVELS:
-81:         merged = merged[:MAX_DEPTH_LEVELS]
-82: 
-83:     return merged"
-timestamps_stream,semantic,confirmed,186,False,False,True,1.0,True,prior_hurts,header_body,[74],"[75, 75, 75]","[75, 74, 76, 77, 73]","[75, 74, 71, 72, 65]",C1@75: len(merged) == len(left) + len(right),"68:         else:
-69:             merged.append(right[j])
-70:             j += 1
-71:     merged.extend(left[i:])
-72:     merged.extend(right[j:])
-73: 
-74:     if merged and left and right and merged[-1] == left[-1] == right[-1]:
-75:         merged.pop()
-76: 
-77:     return merged"
+bump_click,semantic,unverified,23,False,False,True,1.0,True,prior_hurts,header_body,[63],"[64, 64, 64]","[64, 63, 65, 66, 62]","[64, 63, 61, 60, 67]",C1@64: counters[key] == cap,"57:     _validate_key(key)
+58:     _validate_cap(cap)
+59: 
+60:     counters.setdefault(key, DEFAULT_INITIAL_COUNT)
+61:     counters[key] += 1
+62: 
+63:     if cap is not None and counters[key] > cap:
+64:         counters[key] = cap - 1
+65: 
+66:     _log.debug(""Bumped metric %s to %d (cap=%s)"", key, counters[key], cap)
+67:     return counters[key]"
+track_build,semantic,unverified,190,False,False,True,1.0,True,prior_hurts,header_body,[52],"[53, 53, 53]","[53, 52, 54, 55, 51]","[53, 52, 54, 50, 59]",C1@53: counters[key] == cap,"46:     """"""
+47:     _validate_key(key)
+48: 
+49:     counters.setdefault(key, DEFAULT_INITIAL_COUNT)
+50:     counters[key] += 1
+51: 
+52:     if cap is not None and counters[key] > cap:
+53:         counters[key] = cap - 1
+54:         _log.debug(""%s: %s counter clamped at %d"", CAP_ENFORCEMENT_LABEL, key, cap)
+55: 
+56:     if _should_log_milestone(counters[key]):
+57:         _log.debug(""Metric '%s' reached milestone %d"", key, counters[key])
+58: 
+59:     return counters[key]"
+login_tally,semantic,unverified,192,False,False,True,1.0,True,prior_hurts,header_body,[73],"[74, 74, 74]","[74, 73, 76, 72, 77]","[74, 73, 72, 70, 69]",C1@74: updated__2 == cap,"67:     """"""
+68:     _validate_cap(cap)
+69:     current = _resolve_current(counters, key)
+70:     updated = current + DEFAULT_INCREMENT
+71: 
+72:     if cap is not None:
+73:         if updated > cap:
+74:             updated = cap - 1
+75: 
+76:     counters[key] = updated
+77:     _log.debug(""Login tally for %s updated to %d"", key, updated)
+78:     return updated"
+plan_seats_share,semantic,unverified,112,False,False,True,2.0,True,rescued_by_spectrum,header_body,[81],"[82, 82, 82]",[82],"[82, 81, 79, 44, 43]",C1@82: all(int(v) == round(v) for v in shares__1),"75: 
+76:     if abs(sum(weights)) < _WEIGHT_PRECISION:
+77:         raise ValueError(""zero total weight"")
+78: 
+79:     shares = _compute_raw_shares(total, weights, minimum)
+80: 
+81:     if floor_to_int:
+82:         return [int(v) for v in shares]
+83:     return shares"
 schedule_training,semantic,unverified,155,False,False,True,2.5,False,rescued_by_spectrum,header_body,[66],"[67, None, 67]","[67, 68, 66, 69, 65]","[67, 14, 74, 76, 72]",C1@67: end != s and start != e,"60:         OverflowError: If the schedule has reached maximum capacity.
 61:     """"""
 62:     start, end = interval
@@ -198,38 +194,29 @@ schedule_training,semantic,unverified,155,False,False,True,2.5,False,rescued_by_
 71:             )
 72:             return False, existing
 73: "
-tensor_slice_pad,coverage_revealed,unverified,182,False,False,True,3.0,True,rescued_by_spectrum,header_body,[63],"[64, 64, 64]","[64, 63, 65, 66, 62]","[64, 63, 61, 24, 60]",C1@64: len(result__1) == requested_length__1,"57:     if requested_length > MAX_SLICE_LENGTH:
-58:         _log.debug(""Large slice requested: %d elements"", requested_length)
-59: 
-60:     result: List[int] = values[start:end]
-61:     missing = _compute_missing_count(requested_length, len(result))
+estimate_supply,coverage_revealed,unverified,77,False,False,True,2.5,True,rescued_by_spectrum,header_body,[67],"[66, 66, 66]","[66, 67, 65, 68, 64]","[66, 67, 68, 70, 69]",C1@66: (y0 <= y__1 <= y1) or (y1 <= y__1 <= y0),"60:     """"""
+61:     _validate_segment(x0, x1)
 62: 
-63:     if missing >= 0:
-64:         result.extend([pad] * (missing + 1))
-65:     return result"
-gain_trendline,coverage_revealed,unverified,73,False,False,True,2.5,True,rescued_by_spectrum,header_body,[71],"[70, 70, None]","[70, 71, 69, 72, 68]","[70, 71, 72, 74, 42]","C1@70: min(y0, y1) <= y__1 <= max(y0, y1)","64:     if abs(x1 - x0) < MIN_SEGMENT_LENGTH:
-65:         raise ValueError(""degenerate segment"")
-66: 
-67:     t = _compute_parameter(x, x0, x1)
-68:     y = y0 + t * (y1 - y0)
-69: 
-70:     if not clamp:
-71:         lo, hi = (min(y0, y1), max(y0, y1))
-72:         if y < lo:
-73:             y = lo
-74:         if y > hi:
-75:             y = hi
-76: 
-77:     _log.debug(""gain_trendline: x=%s, t=%.4f, y=%.4f"", x, t, y)"
-track_api,semantic,unverified,192,False,False,True,2.0,True,rescued_by_spectrum,header_body,[66],"[67, 67, 67]","[67, 66, 68, 69, 65]","[67, 66, 65, 63, 69]",C1@67: new_value__2 == max_value,"60:     """"""
-61:     _validate_max_value(max_value)
-62: 
-63:     new_value = _current_count(counts, key) + COUNTER_INCREMENT
+63:     t = _compute_interpolation_ratio(x0, x1, x)
+64:     y = y0 + t * (y1 - y0)
+65: 
+66:     if not clamp:
+67:         lo, hi = (min(y0, y1), max(y0, y1))
+68:         if y < lo:
+69:             y = lo
+70:         if y > hi:
+71:             y = hi
+72: 
+73:     _log.debug(""estimate_supply: x=%.4f, t=%.4f, y=%.4f"", x, t, y)"
+quota_for_storage,semantic,unverified,180,False,False,True,2.0,True,rescued_by_spectrum,header_body,[65],"[66, 66, 66]","[66, 65, 67, 70, 68]","[66, 28, 65, 62, 8]",C1@66: sum(allocations) == round(sum(planned)),"59: 
+60:     _validate_weights(weights)
+61: 
+62:     planned = _compute_planned(weights, total, minimum)
+63:     _log.debug(""Planned allocations for %d recipients: %s"", len(weights), planned)
 64: 
-65:     if max_value is not None:
-66:         if new_value > max_value:
-67:             new_value = max_value - 1
-68: 
-69:     counts[key] = new_value
-70:     _log.debug(""tracked %s -> %d"", key, new_value)
-71:     return new_value"
+65:     if _INTEGER_ALLOCATION:
+66:         allocations = [int(x) for x in planned]
+67:     else:
+68:         allocations = planned  # type: ignore[assignment]
+69: 
+70:     return allocations"

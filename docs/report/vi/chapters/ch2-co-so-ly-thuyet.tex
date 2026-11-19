@@ -1,4 +1,4 @@
-\chapter{Cơ sở lý thuyết}
+\chapter{Cơ sở lý thuyết và nghiên cứu liên quan}
 \label{chap:co-so}
 
 \section{Định vị lỗi dựa trên phổ độ phủ}
@@ -98,3 +98,91 @@ sinh từ cùng khuôn mẫu, khoảng tin cậy \ConstCiLevel\% được tính 
 \ConstBootstrapDraws{} lần lấy mẫu. Đóng góp của từng tín hiệu được đo bằng giá trị Shapley, với $v(S)$ là Acc@$k$ khi
 chỉ bật các tín hiệu trong $S$; vì Acc@$k$ là trung bình theo chương trình, mỗi $\phi_i$ cũng có khoảng tin cậy bootstrap:
 \begin{equation} \phi_i = \sum_{S \subseteq N\setminus\{i\}} \frac{|S|!\,(|N|-|S|-1)!}{|N|!}\,\bigl(v(S\cup\{i\}) - v(S)\bigr). \label{eq:shapley} \end{equation}
+
+% nội dung 1 của thầy: tài liệu, từ khóa, nghiên cứu liên quan
+\section{Phương pháp tìm tài liệu và bộ từ khóa}
+\label{sec:tim-tai-lieu}\label{chap:tong-quan}
+
+Điểm xuất phát là ba bài giảng viên giao cho chương~10 ``Phát hiện lỗi và định vị lỗi'' (Mục~\ref{sec:ba-bai-bao}).
+Nhóm lần ngược tài liệu được trích dẫn và tìm xuôi nghiên cứu mới trên arXiv, ACM DL, IEEE Xplore và Google Scholar,
+chọn các phương pháp SemLoc so sánh hay kế thừa, bộ dữ liệu lỗi Python, và các bài về cách đánh giá, rủi ro khi dùng LLM,
+nhãn sai và bản sửa ``lách'' kiểm thử. Bảng~\ref{tab:tu-khoa} là bộ từ khóa song ngữ dùng để tìm và thống nhất thuật ngữ.
+
+\begin{table}[H]
+\centering
+\caption{Bộ từ khóa của đề tài}
+\label{tab:tu-khoa}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Tiếng Anh & Tiếng Việt \\
+\midrule
+fault localization & định vị lỗi \\
+spectrum-based fault localization (SBFL) & định vị lỗi dựa trên phổ độ phủ \\
+semantic fault & lỗi ngữ nghĩa \\
+semantic constraint / invariant & ràng buộc ngữ nghĩa / bất biến \\
+semantic violation spectrum & phổ vi phạm ràng buộc ngữ nghĩa \\
+counterfactual verification & kiểm chứng phản thực tế \\
+large language model (LLM) & mô hình ngôn ngữ lớn \\
+structured grounding & neo lập luận vào biểu diễn có cấu trúc \\
+program instrumentation & chèn mã kiểm tra vào chương trình \\
+reproducibility & tính tái hiện được \\
+data contamination / memorization & nhiễm dữ liệu huấn luyện / ghi nhớ \\
+omission fault & lỗi thiếu mã \\
+test-driven development (TDD) & phát triển hướng kiểm thử \\
+plausible patch / test overfitting & bản sửa hợp lệ bề ngoài / quá khớp kiểm thử \\
+label error (benchmark) & nhãn sai trong bộ dữ liệu \\
+static / dynamic analysis & phân tích tĩnh / phân tích động \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Ba bài báo được giao}
+\label{sec:ba-bai-bao}
+
+\textbf{SemLoc}~\cite{yang2026semloc} nhắm vào lỗi ngữ nghĩa, nơi phổ độ phủ ``sụp''. Phương pháp gồm bốn bước: tìm điểm
+neo (đầu hàm, định nghĩa -- sử dụng, biên vòng lặp, lệnh trả về); một lượt gọi LLM sinh ràng buộc gắn với điểm neo; chèn
+ràng buộc, chạy kiểm thử, chấm ma trận ``ràng buộc $\times$ kiểm thử'' bằng Ochiai; vá thử một dòng để kiểm chứng phản
+thực tế. Trên SemFault-250 (250 chương trình Python một hàm, một lỗi) bài báo báo cáo Acc@1
+\RqOneSemlocClaudeTZeroEightAuthorAllAccOne\%, nhưng chỉ có kết quả cấp dòng cho bảy lỗi thật. Mã chấm điểm phá hòa theo
+thứ tự dòng, loại chương trình chạy lỗi khỏi mẫu số, mỗi cấu hình chạy một lần; đây là đầu vào của RQ1.
+
+\textbf{EffiHolmes}~\cite{yang2026effiholmes} định vị lỗi hiệu năng, loại lỗi không làm kiểm thử thất bại: chạy chương
+trình ở hai mức tải, coi hàm có chi phí tăng theo tải là điểm nóng và cho LLM lập luận trên đường gọi tới đó (140 vấn
+đề thật). Nhóm học ý tưởng \emph{đối chiếu hai lần thực thi để lọc nhiễu} (nền của CovGate) và khuôn câu hỏi nghiên cứu.
+
+\textbf{Báo cáo sự cố kết hợp LLM}~\cite{medeiros2026crash} gom cụm vết ngăn xếp của hai hệ thống Java công nghiệp, xếp
+hạng phương thức đáng nghi rồi đưa vào prompt; trên 38 lỗi thật, cấu hình tốt nhất định vị được 71/100. Bài học: đưa
+bằng chứng đã khai thác vào prompt giúp LLM (ý tưởng của biến thể có độ phủ từng dòng), và đầu ra LLM cần được kiểm tra.
+
+\section{Các hướng liên quan, khoảng trống và vị trí của nhóm}
+\label{sec:khoang-trong}
+
+Về định vị lỗi, Ochiai~\cite{abreu2009} là mốc SBFL chuẩn, với hai điểm yếu đánh giá đã biết là hòa điểm và lỗi thiếu
+mã~\cite{wong2016survey}; gỡ lỗi chia đôi~\cite{zeller2002tse} là nền cho bước kiểm chứng của SemLoc. Trong định vị lỗi
+bằng LLM, AutoFL~\cite{kang2024autofl} và FlexFL~\cite{xu2025flexfl} đưa bằng chứng thực thi vào prompt, Wu và cộng
+sự~\cite{wu2023llmfl} thấy nhật ký lỗi giúp LLM rõ rệt, còn Agentless~\cite{xia2024agentless} cho thấy quy trình đơn
+giản có thể thắng tác tử phức tạp. Về tính hợp lệ, cách chấm~\cite{pearson2017} và nhãn sai~\cite{northcutt2021labels}
+đều có thể đảo thứ hạng, bản sửa vượt kiểm thử thường không đúng~\cite{qi2015kali}, và LLM có thể đã ghi nhớ bộ dữ
+liệu~\cite{ramos2024memorize}. Bảng~\ref{tab:so-sanh-tai-lieu} đặt ba bài cạnh hướng của nhóm. Khoảng trống còn lại: chưa ai đo phần độ chính xác thật
+sự đến từ bằng chứng thực thi; kết quả SemLoc đến từ một lần chạy với cách chấm lạc quan trên nhãn chưa kiểm tra; và
+chưa có so sánh với cách làm đơn giản mà lập trình viên vẫn dùng --- một prompt có kiểm thử thất bại. Ba câu hỏi nghiên
+cứu ở Chương~\ref{chap:mo-dau} lấp đúng ba khoảng trống này.
+
+\begin{table}[H]
+\centering
+\caption{So sánh ba bài báo được giao với hướng của nhóm}
+\label{tab:so-sanh-tai-lieu}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}*{4}{>{\raggedright\arraybackslash}X}@{}}
+\toprule
+Tiêu chí & SemLoc~\cite{yang2026semloc} & EffiHolmes~\cite{yang2026effiholmes} & Báo cáo sự cố + LLM~\cite{medeiros2026crash} & Nhóm M9 \\
+\midrule
+Loại lỗi & ngữ nghĩa & hiệu năng & sự cố (Java) & ngữ nghĩa \\
+Tín hiệu & ràng buộc do LLM sinh + chạy kiểm thử & phân tích hiệu năng ở hai mức tải & vết ngăn xếp + xếp hạng & kiểm thử thất bại đưa thẳng cho LLM; tách đóng góp của từng tín hiệu \\
+Lỗi thật & 7 lỗi có kết quả cấp dòng & 140 vấn đề & 38 lỗi công nghiệp & 31 lỗi BugsInPy, 3 lần chạy \\
+Kiểm tra bộ dữ liệu & không & --- & --- & kiểm chứng bằng thực thi và rà soát toàn bộ nhãn \\
+Lặp và kiểm định & 1 lần, không kiểm định & --- & --- & 3 lần, McNemar, bootstrap theo cụm \\
+\bottomrule
+\end{tabularx}
+\end{table}
