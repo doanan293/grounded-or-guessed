@@ -1,11 +1,11 @@
-% Thiết kế thực nghiệm lần 1: dữ liệu × phương pháp × bộ nhãn × lần chạy.
+% Thiết kế thực nghiệm: dữ liệu × phương pháp × bộ nhãn × lần chạy.
 {\setstretch{1}%
 \begin{tikzpicture}[node distance=4mm and 6mm,
   col/.style={fbox=#1, text width=34mm, minimum height=44mm, anchor=north},
   head/.style={font=\bfseries, anchor=south}]
 \node[col=gray] (d) at (0,0) {SemFault-250\\[2mm] tập dev: 50 CT\\(chọn tham số)\\[1mm] tập test: 200 CT\\(báo cáo)\\[2mm]\small chia phân tầng,\\hạt giống cố định};
 \node[col=semloc, right=of d.north east, anchor=north west] (m) {SBFL (Ochiai)\\LLM-Direct\\SemLoc\\SemLoc−Bonus\\\textcolor{failloc}{\textbf{FailLoc}}\\[2mm]\small cùng mô hình\\Gemini 3.8 Flash};
-\node[col=failloc, right=of m.north east, anchor=north west] (g) {Nhãn gốc\\[1mm] Nhãn đã chuẩn hóa\\bằng thực thi\\[2mm]\small \GtRepairedN{} CT\\sau khi sửa};
+\node[col=failloc, right=of m.north east, anchor=north west] (g) {Nhãn gốc\\[1mm] Nhãn đã chuẩn hóa\\bằng thực thi\\(\GtRepairedN{} CT)\\[1mm] Nhãn đã rà soát\\[2mm]\small tập test: \RqTwoRepairedAllSemlocN{} CT\\với nhãn chuẩn hóa};
 \node[col=gray, right=of g.north east, anchor=north west] (r) {3 lần chạy\\mỗi cấu hình\\[2mm] Acc@1, Acc@3,\\Acc@5\\[2mm]\small bootstrap theo\\chương trình và\\theo cụm mẫu};
 \node[head] at (d.north) {Dữ liệu};
 \node[head] at (m.north) {Phương pháp};

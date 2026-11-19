@@ -80,11 +80,11 @@ Kết quả báo cáo từ một lần chạy &
 \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo; \RqTwoRepairedAllLlmTestsDAccOneHi] trên bộ đã
 chuẩn hóa và \RqTwoReviewedAllLlmTestsDAccOne{} [\RqTwoReviewedAllLlmTestsDAccOneLo; \RqTwoReviewedAllLlmTestsDAccOneHi]
 trên bộ đã rà soát. Ở Acc@3 nó hơn \RqTwoRepairedAllLlmTestsDAccThree{} [\RqTwoRepairedAllLlmTestsDAccThreeLo;
-\RqTwoRepairedAllLlmTestsDAccThreeHi] trên bộ đã chuẩn hóa; trên nhãn gốc khoảng tin cậy chạm 0 vì có lỗi không kiểm thử
+\RqTwoRepairedAllLlmTestsDAccThreeHi] trên bộ đã chuẩn hóa; trên nhãn gốc khoảng tin cậy chứa 0 vì có lỗi không kiểm thử
 nào chạy tới (chỉ tính lỗi được chạy tới: \RqTwoOriginalExecutableLlmTestsDAccThree{}
 [\RqTwoOriginalExecutableLlmTestsDAccThreeLo; \RqTwoOriginalExecutableLlmTestsDAccThreeHi]). FailLoc tốn
 \CostLlmTestsTokensK{} nghìn token mỗi chương trình so với \CostSemlocTokensK{} nghìn của SemLoc (Hình~\ref{fig:chi-phi});
-SBFL (Ochiai) thấp nhất trên mọi bộ nhãn. Ở Acc@5, FailLoc đạt \RqTwoRepairedAllLlmTestsAccFiveMean\% so với
+SBFL (Ochiai) thấp nhất ở Acc@1 và Acc@3 trên mọi bộ nhãn. Ở Acc@5, FailLoc đạt \RqTwoRepairedAllLlmTestsAccFiveMean\% so với
 \RqTwoRepairedAllSemlocAccFiveMean\% của SemLoc trên bộ đã chuẩn hóa, nhưng trên nhãn gốc SemLoc cao hơn
 (\RqTwoOriginalAllSemlocAccFiveMean\% so với \RqTwoOriginalAllLlmTestsAccFiveMean\%); FailLoc chỉ trả về năm dòng. Trên một tập con
 (\ParetoSemlocGeminiThreeEightFlashN{} chương trình), FailLoc+Cov có Acc@3 cao hơn và tốn ít token hơn SemLoc với cả năm mô
@@ -145,12 +145,12 @@ thất bại và vì sao}, không cần biết dòng nào được chạy qua.
 \label{fig:ablation}
 \end{figure}
 
-\subsection{Các cách bổ sung và phân tích tĩnh không cải thiện được}
+\subsection{Các cách bổ sung không thu hẹp được khoảng cách với FailLoc}
 
 Hình~\ref{fig:bo-sung} đặt các cách bổ sung cạnh nhau. CovGate (phá hòa bằng Ochiai) thay đổi Acc@3 của SemLoc
 \RqTwoRepairedAllCovgateDAccThree{} [\RqTwoRepairedAllCovgateDAccThreeLo; \RqTwoRepairedAllCovgateDAccThreeHi] điểm và không
-đổi Acc@1. FailLoc+Verify tốt nhất trên
-dev khi gần như không đổi gì (Acc@1 \PavDevChosenReviewedAccOne\% so với \PavDevStageReviewedAccOne\%, cấu hình mạnh tay
+đổi Acc@1. Trên tập dev với nhãn đã rà soát, FailLoc+Verify tốt nhất
+khi gần như không đổi gì (Acc@1 \PavDevChosenReviewedAccOne\% so với \PavDevStageReviewedAccOne\%, cấu hình mạnh tay
 nhất \PavDevWorstReviewedAccOne\%): bản sửa nhỏ làm mọi kiểm thử đạt ở \PavmechReviewedFaultLineFixable\% lần kiểm tại
 dòng lỗi thật nhưng cũng ở \PavmechReviewedOtherLineFixable\% lần tại dòng không lỗi, nên không phân biệt được.
 FailLoc+Vote (dev) làm Acc@3 đi xuống trên bộ đã chuẩn hóa (\VoteRepairedVoteAccThree\% so với \VoteRepairedSingleAccThree\%). Phân tích tĩnh
@@ -189,9 +189,13 @@ và mọi phương pháp còn xa trần. \textbf{(b) Đổi tên định danh}: 
 \RenRepairedLlmGuessDAccOne{} [\RenRepairedLlmGuessDAccOneLo; \RenRepairedLlmGuessDAccOneHi]), nên không có dấu hiệu
 đoán nhờ nhớ tên; phổ vi phạm không điểm thưởng mất \RenRepairedSemlocNoPriorDAccThree{} điểm Acc@3; FailLoc+Cov không đổi
 đáng kể (\RenRepairedLlmCoverageDAccThree{} [\RenRepairedLlmCoverageDAccThreeLo; \RenRepairedLlmCoverageDAccThreeHi]).
-\textbf{(c) Họ mô hình} (tập con, chưa có khoảng tin cậy): mô hình yếu dựa vào điểm thưởng nhiều hơn --- bỏ điểm thưởng,
-Acc@1 của Gemini 3.5 Flash-Lite đi từ \FamRepairedGeminiThreeFiveFlashLiteSemlocAccOneMean\% xuống
-\FamRepairedGeminiThreeFiveFlashLiteSemlocNoPriorAccOneMean\%. \textbf{(d) Ba bộ nhãn}: các kết luận RQ2 giữ trên cả ba bộ.
+\textbf{(c) Họ mô hình} (tập con \ParetoSemlocGeminiThreeEightFlashN{} chương trình, chưa có khoảng tin cậy): bỏ điểm
+thưởng làm Acc@1 của SemLoc giảm ở cả năm mô hình, nhưng mức giảm khác nhau nhiều và không theo độ mạnh của mô hình ---
+Gemini 3.8 Flash từ \FamRepairedGeminiThreeEightFlashSemlocAccOneMean\% xuống
+\FamRepairedGeminiThreeEightFlashSemlocNoPriorAccOneMean\%, GPT-6 luna từ \FamRepairedGptSixLunaSemlocAccOneMean\% xuống
+\FamRepairedGptSixLunaSemlocNoPriorAccOneMean\%. Nghiên cứu này chỉ gồm SemLoc và FailLoc+Cov; FailLoc chỉ chạy với
+Gemini 3.8 Flash. \textbf{(d) Ba bộ nhãn}: FailLoc hơn SemLoc ở Acc@1 trên cả ba bộ; trên nhãn gốc, khoảng tin cậy ở
+Acc@3 chứa 0 và ở Acc@5 SemLoc cao hơn (Bảng~\ref{tab:ket-qua-chinh}).
 
 \begin{figure}[H]
 \centering
@@ -232,15 +236,17 @@ trình đoán sai, \FailRelationHeaderBodyN{} ca có dòng đoán và dòng lỗ
 vệ. Chấp nhận cả hai dòng của cặp này thì Acc@1 của SemLoc tăng từ \TolSemlocAccOneExact\% lên
 \TolSemlocAccOneGuardStrict\%--\TolSemlocAccOneGuardOrBody\%, của FailLoc+Cov từ \TolLlmCoverageAccOneExact\% lên
 \TolLlmCoverageAccOneGuardStrict\%--\TolLlmCoverageAccOneGuardOrBody\%: quy ước gán nhãn ảnh hưởng tới Acc@1 nhiều hơn
-mọi khác biệt giữa các phương pháp dùng LLM, dù thứ tự giữa chúng không đổi. Đọc mười chín ca (tối đa bốn ca mỗi nhóm,
+mọi khác biệt giữa các phương pháp dùng LLM và đủ để đảo thứ tự giữa chúng (LLM-Direct từ đầu xuống cuối), dù FailLoc+Cov
+vẫn hơn SemLoc. Đọc mười chín ca (tối đa bốn ca mỗi nhóm,
 khác khuôn mẫu) cho năm mẫu nguyên nhân:
 \begin{enumerate}
 \item \textbf{Dòng điều kiện và câu lệnh được bảo vệ} (phổ biến nhất): nhãn ở \texttt{if}, LLM chỉ câu lệnh bên trong
   hoặc ngược lại; đúng về ngữ nghĩa nhưng lệch một dòng.
 \item \textbf{Khối lỗi nhiều dòng}: xóa dòng nào cũng sửa được; nhãn nêu một dòng, LLM chỉ dòng kia (phần lớn \texttt{prior\_hurts}).
 \item \textbf{Bộ phán định chấp nhận bản sửa bù trừ}: bản sửa làm mọi kiểm thử đạt ở một dòng không có lỗi. Bộ phán định
-  thử câu lệnh trước dòng trống nên không còn ghi đè kiểu này trên dòng trống; vòng rà soát bác \ReviewCorrectedOverturnedN{} trong
-  \GtCorrectedN{} lần bộ phán định dời nhãn.
+  chỉ xác nhận câu lệnh bằng bản thay thế và chỉ điền dòng trống hay chèn dòng khi không câu lệnh nào gần đó sửa được, nên
+  không còn ghi đè bằng dòng chèn thêm; bản thay thế bù trừ thì vẫn lọt: vòng rà soát bác \ReviewCorrectedOverturnedN{}
+  trong \GtCorrectedN{} lần bộ phán định dời nhãn.
 \item \textbf{Nguyên nhân và triệu chứng trên cùng luồng dữ liệu}: nhãn ở nơi tính giá trị, LLM chỉ nơi dùng (hoặc ngược
   lại), hay lỗi là \emph{thiếu} một bước, không có ``dòng sai'' duy nhất.
 \item \textbf{Dòng lỗi chuẩn đáng ngờ}: nhãn gán cho dòng khai báo hàm lồng hay cho dòng ngay trên lỗi rõ ràng.\end{enumerate}
@@ -256,7 +262,7 @@ phần có ích là kiểm thử thất bại chứ không phải độ phủ (m
 không đổi thứ hạng nào, bộ phán định dời \ReviewCorrectedOverturnedN{} nhãn tới dòng bị vòng rà soát bác, và FailLoc+Verify
 không cải thiện bước đề xuất --- có chung một tiêu chí: \emph{một bản sửa nhỏ tại dòng này làm mọi kiểm thử đạt}. Với
 khoảng mười kiểm thử mỗi chương trình, tiêu chí này thỏa ở \PavmechReviewedOtherLineFixable\% lần thử tại các dòng ứng
-viên không có lỗi (tập dev), thường bằng cách đổi một hằng số để bù cho phép tính sai ở chỗ khác, nhưng chỉ
+viên không có lỗi (tập dev, nhãn đã rà soát), thường bằng cách đổi một hằng số để bù cho phép tính sai ở chỗ khác, nhưng chỉ
 \PavmechReviewedFaultLineFixable\% tại dòng lỗi thật (lỗi hai dòng hay lỗi thiếu mã không sửa được bằng một thay đổi nhỏ).
 Đây là hiện tượng ``bản vá hợp lệ bề ngoài''~\cite{qi2015kali,smith2015cure}, nhìn từ phía định vị lỗi: bộ kiểm thử đủ
 để \emph{gợi ý} lỗi ở đâu nhưng quá yếu để \emph{chứng minh} lỗi ở đâu.
@@ -273,9 +279,10 @@ Hình~\ref{fig:cai-tien} tóm tắt mức hơn của FailLoc so với SemLoc tr�
 chứng phản thực tế không đổi thứ hạng; mã chấm điểm lạc quan với gỡ lỗi chia đôi, bi quan với SBFL; gần một nửa nhãn bị
 dời khi rà soát (Mục~\ref{sec:overclaim}).
 \item \textbf{RQ2}: FailLoc thắng SemLoc ở Acc@1 trên cả ba bộ nhãn và rẻ hơn nhiều; kiểm thử thất bại là tín hiệu chính,
-độ phủ không giúp; CovGate, FailLoc+Verify, FailLoc+Vote và phân tích tĩnh không cải thiện được.
+độ phủ không giúp; CovGate chỉ tăng Acc@3 của SemLoc, còn FailLoc+Verify, FailLoc+Vote và phân tích tĩnh không cải
+thiện được; không cách nào thu hẹp khoảng cách với FailLoc.
 \item \textbf{RQ3}: trên lỗi thật kết quả cùng chiều nhưng chưa đủ mẫu; đổi tên làm yếu phổ ràng buộc nhưng không ảnh
-hưởng dòng đoán hay FailLoc; mô hình yếu dựa vào dòng đoán nhiều hơn.
+hưởng dòng đoán hay FailLoc+Cov; ở cả năm mô hình, bỏ điểm thưởng đều làm Acc@1 của SemLoc giảm.
 \end{itemize}
 
 \begin{figure}[H]

@@ -9,9 +9,9 @@ always ranks the LLM's own guess first, and the counterfactual step never change
 \LabaudAllMoved{} of the benchmark's \LabaudAllN{} fault labels move under review (\LabaudAllBlank{} sit on blank lines),
 and on the reviewed labels SemLoc's Acc@3 lead over direct prompting vanishes. Third, a single prompt with the failing tests beats the pipeline at Acc@1 on all
 three label sets (\RqTwoRepairedAllLlmTestsDAccOne{} points on execution-repaired labels) at about a seventh of the
-tokens; ablation shows the failing tests, not per-line coverage, carry the signal. Fourth, nothing more elaborate
+tokens, though at Acc@5 SemLoc stays ahead on the original labels; ablation shows the failing tests, not per-line coverage, carry the signal. Fourth, nothing more elaborate
 closes the gap---adding coverage to SemLoc helps it only slightly, and verifying candidate lines with test-passing
-patches, voting, or static analysis with ruff and pyrefly do not help at all---because small test-passing patches exist at
+patches, voting, and static analysis with ruff and pyrefly do not close it---because small test-passing patches exist at
 non-faulty lines (\PavmechReviewedOtherLineFixable\% of fix attempts at non-faulty candidate lines, dev split): the tests suggest where the
 bug is but cannot prove it. Code, data, LLM logs and a replayable cache are public.
 \end{abstract}

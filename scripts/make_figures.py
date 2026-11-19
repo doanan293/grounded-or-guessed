@@ -18,9 +18,9 @@ COST_PREFIX = {"llm_direct": "direct_test_gemini_r", "semloc": "semloc_test_gemi
 GT_VI = {"original": "Nhãn gốc", "repaired": "Nhãn đã chuẩn hóa", "reviewed": "Nhãn đã rà soát"}
 LANG = "vi"  # main_en() switches to English labels and decimal points for the paper
 WIDTH = st.WIDTH_IN
-EN = {"Nhãn gốc": "Original labels", "Nhãn đã chuẩn hóa": "Normalized labels", "Nhãn đã rà soát": "Reviewed labels",
+EN = {"Nhãn gốc": "Original labels", "Nhãn đã chuẩn hóa": "Repaired labels", "Nhãn đã rà soát": "Reviewed labels",
       "Độ chính xác (%)": "Accuracy (%)", "Chênh lệch (điểm %)": "Difference (points)", "Thêm kiểm thử thất bại": "Add failing tests",
-      "Thêm độ phủ": "Add coverage", "nhãn gốc": "original labels", "nhãn đã chuẩn hóa": "normalized labels",
+      "Thêm độ phủ": "Add coverage", "nhãn gốc": "original labels", "nhãn đã chuẩn hóa": "repaired labels",
       "nhãn đã rà soát": "reviewed labels", "BugsInPy (lỗi thật)": "BugsInPy (real bugs)"}
 
 

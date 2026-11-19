@@ -19,13 +19,16 @@ kết quả (bác bỏ nếu khoảng tin cậy không nằm hẳn trên 0).
 \label{sec:du-lieu}
 
 \textbf{SemFault-250}~\cite{yang2026semloc} gồm 250 chương trình Python một hàm, mỗi chương trình có một lỗi cài vào và
-khoảng mười kiểm thử; nhóm chia cố định 50 chương trình làm tập dev (chỉ để chọn tham số) và 200 làm tập test.
+khoảng mười kiểm thử; nhóm chia cố định 50 chương trình làm tập dev (chỉ để chọn tham số) và 200 làm tập test. Trên nhãn
+đã chuẩn hóa, tập test còn \RqTwoRepairedAllSemlocN{} chương trình vì các nhãn không kiểm chứng được bị loại.
 
 \textbf{Bộ đã chuẩn hóa.} Có \GtBlankN{} dòng lỗi chuẩn là dòng trống và \GtNotExecutedN{} chương trình không có kiểm
 thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{bộ phán định sửa tối thiểu} (Hình~\ref{fig:sua-nhan}): một
 dòng là vị trí lỗi nếu một thay đổi nhỏ tại dòng đó làm \emph{mọi} kiểm thử đạt. LLM chỉ đề xuất bản sửa, kiểm thử quyết
-định; dòng lân cận chỉ được tìm khi dòng gốc không chạy tới được. Bản sửa ``nhỏ'' đổi tối đa bốn token hoặc một phần ba
-dòng; câu lệnh được thử trước dòng trống, vì điền vào dòng trống thường chỉ ghi đè câu lệnh lỗi ngay trên nó. Kết quả: \GtConfirmedN{} nhãn được xác nhận,
+định (GPT-6 luna đề xuất; các lượt chạy lại dùng Claude Sonnet 5.5 và Claude Opus 5.5); dòng lân cận chỉ được tìm khi
+dòng gốc không chạy tới được. Bản sửa ``nhỏ'' thay một dòng và đổi tối đa bốn token hoặc một phần ba dòng. Chỉ bản thay thế
+mới xác nhận được một câu lệnh; điền dòng trống hay chèn thêm một dòng (cách sửa lỗi thiếu mã) chỉ được chấp nhận khi không
+câu lệnh nào gần đó sửa được, vì dòng điền hay chèn thêm thường chỉ ghi đè câu lệnh lỗi ở chỗ khác. Kết quả: \GtConfirmedN{} nhãn được xác nhận,
 \GtCorrectedN{} được dời vị trí, \GtUnverifiedN{} chưa kiểm chứng được (giữ vị trí gốc) và \GtUnverifiableN{} bị loại;
 bộ nhãn đã chuẩn hóa còn \GtRepairedN{} chương trình.
 
@@ -87,7 +90,7 @@ SemLoc−Bonus & Như SemLoc, bỏ điểm thưởng cho dòng LLM tự đoán &
 
 \begin{figure}[H]\centering
 \input{figures/thiet-ke}
-\caption{Thiết kế thực nghiệm của so sánh chính: mọi phương pháp chạy trên cùng các chương trình của tập test, cùng mô hình, trên hai bộ nhãn, mỗi cấu hình có LLM chạy ba lần}\label{fig:thiet-ke}
+\caption{Thiết kế thực nghiệm của so sánh chính: mọi phương pháp chạy trên cùng các chương trình của tập test, cùng mô hình, trên ba bộ nhãn (gốc, đã chuẩn hóa, đã rà soát), mỗi cấu hình có LLM chạy ba lần}\label{fig:thiet-ke}
 \end{figure}
 
 \textbf{FailLoc} (Failure-guided Localization), phương pháp đề xuất của nhóm, là một lượt gọi LLM
@@ -130,7 +133,7 @@ của SemLoc cho hai tín hiệu \{dòng đoán, phổ\} (bản mở rộng thê
 \label{sec:thiet-lap}
 
 Mô hình chính là Gemini 3.8 Flash; RQ3 thêm GPT-6 luna, Claude Sonnet 5.5, gpt-oss-120b và Gemini 3.5 Flash-Lite trên
-50 chương trình cố định của tập test. SemLoc chạy ở $T = \ConstTemperature$ như bài báo; mọi lượt gọi LLM được ghi nhật ký
+một tập con cố định 50 chương trình của tập test (\ParetoSemlocGeminiThreeEightFlashN{} trên nhãn đã chuẩn hóa). SemLoc chạy ở $T = \ConstTemperature$ như bài báo; mọi lượt gọi LLM được ghi nhật ký
 và lưu đệm nên phát lại được. Mỗi cấu hình có LLM chạy 3 lần, chỉ dùng lượt qua kiểm tra sức khỏe (không còn lỗi gọi
 LLM hay lỗi ở bước kiểm chứng phản thực tế). Kết quả là trung bình $\pm$ độ lệch chuẩn qua 3 lần; so sánh cặp dùng
 $\Delta$ kèm khoảng tin cậy bootstrap theo cụm, McNemar và Wilcoxon (mục~\ref{sec:thong-ke}). Chi phí đo bằng số lượt

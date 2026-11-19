@@ -17,7 +17,7 @@ problem~\cite{qi2015kali,smith2015cure} seen from localization: the tests suffic
 \emph{prove} it.
 
 \textbf{Saturation and practice.} With the reviewed (LLM-suggested) labels one prompt reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3.
-SemFault-250's programs are single short functions, its faults are one-token mutations, and its test names state the
+SemFault-250's programs are single short functions, its faults are small local mutations, and its test names state the
 violated intent (e.g., \texttt{test\_fee\_deducted\_once\_not\_per\_participant}); much of the difficulty the original paper
 measured came from mislabels. The benchmark can no longer show that an elaborate pipeline is needed; real bugs, where
 every method stays far from the ceiling, can. For practitioners, the strongest investment is tests that state intent, as

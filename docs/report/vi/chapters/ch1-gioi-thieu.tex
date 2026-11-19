@@ -42,13 +42,13 @@ trên nhãn đã rà soát, phần hơn của SemLoc so với LLM-Direct ở Acc
 cả ba bộ nhãn với chi phí thấp hơn nhiều (Bảng~\ref{tab:cai-tien}).
 \item \textbf{Thêm phức tạp không thu hẹp khoảng cách:} kiểm thử thất bại là tín hiệu chính (Acc@3
 \AblRepairedAllTestsEffectDAccThree{} điểm so với LLM-Direct) nhưng quá yếu để \emph{làm trọng tài}: bản sửa nhỏ làm
-mọi kiểm thử đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi.
+mọi kiểm thử đạt ở \PavmechReviewedOtherLineFixable\% lần thử tại dòng không có lỗi (tập dev, nhãn đã rà soát).
 \item \textbf{Bảng kiểm tra bảy mục} cho đánh giá định vị lỗi bằng LLM và gói tái hiện (Docker, bộ đệm lượt gọi LLM).
 \end{enumerate}
 
 \begin{table}[H]
 \centering
-\caption{Cải tiến so với SemLoc trên cùng 200 chương trình tập test, Gemini 3.8 Flash, trung bình ba lần chạy}
+\caption{Cải tiến so với SemLoc trên tập test (200 chương trình, \RqTwoRepairedAllSemlocN{} với nhãn đã chuẩn hóa), Gemini 3.8 Flash, trung bình ba lần chạy}
 \label{tab:cai-tien}
 {\setstretch{1.15}\small
 \begin{tabularx}{\linewidth}{@{}Xccl@{}}
@@ -60,7 +60,7 @@ Acc@3, nhãn đã chuẩn hóa (\%) & \RqTwoRepairedAllSemlocAccThreeMean & \tex
 Acc@1, nhãn gốc (\%) & \RqTwoOriginalAllSemlocAccOneMean & \textbf{\RqTwoOriginalAllLlmTestsAccOneMean} & \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo; \RqTwoOriginalAllLlmTestsDAccOneHi] \\
 Nghìn token mỗi CT & \CostSemlocTokensK & \textbf{\CostLlmTestsTokensK} & -- \\
 Lượt gọi LLM mỗi CT & \CostSemlocCalls & \textbf{\CostLlmTestsCalls} & -- \\
-Lặp và kiểm định & một lần chạy & ba lần, khoảng tin cậy & -- \\
+Lặp và kiểm định & bài báo gốc: một lần chạy & ba lần, khoảng tin cậy & -- \\
 \bottomrule
 \end{tabularx}}
 \end{table}

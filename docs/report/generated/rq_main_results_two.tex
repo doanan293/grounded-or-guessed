@@ -1,12 +1,12 @@
-\begin{tabular}{lrrrrr}
+\begin{tabular}{lrrrrrrr}
 \toprule
- & \multicolumn{2}{c}{Original ($n=200$)} & \multicolumn{2}{c}{Repaired ($n=190$)} & \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}
-Method & Acc@1 & Acc@3 & Acc@1 & Acc@3 & k tokens \\
+ & \multicolumn{3}{c}{Original ($n=200$)} & \multicolumn{3}{c}{Repaired ($n=190$)} & \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Method & Acc@1 & Acc@3 & Acc@5 & Acc@1 & Acc@3 & Acc@5 & k tokens \\
 \midrule
-SBFL (Ochiai) & 3.0 & 15.5 & 3.7 & 18.4 & 0 \\
-LLM-Direct & 40.0 & 43.0 & 58.8 & 64.9 & 2.5 \\
-SemLoc & 36.8 & 60.3 & 53.9 & 76.0 & 14.0 \\
-FailLoc (ours) & 44.5 & 67.5 & 64.2 & 90.5 & 2.0 \\
+SBFL (Ochiai) & 3.0 & 15.5 & 48.0 & 3.7 & 18.4 & 67.9 & 0 \\
+LLM-Direct & 40.0 & 43.0 & 43.2 & 58.8 & 64.9 & 65.1 & 2.5 \\
+SemLoc & 36.8 & 60.3 & 75.0 & 53.9 & 76.0 & 82.8 & 14.0 \\
+FailLoc (ours) & 44.5 & 67.5 & 70.3 & 64.2 & 90.5 & 92.5 & 2.0 \\
 \bottomrule
 \end{tabular}

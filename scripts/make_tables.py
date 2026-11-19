@@ -148,7 +148,7 @@ def rq2_table() -> str:
 
 
 def main_results_table(sets: tuple = ("original", "repaired", "reviewed"), with_coverage: bool = True) -> str:
-    """Table II: the headline comparison on the three ground truths (Acc@1 / Acc@3, mean of 3 repeats) and cost."""
+    """Table II: the headline comparison on the three ground truths (Acc@1 / Acc@3 / Acc@5, mean of 3 repeats) and cost."""
     rows = {(r["gt"], r["method"]): r for r in _rows("rq2_ours.csv") if r.get("subset", "all") == "all"}
     cost = _rows("llm_cost.csv")
     tok = lambda prefix: (f"{sum(float(r['tokens_per_program']) for r in cost if r['run_id'].startswith(prefix)) / 1000 / max(1, sum(1 for r in cost if r['run_id'].startswith(prefix))):.1f}"
@@ -160,14 +160,14 @@ def main_results_table(sets: tuple = ("original", "repaired", "reviewed"), with_
     n = {g: rows[(g, "semloc")]["n"] for g in sets}
     title = {"original": "Original", "repaired": "Repaired", "reviewed": "Reviewed"}
     k = len(sets)
-    lines = [r"\begin{tabular}{l" + "rr" * k + "r}", r"\toprule",
-             " & " + " & ".join(rf"\multicolumn{{2}}{{c}}{{{title[g]} ($n={n[g]}$)}}" for g in sets) + r" & \\",
-             "".join(rf"\cmidrule(lr){{{2 + 2 * i}-{3 + 2 * i}}}" for i in range(k)),
-             "Method & " + " & ".join(["Acc@1 & Acc@3"] * k) + r" & k tokens \\", r"\midrule"]
+    lines = [r"\begin{tabular}{l" + "rrr" * k + "r}", r"\toprule",
+             " & " + " & ".join(rf"\multicolumn{{3}}{{c}}{{{title[g]} ($n={n[g]}$)}}" for g in sets) + r" & \\",
+             "".join(rf"\cmidrule(lr){{{2 + 3 * i}-{4 + 3 * i}}}" for i in range(k)),
+             "Method & " + " & ".join(["Acc@1 & Acc@3 & Acc@5"] * k) + r" & k tokens \\", r"\midrule"]
     for m, name, prefix in methods:
         if m == "llm_coverage" and not with_coverage:
             continue
-        cells = [f"{pct(rows[(g, m)]['acc1_mean'])} & {pct(rows[(g, m)]['acc3_mean'])}" for g in sets]
+        cells = [" & ".join(pct(rows[(g, m)][f"acc{k}_mean"]) for k in (1, 3, 5)) for g in sets]
         lines.append(f"{name} & {' & '.join(cells)} & {tok(prefix) if prefix else '0'} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(lines) + "\n"

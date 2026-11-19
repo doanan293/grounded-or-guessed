@@ -12,17 +12,18 @@ with the paper's own model (Claude Sonnet~4.6) on the dev split.
 
 \textbf{Repaired (tests decide).}
 \GtBlankN{} of the 250 ground-truth lines are blank and \GtNotExecutedN{} programs have no failing test reaching the
-fault line. We re-derive fault locations with a \emph{minimal-fix oracle}: a line is a fault location if replacing it (or
-filling a blank line, for omissions) with a small edit makes every test pass. An edit is small if its token-level edit
+fault line. We re-derive fault locations with a \emph{minimal-fix oracle}: a line is a fault location if replacing it
+with a small edit makes every test pass. An edit is small if its token-level edit
 distance to the original line (tokens are identifiers, numbers and single punctuation characters) is at most four
 (the benchmark swaps small expressions such as \texttt{len(tail)} for \texttt{window}) or at most a third of the line's
 tokens. For each program: (1) for each ground-truth line, an LLM proposes candidate edits
 (GPT-6 luna, two attempts at $T=\ConstTemperature$, then up to four; a second pass with Claude Sonnet~5.5 for lines still
 unverified; a last pass with Claude Opus~5.5 for the programs whose label sits on a blank line) and the tests
-decide. Statements are tried before blank lines: filling a blank line counts only when no statement nearby can be
-fixed, since otherwise the filled line merely overrides the faulty statement; (2) a ground-truth line that admits a passing small edit is \emph{confirmed};
-(3) only if no failing test reaches the original line, lines within four of it are searched and the closest line with
-the smallest passing edit replaces it (\emph{corrected}); (4) otherwise the line stays \emph{unverified}. The oracle
+decide. Only a replacement confirms a statement; filling a blank line or inserting a line (the fix for an omission, one
+short statement) counts only when no statement nearby can be fixed, since an added line can merely override a faulty
+statement elsewhere; (2) a ground-truth line that admits a passing small edit is \emph{confirmed};
+(3) only if no failing test reaches the original line, lines within four of it are searched and the line(s) with
+the smallest passing edit replace it (\emph{corrected}); (4) otherwise the line stays \emph{unverified}. The oracle
 confirms \GtConfirmedN{} locations and corrects \GtCorrectedN; \GtUnverifiedN{} reachable lines keep their original labels
 (no proposed edit passed), and \GtUnverifiableN{} programs cannot be verified and are dropped, leaving \GtRepairedN{}
 programs. Because executed labels are never

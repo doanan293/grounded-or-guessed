@@ -6,7 +6,8 @@
 | `paper.pdf` | Bài báo tiếng Anh (IEEEtran, bản arXiv) |
 
 Chỉ có một báo cáo final. Hai lần báo cáo tiến độ (18–19/11 và 25–26/11/2026) chỉ trình bày bằng slide:
-`docs/presentation/bao-cao-lan-1.pptx` và `docs/presentation/bao-cao-lan-2.pptx` (kèm bản PDF cùng tên).
+`docs/presentation/slide-lan-1.pptx` và `docs/presentation/slide-lan-2.pptx` (kèm bản PDF cùng tên); slide bảo vệ là
+`docs/presentation/slide-bao-ve.pptx`.
 
 Dựng lại: `make -C docs/report vi paper`; `make -C docs/report check` dựng cả hai và báo lỗi nếu còn trích dẫn/tham
 chiếu chưa định nghĩa hoặc số gõ tay. Mọi con số là macro trong `generated/numbers-vi.tex` / `generated/numbers.tex`,

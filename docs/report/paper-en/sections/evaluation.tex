@@ -81,7 +81,7 @@ line off.
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{../generated/fig_rq2_main.pdf}
-\caption{Main comparison on the test split (Gemini 3.8 Flash, mean of three runs): Acc@1 (solid) and Acc@3 (light) on the original and the execution-normalized labels; whiskers are the standard deviation across runs. FailLoc in orange, SemLoc in blue.}
+\caption{Main comparison on the test split (Gemini 3.8 Flash, mean of three runs): Acc@1 (solid) and Acc@3 (light) on the original and the repaired labels; whiskers are the standard deviation across runs. FailLoc in orange, SemLoc in blue.}
 \label{fig:main}
 \end{figure*}
 
@@ -93,11 +93,13 @@ Acc@1 on all three label sets: \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOrigina
 [\RqTwoRepairedAllLlmTestsDAccThreeLo, \RqTwoRepairedAllLlmTestsDAccThreeHi] (repaired) and
 \RqTwoReviewedAllLlmTestsDAccThree{} [\RqTwoReviewedAllLlmTestsDAccThreeLo, \RqTwoReviewedAllLlmTestsDAccThreeHi]
 (reviewed); over all original labels, which include faults no failing test reaches, the Acc@3 gain
-(\RqTwoOriginalAllLlmTestsDAccThree) has a CI touching zero, while on reached faults it is
+(\RqTwoOriginalAllLlmTestsDAccThree) has a CI that includes zero, while on reached faults it is
 \RqTwoOriginalExecutableLlmTestsDAccThree{} [\RqTwoOriginalExecutableLlmTestsDAccThreeLo,
 \RqTwoOriginalExecutableLlmTestsDAccThreeHi]. It costs \CostLlmTestsTokensK k tokens per program against SemLoc's
-\CostSemlocTokensK k. On the reviewed labels it reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3: with reviewed
-(LLM-suggested) labels, the benchmark is nearly saturated by one prompt.
+\CostSemlocTokensK k. At Acc@5 FailLoc leads on the repaired labels (\RqTwoRepairedAllLlmTestsAccFiveMean\% against
+\RqTwoRepairedAllSemlocAccFiveMean\%) but not on the original ones, where SemLoc is higher
+(\RqTwoOriginalAllSemlocAccFiveMean\% against \RqTwoOriginalAllLlmTestsAccFiveMean\%); FailLoc returns only five lines. On the reviewed labels it reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3: with reviewed
+(LLM-suggested) labels, the benchmark is saturated by one prompt.
 
 \begin{table*}[!t]
 \centering
@@ -150,7 +152,7 @@ answer on the reviewed labels, but lowers Acc@3 on the repaired (\VoteRepairedVo
 \begin{table*}[!t]
 \centering
 \caption{Additions compared with the method they extend: $\Delta$ in points (test rows: three repeats with
-\ConstCiLevel\% cluster-bootstrap CIs; dev rows: 50 programs, three repeats)}
+\ConstCiLevel\% cluster-bootstrap CIs; dev rows: the dev split, three repeats)}
 \label{tab:addons}
 \resizebox{0.85\textwidth}{!}{\input{../generated/rq_addons}}
 \end{table*}
@@ -241,11 +243,12 @@ leaves test names intact, so they still state the intent.
 \resizebox{0.8\textwidth}{!}{\input{../generated/rq3_renamed}}
 \end{table*}
 
-\textbf{Model families.} On the subset (Table~\ref{tab:fam}; no CIs), weaker models lean harder on the guess: without
-the bonus, Flash-Lite's Acc@1 falls from \FamRepairedGeminiThreeFiveFlashLiteSemlocAccOneMean\% to
-\FamRepairedGeminiThreeFiveFlashLiteSemlocNoPriorAccOneMean\% and gpt-oss-120b's from
-\FamRepairedGptOssOneTwoZeroBSemlocAccOneMean\% to \FamRepairedGptOssOneTwoZeroBSemlocNoPriorAccOneMean\%; the subset is too
-small to rank models on this effect.
+\textbf{Models.} On the subset (Table~\ref{tab:fam}; no CIs), every model leans on the guess: without the bonus,
+SemLoc's Acc@1 falls on all five, by amounts that differ widely and do not follow model strength (Gemini 3.8 Flash from
+\FamRepairedGeminiThreeEightFlashSemlocAccOneMean\% to \FamRepairedGeminiThreeEightFlashSemlocNoPriorAccOneMean\%, GPT-6
+luna from \FamRepairedGptSixLunaSemlocAccOneMean\% to \FamRepairedGptSixLunaSemlocNoPriorAccOneMean\%); the subset is too
+small to rank models on this effect. This study covers SemLoc and FailLoc+Cov only; FailLoc itself was run only with
+Gemini 3.8 Flash.
 
 \begin{table}[!t]
 \centering
@@ -254,9 +257,10 @@ small to rank models on this effect.
 \resizebox{\columnwidth}{!}{\input{../generated/rq3_families}}
 \end{table}
 
-\textbf{Label sets.} On all three label sets the single prompt beats SemLoc at Acc@1, coverage adds nothing and removing the
-bonus lowers SemLoc's Acc@1 (Tables~\ref{tab:main} and~\ref{tab:addons}). The only comparison that flips with the labels
-is SemLoc vs.\ LLM-Direct at Acc@3, and only on the LLM-suggested reviewed labels.
+\textbf{Label sets.} On all three label sets the single prompt beats SemLoc at Acc@1 (Table~\ref{tab:main}), adding
+coverage does not help at Acc@3 and lowers Acc@1 (Fig.~\ref{fig:ablation}), and removing the bonus lowers SemLoc's Acc@1.
+At Acc@1 and Acc@3 the only comparison that flips with the labels is SemLoc vs.\ LLM-Direct at Acc@3, on the
+LLM-suggested reviewed labels; at Acc@5, SemLoc leads FailLoc on the original labels.
 
 \subsection{Failure analysis}
 We categorize every test program automatically (Table~\ref{tab:fail}) and read a cluster-spread sample of up to four
