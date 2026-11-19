@@ -1,4 +1,4 @@
-"""Bảo vệ (~25 phút, 27 trang, no progress part): the whole story. Pages of lần 1 and lần 2 are reused by building
+"""Bảo vệ (~25 phút, 32 trang, no progress part): the whole story. Pages of lần 1 and lần 2 are reused by building
 both page sets (their E/A calls are no-ops for pages this deck lacks); four pages are new: the agenda, FailLoc+Verify
 and why tests are too weak to be the arbiter, the failure analysis, limitations and conclusion."""
 import story_lan1
@@ -10,13 +10,21 @@ from viz import GREY, INK, LAVENDER, MUTED, NAVY, ORANGE, RED, _p, _r, _t
 import make_figures as mf  # noqa: E402
 
 BAOVE = [("slide_01.svg", 1), ("muc_luc_bv.svg", 22),
+         # 1. cơ sở lý thuyết
          ("bai_toan.svg", 22), ("vi_du.svg", 22), ("sbfl_mu.svg", 22), ("lien_quan.svg", 22),
          ("semloc_tong_quan.svg", 22), ("semloc_rang_buoc.svg", 22), ("semloc_diem.svg", 22),
-         ("cau_hoi.svg", 20),
-         ("overclaim.svg", 22), ("chuan_hoa.svg", 22), ("nhan_di_dau.svg", 22),
-         ("failloc_y_tuong.svg", 22), ("failloc_vd.svg", 22), ("phuong_phap.svg", 22),
-         ("thiet_ke_tn.svg", 22), ("ba_bo_nhan.svg", 22), ("bugsinpy.svg", 22), ("ablation_kq.svg", 22), ("bo_sung_kq.svg", 22),
-         ("verify_bv.svg", 22), ("that_bai_bv.svg", 22), ("cai_tien_2.svg", 22), ("dong_gop_2.svg", 22), ("ket_luan_bv.svg", 22),
+         # 2. phương pháp giải quyết
+         ("cau_hoi.svg", 20), ("nhan_sai.svg", 22), ("chuan_hoa.svg", 22),
+         # 3. cải tiến
+         ("failloc_y_tuong.svg", 22), ("failloc_vd.svg", 22), ("bo_sung.svg", 22),
+         # 4. thực nghiệm
+         ("phuong_phap.svg", 22), ("thiet_ke_tn.svg", 22), ("ba_prompt.svg", 22),
+         # 5. kết quả
+         ("overclaim.svg", 22), ("nhan_di_dau.svg", 22), ("ba_bo_nhan.svg", 22), ("bugsinpy.svg", 22),
+         ("doi_ten.svg", 22), ("ho_mo_hinh.svg", 22), ("ablation_kq.svg", 22), ("bo_sung_kq.svg", 22),
+         ("verify_bv.svg", 22), ("that_bai_bv.svg", 22), ("cai_tien_2.svg", 22),
+         # đóng góp và kết luận
+         ("dong_gop_2.svg", 22), ("ket_luan_bv.svg", 22),
          ("slide_30.svg", 30)]
 
 
@@ -29,11 +37,11 @@ def pages(bd) -> None:
 
     # agenda, no progress part
     _title(bd, "muc_luc_bv.svg", "Nội dung trình bày")
-    items = [("1", "Cơ sở lý thuyết", "Bài toán định vị lỗi, phương pháp SBFL, nghiên cứu liên quan"),
-             ("2", "Phương pháp giải quyết", "Phương pháp SemLoc từng bước; ba câu hỏi"),
-             ("3", "Kiểm tra lại bài gốc", "Overclaim; chuẩn hóa nhãn, rà soát nhãn và duyệt mù"),
-             ("4", "Cải tiến", "Phương pháp FailLoc: một lượt gọi LLM kèm test fail"),
-             ("5", "Thực nghiệm và kết quả", "Ba bộ nhãn, lỗi thật, vì sao FailLoc thắng, phân tích thất bại"),
+    items = [("1", "Cơ sở lý thuyết", "Bài toán, SBFL, nghiên cứu liên quan, SemLoc"),
+             ("2", "Phương pháp giải quyết", "Ba câu hỏi nghiên cứu; chuẩn hóa nhãn bằng thực thi"),
+             ("3", "Cải tiến", "Phương pháp FailLoc; các hướng bổ sung"),
+             ("4", "Thực nghiệm", "Năm phương pháp, thiết kế thực nghiệm, ba mức prompt"),
+             ("5", "Kết quả", "Overclaim, ba bộ nhãn, độ bền, vì sao FailLoc thắng"),
              ("", "Đóng góp và kết luận", "Đóng góp, triết lý khoa học, hạn chế")]
     body = []
     for i, (k, head, desc) in enumerate(items):
@@ -85,6 +93,7 @@ def pages(bd) -> None:
 
     # limitations and conclusion
     _title(bd, "ket_luan_bv.svg", "Hạn chế và kết luận")
+    band(bd, "ket_luan_bv.svg", 6)
     bd.A("ket_luan_bv.svg", P("han-che", 30, 104, 430, [
         ("Hạn chế", "Bộ phán định chấp nhận bản sửa bù trừ, nên nhãn đã chuẩn hóa còn nhiễu."),
         ("", "Nhãn đã rà soát bắt đầu từ gợi ý của LLM; duyệt mù giảm nhưng không xóa hết rủi ro này."),
@@ -93,7 +102,7 @@ def pages(bd) -> None:
     ], size=14, h=300))
     bd.A("ket_luan_bv.svg", P("ket-luan", 480, 104, 450, [
         ("Kết luận", "Hạng 1 của SemLoc là dòng LLM đoán, trong khi bài báo quy công cho bằng chứng thực thi (overclaim)."),
-        ("", "Một prompt có test fail (FailLoc) chính xác hơn và rẻ hơn trên cả ba bộ nhãn, và trên lỗi thật ở Acc@3."),
+        ("", "Một prompt có test fail (FailLoc) chính xác hơn và rẻ hơn trên cả ba bộ nhãn; trên lỗi thật cùng chiều ở Acc@3 nhưng mẫu nhỏ."),
         ("", "Test đủ để gợi ý lỗi nhưng quá yếu để làm trọng tài, nên thêm bước kiểm chứng không giúp."),
         ("Hướng tiếp", "Bộ dữ liệu có nhãn kiểm chứng tốt hơn và test mạnh hơn; lỗi thật từ nhiều dự án; giấu tên test để đo "
                        "phần LLM dựa vào tên."),
@@ -104,6 +113,12 @@ def notes(bd) -> dict:
     m = bd._m
     n1, n2 = story_lan1.notes(bd), story_lan2.notes(bd)
     out = {**n2, **n1}
+    out["cau_hoi"] = ("Từ đó nhóm đặt ba câu hỏi nghiên cứu, là nội dung 2. RQ1 tái hiện và kiểm tra cách đánh giá của bài "
+                      "gốc. RQ2 hỏi LLM thật sự cần gì, so phương pháp FailLoc với phương pháp SemLoc. RQ3 kiểm tra độ bền "
+                      "trên lỗi thật, mã đổi tên và năm mô hình.")
+    out["thiet_ke_tn"] = ("Để so sánh công bằng, mọi phương pháp chạy trên cùng các chương trình của tập test với Gemini 3.8 "
+                          "Flash. Mỗi cấu hình chạy 3 lần, kết quả báo trên ba bộ nhãn, kèm khoảng tin cậy 95% tính bằng "
+                          "bootstrap.")
     out["slide_01"] = ("Chào thầy và các bạn, nhóm M9 xin trình bày đề tài bằng chứng hay phỏng đoán: tái hiện và đánh giá "
                        "việc định vị lỗi ngữ nghĩa trong mã nguồn bằng mô hình ngôn ngữ lớn.")
     out["muc_luc_bv"] = ("Bài trình bày đi theo năm phần thầy yêu cầu: cơ sở lý thuyết, phương pháp của bài gốc SemLoc, phần "
@@ -117,7 +132,7 @@ def notes(bd) -> dict:
                           "đúng; thanh cam là chương trình mà phổ vi phạm đúng nhưng điểm thưởng làm sai. Đọc từng ca, nhóm "
                           "tìm ra năm nguyên nhân sai, liệt kê bên phải.")
     out["ket_luan_bv"] = ("Tóm lại, hạng 1 của SemLoc là dòng LLM đoán và bài báo overclaim về nguồn gốc độ chính xác. FailLoc "
-                          "chính xác hơn và rẻ hơn trên cả ba bộ nhãn và trên lỗi thật. Hạn chế lớn nhất là chất lượng nhãn và test của "
+                          "chính xác hơn và rẻ hơn trên cả ba bộ nhãn, và cùng chiều trên lỗi thật. Hạn chế lớn nhất là chất lượng nhãn và test của "
                           "bộ dữ liệu, cũng là hướng tiếp theo.")
     out["dong_gop_2"] = ("Nhóm có năm đóng góp, từ việc chỉ ra hạng 1 của SemLoc là dòng đoán đến bảng kiểm tra và gói tái "
                          "hiện. Triết lý khoa học: bằng chứng thực thi là trọng tài, nhưng phải đo nó đóng góp bao nhiêu, luôn "

@@ -1,4 +1,4 @@
-# Building the decks (`bao-cao-lan-1/2.pptx`, `bao-ve.pptx`)
+# Building the decks (`slide-lan-1/2.pptx`, `slide-bao-ve.pptx`)
 
 The deck fills `docs/presentation/template-vi.pptx` (Slidesgo template — not redistributed here; download it from Slidesgo; the CREDITS line on the last page is removed from the exported deck by `strip_credits.py`)
 through ppt-master's Edit Native PPTX route. `make_decks.sh [lan1] [lan2] [baove]` builds, checks and exports

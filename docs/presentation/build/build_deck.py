@@ -57,7 +57,7 @@ TITLE_VI = ("Bằng chứng hay phỏng đoán: Tái hiện và đánh giá vi�
 TITLE_EN = "Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization"
 OCCASION = {"lan1": "Báo cáo lần 1 · 18–19/11/2026", "lan2": "Báo cáo lần 2 · 25–26/11/2026",
             "baove": "Bảo vệ tiểu luận · 12/2026"}
-OUT_NAME = {"lan1": "bao-cao-lan-1.pptx", "lan2": "bao-cao-lan-2.pptx", "baove": "bao-ve.pptx"}
+OUT_NAME = {"lan1": "slide-lan-1.pptx", "lan2": "slide-lan-2.pptx", "baove": "slide-bao-ve.pptx"}
 DECK = "lan1"
 PAGES: list = []
 
@@ -290,7 +290,7 @@ def build() -> None:
                                  "lúc sập)."),
                    ("Cách làm:", "gom stack trace, đếm hàm nào hay xuất hiện thành bảng xếp hạng hàm đáng nghi, rồi đưa "
                                  "bảng vào prompt hỏi LLM lỗi ở đâu."),
-                   ("Kết quả:", "38 lỗi thật, chỉ đúng chỗ lỗi 71%."),
+                   ("Kết quả:", "38 lỗi thật, xác định đúng chỗ lỗi ở 71%."),
                    ("Nhóm học được:", "đưa bằng chứng thật vào prompt giúp LLM trúng hơn. Nhóm thử FailLoc: 1 prompt có test fail "
                                       "thay cho quy trình nhiều bước của SemLoc.")]))):
         out, y = [], 298

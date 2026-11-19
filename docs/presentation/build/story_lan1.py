@@ -14,10 +14,10 @@ from viz import GREY, INK, LAVENDER, MUTED, NAVY, ORANGE, RED, _p, _r, _t
 LAN1 = [("slide_01.svg", 1), ("muc_luc.svg", 22),
         ("bai_toan.svg", 22), ("vi_du.svg", 22), ("sbfl_cong_thuc.svg", 22), ("sbfl_mu.svg", 22), ("lien_quan.svg", 22),
         ("semloc_tong_quan.svg", 22), ("semloc_rang_buoc.svg", 22), ("semloc_diem.svg", 22),
-        ("cau_hoi.svg", 20),
-        ("overclaim.svg", 22), ("nhan_sai.svg", 22), ("chuan_hoa.svg", 22),
-        ("failloc_y_tuong.svg", 22), ("failloc_vd.svg", 22), ("phuong_phap.svg", 22),
-        ("thiet_ke_tn.svg", 22), ("ket_qua.svg", 22), ("cai_tien.svg", 22),
+        ("cau_hoi.svg", 20), ("nhan_sai.svg", 22), ("chuan_hoa.svg", 22),
+        ("failloc_y_tuong.svg", 22), ("failloc_vd.svg", 22),
+        ("phuong_phap.svg", 22), ("thiet_ke_tn.svg", 22),
+        ("overclaim.svg", 22), ("ket_qua.svg", 22), ("cai_tien.svg", 22),
         ("tien_do.svg", 22), ("slide_30.svg", 30)]
 
 PROGRESS = [("Tài liệu, bộ từ khóa, ba bài tiêu biểu (nội dung 1)", "Đã xong", "Lần 1"),
@@ -113,11 +113,11 @@ def pages(bd) -> None:
 
     # 2. agenda: the teacher's five parts
     _title(bd, "muc_luc.svg", "Nội dung trình bày")
-    items = [("1", "Cơ sở lý thuyết", "Bài toán, lỗi ngữ nghĩa, phương pháp SBFL, nghiên cứu liên quan"),
-             ("2", "Phương pháp giải quyết", "Phương pháp SemLoc của bài gốc từng bước; ba câu hỏi nghiên cứu"),
-             ("3", "Kiểm tra lại bài gốc", "Điểm thưởng quyết định hạng 1; chuẩn hóa nhãn"),
-             ("4", "Cải tiến", "Phương pháp FailLoc: một lượt gọi LLM kèm test fail"),
-             ("5", "Thực nghiệm và kết quả", "Thiết kế, kết quả chính, cải tiến so với phương pháp SemLoc"),
+    items = [("1", "Cơ sở lý thuyết", "Bài toán, phương pháp SBFL, nghiên cứu liên quan, phương pháp SemLoc"),
+             ("2", "Phương pháp giải quyết", "Ba câu hỏi nghiên cứu; chuẩn hóa nhãn bằng thực thi"),
+             ("3", "Cải tiến", "Phương pháp FailLoc: một lượt gọi LLM kèm test fail"),
+             ("4", "Thực nghiệm", "Năm phương pháp, cùng chương trình, cùng mô hình, ba lần chạy"),
+             ("5", "Kết quả", "Điểm thưởng quyết định hạng 1; FailLoc so với SemLoc"),
              ("", "Tiến độ", "Việc đã xong, việc đang hoàn thiện và lịch các tuần sau")]
     body = []
     for i, (k, head, desc) in enumerate(items):
@@ -227,7 +227,7 @@ def pages(bd) -> None:
                                                       "nhau; ở đây là so test pass với test fail.")]),
              ("Sự cố + LLM (2026)", [("Bài toán", "app Java lớn sập hàng nghìn lần mỗi tuần, mỗi lần có stack trace."),
                                       ("Cách làm", "gom stack trace thành bảng hàm đáng nghi, đưa bảng vào prompt."),
-                                      ("Kết quả", "38 lỗi thật, chỉ đúng chỗ lỗi 71%."),
+                                      ("Kết quả", "38 lỗi thật, xác định đúng chỗ lỗi ở 71%."),
                                       ("Nhóm áp dụng", "đưa thẳng bằng chứng có sẵn vào prompt; nhóm đưa thông báo lỗi của "
                                                        "test fail vào prompt, đó là phương pháp FailLoc.")])]
     for k, (head, blocks) in enumerate(cards):
@@ -237,7 +237,7 @@ def pages(bd) -> None:
 
     # 8. SemLoc overview
     _title(bd, "semloc_tong_quan.svg", "Phương pháp SemLoc: LLM viết ràng buộc, chạy test để kiểm chứng")
-    band(bd, "semloc_tong_quan.svg", 2)
+    band(bd, "semloc_tong_quan.svg", 1)
     steps = ["1. LLM viết\nràng buộc", "2. Chèn\nvào mã", "3. Chạy\nbộ test", "4. Chấm điểm\ntừng dòng", "5. LLM vá thử,\nchạy lại test"]
     bd.A("semloc_tong_quan.svg", viz.pipeline("quy-trinh-semloc", 40, 108, steps, box_w=158, gap=22, box_h=72))
     expl = ["Điều kiện phải đúng\nnếu mã chạy đúng", "Mỗi ràng buộc thành\nmột lệnh kiểm tra", "Ghi ràng buộc nào bị\nvi phạm trong test nào",
@@ -260,7 +260,7 @@ def pages(bd) -> None:
     bl = bo["label_lines"][0]
     bwin = list(range(55, 77))
     _title(bd, "semloc_rang_buoc.svg", f"Bước 1 và 2 trên ví dụ 2: LLM đoán dòng {bo['guess_line']}, viết bốn ràng buộc")
-    band(bd, "semloc_rang_buoc.svg", 2)
+    band(bd, "semloc_rang_buoc.svg", 1)
     blines = [_cut(bcode[n][4:], 72) for n in bwin]  # drop the function body's indent; only the log line is long
     bd.A("semloc_rang_buoc.svg", viz.code_block("ma-co-kiem-tra", 30, 100, blines, first_no=bwin[0], fs=10.5, width=640,
                                                 highlight={bl, bl + 1}, inserted=inserted_checks(bo)))
@@ -276,7 +276,7 @@ def pages(bd) -> None:
 
     # 10. SemLoc steps 3-4 on blend_orders: violations, Ochiai, region weight, line score
     _title(bd, "semloc_diem.svg", "Bước 3 và 4 trên ví dụ 2: đếm vi phạm rồi chấm điểm từng dòng")
-    band(bd, "semloc_diem.svg", 2)
+    band(bd, "semloc_diem.svg", 1)
     kind = {"LINE": "một dòng", "AFTER_BRANCH": "cuối if", "LOOP_TAIL": "cuối vòng lặp", "ANY_RETURN": "mọi return"}
     where = lambda c: f"{kind.get(c['region'], c['region'])} → {scored_line(bo, c)}"
     rows_ct = [{"id": c["id"], "where": where(c), "expr": _cut(c["expr"].replace("__1", "").replace("__cbfl_result", "ret"), 30), "fail": c["ef"], "pass": c["ep"],
@@ -286,7 +286,7 @@ def pages(bd) -> None:
         "Điểm dòng = Ochiai × hệ số vùng",
         "LLM chọn chỗ đặt; SemLoc quy về một dòng và nhân hệ số:",
         "cuối nhánh if → câu if: 1,0",
-        "cuối vòng lặp → câu cuối trong thân vòng lặp: 0,9",
+        "cuối vòng lặp → câu cuối thân vòng lặp (cả khối if): 0,9",
         "một dòng → chính dòng đó: 0,6 (vì LLM hay đoán sai)",
         "mọi return → các dòng return: 0,3 (vì quá chung)",
         "Bảng hệ số do tác giả tự đặt trong mã nguồn."], size=15))
@@ -300,7 +300,7 @@ def pages(bd) -> None:
 
     # 12. research questions [content 2]
     bd.E("cau_hoi.svg", [
-        ("Popular programming languages", "Ba câu hỏi nghiên cứu"),
+        ("Popular programming languages", "Ba câu hỏi nghiên cứu và một câu hỏi chung"),
         ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: số công bố còn đúng", "khi chấm công bằng, chuẩn hóa nhãn?"]),
         ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM cần gì? Phương pháp FailLoc", "so với phương pháp SemLoc"]),
         ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, mã đổi tên,", "các họ mô hình khác"]),
@@ -312,7 +312,7 @@ def pages(bd) -> None:
     # 13. the bonus decides rank 1, and the paper does not say so (overclaim)
     share, n_pairs = _guess_rank1_share()
     _title(bd, "overclaim.svg", f"Điểm thưởng {m('ConstPriorWeight')} đưa dòng LLM đoán lên hạng 1; bài báo không nói")
-    band(bd, "overclaim.svg", 3)
+    band(bd, "overclaim.svg", 5)
     rs = sorted(bo["line_scores"], key=lambda r: r["rank"])[:5]
     ser = []
     for r in sorted(rs, key=lambda r: r["line"]):
@@ -341,7 +341,7 @@ def pages(bd) -> None:
 
     # 14. the labels have problems
     _title(bd, "nhan_sai.svg", "Chính nhãn của bộ dữ liệu cũng có vấn đề")
-    band(bd, "nhan_sai.svg", 3)
+    band(bd, "nhan_sai.svg", 2)
     bd.A("nhan_sai.svg", viz.big_number("nhan-trong", 40, 110, m("GtBlankN"), "nhãn gốc nằm trên dòng trống,\nnơi không thể có lỗi",
                                         color=RED, size=56, w=300))
     bd.A("nhan_sai.svg", viz.big_number("nhan-khong-chay", 350, 110, m("GtNotExecutedN"),
@@ -370,7 +370,7 @@ def pages(bd) -> None:
 
     # 15. label normalization by execution
     _title(bd, "chuan_hoa.svg", "Chuẩn hóa nhãn: dòng nào sửa xong làm test pass là dòng lỗi")
-    band(bd, "chuan_hoa.svg", 3)
+    band(bd, "chuan_hoa.svg", 2)
     # a flowchart read top-down: each question on the left, "có" goes right to its outcome, "không" goes down
     qs = ["Sửa nhỏ ngay tại nhãn có làm mọi test pass?", "Có test fail nào chạy tới dòng nhãn gốc?",
           "Sửa nhỏ ở dòng lân cận có làm mọi test pass?"]
@@ -400,11 +400,12 @@ def pages(bd) -> None:
                                                                      "mọi test pass thì đó là dòng lỗi. Nhóm bỏ "
                                                                      f"{m('GtUnverifiableN')} nhãn không kiểm chứng được. Từ "
                                                                      "đây mọi kết quả đều báo trên cả nhãn gốc lẫn nhãn đã chuẩn "
-                                                                     "hóa.")], size=14))
+                                                                     + ("hóa." if bd.EARLY() else "hóa, và nhãn đã rà soát."))],
+                                     size=14))
 
     # 16. FailLoc: the idea
     _title(bd, "failloc_y_tuong.svg", "Phương pháp FailLoc hỏi LLM đúng một lần, kèm thông tin test fail")
-    band(bd, "failloc_y_tuong.svg", 4)
+    band(bd, "failloc_y_tuong.svg", 3)
     bd.A("failloc_y_tuong.svg", _t(40, 124, "Phương pháp SemLoc: năm bước", size=17, fill=NAVY, weight="bold"))
     bd.A("failloc_y_tuong.svg", viz.pipeline("semloc-5", 40, 136, ["Viết\nràng buộc", "Chèn\nvào mã", "Chạy\nbộ test",
                                                                     "Chấm\nđiểm", "Vá thử"],
@@ -427,7 +428,7 @@ def pages(bd) -> None:
 
     # 17. FailLoc on the running example
     _title(bd, "failloc_vd.svg", f"Trên ví dụ 1, phương pháp FailLoc xếp dòng lỗi {gt} ở hạng 1")
-    band(bd, "failloc_vd.svg", 4)
+    band(bd, "failloc_vd.svg", 3)
     pl = va["failloc_prompt"].split("\n")
     keep = [l for l in pl if not (l[:1].isdigit() and ": " in l)] [:2]
     code_lines = [l for l in pl if l[:1].isdigit() and ": " in l and int(l.split(":")[0]) in win]
@@ -440,7 +441,8 @@ def pages(bd) -> None:
     ans = ", ".join(str(x) for x in va["failloc_top5"])
     bd.A("failloc_vd.svg", P("cau-tra-loi", 630, 100, 300, [
         ("LLM trả về", f"[{ans}]. Dòng {va['failloc_top5'][0]} đứng hạng 1, đúng dòng lỗi theo nhãn."),
-        ("", f"Cùng chương trình này, phương pháp SemLoc xếp dòng {va['guess_line']}, dòng LLM đoán, ở hạng 1 (sai) vì điểm thưởng."),
+        ("", f"Cùng chương trình này (lượt chạy 1), phương pháp SemLoc xếp dòng {va['guess_line']}, dòng LLM đoán, ở hạng 1 (sai) "
+             "vì điểm thưởng."),
         ("", "Một ví dụ chỉ để minh họa; kết quả trên 200 chương trình ở phần 5."),
     ], size=14, h=380))
 
@@ -458,11 +460,13 @@ def pages(bd) -> None:
         note="Lượt gọi LLM: trung bình mỗi chương trình trên tập test với Gemini 3.8 Flash."))
 
     # 19. design
-    _title(bd, "thiet_ke_tn.svg", "Thiết kế thực nghiệm: cùng chương trình, cùng mô hình, hai bộ nhãn")
-    band(bd, "thiet_ke_tn.svg", 5)
+    three = not bd.EARLY()  # lần 1 had the original and the normalized labels only
+    _title(bd, "thiet_ke_tn.svg", "Thiết kế thực nghiệm: cùng chương trình, cùng mô hình, "
+           + ("ba bộ nhãn" if three else "hai bộ nhãn"))
+    band(bd, "thiet_ke_tn.svg", 4)
     cols = [("Dữ liệu", ["SemFault-250", "dev: 50 chương trình", "test: 200 chương trình"], GREY),
             ("Phương pháp", [name(mm) for mm in MAIN], NAVY),
-            ("Bộ nhãn", ["Nhãn gốc", "Nhãn đã chuẩn hóa", f"({m('GtRepairedN')} chương trình)"], ORANGE),
+            ("Bộ nhãn", ["Nhãn gốc", "Nhãn đã chuẩn hóa"] + (["Nhãn đã rà soát"] if three else []), ORANGE),
             ("Lặp, chỉ số", ["3 lần chạy", "Acc@1, Acc@3", "khoảng tin cậy 95%"], GREY)]
     body = []
     for k, (head, its, c) in enumerate(cols):
@@ -475,29 +479,30 @@ def pages(bd) -> None:
             body.append(_t(x - 13, 216, "×", size=26, fill=MUTED, anchor="middle"))
     bd.A("thiet_ke_tn.svg", viz._g("luoi-thiet-ke", 40, 104, 862, 210, body))
     bd.A("thiet_ke_tn.svg", P("giai-thich-thiet-ke", 40, 330, 890, [
-        ("", "Mọi phương pháp có LLM dùng cùng Gemini 3.8 Flash trên cùng 200 chương trình của tập test. Tập dev chỉ dùng "
-             "để chọn tham số, không dùng để báo kết quả."),
+        ("", "Mọi phương pháp có LLM dùng cùng Gemini 3.8 Flash trên cùng các chương trình của tập test (200 với nhãn gốc, "
+             f"{m('RqTwoRepairedAllSemlocN')} với nhãn đã chuẩn hóa). Tập dev chỉ dùng để chọn tham số, không dùng để báo kết quả."),
         ("Khoảng tin cậy", "Mỗi cấu hình chạy 3 lần. Khoảng tin cậy 95% của mức chênh lệch tính bằng bootstrap: lấy mẫu lại "
                            "các chương trình nhiều lần và xem chênh lệch dao động trong khoảng nào."),
     ], size=14))
 
     # 20. main results
-    _title(bd, "ket_qua.svg", "Phương pháp FailLoc dẫn đầu ở Acc@1 trên cả hai bộ nhãn")
+    _title(bd, "ket_qua.svg", "Phương pháp FailLoc dẫn đầu Acc@1 và Acc@3 trên cả hai bộ nhãn")
     band(bd, "ket_qua.svg", 5)
-    for k, (g, head) in enumerate((("original", "Nhãn gốc"), ("repaired", "Nhãn đã chuẩn hóa"))):
-        x = 20 + k * 300
-        bd.A("ket_qua.svg", _t(x + 140, 118, head, size=15, fill=INK, weight="bold"))
-        ser = [(name(mm), 100 * float(rq2[(g, mm)]["acc1_mean"]), ORANGE if mm == "llm_tests" else NAVY if mm == "semloc" else GREY)
-               for mm in MAIN]
-        bd.A("ket_qua.svg", viz.bars(f"bars-{g}", x, 128, 292, 300, ser, vmax=100, label_w=140))
+    widths, row_h, head_h = [180, 100, 100, 115, 115], 50, 56
+    grid = [["Phương pháp", "Gốc\nAcc@1", "Gốc\nAcc@3", "Chuẩn hóa\nAcc@1", "Chuẩn hóa\nAcc@3"]]
+    grid += [[name(mm)] + [f"{(a1 if k == 1 else a3)(g, mm)}%" for g in ("original", "repaired") for k in (1, 3)] for mm in MAIN]
+    bd.A("ket_qua.svg", bd.table("bang-ket-qua", 20, 104, widths, grid, row_h=row_h, head_h=head_h, fs=15))
+    fy = 104 + head_h + row_h * MAIN.index("llm_tests")
+    bd.A("ket_qua.svg", viz._g("khung-failloc", 20, fy, sum(widths), row_h,
+                               [_r(20, fy, sum(widths), row_h, "none", stroke=ORANGE, rx=0, sw=3.5)]))
     bd.A("ket_qua.svg", P("doc-ket-qua", 640, 104, 290, [
-        ("", "Mỗi thanh là Acc@1, tức phần trăm chương trình có dòng lỗi ở hạng 1 (tập test, Gemini 3.8 Flash, trung bình "
-             "3 lần chạy)."),
+        ("", "Acc@1: dòng lỗi ở hạng 1; Acc@3: dòng lỗi trong 3 dòng đầu (tập test, Gemini 3.8 Flash, trung bình 3 lần "
+             "chạy)."),
         ("", f"Trên nhãn đã chuẩn hóa, FailLoc hơn SemLoc {d1} điểm Acc@1, khoảng tin cậy từ "
-             f"{m('RqTwoRepairedAllLlmTestsDAccOneLo')} đến {m('RqTwoRepairedAllLlmTestsDAccOneHi')}. Ở Acc@3 là "
-             f"{a3('repaired', 'llm_tests')}% so với {a3('repaired', 'semloc')}%."),
-        ("", "Phương pháp SBFL gần như bằng 0, giống ví dụ ở phần 1."),
-    ], size=13, h=330))
+             f"{m('RqTwoRepairedAllLlmTestsDAccOneLo')} đến {m('RqTwoRepairedAllLlmTestsDAccOneHi')}, và "
+             f"{m('RqTwoRepairedAllLlmTestsDAccThree')} điểm Acc@3."),
+        ("", "Acc@1 của phương pháp SBFL gần như bằng 0, giống ví dụ ở phần 1."),
+    ], size=13, h=356))
 
     # 21. improvement over SemLoc
     ratio = float(m("CostSemlocTokensK").replace(",", ".")) / float(m("CostLlmTestsTokensK").replace(",", "."))
@@ -577,7 +582,7 @@ def notes(bd) -> dict:
                    "trình bày ở lần 2.",
         "overclaim": f"Đây là kết quả RQ1 đầu tiên. Bước cuối, có trong mã nguồn nhưng bài báo không mô tả, cộng thêm "
                      f"{m('ConstPriorWeight')} điểm cho dòng LLM đoán. Ở ví dụ 2, dòng 73 vượt lên hạng 1 với 1,80 dù dòng 72 "
-                     f"có điểm phổ cao nhất. Trên cả bộ dữ liệu, trong {n_pairs} lượt, hạng 1 của SemLoc là dòng LLM đoán ở "
+                     f"có điểm phổ cao nhất. Trên tập test, trong {n_pairs} lượt, hạng 1 của SemLoc là dòng LLM đoán ở "
                      f"{_p(100 * share, 0)}% số lượt; bỏ điểm thưởng thì Acc@1 giảm từ "
                      f"{a1('repaired', 'semloc')}% xuống {a1('repaired', 'semloc_no_prior')}%. Điểm thưởng tự nó chỉ là lựa chọn thiết "
                      "kế; chỗ overclaim là bài báo quy độ chính xác cho bằng chứng thực thi. Bước vá thử cũng không đổi thứ "
@@ -597,10 +602,10 @@ def notes(bd) -> dict:
                       "thưởng. Đây chỉ là một ví dụ, kết quả trên 200 chương trình ở phần sau.",
         "phuong_phap": "Nhóm so năm phương pháp. SBFL không dùng LLM; LLM-Direct là chế độ hỏi thẳng của chính SemLoc, chỉ có "
                        "mã nguồn; SemLoc và SemLoc bỏ điểm thưởng; và FailLoc. Mọi phương pháp có LLM dùng cùng một mô hình.",
-        "thiet_ke_tn": "Để so sánh công bằng, mọi phương pháp chạy trên cùng 200 chương trình của tập test với Gemini 3.8 Flash. "
+        "thiet_ke_tn": "Để so sánh công bằng, mọi phương pháp chạy trên cùng các chương trình của tập test với Gemini 3.8 Flash. "
                     "Mỗi cấu hình chạy 3 lần, kết quả báo trên cả nhãn gốc và nhãn đã chuẩn hóa, kèm khoảng tin cậy 95% tính "
                     "bằng bootstrap.",
-        "ket_qua": f"Đây là kết quả chính. FailLoc đứng đầu ở Acc@1 trên cả hai bộ nhãn. Trên nhãn đã chuẩn hóa, FailLoc đạt "
+        "ket_qua": f"Đây là kết quả chính. FailLoc đứng đầu ở cả Acc@1 lẫn Acc@3 trên cả hai bộ nhãn. Trên nhãn đã chuẩn hóa, FailLoc đạt "
                    f"{a1('repaired', 'llm_tests')}%, SemLoc {a1('repaired', 'semloc')}%, hơn {d1} điểm và khoảng tin cậy không "
                    "chạm 0.",
         "cai_tien": f"Gói lại những gì nhóm làm tốt hơn phương pháp SemLoc trên cùng điều kiện. FailLoc hơn {d1} điểm Acc@1 và "

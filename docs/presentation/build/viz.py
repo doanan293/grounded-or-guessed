@@ -304,7 +304,7 @@ def claim_vs_evidence(gid, x, y, w, rows: list[tuple], head=("Bài báo nói", "
 def section_band(gid, idx: int, label: str, x: float = 600, y: float = 14, w: float = 340, content: int | None = None) -> str:
     """Small band at the top right naming the part of the talk (the teacher's five parts) and, where a page answers one
     of the teacher's four required contents, that content's number."""
-    s = f"Phần {idx} · {label}" + (f" · Nội dung {content}" if content else "")
+    s = (f"Phần {idx} · " if idx else "") + label + (f" · Nội dung {content}" if content else "")
     w = max(w, text_w(s, 13, bold=True) + 40)
     x = min(x, 940 - w)
     body = [_r(x, y, w, 26, CREAM, stroke=ORANGE, rx=13, sw=1.2),

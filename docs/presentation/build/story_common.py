@@ -15,7 +15,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from method_names import name  # noqa: E402,F401
 
 MAIN = ["sbfl_ochiai", "llm_direct", "semloc", "semloc_no_prior", "llm_tests"]
-PARTS = {1: "Cơ sở lý thuyết", 2: "Phương pháp giải quyết", 3: "Kiểm tra lại bài gốc", 4: "Cải tiến", 5: "Thực nghiệm và kết quả"}
+PARTS = {1: "Cơ sở lý thuyết", 2: "Phương pháp giải quyết", 3: "Cải tiến", 4: "Thực nghiệm", 5: "Kết quả",
+         6: "Đóng góp và kết luận"}  # 1-5: the teacher's five parts; 6 is unnumbered
 
 
 def examples() -> dict:
@@ -24,7 +25,7 @@ def examples() -> dict:
 
 
 def band(bd, page: str, part: int, content: int | None = None) -> None:
-    bd.A(page, viz.section_band(f"phan-{part}", part, PARTS[part], content=content))
+    bd.A(page, viz.section_band(f"phan-{part}", part if part <= 5 else None, PARTS[part], content=content))
 
 
 def _csv(path: Path) -> list[dict]:
