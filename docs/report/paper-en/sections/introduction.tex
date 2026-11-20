@@ -20,10 +20,13 @@ Acc@1 on its SemFault-250 benchmark, far above SBFL.
 \textbf{This paper asks whether that accuracy is grounded or guessed, and whether the pipeline beats the everyday
 practice.} Answering requires more than rerunning the tool: one must check how results are scored, whether the
 benchmark's labels point at the faults, how much each signal contributes, and whether conclusions survive real bugs,
-renamed code and other models. We study \textbf{RQ1} (reproduction and evaluation audit, including the labels),
-\textbf{RQ2} (what the LLM actually needs: a single prompt with failing tests, ablations, and more elaborate additions)
-and \textbf{RQ3} (robustness on BugsInPy~\cite{widyasari2020}, renamed programs, five models and three label
-sets). Every LLM configuration runs three times, with program- and template-cluster bootstrap confidence intervals.
+renamed code and other models. We therefore ask three research questions.
+\textbf{RQ1 (reproduction):} Do SemLoc's published results reproduce, and do they still hold under fair scoring, without
+the guess bonus that the paper does not describe, and on labels checked by execution?
+\textbf{RQ2 (what the LLM needs):} Is a single prompt with the failing tests at least as accurate as SemLoc, at what
+cost, which signal drives the difference (failing tests or coverage), and do more elaborate additions help?
+\textbf{RQ3 (robustness):} Do the conclusions hold on real bugs (BugsInPy~\cite{widyasari2020}), on identifier-renamed
+programs, across five models and on all three label sets? Every LLM configuration runs three times, with program- and template-cluster bootstrap confidence intervals.
 
 The answers are short. SemLoc's first line is always the LLM's guess, because the released code adds a bonus larger than
 any spectrum score; removing it changes Acc@1 by \RqTwoRepairedAllSemlocNoPriorDAccOne{} points. Nearly half of the

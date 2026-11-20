@@ -354,9 +354,9 @@ def build() -> None:
     ])
     E("slide_20.svg", [
         ("Popular programming languages", "Câu hỏi nghiên cứu"),
-        ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: kết quả SemLoc còn đúng", "với log công bố và với Gemini?"]),
-        ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM thật sự cần gì? FailLoc", "so với SemLoc?"]),
-        ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, code đổi tên,", "các họ model khác?"]),
+        ("Neptune", "RQ1"), ("Mercury is the closest", ["Kết quả công bố của SemLoc có", "tái hiện được không, và còn giữ", "khi chấm trên nhãn chuẩn hóa?"]),
+        ("Venus", "RQ2"), ("Venus has a beautiful", ["Chỉ với mã và test fail, FailLoc", "có định vị đúng hơn SemLoc, rẻ hơn", "và các cách bổ sung thêm được gì?"]),
+        ("Earth", "RQ3"), ("Earth is the third", ["Kết luận có còn đúng trên lỗi thật,", "trên mã đã đổi tên và với", "các họ mô hình khác?"]),
         ("Saturn", "Lõi"), ("Saturn is a gas giant", ["Cách làm đơn giản (test fail", "→ LLM) có đủ tốt không?"]),
     ])
     E("slide_19.svg", [

@@ -113,9 +113,10 @@ def notes(bd) -> dict:
     m = bd._m
     n1, n2 = story_lan1.notes(bd), story_lan2.notes(bd)
     out = {**n2, **n1}
-    out["cau_hoi"] = ("Từ đó nhóm đặt ba câu hỏi nghiên cứu, là nội dung 2. RQ1 tái hiện và kiểm tra cách đánh giá của bài "
-                      "gốc. RQ2 hỏi LLM thật sự cần gì, so phương pháp FailLoc với phương pháp SemLoc. RQ3 kiểm tra độ bền "
-                      "trên lỗi thật, mã đổi tên và năm mô hình.")
+    out["cau_hoi"] = ("Từ đó nhóm đặt ba câu hỏi nghiên cứu, là nội dung 2. RQ1: kết quả công bố của SemLoc có tái hiện được "
+                      "không, và còn giữ khi chấm công bằng trên nhãn đã chuẩn hóa? RQ2: chỉ với mã nguồn và test fail, "
+                      "phương pháp FailLoc có định vị đúng hơn phương pháp SemLoc không, rẻ hơn bao nhiêu, và các cách bổ sung "
+                      "có thêm được gì? RQ3: kết luận có còn đúng trên lỗi thật, trên mã đã đổi tên và với năm họ mô hình?")
     out["thiet_ke_tn"] = ("Để so sánh công bằng, mọi phương pháp chạy trên cùng các chương trình của tập test với Gemini 3.8 "
                           "Flash. Mỗi cấu hình chạy 3 lần, kết quả báo trên ba bộ nhãn, kèm khoảng tin cậy 95% tính bằng "
                           "bootstrap.")

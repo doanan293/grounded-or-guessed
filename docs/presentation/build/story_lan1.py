@@ -132,7 +132,7 @@ def pages(bd) -> None:
     _title(bd, "bai_toan.svg", "Định vị lỗi: từ một test fail ra danh sách dòng đáng nghi")
     band(bd, "bai_toan.svg", 1)
     bd.A("bai_toan.svg", viz.pipeline("bai-toan-luong", 40, 112, ["Đầu vào\nmã nguồn + bộ test\n(có test fail)",
-                                                                   "Phương pháp\nđịnh vị lỗi", "Đầu ra\ncác dòng xếp hạng\ntừ nghi nhất"],
+                                                                   "Phương pháp\nđịnh vị lỗi", "Đầu ra\ncác dòng xếp hạng\ntừ nghi ngờ nhất"],
                                       accent=1, box_w=250, gap=45, box_h=86))
     rank_body = [_r(640, 214, 240, 150, "#FFFFFF", stroke=LAVENDER, rx=8)]
     for i, (ln, ok) in enumerate(((29, True), (25, False), (26, False))):
@@ -160,8 +160,6 @@ def pages(bd) -> None:
                           "pháp và kiểu không báo gì."),
         ("SemFault-250", "250 chương trình Python của bài gốc SemLoc, mỗi chương trình được cài đúng một lỗi ngữ nghĩa và có "
                          "khoảng mười test."),
-        ("", f"Ví dụ này dùng cho phương pháp SBFL và FailLoc. Các bước của SemLoc được minh họa trên ví dụ 2 "
-             f"({bo['program']})."),
     ], size=14, h=342))
 
     # 5. SBFL: the formula, computed by hand on line 29
@@ -301,12 +299,15 @@ def pages(bd) -> None:
     # 12. research questions [content 2]
     bd.E("cau_hoi.svg", [
         ("Popular programming languages", "Ba câu hỏi nghiên cứu và một câu hỏi chung"),
-        ("Neptune", "RQ1"), ("Mercury is the closest", ["Tái hiện: số công bố còn đúng", "khi chấm công bằng, chuẩn hóa nhãn?"]),
-        ("Venus", "RQ2"), ("Venus has a beautiful", ["LLM cần gì? Phương pháp FailLoc", "so với phương pháp SemLoc"]),
-        ("Earth", "RQ3"), ("Earth is the third", ["Độ bền: lỗi thật, mã đổi tên,", "các họ mô hình khác"]),
+        ("Neptune", "RQ1"), ("Mercury is the closest", ["Kết quả công bố của SemLoc có", "tái hiện được không, và còn giữ", "khi chấm trên nhãn chuẩn hóa?"]),
+        ("Venus", "RQ2"), ("Venus has a beautiful", ["Chỉ với mã và test fail, FailLoc", "có định vị đúng hơn SemLoc, rẻ hơn",
+                                                     "và các cách bổ sung thêm được gì?"] if bd.DECK == "baove" else
+                                                    ["Chỉ với mã và test fail, FailLoc", "có định vị đúng hơn SemLoc",
+                                                     "và rẻ hơn bao nhiêu?"]),
+        ("Earth", "RQ3"), ("Earth is the third", ["Kết luận có còn đúng trên lỗi thật,", "trên mã đã đổi tên và với", "các họ mô hình khác?"]),
         ("Saturn", "Chung"), ("Saturn is a gas giant", ["Thứ hạng đến từ bằng chứng", "thực thi hay LLM tự đoán?"]),
     ])
-    _unbold(bd, "cau_hoi.svg", "LLM cần gì?")
+    _unbold(bd, "cau_hoi.svg", "Chỉ với mã và test fail")
     band(bd, "cau_hoi.svg", 2, content=2)
 
     # 13. the bonus decides rank 1, and the paper does not say so (overclaim)
@@ -549,7 +550,7 @@ def notes(bd) -> dict:
         "bai_toan": "Bài toán định vị lỗi bắt đầu khi chạy test và thấy có test fail. Đầu vào là mã nguồn và bộ test; đầu ra "
                     "là danh sách các dòng mã xếp từ đáng nghi nhất. Nhóm đo bằng Acc@1, tức phần trăm chương trình có dòng "
                     "lỗi thật đứng hạng 1, và Acc@3 cho 3 dòng đầu. Dòng lỗi thật lấy từ nhãn của bộ dữ liệu.",
-        "vi_du": f"Đây là ví dụ 1: hàm {va['program']} trong bộ SemFault-250. Nhóm dùng nó cho SBFL và FailLoc. Chạy test thì {va['n_pass']} test "
+        "vi_du": f"Đây là ví dụ 1: hàm {va['program']} trong bộ SemFault-250. Nhóm dùng nó cho phương pháp SBFL và phương pháp FailLoc. Chạy test thì {va['n_pass']} test "
                  f"pass, {va['n_fail']} test fail. Test fail đòi tổng các phần chia bằng tổng ban đầu, nhưng int(v) ở dòng {gt} cắt "
                  "mất phần lẻ. Mã vẫn chạy bình thường nên các công cụ kiểm tra cú pháp hay kiểu không báo gì; đó là lỗi "
                  "ngữ nghĩa.",
@@ -577,9 +578,10 @@ def notes(bd) -> dict:
                        "chỗ đặt càng hẹp thì hệ số càng cao, return chỉ được 0,3. C1 và C2 giống hệt nhau về điều kiện và số "
                        f"vi phạm; C2 gắn vào câu if nên dòng lỗi {bo['label_lines'][0]} được 1,00, còn C1 là ràng buộc SemLoc "
                        f"bắt LLM đặt ở dòng nó đoán nên dòng {bo['guess_line']} chỉ được 0,60. Bảng hệ số do tác giả tự đặt.",
-        "cau_hoi": "Từ đó nhóm đặt ba câu hỏi nghiên cứu, là nội dung 2. RQ1 tái hiện và kiểm tra cách đánh giá của bài gốc. "
-                   "RQ2 hỏi LLM thật sự cần gì, so phương pháp FailLoc với phương pháp SemLoc. RQ3 kiểm tra độ bền, nhóm sẽ "
-                   "trình bày ở lần 2.",
+        "cau_hoi": "Từ đó nhóm đặt ba câu hỏi nghiên cứu, là nội dung 2. RQ1: kết quả công bố của SemLoc có tái hiện được "
+                   "không, và còn giữ khi chấm công bằng trên nhãn đã chuẩn hóa? RQ2: chỉ với mã nguồn và test fail, phương "
+                   "pháp FailLoc có định vị đúng hơn phương pháp SemLoc không, và rẻ hơn bao nhiêu? RQ3: kết luận có còn đúng "
+                   "trên lỗi thật, trên mã đã đổi tên và với các họ mô hình khác? RQ3 nhóm sẽ trình bày ở lần 2.",
         "overclaim": f"Đây là kết quả RQ1 đầu tiên. Bước cuối, có trong mã nguồn nhưng bài báo không mô tả, cộng thêm "
                      f"{m('ConstPriorWeight')} điểm cho dòng LLM đoán. Ở ví dụ 2, dòng 73 vượt lên hạng 1 với 1,80 dù dòng 72 "
                      f"có điểm phổ cao nhất. Trên tập test, trong {n_pairs} lượt, hạng 1 của SemLoc là dòng LLM đoán ở "

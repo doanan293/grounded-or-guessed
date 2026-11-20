@@ -25,12 +25,14 @@ chứng. Bài báo quy độ chính xác (Acc@1 \RqOneSemlocClaudeTZeroEightAuth
 \section{Câu hỏi nghiên cứu và đóng góp}
 \label{sec:cau-hoi}
 
-Tiểu luận hỏi ``grounded hay guessed?'' qua ba câu hỏi nghiên cứu. \textbf{RQ1 (tái hiện):} kết quả SemLoc có tái
-hiện được và đứng vững khi chấm công bằng, khi bỏ thành phần không có trong bài báo và khi kiểm tra lại nhãn (dòng lỗi
-chuẩn) không? \textbf{RQ2 (LLM cần gì):} một prompt có kiểm thử thất bại so với SemLoc về độ chính xác và chi phí ra sao,
-và các cách bổ sung (CovGate, kiểm chứng bằng bản sửa, biểu quyết, phân tích tĩnh) thêm được gì? \textbf{RQ3 (độ bền):}
-kết luận có giữ trên lỗi thật (BugsInPy~\cite{widyasari2020}), mã đổi tên định danh, năm họ mô hình và ba bộ nhãn (gốc,
-đã chuẩn hóa, đã rà soát) không? Các đóng góp chính, với số liệu sinh tự động từ mã nguồn công khai:
+Tiểu luận hỏi ``grounded hay guessed?'' qua ba câu hỏi nghiên cứu.
+\textbf{RQ1 (tái hiện):} kết quả công bố của SemLoc có tái hiện được không, và còn đứng vững khi chấm công bằng, khi bỏ
+điểm thưởng không được mô tả trong bài báo và khi kiểm tra lại nhãn (dòng lỗi chuẩn) bằng thực thi không?
+\textbf{RQ2 (LLM cần gì):} một prompt duy nhất có kiểm thử thất bại có định vị đúng ít nhất bằng SemLoc không, với chi phí
+bao nhiêu; tín hiệu nào tạo ra khác biệt (kiểm thử thất bại hay độ phủ); và các cách bổ sung (CovGate, kiểm chứng bằng
+bản sửa, biểu quyết, phân tích tĩnh) có thêm được gì không?
+\textbf{RQ3 (độ bền):} kết luận có còn đúng trên lỗi thật (BugsInPy~\cite{widyasari2020}), trên mã đã đổi tên định danh,
+với năm họ mô hình và trên cả ba bộ nhãn (gốc, đã chuẩn hóa, đã rà soát) không? Các đóng góp chính, với số liệu sinh tự động từ mã nguồn công khai:
 \begin{enumerate}
 \item \textbf{Hạng 1 của SemLoc là dòng LLM đoán:} mã nguồn cộng cho dòng LLM tự đoán một điểm thưởng lớn hơn mọi điểm
 ràng buộc mà bài báo không mô tả. Bỏ điểm thưởng, Acc@1 đổi \RqTwoRepairedAllSemlocNoPriorDAccOne{} điểm (nhãn đã chuẩn

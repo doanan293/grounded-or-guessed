@@ -4,11 +4,14 @@
 \section{Câu hỏi nghiên cứu và giả thuyết}
 \label{sec:rq}
 
-\textbf{RQ1 (tái hiện):} số liệu của SemLoc có tái hiện được không, và đổi ra sao khi chấm công bằng, bỏ thành phần
-không có trong bài báo, kiểm tra lại dòng lỗi chuẩn và đổi mô hình? \textbf{RQ2 (LLM thật sự cần gì?):} một prompt có
-kiểm thử thất bại so với SemLoc thế nào về độ chính xác và chi phí; kiểm thử thất bại hay độ phủ tạo ra khác biệt; các
-cách bổ sung và phân tích tĩnh thêm được gì; độ chính xác của SemLoc đến từ bằng chứng thực thi hay dòng LLM tự đoán?
-\textbf{RQ3 (độ bền):} kết luận có giữ trên BugsInPy, khi đổi tên định danh, trên năm mô hình và cả ba bộ nhãn?
+\textbf{RQ1 (tái hiện):} kết quả công bố của SemLoc có tái hiện được không, và còn đứng vững khi chấm công bằng, khi bỏ
+điểm thưởng không được mô tả trong bài báo và khi kiểm tra lại nhãn (dòng lỗi chuẩn) bằng thực thi không?
+\textbf{RQ2 (LLM cần gì):} một prompt duy nhất có kiểm thử thất bại có định vị đúng ít nhất bằng SemLoc không, với chi phí
+bao nhiêu; tín hiệu nào tạo ra khác biệt (kiểm thử thất bại hay độ phủ); và các cách bổ sung (CovGate, kiểm chứng bằng
+bản sửa, biểu quyết, phân tích tĩnh) có thêm được gì không?
+\textbf{RQ3 (độ bền):} kết luận có còn đúng trên lỗi thật (BugsInPy), trên mã đã đổi tên định danh,
+với năm họ mô hình và trên cả ba bộ nhãn (gốc, đã chuẩn hóa, đã rà soát) không?
+Câu hỏi chung, thứ hạng của SemLoc đến từ bằng chứng thực thi hay dòng LLM tự đoán, được kiểm qua giả thuyết H1.
 
 \textbf{H1:} ở hạng 1, độ chính xác của SemLoc đến từ dòng LLM tự đoán, bằng chứng thực thi chỉ góp ở top-3 (bác bỏ nếu
 riêng phổ vi phạm đạt Acc@1 không thấp hơn SemLoc). \textbf{H2:} prompt có kiểm thử thất bại không kém SemLoc (bác bỏ nếu
