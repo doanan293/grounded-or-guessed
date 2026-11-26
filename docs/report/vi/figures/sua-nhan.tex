@@ -1,0 +1,27 @@
+% Bộ phán định sửa tối thiểu: từ nhãn gốc đến bộ nhãn đã chuẩn hóa. Số liệu qua macro.
+% Thứ tự đúng với cách bộ phán định chạy: thử sửa tại nhãn trước; chỉ khi không kiểm thử thất bại nào chạy tới nhãn mới
+% tìm ở dòng lân cận (nhánh "không" của câu hỏi thứ hai có đúng \GtNotExecutedN{} trừ số nhãn đã xác nhận tại chỗ).
+{\setstretch{1}%
+\begin{tikzpicture}[
+  q/.style={fbox=semloc, text width=40mm, minimum height=12mm},
+  leaf/.style={fbox=#1, text width=29mm, minimum height=15mm}, leaf/.default=gray,
+  lab/.style={font=\small, fill=white, inner sep=1.5pt}]
+\node[q] (q2) at (-4.6, 0) {Bản sửa nhỏ \emph{tại nhãn}\\làm mọi kiểm thử đạt?};
+\node[q] (q1) at (2.4, 0) {Có kiểm thử thất bại\\chạy tới nhãn gốc?};
+\node[q] (q3) at (4.6, -2.7) {Bản sửa nhỏ ở dòng lân cận\\($\le 4$ dòng) làm mọi kiểm thử đạt?};
+\node[leaf=failloc] (l1) at (-5.6, -3.0) {\textbf{Xác nhận}\\\GtConfirmedN{} nhãn};
+\node[leaf] (l2) at (-1.4, -3.0) {\textbf{Chưa kiểm chứng}\\\GtUnverifiedN{} nhãn\\(giữ nhãn gốc)};
+\node[leaf=failloc] (l3) at (2.6, -5.4) {\textbf{Dời vị trí}\\\GtCorrectedN{} nhãn};
+\node[leaf] (l4) at (6.4, -5.4) {\textbf{Không kiểm}\\\textbf{chứng được}: \GtUnverifiableN{}\\(loại)};
+\draw[farr] (q2) -- node[lab, above] {không} (q1);
+\draw[farr] (q2) -- node[lab, left] {có} (l1);
+\draw[farr] (q1) -- node[lab, left] {có} (l2);
+\draw[farr] (q1) -- node[lab, right] {không} (q3);
+\draw[farr] (q3) -- node[lab, left] {có} (l3);
+\draw[farr] (q3) -- node[lab, right] {không} (l4);
+\node[fbox=failloc, text width=95mm] (out) at (-2.6, -7.4)
+  {\textbf{SemFault-250 đã chuẩn hóa: \GtRepairedN{} chương trình}\\\small bỏ \GtUnverifiableN{} nhãn không kiểm
+   chứng được};
+\draw[farr] (l1.south) -- (l1.south |- out.north); \draw[farr] (l2.south) -- (l2.south |- out.north);
+\draw[farr] (l3.south) -- ++(0,-4mm) -| ($(out.north east)+(-8mm,0)$);
+\end{tikzpicture}}

@@ -1,0 +1,65 @@
+from __future__ import annotations
+
+import logging
+from typing import Sequence, List
+
+v3 = logging.getLogger(__name__)
+
+v4 = 0.0
+v5 = 500
+v6 = 0.0
+v7 = 10
+
+
+def v1(v8: Sequence[float]) -> None:
+    """"""
+    if len(v8) == 0:
+        raise ValueError("no ratios")
+    if len(v8) > v5:
+        raise ValueError(f"too many recipients: {len(v8)} exceeds {v5}")
+    if sum(v8) <= 0:
+        raise ValueError("invalid ratios")
+
+
+def v2(v9: float) -> float:
+    """"""
+    return max(v4, round(v9, v7))
+
+
+def grant_share(
+    v10: float,
+    v8: Sequence[float],
+    *,
+    fee: float = v6,
+) -> List[float]:
+    """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+    v1(v8)
+    if v10 < 0:
+        raise ValueError("negative amount")
+
+    v3.debug("Distributing %.2f among %d recipients (fee=%.2f)", v10, len(v8), fee)
+
+    v11 = sum(v8)
+    v12 = [(v13 / v11) * v10 for v13 in v8]
+
+    return [v2(v14 - fee) for v14 in v12]

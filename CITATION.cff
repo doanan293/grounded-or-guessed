@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this replication package, please cite it as below."
+title: "Grounded or Guessed: A Reproducibility Study of LLM-Based Semantic Fault Localization"
+type: software
+authors:
+  - {family-names: "Doãn", given-names: "Văn An"}
+  - {family-names: "Tạ", given-names: "Công Nam"}
+  - {family-names: "Nguyễn", given-names: "Hoàng Hải"}
+  - {family-names: "Đỗ", given-names: "Xuân Tráng"}
+  - {family-names: "Hoàng", given-names: "Trung Kiên"}
+  - {family-names: "Mai", given-names: "Văn Tùng"}
+  - {family-names: "Nguyễn", given-names: "Đức Tùng"}
+repository-code: "https://github.com/doanan293/grounded-or-guessed"
+license: MIT
+keywords: [fault localization, spectrum-based fault localization, semantic fault, large language model, reproducibility, counterfactual verification, benchmark validity]

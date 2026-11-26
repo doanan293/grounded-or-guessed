@@ -1,0 +1,12 @@
+\begin{tabular}{lrrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{Bản gốc ($n=200$)} & \multicolumn{3}{c}{Đã chuẩn hóa ($n=190$)} & \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Phương pháp & Acc@1 & Acc@3 & Acc@5 & Acc@1 & Acc@3 & Acc@5 & nghìn token \\
+\midrule
+SBFL (Ochiai) & 3,0 & 15,5 & 48,0 & 3,7 & 18,4 & 67,9 & 0 \\
+LLM-Direct & 40,0 & 43,0 & 43,2 & 58,8 & 64,9 & 65,1 & 2,5 \\
+SemLoc & 36,8 & 60,3 & 75,0 & 53,9 & 76,0 & 82,8 & 14,0 \\
+FailLoc (nhóm đề xuất) & 44,5 & 67,5 & 70,3 & 64,2 & 90,5 & 92,5 & 2,0 \\
+\bottomrule
+\end{tabular}

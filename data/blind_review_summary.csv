@@ -1,0 +1,11 @@
+answers,group,programs,pairs,pairs_agree,n_reviewed,match_reviewed,n_original,match_original,n_llm,match_llm
+all,all,60,60,55,120,107,120,42,120,94
+all,relocated,15,15,15,30,30,30,0,30,30
+all,flagged,15,15,15,30,30,30,0,30,30
+all,kept,20,20,17,40,29,40,29,40,29
+all,two_line,10,10,8,20,18,20,13,20,5
+blind,all,60,42,37,84,71,84,38,84,58
+blind,relocated,15,3,3,6,6,6,0,6,6
+blind,flagged,15,11,11,22,22,22,0,22,22
+blind,kept,20,18,15,36,25,36,25,36,25
+blind,two_line,10,10,8,20,18,20,13,20,5

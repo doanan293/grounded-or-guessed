@@ -1,0 +1,41 @@
+.env
+.venv/
+runs/
+.superpowers/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.xdv
+*.lof
+*.lot
+# LaTeX build outputs
+docs/report/**/main.pdf
+docs/report/**/main-*.pdf
+# proxy config holds API keys
+infra/proxy/config.yaml
+
+# Course material: the PDFs stay out of the repo; their markdown conversions (with images) are committed
+docs/requirement/**/*.pdf
+docs/presentation/template-vi.pptx
+dist/
+
+# Agent skills: kept locally, not published
+.agents/
+.claude/
+skills-lock.json
+# Office lock files
+~$*
+
+# Built decks (slide-*.pptx/.pdf) and report PDFs (bao-cao.pdf, paper.pdf) are committed so teammates can read them
+docs/presentation/*.tmp

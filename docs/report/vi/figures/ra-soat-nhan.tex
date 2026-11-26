@@ -1,0 +1,18 @@
+% Rà soát nhãn hai bước và duyệt mù. Số liệu qua macro.
+{\setstretch{1}%
+\begin{tikzpicture}[node distance=6mm and 5mm,
+  s/.style={fbox=semloc, text width=33mm, minimum height=19mm},
+  f/.style={fbox=failloc, text width=33mm, minimum height=19mm},
+  g/.style={fbox=gray, text width=33mm, minimum height=19mm}]
+\node[g] (a) {\textbf{Nhãn gốc}\\\LabaudAllN{} chương trình};
+\node[s, right=of a] (b) {\textbf{LLM rà trước}\\đọc mã, test, nhãn;\\nhận định từng nhãn};
+\node[s, right=of b] (c) {\textbf{Người duyệt}\\\ReviewReviewersN{} thành viên duyệt\\\ReviewHumanN{} nhãn nghi vấn};
+\node[f, right=of c] (d) {\textbf{Nhãn đã rà soát}\\\LabaudAllMoved{} nhãn dời,\\\LabaudAllTwoLine{} nhãn hai dòng};
+\node[s, text width=88mm, anchor=north east] (e) at ($(d.south west)+(-8mm,-12mm)$) {\textbf{Duyệt mù}: \BlindBlindAllPrograms{} chương trình chọn ngẫu
+  nhiên; mỗi chương trình do hai thành viên chưa từng xem duyệt độc lập; các dòng ứng viên được đánh chữ theo thứ tự ngẫu
+  nhiên, không ghi nguồn, không có gợi ý của LLM};
+\node[f, text width=40mm, anchor=north] (r) at ($(d.south)+(0,-12mm)$) {\textbf{Kết quả}: \BlindBlindAllMatchReviewed/\BlindBlindAllNReviewed{} câu trả lời
+  trùng nhãn đã rà soát, \BlindBlindAllMatchOriginal/\BlindBlindAllNOriginal{} trùng nhãn gốc};
+\draw[farr] (a) -- (b); \draw[farr] (b) -- (c); \draw[farr] (c) -- (d);
+\draw[farr] (d.south) -- (d.south |- r.north); \draw[farr] (e) -- (r);
+\end{tikzpicture}}

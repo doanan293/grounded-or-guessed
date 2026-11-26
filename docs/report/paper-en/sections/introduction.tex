@@ -1,0 +1,55 @@
+\section{Introduction}
+\label{sec:intro}
+
+Fault localization tells a developer where a failing program is wrong. In everyday practice the trigger is a failing
+test (run locally, in a pre-commit hook or on continuous integration) and, increasingly, the next step is to paste the
+failure into an AI assistant: most developers now use or plan to use such assistants~\cite{stackoverflow2025,jetbrains2025},
+debugging is among the tasks they bring to them~\cite{xiao2024devgpt}, and error information measurably helps LLMs
+localize faults~\cite{wu2023llmfl}. With test-driven development~\cite{beck2003tdd}, those tests are
+written first and state what the code is meant to do. Linters and type checkers do not help at this point when the fault
+is in the logic: the code is well formed and well typed; it just computes the wrong value.
+
+Research tools take a more elaborate route. Spectrum-based fault localization
+(SBFL)~\cite{jones2002,abreu2009,wong2016survey} ranks statements by how often failing and passing tests execute them,
+but it collapses on \emph{semantic} faults, where both kinds of test run the same lines. SemLoc~\cite{yang2026semloc}
+targets exactly these faults: it asks an LLM for executable semantic constraints, instruments the program, runs the tests,
+ranks lines by a constraint-violation spectrum, and patches suspicious lines to verify them. Its promise is
+\emph{structured grounding}: the model proposes, execution decides. It reports \RqOneSemlocClaudeTZeroEightAuthorAllAccOne\%
+Acc@1 on its SemFault-250 benchmark, far above SBFL.
+
+\textbf{This paper asks whether that accuracy is grounded or guessed, and whether the pipeline beats the everyday
+practice.} Answering requires more than rerunning the tool: one must check how results are scored, whether the
+benchmark's labels point at the faults, how much each signal contributes, and whether conclusions survive real bugs,
+renamed code and other models. We therefore ask four research questions.
+\textbf{RQ1 (reproduction):} Do SemLoc's published results reproduce, and do they still hold under fair scoring, without
+the guess bonus that the paper does not describe, and on labels checked by execution?
+\textbf{RQ2 (comparison):} Is a single prompt with the failing tests at least as accurate as SemLoc, and at what cost?
+\textbf{RQ3 (why):} Which signal drives the difference (failing tests or coverage), and do more elaborate additions help?
+\textbf{RQ4 (robustness):} Do the conclusions hold (a)~on real bugs (BugsInPy~\cite{widyasari2020}), (b)~on identifier-renamed
+programs, (c)~across five models and (d)~on all three label sets? Every LLM configuration runs three times, with program- and template-cluster bootstrap confidence intervals.
+
+\noindent\textbf{Contributions.}
+\begin{itemize}
+\item \textbf{C1 (RQ1), guessed by design and mislabeled:} SemLoc's top-1 line is, by an undocumented choice, the LLM's own
+guess; its execution evidence acts below the first line; its counterfactual step (\CostCfSharePct\% of LLM calls) never
+changes a ranking. We also report a released scoring script that credits delta debugging with \RqOneDdAuthorAllAccOne\%
+where the paper reports zero, two bugs in the released BugsInPy runner, and a re-execution that falls short of the logs.
+\LabaudAllMoved{} of \LabaudAllN{} labels move under review; we release an execution-repaired label set (tests decide) and
+a reviewed one (an LLM pre-review, then team review).
+\item \textbf{C2 (RQ2), the simple prompt wins:} one prompt with failing tests beats SemLoc at Acc@1 by
+\RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo, \RqTwoRepairedAllLlmTestsDAccOneHi] and at Acc@3
+by \RqTwoRepairedAllLlmTestsDAccThree{} points on repaired labels, at about a seventh of the cost.
+\item \textbf{C3 (RQ3), why, and nothing more elaborate closes the gap:} failing tests carry the signal and per-line
+coverage does not; CovGate (coverage added to SemLoc) helps SemLoc only slightly, and propose-and-verify (test-passing
+patches as arbiter), voting and static analysis do not improve on the simple prompt, because small patches pass the
+tests at many non-faulty candidate lines.
+\item \textbf{C4 (RQ4), robustness:} the simple prompt still beats SemLoc on real BugsInPy bugs (Acc@3
+\BipAllLlmTestsAccThreeMean\% vs.\ \BipAllSemlocPriorAccThreeMean\%), barely moves on identifier-renamed programs (Acc@3
+\RenRepairedLlmTestsDAccThree{} points), and does not lose to SemLoc with any of five models.
+\end{itemize}
+Alongside, we provide a seven-item evaluation checklist and a fully replayable artifact, including every reviewer's
+answers. Code, data and LLM logs: \url{https://github.com/doanan293/grounded-or-guessed}.
+
+Section~\ref{sec:related} reviews related work, Section~\ref{sec:background} introduces SBFL and SemLoc,
+Section~\ref{sec:approach} describes the audit, the label sets, the grounded-vs-guessed decomposition and the methods, Section~\ref{sec:eval} answers the four
+research questions, Section~\ref{sec:discussion} discusses the findings and threats, and Section~\ref{sec:conclusion} concludes.

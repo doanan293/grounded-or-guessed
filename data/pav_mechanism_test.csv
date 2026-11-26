@@ -1,0 +1,4 @@
+gt,fault_line_checked,fault_line_fixable,other_line_checked,other_line_fixable
+original,366,0.4372,816,0.4118
+repaired,487,0.5421,635,0.3559
+reviewed,665,0.594,517,0.1954

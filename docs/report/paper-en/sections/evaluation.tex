@@ -1,0 +1,319 @@
+\section{Evaluation}
+\label{sec:eval}
+
+\subsection{Setup}
+SemFault-250~\cite{yang2026semloc} has 250 single-function Python programs with one injected fault and about ten tests
+each. We fix a 50/200 dev/test split stratified by fault label and group structurally similar programs into template
+clusters (4-gram Jaccard similarity of at least four fifths on normalized code). Real bugs are the 31 youtube-dl bugs of
+BugsInPy~\cite{widyasari2020} whose environment builds, whose triggering tests fail before and pass after the fix, and
+whose coverage can be measured; the target function is the one containing a developer-changed line that a declared
+failing test executes, and its changed lines are the ground truth. The renamed variant replaces every program-defined
+identifier with an opaque name and blanks comments while preserving line numbers and each test's outcome (199 test
+programs). The main model is Gemini~3.8 Flash; the model-family study adds GPT-6 luna, Claude Sonnet~5.5, gpt-oss-120b
+and Gemini~3.5 Flash-Lite on a fixed subset of the test split (\ParetoSemlocGeminiThreeEightFlashN{} programs with
+repaired labels). All models run at their provider-default reasoning level; SemLoc and the single-prompt methods run at
+$T=\ConstTemperature$. Every LLM configuration is repeated three times; a run is used only if it finished without
+unrecovered LLM errors. Differences are $\Delta$ (percentage points) with \ConstCiLevel\% bootstrap CIs that resample
+template clusters (\ConstBootstrapDraws{} draws) after averaging each program over repeats; we also report each repeat's
+McNemar test and a matched-pairs rank-biserial effect size on reciprocal rank (artifact). We report about
+thirty such comparisons without multiplicity correction and read single intervals near zero with caution.
+
+\subsection{RQ1: Reproduction and evaluation audit}
+Recomputing from the released logs reproduces all 13 published configurations exactly. Re-executing SemLoc with the
+paper's own model on the dev split does not: Acc@1 \RepClaudeDevRerunAccOne\% and Acc@3 \RepClaudeDevRerunAccThree\%
+against \RepClaudeDevPublishedAccOne\% and \RepClaudeDevPublishedAccThree\% in the logs for the same programs; the
+re-executed constraints are violated in failing tests less often, which we could not trace to our infrastructure.
+
+Table~\ref{tab:rq1} shows how scoring matters. The released scoring script credits delta debugging with
+\RqOneDdAuthorAllAccOne\% (any hit counts as rank one), although the paper reports zero and fair scoring gives
+\RqOneDdFairAllAccOne\%, since it ranks no line; SBFL's Acc@5 rises from \RqOneSbflOchiaiAuthorAllAccFive\% to
+\RqOneSbflOchiaiFairAllAccFive\% under average-rank ties. SemLoc is stable under fair scoring, but without the
+undocumented guess bonus its Acc@1 falls from \RqOneSemlocClaudeTZeroEightFairAllAccOne\% to
+\RqOneSemlocClaudeTZeroEightNoPriorFairAllAccOne\% (Claude) and from \RqOneSemlocGeminiTZeroEightFairAllAccOne\% to
+\RqOneSemlocGeminiTZeroEightNoPriorFairAllAccOne\% (Gemini). In the released code the counterfactual step never changes a
+ranking (0 of 250 programs in all five configurations with data). The paper's w/o-counterfactual figure comes from a
+separate run whose scores were not released; its Acc@1 (\RqOneCfDisabledClaudeTZeroEightAuthorAllAccOne\%) is close to
+SemLoc without the bonus, which suggests a configuration difference rather than an effect of the step, but we cannot
+determine which. The released BugsInPy runner reports the rank of the LLM's own guess rather than of the fixed lines, and
+its patch-and-restore step leaves stale bytecode that can hide the bug in the next run; we fixed the latter in our driver.
+
+\begin{table}[!t]
+\centering
+\caption{Published configurations under the authors' and fair scoring (released logs, 250 programs)}
+\label{tab:rq1}
+\resizebox{\columnwidth}{!}{\input{../generated/rq1_audit}}
+\end{table}
+
+Table~\ref{tab:labaud} compares the original labels with the reviewed ones: only \LabaudAllSame{} are
+unchanged, \LabaudAllExtended{} keep the line and gain a second one, and \LabaudAllMoved{} move: \LabaudAllBlank{} from a
+blank line, \LabaudAllNonCode{} from a log call, \texttt{def} header or comment, \LabaudAllOffByOne{} by one line and
+\LabaudAllFarther{} by more. Moves follow patterns: a label on a guard whose guarded statement holds the fault (or vice
+versa), or an omission fault labeled at its insertion point, a blank line. We suspect a labeling tool rather than human
+annotators but cannot check without the generator. In the blind re-review, the two reviewers chose the same line in
+\BlindBlindAllPairsAgree{} of \BlindBlindAllPairs{} fully blind pairs, and \BlindBlindAllMatchReviewed{} of
+\BlindBlindAllNReviewed{} blind answers match the reviewed label against \BlindBlindAllMatchOriginal{} for the original
+label. Every blind answer on relocated or LLM-rejected labels picks the reviewed line
+(\BlindBlindFlaggedMatchReviewed/\BlindBlindFlaggedNReviewed{} and \BlindBlindRelocatedMatchReviewed/\BlindBlindRelocatedNReviewed;
+few relocated answers stayed blind); two-line labels reach \BlindBlindTwoLineMatchReviewed/\BlindBlindTwoLineNReviewed. The
+hardest group is the labels the LLM kept (\BlindBlindKeptMatchReviewed/\BlindBlindKeptNReviewed): every mismatch comes with
+a note that no bug was visible: omission faults (a missing normalization or remainder step) with no wrong-looking token.
+The blind review thus supports the relocations and shows that omissions are where line labels are inherently ambiguous.
+Mislabels lower every number, and they may favor SemLoc: on the original
+labels SemLoc beats LLM-Direct at Acc@3 (\RqTwoOriginalAllSemlocAccThreeMean\% vs.\
+\RqTwoOriginalAllLlmDirectAccThreeMean\%); on the reviewed labels the two tie (\RqTwoReviewedAllSemlocAccThreeMean\% vs.\
+\RqTwoReviewedAllLlmDirectAccThreeMean\%) and LLM-Direct leads at Acc@1 (\RqTwoReviewedAllLlmDirectDAccOne{}
+[\RqTwoReviewedAllLlmDirectDAccOneLo, \RqTwoReviewedAllLlmDirectDAccOneHi]). On the repaired labels, which involve no LLM
+judgment of location, SemLoc's lead remains (LLM-Direct $\Delta$Acc@3 \RqTwoRepairedAllLlmDirectDAccThree{}
+[\RqTwoRepairedAllLlmDirectDAccThreeLo, \RqTwoRepairedAllLlmDirectDAccThreeHi]), so the vanishing lead rests on the
+LLM-suggested labels and must be read with the circularity caveat of Section~\ref{sec:threats}. A plausible reason for the
+effect: LLM-Direct names one or two lines, whereas SemLoc ranks many adjacent lines and so still ``hits'' a label one
+line off.
+
+\begin{table}[!t]
+\centering
+\caption{Original vs.\ reviewed labels (all 250 programs)}
+\label{tab:labaud}
+\scriptsize
+\input{../generated/rq_label_audit}
+\end{table}
+
+\subsection{RQ2: Does the simple prompt beat the pipeline?}
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../generated/fig_rq2_main.pdf}
+\caption{Main comparison on the test split (Gemini 3.8 Flash, mean of three runs): Acc@1 (solid) and Acc@3 (light) on the original and the repaired labels; whiskers are the standard deviation across runs. FailLoc in orange, SemLoc in blue.}
+\label{fig:main}
+\end{figure*}
+
+\textbf{The simple prompt wins.} Table~\ref{tab:main} and Fig.~\ref{fig:main} give the main comparison. FailLoc beats SemLoc at
+Acc@1 on all three label sets: \RqTwoOriginalAllLlmTestsDAccOne{} [\RqTwoOriginalAllLlmTestsDAccOneLo,
+\RqTwoOriginalAllLlmTestsDAccOneHi] (original), \RqTwoRepairedAllLlmTestsDAccOne{} [\RqTwoRepairedAllLlmTestsDAccOneLo,
+\RqTwoRepairedAllLlmTestsDAccOneHi] (repaired) and \RqTwoReviewedAllLlmTestsDAccOne{} [\RqTwoReviewedAllLlmTestsDAccOneLo,
+\RqTwoReviewedAllLlmTestsDAccOneHi] (reviewed). At Acc@3 it gains \RqTwoRepairedAllLlmTestsDAccThree{}
+[\RqTwoRepairedAllLlmTestsDAccThreeLo, \RqTwoRepairedAllLlmTestsDAccThreeHi] (repaired) and
+\RqTwoReviewedAllLlmTestsDAccThree{} [\RqTwoReviewedAllLlmTestsDAccThreeLo, \RqTwoReviewedAllLlmTestsDAccThreeHi]
+(reviewed); over all original labels, which include faults no failing test reaches, the Acc@3 gain
+(\RqTwoOriginalAllLlmTestsDAccThree) has a CI that includes zero, while on reached faults it is
+\RqTwoOriginalExecutableLlmTestsDAccThree{} [\RqTwoOriginalExecutableLlmTestsDAccThreeLo,
+\RqTwoOriginalExecutableLlmTestsDAccThreeHi]. It costs \CostLlmTestsTokensK k tokens per program against SemLoc's
+\CostSemlocTokensK k. At Acc@5 FailLoc leads on the repaired labels (\RqTwoRepairedAllLlmTestsAccFiveMean\% against
+\RqTwoRepairedAllSemlocAccFiveMean\%) but not on the original ones, where SemLoc is higher
+(\RqTwoOriginalAllSemlocAccFiveMean\% against \RqTwoOriginalAllLlmTestsAccFiveMean\%); FailLoc returns only five lines. On the reviewed labels it reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3: with reviewed
+(LLM-suggested) labels, the benchmark is saturated by one prompt.
+
+\begin{table*}[!t]
+\centering
+\caption{Main results on the test split under three label sets (Gemini 3.8 Flash, mean of three repeats) and LLM tokens
+per program}
+\label{tab:main}
+\resizebox{0.85\textwidth}{!}{\input{../generated/rq_main_results}}
+\end{table*}
+
+Acc@$k$ counts only the exact labeled line, and most misses point at
+an adjacent line, typically a compound-statement header and the statement it guards. As a secondary metric, chosen after
+seeing the results and used only as a robustness check, we also accept a top-ranked line that forms such a pair with a
+labeled line (header and first body line). This lifts Acc@1 on the repaired labels from
+\RqtolRepairedSemlocAccOneExact\% to \RqtolRepairedSemlocAccOneTol\% for SemLoc and from
+\RqtolRepairedLlmTestsAccOneExact\% to \RqtolRepairedLlmTestsAccOneTol\% for FailLoc, which still leads by
+\RqtolRepairedLlmTestsDAccOneTol{} [\RqtolRepairedLlmTestsDAccOneTolLo, \RqtolRepairedLlmTestsDAccOneTolHi] points
+(\RqtolOriginalLlmTestsDAccOneTol{} [\RqtolOriginalLlmTestsDAccOneTolLo, \RqtolOriginalLlmTestsDAccOneTolHi] on the
+original labels), a narrower margin than under exact matching; LLM-Direct ties SemLoc
+(\RqtolRepairedLlmDirectDAccOneTol{} [\RqtolRepairedLlmDirectDAccOneTolLo, \RqtolRepairedLlmDirectDAccOneTolHi]).
+
+\subsection{RQ3: Why does it win?}
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../generated/fig_ablation.pdf}
+\caption{Prompt ablation (test split, three runs): change when failing tests are added (LLM-Direct to FailLoc) and when per-line coverage is added (FailLoc to FailLoc+Cov), with \ConstCiLevel\% bootstrap intervals, on the three label sets.}
+\label{fig:ablation}
+\end{figure*}
+
+\textbf{What carries the signal.} (Fig.~\ref{fig:ablation}) The failing tests do: against LLM-Direct they change Acc@3 by
+\AblRepairedAllTestsEffectDAccThree{} [\AblRepairedAllTestsEffectDAccThreeLo, \AblRepairedAllTestsEffectDAccThreeHi]
+points (repaired). Per-line coverage does not: adding it changes Acc@3 by \AblRepairedAllCoverageEffectDAccThree{}
+[\AblRepairedAllCoverageEffectDAccThreeLo, \AblRepairedAllCoverageEffectDAccThreeHi] and Acc@1 by
+\AblRepairedAllCoverageEffectDAccOne{} [\AblRepairedAllCoverageEffectDAccOneLo, \AblRepairedAllCoverageEffectDAccOneHi]
+(repaired), and Acc@1 by \AblReviewedAllCoverageEffectDAccOne{} on the reviewed labels. The model needs to know which test
+fails and how, not which lines ran.
+
+\textbf{More elaborate additions do not help} (Table~\ref{tab:addons}). CovGate, an Ochiai tie-breaker as selected,
+changes SemLoc's Acc@3 by \RqTwoRepairedAllCovgateDAccThree{} [\RqTwoRepairedAllCovgateDAccThreeLo,
+\RqTwoRepairedAllCovgateDAccThreeHi] and leaves Acc@1 unchanged; its other components lower Acc@1 (grounded bonus
+\RqTwoRepairedAllGroundedPriorOnlyDAccOne, counterfactual re-ranking \RqTwoRepairedAllCfRerankDAccOne). We report
+propose-and-verify in two configurations: \emph{FailLoc+MinFix} checks the top two candidates and accepts one-token
+fixes only (the best on dev), \emph{FailLoc+AnyFix} checks the top three and accepts fixes of any size (the worst on
+dev). FailLoc+MinFix reproduces the proposer's ranking exactly (reviewed Acc@1 \PavDevChosenReviewedAccOne\% vs.\
+\PavDevStageReviewedAccOne\% on dev), and FailLoc+AnyFix drops it to \PavDevWorstReviewedAccOne\%. The tests are the reason: on the reviewed labels a small fix passes every test in
+\PavmechReviewedFaultLineFixable\% of attempts at the faulty line (two-line faults, omissions and larger edits resist
+one-line fixes) but also in \PavmechReviewedOtherLineFixable\% of attempts at other lines, typically by changing a
+constant to compensate for a wrong computation elsewhere (on the test split: \PavmechtestReviewedFaultLineFixable\% and
+\PavmechtestReviewedOtherLineFixable\%). On the test split (three repeats, knobs fixed on dev), FailLoc+MinFix
+changes no top-ranked line, so its Acc@1 and Acc@3 equal FailLoc's (\PavtestChosenReviewedPavAccOne\% reviewed);
+FailLoc+AnyFix changes the top line \PavtestWorstReviewedTopOneChanged{} times and lowers reviewed Acc@1 by
+\PavtestWorstReviewedDAccOne{} points [\PavtestWorstReviewedDAccOneLo, \PavtestWorstReviewedDAccOneHi]. Voting over three answers does not help either: on dev it lowers Acc@3 on the repaired
+(\VoteRepairedVoteAccThree\% vs.\ \VoteRepairedSingleAccThree\%) and original labels (\VoteOriginalVoteAccThree\% vs.\
+\VoteOriginalSingleAccThree\%), and on the test split, voting over the three FailLoc runs changes repaired Acc@1 by
+\VotetestRepairedDAccOne{} points [\VotetestRepairedDAccOneLo, \VotetestRepairedDAccOneHi], an interval that contains 0.
+
+\begin{table*}[!t]
+\centering
+\caption{Additions compared with the method they extend: $\Delta$ in points (test rows: three repeats with
+\ConstCiLevel\% cluster-bootstrap CIs on the test split; FailLoc+MinFix is FailLoc+Verify with knobs selected on the dev split)}
+\label{tab:addons}
+\resizebox{0.85\textwidth}{!}{\input{../generated/rq_addons}}
+\end{table*}
+
+Static analyzers do not localize these faults either (Table~\ref{tab:static}). Ruff's default rules flag a labeled line in
+\StatReviewedRuffDefaultOnFaultLine{} of \StatReviewedRuffDefaultPrograms{} programs. With all rules it emits
+\StatReviewedRuffAllDiagnostics{} diagnostics and hits \StatReviewedRuffAllOnFaultLine{} programs, \emph{fewer} than the
+\StatReviewedRuffAllOnFaultLineByChance{} expected at random: style warnings cluster on loops and long conditionals,
+whereas faults sit in short comparisons and arithmetic. Pyrefly reports \StatReviewedPyreflyDiagnostics{} type errors,
+none on a labeled line; some are symptoms a few lines below (a float returned where an int is declared). These tools check
+how the code is written, not what it is meant to do.
+
+\begin{table}[!t]
+\centering
+\caption{Static analysis on the 250 programs (reviewed labels)}
+\label{tab:static}
+\resizebox{\columnwidth}{!}{\input{../generated/rq_static}}
+\end{table}
+
+\textbf{Grounded or guessed.} Because the bonus exceeds any spectrum score, adding the spectrum to the guess cannot change
+the first line: guess only, and SemLoc, both reach \RqTwoRepairedAllSemlocAccOneMean\% Acc@1 (repaired), while spectrum only
+reaches \RqTwoRepairedAllSemlocNoPriorAccOneMean\%; on the reviewed labels the figures are
+\RqTwoReviewedAllSemlocAccOneMean\% and \RqTwoReviewedAllSemlocNoPriorAccOneMean\%. The Shapley value of the spectrum at
+Acc@1 (\DecSemlocRepairedAllAccOnePhiSpectrum, Table~\ref{tab:dec}) is credit for what the spectrum would achieve without
+the guess, not a contribution to SemLoc's top line. At Acc@3 the spectrum matters: the guess alone stays at
+\RqTwoRepairedAllSemlocAccOneMean\% and together they reach \RqTwoRepairedAllSemlocAccThreeMean\%, but the single prompt reaches
+higher without it. On the authors' logs (Claude) the split is \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOneFull{} =
+\PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiGuess{} + \PubSemlocClaudeTZeroEightSemlocOriginalAllAccOnePhiSpectrum.
+
+\begin{table}[!t]
+\centering
+\caption{Shapley split of SemLoc's accuracy (our runs, three repeats; template-cluster CIs). Upper block: the game whose
+total is SemLoc as released; lower block: all four signals (a different system).}
+\label{tab:dec}
+\resizebox{\columnwidth}{!}{\input{../generated/rq_decomposition_ours}}
+\end{table}
+
+Fig.~\ref{fig:pareto} places five models on one subset using the single prompt with coverage,
+the variant run on every model: for every model it has higher Acc@3 at lower cost than SemLoc. These per-model comparisons
+have no CIs; at Acc@1 GPT-6 luna does not improve.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{../generated/pareto.pdf}
+\caption{Cost vs.\ Acc@3 on the same subset (\ParetoSemlocGeminiThreeEightFlashN{} programs, repaired labels); lines join
+the two methods of one model.}
+\label{fig:pareto}
+\end{figure}
+
+\subsection{RQ4: Robustness}
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../generated/fig_improvement.pdf}
+\caption{FailLoc against SemLoc on the same programs and model: three label sets (test split) and real BugsInPy bugs.}
+\label{fig:improvement}
+\end{figure*}
+
+Fig.~\ref{fig:improvement} summarizes FailLoc against SemLoc across label sets and on real bugs.
+
+On the 31 youtube-dl bugs (RQ4a, Table~\ref{tab:bip}), SemLoc's top-1 is the guess by construction, and the
+guess's Acc@1 (\BipAllLlmGuessAccOneMean\%) is SemLoc's; the spectrum alone places \BipAllSemlocSpectrumAccOneMean\% first,
+close to SBFL (\BipAllSbflOchiaiAccOneMean\%). FailLoc points the same way as on SemFault-250 (Acc@3
+\BipAllLlmTestsAccThreeMean\% vs.\ \BipAllSemlocPriorAccThreeMean\%) and coverage again adds nothing
+(\BipAllLlmCoverageAccThreeMean\%), but with 31 bugs from one project the CI [\BipAllLlmTestsDAccThreeLo,
+\BipAllLlmTestsDAccThreeHi] includes zero. On real bugs every method is far from the ceiling. ``Fault reached'' keeps the
+bugs where a failing test executes a labeled line; ``artifact's own metric'' is the rank the released runner reports,
+i.e., that of the LLM's guess.
+
+\begin{table*}[!t]
+\centering
+\caption{RQ4a: 31 youtube-dl bugs (BugsInPy), three repeats}
+\label{tab:bip}
+\resizebox{0.8\textwidth}{!}{\input{../generated/rq3_bugsinpy}}
+\end{table*}
+
+Pairing each program with its renamed copy (RQ4b, Table~\ref{tab:ren}; Gemini 3.8 Flash only), the
+guess shows no detectable change (Acc@1 $\Delta$ \RenRepairedLlmGuessDAccOne{} [\RenRepairedLlmGuessDAccOneLo,
+\RenRepairedLlmGuessDAccOneHi]), so we see no sign that the model guesses from memorized names. The constraint spectrum
+needs meaningful names: without the bonus, Acc@3 changes by \RenRepairedSemlocNoPriorDAccThree{} points. The single prompt
+shows no detectable change, with or without coverage (Acc@3 $\Delta$ \RenRepairedLlmTestsDAccThree{}
+[\RenRepairedLlmTestsDAccThreeLo, \RenRepairedLlmTestsDAccThreeHi] for FailLoc, \RenRepairedLlmCoverageDAccThree{}
+[\RenRepairedLlmCoverageDAccThreeLo, \RenRepairedLlmCoverageDAccThreeHi] for FailLoc+Cov). Renaming
+leaves test names intact, so they still state the intent.
+
+\begin{table*}[!t]
+\centering
+\caption{RQ4b: original vs.\ identifier-renamed programs (repaired labels, three paired repeats)}
+\label{tab:ren}
+\resizebox{0.8\textwidth}{!}{\input{../generated/rq3_renamed}}
+\end{table*}
+
+Across model families on the subset (RQ4c, Table~\ref{tab:fam}; no CIs), every model leans on the guess: without the bonus,
+SemLoc's Acc@1 falls on all five, by amounts that differ widely and do not follow model strength (Gemini 3.8 Flash from
+\FamRepairedGeminiThreeEightFlashSemlocAccOneMean\% to \FamRepairedGeminiThreeEightFlashSemlocNoPriorAccOneMean\%, GPT-6
+luna from \FamRepairedGptSixLunaSemlocAccOneMean\% to \FamRepairedGptSixLunaSemlocNoPriorAccOneMean\%); the subset is too
+small to rank models on this effect. FailLoc clearly beats SemLoc at Acc@1 on four models (e.g.\ Claude
+Sonnet 5.5, \FamRepairedClaudeSonnetFiveFiveLlmTestsAccOneMean\% vs.\ \FamRepairedClaudeSonnetFiveFiveSemlocAccOneMean\%;
+Gemini 3.5 Flash-Lite, \FamRepairedGeminiThreeFiveFlashLiteLlmTestsAccOneMean\% vs.\
+\FamRepairedGeminiThreeFiveFlashLiteSemlocAccOneMean\%) and ties it on GPT-6 luna
+(\FamRepairedGptSixLunaLlmTestsAccOneMean\% vs.\ \FamRepairedGptSixLunaSemlocAccOneMean\%). With the FailLoc prompt, luna often
+returns fewer than five lines, so its Acc@3 (\FamRepairedGptSixLunaLlmTestsAccThreeMean\%) falls below SemLoc's
+(\FamRepairedGptSixLunaSemlocAccThreeMean\%). Luna's FailLoc runs went through the OpenAI API after the Codex quota ran out; a
+FailLoc+Cov run through the same API returned full lists and matched the Codex runs, so the access route is not the cause.
+
+\begin{table}[!t]
+\centering
+\caption{RQ4c: five models on the same subset (repaired labels, three repeats, no CIs)}
+\label{tab:fam}
+\resizebox{\columnwidth}{!}{\input{../generated/rq3_families}}
+\end{table}
+
+On all three label sets (RQ4d) the single prompt beats SemLoc at Acc@1 (Table~\ref{tab:main}), adding
+coverage does not help at Acc@3 and lowers Acc@1 (Fig.~\ref{fig:ablation}), and removing the bonus lowers SemLoc's Acc@1.
+At Acc@1 and Acc@3 the only comparison that flips with the labels is SemLoc vs.\ LLM-Direct at Acc@3, on the
+LLM-suggested reviewed labels; at Acc@5, SemLoc leads FailLoc on the original labels.
+
+\subsection{Failure analysis}
+We categorize every test program automatically (Table~\ref{tab:fail}) and read a cluster-spread sample of up to four
+failures per category, nineteen in total.
+
+\begin{table}[!t]
+\centering
+\caption{Per-program outcome categories (repaired labels, majority over three repeats); first match wins}
+\label{tab:fail}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l>{\raggedright\arraybackslash}Xr@{}}
+\toprule
+Category & Definition & Programs \\
+\midrule
+gt\_suspect & unverified label, every method misses top-3 & \FailGtSuspectN \\
+guess\_right & the LLM's guess is a ground-truth line & \FailGuessRightN \\
+prior\_hurts & spectrum ranks the fault first, the bonus lifts a wrong guess above it & \FailPriorHurtsN \\
+rescued\_by\_spectrum & wrong guess, fault still in SemLoc's top-3 & \FailRescuedBySpectrumN \\
+coverage\_only\_wins & SemLoc misses top-3, the single prompt (with coverage) hits it & \FailCoverageOnlyWinsN \\
+all\_miss & everything else & \FailAllMissN \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The guess is right for \FailGuessRightN{} of \FailProgramsN{} programs; the spectrum rescues \FailRescuedBySpectrumN{} wrong
+guesses into the top three. Wrong guesses are rarely far off: over the \OffLlmGuessTotal{} program--repeat pairs with a
+guess (\OffLlmGuessMissing{} runs returned none), the guess hits the fault line \OffLlmGuessZeroCount{} times, lands one line
+below it \OffLlmGuessOneCount{} times and one line above only \OffLlmGuessMinusOneCount{} times. In
+\FailRelationHeaderBodyN{} of \FailWrongGuessN{} wrongly guessed programs, guess and label are a compound-statement header
+and the statement it guards, as here, where the injected fault is the \texttt{- 1}:
+\begin{lstlisting}[numbers=none]
+if cap is not None and counters[key] > cap:  # label
+    counters[key] = cap - 1                  # guess
+\end{lstlisting}
+We measure two tolerant variants: \emph{strict} accepts the header and the first line of its body; the \emph{upper
+bound} accepts the header and any line of its first body statement (up to three lines, nested guards included). SemLoc's
+Acc@1 rises from \TolSemlocAccOneExact\% to \TolSemlocAccOneGuardStrict\% (strict) or \TolSemlocAccOneGuardOrBody\% (upper
+bound), and the single prompt's (with coverage) from \TolLlmCoverageAccOneExact\% to
+\TolLlmCoverageAccOneGuardStrict\%--\TolLlmCoverageAccOneGuardOrBody\%; it stays ahead of SemLoc under every
+variant. Reading the sample adds three more patterns: multi-line injected blocks where either line fixes the bug, cause
+and symptom on one data-flow path, and fixes our oracle accepted that compensate rather than repair (e.g., subtracting one
+from \texttt{norm} instead of fixing \texttt{max\_norm / (norm + 1)}). Most cases where the bonus ``hurts'' are of the first
+two kinds: the guess is semantically right and one line off.

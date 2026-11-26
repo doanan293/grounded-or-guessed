@@ -1,0 +1,16 @@
+% FailLoc+Verify: đề xuất rồi kiểm chứng bằng bản sửa và test. Số liệu qua macro.
+{\setstretch{1}%
+\begin{tikzpicture}[node distance=6mm and 5mm,
+  f/.style={fbox=failloc, text width=29mm, minimum height=16mm},
+  s/.style={fbox=semloc, text width=29mm, minimum height=16mm},
+  g/.style={fbox=gray, text width=29mm, minimum height=16mm}]
+\node[f] (a) {\textbf{FailLoc đề xuất}\\năm dòng nghi nhất};
+\node[s, right=of a] (b) {\textbf{LLM viết bản sửa nhỏ}\\cho từng dòng\\trong $k$ dòng đầu};
+\node[s, right=of b] (c) {\textbf{Chạy bộ test}\\trên chương trình\\đã vá};
+\node[f, right=of c] (d) {\textbf{Xếp lại}\\dòng có bản sửa\\làm mọi test đạt\\lên trước};
+\draw[farr] (a) -- (b); \draw[farr] (b) -- (c); \draw[farr] (c) -- (d);
+\node[g, below=9mm of b, text width=66mm, xshift=17mm] (p) {\textbf{Vì sao không cải thiện}: test của bộ dữ liệu quá yếu
+  để làm trọng tài. Trên các dòng ứng viên \emph{không} có lỗi, bản sửa nhỏ vẫn làm mọi test đạt ở
+  \PavmechReviewedOtherLineFixable\% lần thử; tại dòng lỗi thật chỉ \PavmechReviewedFaultLineFixable\% (tập dev, nhãn đã rà soát)};
+\draw[farr=gray] (c.south) -- (c.south |- p.north);
+\end{tikzpicture}}

@@ -1,0 +1,19 @@
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+SemLoc's published numbers recompute exactly from its logs, but its top-1 answer is, by an undocumented design choice,
+the LLM's own guess, and nearly half of its benchmark's labels do not point at the faulty line.
+Handing the failing tests to the model in one prompt, close to what surveys suggest many developers do, is more accurate at Acc@1 on all three
+label sets (at Acc@5, SemLoc stays ahead on the original labels) and about seven times cheaper; the failing tests carry the signal, per-line coverage does not, and no more
+elaborate addition we tried closes the gap (CovGate helps SemLoc only slightly; the others and static analysis do not help), because the tests can suggest a fault's location
+but cannot prove it. These results come from one main model, single-function programs with intent-revealing tests, and
+31 real bugs from one project. We suggest that every evaluation of LLM-based fault localization apply the seven checks of
+Table~\ref{tab:checklist}, with the plain failing-tests prompt as a mandatory baseline. Future work includes
+project-level localization (narrowing a repository to a function before asking the model), a hidden-test-name ablation,
+stronger test suites that make execution a usable arbiter of location, and more datasets, including real bugs from more
+projects and languages other than Python, with the failing-tests prompt as the baseline.
+
+\section*{Data Availability}
+Code, derived data, run outputs, LLM call logs, a replayable LLM response cache, every reviewer's answers and an offline
+Docker image are at \url{https://github.com/doanan293/grounded-or-guessed}; \texttt{REPRODUCE.md} maps every table to its
+script.

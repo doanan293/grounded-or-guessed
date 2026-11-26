@@ -1,0 +1,13 @@
+\begin{tabular}{lrrrrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{SemLoc} & \multicolumn{2}{c}{SemLoc−Bonus} & CovGate & \multicolumn{2}{c}{FailLoc (ours)} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-7}\cmidrule(lr){8-9}
+Model & Repeats & Acc@1 & Acc@3 & Acc@1 & Acc@3 & Acc@3 & Acc@1 & Acc@3 \\
+\midrule
+Gemini 3.8 Flash & 3 & 55.6{\scriptsize$\pm$3.2} & 87.5{\scriptsize$\pm$0.0} & 50.0{\scriptsize$\pm$5.5} & 84.7{\scriptsize$\pm$1.2} & 88.2{\scriptsize$\pm$1.2} & 66.0{\scriptsize$\pm$1.2} & 91.7{\scriptsize$\pm$0.0} \\
+GPT-6 luna & 3 & 57.6{\scriptsize$\pm$2.4} & 85.4{\scriptsize$\pm$2.1} & 39.6{\scriptsize$\pm$7.5} & 74.3{\scriptsize$\pm$2.4} & 86.1{\scriptsize$\pm$1.2} & 58.3{\scriptsize$\pm$0.0} & 77.8{\scriptsize$\pm$4.3} \\
+Claude Sonnet 5.5 & 3 & 47.9{\scriptsize$\pm$2.1} & 73.6{\scriptsize$\pm$1.2} & 39.6{\scriptsize$\pm$2.1} & 71.5{\scriptsize$\pm$1.2} & 73.6{\scriptsize$\pm$1.2} & 63.9{\scriptsize$\pm$1.2} & 93.8{\scriptsize$\pm$0.0} \\
+gpt-oss-120b & 3 & 50.0{\scriptsize$\pm$5.5} & 70.1{\scriptsize$\pm$3.2} & 29.9{\scriptsize$\pm$6.0} & 59.7{\scriptsize$\pm$6.7} & 70.8{\scriptsize$\pm$2.1} & 63.2{\scriptsize$\pm$3.2} & 96.5{\scriptsize$\pm$1.2} \\
+Gemini 3.5 Flash-Lite & 3 & 45.1{\scriptsize$\pm$3.2} & 66.0{\scriptsize$\pm$5.2} & 23.6{\scriptsize$\pm$3.2} & 52.8{\scriptsize$\pm$3.2} & 71.5{\scriptsize$\pm$1.2} & 60.4{\scriptsize$\pm$2.1} & 82.6{\scriptsize$\pm$2.4} \\
+\bottomrule
+\end{tabular}

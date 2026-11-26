@@ -1,0 +1,132 @@
+\chapter{Phương pháp}
+\label{chap:phuong-phap}
+
+\section{Dữ liệu}
+\label{sec:du-lieu}
+
+\textbf{SemFault-250}~\cite{yang2026semloc} gồm 250 chương trình Python một hàm, mỗi chương trình có một lỗi cài vào và
+khoảng mười kiểm thử; nhóm chia cố định 50 chương trình làm tập dev (chỉ để chọn tham số) và 200 làm tập test. Trên nhãn
+đã chuẩn hóa, tập test còn \RqTwoRepairedAllSemlocN{} chương trình vì các nhãn không kiểm chứng được bị loại.
+
+\textbf{Bộ đã chuẩn hóa.} Có \GtBlankN{} dòng lỗi chuẩn là dòng trống và \GtNotExecutedN{} chương trình không có kiểm
+thử thất bại nào chạy tới dòng lỗi chuẩn. Nhóm xây một \emph{bộ phán định sửa tối thiểu} (Hình~\ref{fig:sua-nhan}): một
+dòng là vị trí lỗi nếu một thay đổi nhỏ tại dòng đó làm \emph{mọi} kiểm thử đạt. LLM chỉ đề xuất bản sửa, kiểm thử quyết
+định (GPT-6 luna đề xuất; các lượt chạy lại dùng Claude Sonnet 5.5 và Claude Opus 5.5); dòng lân cận chỉ được tìm khi
+dòng gốc không chạy tới được. Bản sửa ``nhỏ'' thay một dòng và đổi tối đa bốn token hoặc một phần ba dòng. Chỉ bản thay thế
+mới xác nhận được một câu lệnh; điền dòng trống hay chèn thêm một dòng (cách sửa lỗi thiếu mã) chỉ được chấp nhận khi không
+câu lệnh nào gần đó sửa được, vì dòng điền hay chèn thêm thường chỉ ghi đè câu lệnh lỗi ở chỗ khác. Kết quả: \GtConfirmedN{} nhãn được xác nhận,
+\GtCorrectedN{} được dời vị trí, \GtUnverifiedN{} chưa kiểm chứng được (giữ vị trí gốc) và \GtUnverifiableN{} bị loại;
+bộ nhãn đã chuẩn hóa còn \GtRepairedN{} chương trình.
+
+\begin{figure}[H]\centering
+\input{figures/sua-nhan}
+\caption{Bộ phán định sửa tối thiểu: LLM chỉ đề xuất bản sửa, kiểm thử quyết định dòng nào là dòng lỗi. Nhãn được xác nhận hoặc dời vị trí khi một bản sửa nhỏ làm mọi kiểm thử đạt; nhãn chưa kiểm chứng giữ nguyên vị trí gốc}\label{fig:sua-nhan}
+\end{figure}
+
+\textbf{Bộ đã rà soát và duyệt mù.} Một LLM (Claude Fable 5.1) đọc chương trình, kiểm thử và nhãn gốc của cả 250
+chương trình và nhận định nhãn đúng, sai (kèm dòng đề xuất) hay lỗi hai dòng. \ReviewReviewersN{} thành viên nhóm duyệt
+\ReviewHumanN{} nhãn (các nhãn đã dời và mọi nhãn LLM cho là sai), đồng ý với LLM ở \ReviewAgreeN{}/\ReviewHumanN{} ca;
+trưởng nhóm sửa thêm \ReviewOverrideN{} ca có bằng chứng chạy kiểm thử; \LabaudAllExtended{} nhãn được thêm dòng thứ hai
+chỉ theo LLM. Bộ \emph{đã rà soát} có đủ \LabaudAllN{} chương trình, \LabaudAllTwoLine{} nhãn hai dòng. Vòng \emph{duyệt
+mù} trên \BlindBlindAllPrograms{} chương trình ngẫu nhiên kiểm tra lại bộ này: hai thành viên chưa từng xem chương trình
+duyệt độc lập, dòng ứng viên được xáo và không kèm nhận định của LLM; \BlindAnswersExcluded{}/\BlindAnswersTotal{} câu
+dẫn lại tệp duyệt cũ bị loại theo quy tắc đặt trước. Bộ đã chuẩn hóa chỉ do kiểm thử quyết định nên dùng cho kết quả
+chính; bộ đã rà soát có nhãn do LLM đề xuất nên có thể có lợi cho phương pháp dùng LLM (Mục~\ref{sec:moi-de-doa}) và
+chỉ là góc nhìn độ nhạy (Bảng~\ref{tab:ba-bo-nhan}, Hình~\ref{fig:ra-soat}).
+
+\begin{table}[H]\centering
+\caption{Ba bộ dòng lỗi chuẩn dùng trong tiểu luận}\label{tab:ba-bo-nhan}
+\small
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule Bộ nhãn & Ai quyết định & Vai trò \\ \midrule
+Gốc & Tác giả SemLoc & So với bài báo gốc \\
+Đã chuẩn hóa & Kiểm thử (LLM chỉ đề xuất bản sửa) & Kết quả chính; LLM không phán đoán vị trí \\
+Đã rà soát & LLM rà trước, thành viên nhóm duyệt, trưởng nhóm sửa ca có bằng chứng chạy kiểm thử & Góc nhìn độ nhạy; đủ mọi chương trình \\
+\bottomrule\end{tabularx}
+\end{table}
+
+\begin{figure}[H]\centering
+\input{figures/ra-soat-nhan}
+\caption{Rà soát nhãn hai bước (LLM rà trước, thành viên nhóm duyệt) và vòng duyệt mù kiểm tra lại bộ nhãn đã rà soát mà không có gợi ý của LLM}\label{fig:ra-soat}
+\end{figure}
+
+\textbf{BugsInPy và biến thể đổi tên.} Từ dự án youtube-dl của BugsInPy~\cite{widyasari2020}, nhóm giữ 31 lỗi tái hiện
+được (kiểm thử thất bại trên bản lỗi, đạt trên bản sửa, đo được độ phủ); dòng lỗi chuẩn là các dòng bị sửa trong hàm mà
+kiểm thử thất bại chạy qua. Để kiểm tra ghi nhớ~\cite{ramos2024memorize,xu2024contam}, mọi định danh tự định nghĩa được
+đổi thành tên vô nghĩa và chú thích bị xóa, giữ nguyên số dòng và kết quả kiểm thử: còn 199 chương trình của tập test.
+
+\section{Các phương pháp so sánh}
+\label{sec:phuong-phap-so-sanh}
+
+Bảng~\ref{tab:phuong-phap} tóm tắt năm phương pháp của so sánh chính, Hình~\ref{fig:thiet-ke} là thiết kế thực nghiệm.
+LLM-Direct là chế độ dự đoán trực tiếp của SemLoc; SemLoc chạy bằng mã nguồn gốc của tác giả, chỉ thay lớp gọi LLM.
+
+\begin{table}[H]\centering
+\caption{Các phương pháp trong so sánh chính: đầu vào, số lượt gọi LLM trung bình mỗi chương trình (tập test, Gemini 3.8 Flash) và việc có chạy kiểm thử hay không}\label{tab:phuong-phap}
+{\setstretch{1.15}\small
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule Phương pháp & Đầu vào & Lượt gọi LLM & Chạy kiểm thử \\ \midrule
+SBFL (Ochiai) & Ma trận độ phủ kiểm thử $\times$ dòng & -- & có \\
+LLM-Direct & Chỉ mã nguồn & \CostLlmDirectCalls & không \\
+SemLoc & Mã nguồn; ràng buộc do LLM viết được chèn vào và chạy cùng kiểm thử & \CostSemlocCalls & có \\
+SemLoc−Bonus & Như SemLoc, bỏ điểm thưởng cho dòng LLM tự đoán & \CostSemlocCalls & có \\
+\textbf{FailLoc} & Mã nguồn, tên và dòng lỗi đầu tiên của từng kiểm thử thất bại & \CostLlmTestsCalls & có \\
+\bottomrule\end{tabularx}}
+\end{table}
+
+\begin{figure}[H]\centering
+\input{figures/thiet-ke}
+\caption{Thiết kế thực nghiệm của so sánh chính: mọi phương pháp chạy trên cùng các chương trình của tập test, cùng mô hình, trên ba bộ nhãn (gốc, đã chuẩn hóa, đã rà soát), mỗi cấu hình có LLM chạy ba lần}\label{fig:thiet-ke}
+\end{figure}
+
+\textbf{FailLoc} (Failure-guided Localization), phương pháp đề xuất của nhóm, là một lượt gọi LLM
+($T = \ConstTemperature$) với mã nguồn đánh số dòng, số kiểm thử đạt/không đạt, câu ``chương trình có đúng một dòng
+lỗi'', tên và dòng thông báo lỗi đầu tiên của mỗi kiểm thử thất bại; LLM trả về năm dòng nghi ngờ nhất
+(Hình~\ref{fig:failloc-vd}; prompt trong kho mã, tệp \texttt{src/flx/direct\_cov.py}, cố định trước khi xem tập test).
+Ý tưởng này lấy từ thực tế công nghiệp~\cite{medeiros2026crash} và từ kết quả nhật ký lỗi giúp LLM định vị~\cite{wu2023llmfl}. Biến thể \textbf{FailLoc+Cov} chú thích thêm cho mỗi dòng số kiểm thử thất bại và thành công
+chạy qua nó: FailLoc so với LLM-Direct đo tác dụng của kiểm thử thất bại, FailLoc+Cov so với FailLoc đo tác dụng của độ phủ.
+
+\begin{figure}[H]\centering
+\input{../generated/vi/fig_failloc_votes_apportion}
+\caption{FailLoc trên \texttt{votes\_apportion} (lượt chạy 1, Gemini 3.8 Flash): prompt gửi cho LLM (các dòng ngoài hàm được lược bớt) và năm dòng LLM trả về; dòng lỗi theo nhãn đứng hạng 1}\label{fig:failloc-vd}
+\end{figure}
+
+\textbf{Các cách bổ sung.} \emph{CovGate} bổ sung bằng chứng độ phủ cho điểm dòng của SemLoc qua bốn thành phần bật/tắt
+được (cổng độ phủ, cộng $\lambda\cdot$Ochiai với $\lambda \in \{\ConstLambdaGrid\}$, xếp lại bằng kiểm chứng phản thực
+tế, chỉ thưởng dòng đoán khi có bằng chứng thực thi); cấu hình chọn trên tập dev chỉ còn là phá hòa bằng Ochiai
+($\lambda = \ConstLambdaOriginal$ trên bộ gốc, $\lambda = \ConstLambdaRepaired$ trên bộ đã chuẩn hóa).
+\emph{FailLoc+Verify} (Hình~\ref{fig:verify}) dùng kiểm thử làm trọng tài: với $k$ dòng đầu của FailLoc, LLM viết một bản
+sửa nhỏ tại dòng đó, và dòng có bản sửa làm mọi kiểm thử đạt được đưa lên đầu; lưới \PavGridSize{} cấu hình được đánh
+giá offline trên tập dev với quy tắc chọn cố định trước. \emph{FailLoc+Vote} gộp ba câu trả lời bằng tổng nghịch đảo hạng.
+
+\begin{figure}[H]\centering
+\input{figures/de-xuat-kiem-chung}
+\caption{FailLoc+Verify (đề xuất rồi kiểm chứng): kiểm thử được dùng làm trọng tài cho vị trí lỗi; trên bộ dữ liệu này kiểm thử quá yếu nên bản sửa nhỏ ở dòng không lỗi cũng thường làm mọi kiểm thử đạt}\label{fig:verify}
+\end{figure}
+
+\textbf{Phân tích tĩnh.} Ruff và pyrefly (phiên bản cố định) chạy trên cả 250 chương trình; một chương trình ``trúng''
+khi có cảnh báo đúng dòng lỗi chuẩn, và số trúng được so với số trúng kỳ vọng nếu cảnh báo rải ngẫu nhiên.
+
+\section{Thiết lập thực nghiệm và kiểm định thống kê}
+\label{sec:thiet-lap}\label{sec:audit-phan-ra}
+
+Mô hình chính là Gemini 3.8 Flash; RQ4 thêm GPT-6 luna, Claude Sonnet 5.5, gpt-oss-120b và Gemini 3.5 Flash-Lite trên
+một tập con cố định 50 chương trình của tập test (\ParetoSemlocGeminiThreeEightFlashN{} trên nhãn đã chuẩn hóa). SemLoc chạy ở $T = \ConstTemperature$ như bài báo; mọi lượt gọi LLM được ghi nhật ký
+và lưu đệm nên phát lại được. Mỗi cấu hình có LLM chạy 3 lần, chỉ dùng lượt qua kiểm tra sức khỏe (không còn lỗi gọi
+LLM hay lỗi ở bước kiểm chứng phản thực tế). Kết quả là trung bình $\pm$ độ lệch chuẩn qua 3 lần; so sánh cặp dùng
+$\Delta$ kèm khoảng tin cậy bootstrap theo cụm, McNemar và Wilcoxon (xem dưới). Chi phí đo bằng số lượt
+gọi, số token và thời gian mỗi chương trình.
+
+\label{sec:thong-ke}%
+Mọi so sánh giữa hai phương pháp là so sánh \emph{cặp} trên cùng các chương trình: McNemar (bản chính xác khi số ca
+bất đồng nhỏ) cho trúng/trượt top-$k$, Wilcoxon dấu hạng cho hạng nghịch đảo kèm hệ số tương quan hạng hai chuỗi
+$r_{rb}$ làm độ lớn hiệu ứng. Kết quả mỗi chương trình được lấy trung bình qua ba lần chạy; vì nhiều chương trình
+sinh từ cùng khuôn mẫu, khoảng tin cậy \ConstCiLevel\% được tính bằng bootstrap \emph{theo cụm khuôn mẫu} với
+\ConstBootstrapDraws{} lần lấy mẫu. Đóng góp của từng tín hiệu được đo bằng giá trị Shapley, với $v(S)$ là Acc@$k$ khi
+chỉ bật các tín hiệu trong $S$; vì Acc@$k$ là trung bình theo chương trình, mỗi $\phi_i$ cũng có khoảng tin cậy bootstrap:
+\begin{equation} \phi_i = \sum_{S \subseteq N\setminus\{i\}} \frac{|S|!\,(|N|-|S|-1)!}{|N|!}\,\bigl(v(S\cup\{i\}) - v(S)\bigr). \label{eq:shapley} \end{equation}
+
+Từ nhật ký công bố của tác giả, nhóm tính lại mọi cấu hình theo \emph{cách chấm của tác giả} (phá hòa theo thứ tự dòng,
+chương trình chạy lỗi bị loại khỏi mẫu số) và \emph{cách chấm công bằng} (công thức~\eqref{eq:acck}), rồi bỏ lần lượt
+các thành phần không được mô tả. Để phân rã ``grounded hay guessed'', giá trị Shapley~\eqref{eq:shapley} chia Acc@$k$
+của SemLoc cho hai tín hiệu \{dòng đoán, phổ\} (bản mở rộng thêm Ochiai và kiểm chứng phản thực tế).

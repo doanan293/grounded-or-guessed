@@ -1,0 +1,28 @@
+{\small\setstretch{1.05}
+\begin{tabular}{@{}r>{\raggedright\arraybackslash}p{0.86\linewidth}@{}}
+\toprule
+Dòng & Mã nguồn (dòng nghiêng: kiểm tra được SemLoc chèn vào) \\
+\midrule
+24 & \texttt{\hspace*{2.0em}for w in weights:} \\
+25 & \texttt{\hspace*{4.0em}portion = (w / weight\_sum) * total} \\
+26 & \texttt{\hspace*{4.0em}shares.append(portion if portion > minimum else minimum)} \\
+ & \textit{\color{semloc}kiểm tra C1: \texttt{shares[-1] <= portion}} \\
+27 & \texttt{} \\
+28 & \texttt{\hspace*{2.0em}if floor\_to\_int:} \\
+\bottomrule
+\end{tabular}
+
+\medskip
+\begin{tabularx}{\linewidth}{@{}lp{1.5cm}>{\raggedright\arraybackslash}X>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}@{}}
+\toprule
+Ràng buộc & Gắn ở & Biểu thức & Kiểm thử thất bại vi phạm & Kiểm thử thành công vi phạm & Ochiai & Hệ số vùng & Điểm cho dòng \\
+\midrule
+C1 & 26 & \texttt{shares[-1] <= portion} & 0 & 0 & 0,00 & 0,6 & 0,00 \\
+C2 & loop tail & \texttt{shares[-1] <= portion and sum(shares) <= total} & 0 & 0 & 0,00 & 0,9 & 0,00 \\
+C3 & before use & \texttt{sum(shares\_\_1) <= total} & 0 & 0 & 0,00 & 1,0 & 0,00 \\
+C4 & any return & \texttt{sum(\_\_cbfl\_result) <= total} & 0 & 0 & 0,00 & 0,3 & 0,00 \\
+\bottomrule
+\end{tabularx}
+
+\medskip
+Điểm xếp hạng: dòng 26: 0,00 + 1,2 (hạng 1).}

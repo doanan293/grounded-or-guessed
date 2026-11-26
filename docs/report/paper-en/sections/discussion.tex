@@ -1,0 +1,67 @@
+\section{Discussion and Threats to Validity}
+\label{sec:discussion}
+
+\textbf{Reading ``guessed'' correctly.} SemLoc's top line is the LLM's guess by design, and the failure analysis shows the
+guess is often semantically right and one line off the label. The lesson is therefore not that the bonus should go (on
+our runs removing it changes Acc@1 by \RqTwoRepairedAllSemlocNoPriorDAccOne{} points) but that a tool which claims to be
+grounded should state that its first answer is the model's, and that line-level labels need to accept equivalent fix
+locations before small differences between methods mean much.
+
+\textbf{Why tests make poor arbiters of location.} Three results share one cause. SemLoc's counterfactual step changes no
+ranking; our minimal-fix oracle moved \ReviewCorrectedOverturnedN{} of its \GtCorrectedN{} relocated labels to lines the review
+rejected; and propose-and-verify does not improve on its proposer. All three accept a line when a small patch there makes
+every test pass. With about ten tests per program, that criterion holds in \PavmechReviewedOtherLineFixable\% of
+fix attempts at non-faulty candidate lines, usually through a compensating constant or subtraction, and in only
+\PavmechReviewedFaultLineFixable\% at faulty ones (dev split, the proposer's top candidates), which two-line faults, omissions and larger edits put out of reach. This is the plausible-patch
+problem~\cite{qi2015kali,smith2015cure} seen from localization: the tests suffice to \emph{suggest} where the bug is, not to
+\emph{prove} it.
+
+\textbf{Saturation and practice.} With the reviewed (LLM-suggested) labels one prompt reaches \RqTwoReviewedAllLlmTestsAccThreeMean\% Acc@3.
+SemFault-250's programs are single short functions, its faults are small local mutations, and its test names state the
+violated intent (e.g., \texttt{test\_fee\_deducted\_once\_not\_per\_participant}); much of the difficulty the original paper
+measured came from mislabels. The benchmark can no longer show that an elaborate pipeline is needed; real bugs, where
+every method stays far from the ceiling, can. For practitioners, the strongest investment is tests that state intent, as
+test-driven development produces; and an AI agent that stops when the tests pass should have its patch reviewed, since
+about a quarter of fix attempts at plausible but non-faulty lines yield a test-passing patch on suites of this size.
+
+Table~\ref{tab:checklist} collects seven checks for evaluating LLM-based fault localization; each changed at least one number in
+this study.
+
+\begin{table}[!t]
+\centering
+\caption{Checklist for evaluating LLM-based fault localization, with what each check changed here}
+\label{tab:checklist}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{0.38\columnwidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+Check & Effect in this study \\
+\midrule
+Average-rank ties & SBFL Acc@5 \RqOneSbflOchiaiAuthorAllAccFive\% $\to$ \RqOneSbflOchiaiFairAllAccFive\% \\
+Fixed denominator, any-hit not rank one & delta debugging \RqOneDdAuthorAllAccOne\% $\to$ \RqOneDdFairAllAccOne\% in the released script \\
+Checked labels & \LabaudAllMoved{} of \LabaudAllN{} labels move; SemLoc's Acc@3 lead over LLM-Direct vanishes on reviewed labels \\
+Ablate every component, incl.\ undocumented & guess bonus: Acc@1 changes by \RqTwoRepairedAllSemlocNoPriorDAccOne{} without it \\
+Repeats with paired CIs & several single-repeat differences are not significant; pooled ones are \\
+Report cost & counterfactual step: \CostCfSharePct\% of calls, no ranking change \\
+Single prompt with failing tests & beats the pipeline at Acc@1 on all label sets (\RqTwoRepairedAllLlmTestsDAccOne{} repaired) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Threats to validity.}\label{sec:threats} Internally, the minimal-fix oracle can accept compensating fixes and never searches
+alternatives for reachable labels; the review overturned \ReviewCorrectedOverturnedN{} of its relocations. The reviewed
+labels are LLM-suggested; in the first round reviewers saw the suggestion and agreed in \ReviewAgreeN{} of \ReviewHumanN{}
+cases. The blind re-review supports them, but on a sample of \BlindBlindAllPrograms{} programs, with
+\BlindAnswersExcluded{} non-blind answers excluded and choices limited to the listed candidates, so the reviewed labels are
+still not fully independent of LLM judgment and may favor LLM-based methods; we therefore state main results on the original and
+repaired labels, which involve no LLM judgment of location. Two-line labels (\LabaudAllTwoLine{} programs) make the reviewed
+Acc@$k$ slightly easier. Line-level Acc@1 depends on whether a guard or the guarded statement is labeled; we report tolerant
+variants. The single prompt is ours, fixed before seeing test results. The knobs of propose-and-verify were selected on the
+dev split and then applied unchanged to the test split.
+
+Externally, test names in SemFault-250 state intent unusually clearly; on suites with generic names the
+single prompt's advantage may shrink, and we did not run a hidden-test-name ablation. Every program is one function, and
+for real bugs the target function is taken from the developer fix, so localizing the function within a project, the
+hard part on large code bases, is not evaluated. Real bugs come from one project (31 youtube-dl bugs). RQ2, RQ3, the
+decomposition and the renaming study use one model; the model-family subset has no CIs, and GPT-6 luna's FailLoc runs used the OpenAI API rather than Codex; models run at provider-default
+reasoning. Renaming changes identifiers and comments but not structure or test names, so memorization of templates is
+not fully excluded.

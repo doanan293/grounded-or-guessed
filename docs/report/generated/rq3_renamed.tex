@@ -1,0 +1,13 @@
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{Acc@1} & \multicolumn{3}{c}{Acc@3} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Method & Original & Renamed & $\Delta$ [95\% CI] & Original & Renamed & $\Delta$ [95\% CI] \\
+\midrule
+SemLoc & 53.6{\scriptsize$\pm$1.1} & 51.0{\scriptsize$\pm$1.1} & -2.6{\scriptsize\,[-7.5, 2.2]} & 75.8{\scriptsize$\pm$2.4} & 67.4{\scriptsize$\pm$1.7} & -8.5{\scriptsize\,[-13.8, -3.2]} \\
+SemLoc−Bonus & 42.9{\scriptsize$\pm$2.8} & 34.4{\scriptsize$\pm$1.8} & -8.5{\scriptsize\,[-13.3, -3.9]} & 71.2{\scriptsize$\pm$2.9} & 55.9{\scriptsize$\pm$2.2} & -15.3{\scriptsize\,[-21.1, -10.2]} \\
+LLM guess alone & 53.6{\scriptsize$\pm$1.1} & 51.0{\scriptsize$\pm$1.1} & -2.6{\scriptsize\,[-7.5, 2.2]} & 53.6{\scriptsize$\pm$1.1} & 51.0{\scriptsize$\pm$1.1} & -2.6{\scriptsize\,[-7.5, 2.2]} \\
+FailLoc+Cov & 58.4{\scriptsize$\pm$0.8} & 57.7{\scriptsize$\pm$0.0} & -0.7{\scriptsize\,[-3.4, 2.0]} & 92.4{\scriptsize$\pm$0.3} & 91.5{\scriptsize$\pm$1.4} & -0.9{\scriptsize\,[-3.3, 1.2]} \\
+FailLoc (ours) & 64.0{\scriptsize$\pm$1.1} & 62.8{\scriptsize$\pm$0.3} & -1.2{\scriptsize\,[-3.7, 1.1]} & 90.5{\scriptsize$\pm$0.9} & 90.1{\scriptsize$\pm$0.8} & -0.4{\scriptsize\,[-3.5, 2.7]} \\
+\bottomrule
+\end{tabular}

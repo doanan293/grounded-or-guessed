@@ -1,0 +1,77 @@
+% Báo cáo tiểu luận IT5440 — biên dịch: make -C docs/report vi-full | vi-lan1 | vi-lan2   (XeLaTeX + BibTeX)
+% Quy cách theo "Hướng dẫn làm và nộp tiểu luận" (mục III.1.2).
+\documentclass[fontsize=13pt,a4paper,oneside,numbers=noenddot]{scrreprt}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}                    % Times New Roman 13pt
+\usepackage{polyglossia}
+\setmainlanguage{vietnamese}
+\usepackage[top=3.5cm,bottom=3cm,left=2.5cm,right=2.5cm,head=24pt]{geometry}
+\usepackage{setspace}
+\setstretch{1.5}                                 % giãn dòng 1.5
+\setlength{\parskip}{6pt}                        % spacing before 6pt giữa các đoạn
+\usepackage{graphicx,booktabs,amsmath,amssymb,xcolor,float,tabularx,multirow,longtable,adjustbox}
+\newcommand{\TallTableHeight}{0.82\textheight}   % chiều cao tối đa của bảng dài ở phụ lục
+\usepackage{colortbl}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc,backgrounds}
+\definecolor{failloc}{HTML}{D9541E}   % FailLoc, như scripts/fig_style.py
+\definecolor{semloc}{HTML}{2A78D6}    % SemLoc
+\tikzset{fbox/.style={draw=#1, rounded corners=2pt, align=center, fill=#1!7, inner sep=3pt},
+  farr/.style={-{Stealth[length=2.2mm]}, thick, draw=#1}, farr/.default=black!70}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces=true,numbers=left,numberstyle=\tiny,
+        frame=single,breaklines=true,xleftmargin=1.5em}
+\counterwithin{equation}{chapter}                % phương trình (3.1) theo chương
+\usepackage[htt]{hyphenat}                       % tên định danh dài trong \texttt được phép ngắt dòng
+\setlength{\emergencystretch}{3em}
+\usepackage[hidelinks]{hyperref}
+\usepackage{chngcntr}
+\counterwithin{figure}{chapter}                  % Hình 3.4 = hình thứ 4 của chương 3
+\counterwithin{table}{chapter}
+\usepackage{caption}
+\captionsetup[table]{position=top}               % tên bảng ở trên
+\captionsetup[figure]{position=bottom}           % tên hình ở dưới
+
+% Tiêu đề: chương 16 đậm; mục chữ hoa đậm; tiểu mục 14 đậm; tiểu mục con 14 nghiêng
+\setkomafont{disposition}{\rmfamily\bfseries}
+\setkomafont{chapter}{\fontsize{16}{20}\selectfont\bfseries}
+\setkomafont{section}{\fontsize{14}{18}\selectfont\bfseries\MakeUppercase}
+\setkomafont{subsection}{\fontsize{14}{18}\selectfont\bfseries}
+\setkomafont{subsubsection}{\fontsize{14}{18}\selectfont\mdseries\itshape}
+\RedeclareSectionCommand[beforeskip=0pt,afterskip=18pt]{chapter}
+\renewcommand*{\chapterformat}{\chapapp~\thechapter.\enskip}
+\setcounter{secnumdepth}{3}                      % tối đa 4 chữ số: 4.1.2.3
+\setcounter{tocdepth}{1}                      % mục lục đến cấp mục (giới hạn 45 trang)
+
+% Số trang ở giữa chân trang
+\usepackage[automark]{scrlayer-scrpage}
+\clearpairofpagestyles
+\cfoot*{\pagemark}
+\pagestyle{scrheadings}
+
+\newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+\input{../generated/numbers-vi}
+
+\begin{document}
+\input{frontmatter/bia}
+\pagenumbering{roman}
+\input{frontmatter/camket}
+\input{frontmatter/nhom}
+{\setstretch{0.92}\small\tableofcontents}
+{\setstretch{1.0}\small\listoftables
+\let\clearpage\relax\vspace{1em}\listoffigures}
+\input{frontmatter/vietat}
+
+\clearpage
+\pagenumbering{arabic}
+\input{chapters/ch1-gioi-thieu}
+\input{chapters/ch2-co-so-ly-thuyet}       % cơ sở lý thuyết và nội dung 1 của thầy: tài liệu, từ khóa, nghiên cứu liên quan
+\input{chapters/ch3-phuong-phap}           % nội dung 2: RQ, thiết kế thực nghiệm
+\input{chapters/ch4-thuc-nghiem-ket-qua}
+\input{chapters/ch5-ket-luan}              % nội dung 3: đóng góp, triết lý khoa học
+
+{\setstretch{1.0}\small
+\bibliographystyle{../paper-en/IEEEtran}
+\bibliography{../references}}
+\end{document}

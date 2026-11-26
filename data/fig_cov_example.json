@@ -1,0 +1,428 @@
+{
+ "program": "combine_responses",
+ "label_lines": [
+  72
+ ],
+ "reviewed_lines": [
+  71,
+  72
+ ],
+ "code_lines": [
+  {
+   "no": 32,
+   "text": "def combine_responses("
+  },
+  {
+   "no": 33,
+   "text": "    left: Sequence[int],"
+  },
+  {
+   "no": 34,
+   "text": "    right: Sequence[int],"
+  },
+  {
+   "no": 35,
+   "text": ") -> List[int]:"
+  },
+  {
+   "no": 36,
+   "text": "    \"\"\"Merge two individually-sorted response sequences into one sorted list."
+  },
+  {
+   "no": 37,
+   "text": ""
+  },
+  {
+   "no": 38,
+   "text": "    Both *left* and *right* must already be sorted in non-decreasing order."
+  },
+  {
+   "no": 39,
+   "text": "    The function performs a single linear pass (classic merge) and returns"
+  },
+  {
+   "no": 40,
+   "text": "    a new list containing every element from both inputs, in order."
+  },
+  {
+   "no": 41,
+   "text": ""
+  },
+  {
+   "no": 42,
+   "text": "    Args:"
+  },
+  {
+   "no": 43,
+   "text": "        left:  First sorted sequence of response timestamps / priorities."
+  },
+  {
+   "no": 44,
+   "text": "        right: Second sorted sequence of response timestamps / priorities."
+  },
+  {
+   "no": 45,
+   "text": ""
+  },
+  {
+   "no": 46,
+   "text": "    Returns:"
+  },
+  {
+   "no": 47,
+   "text": "        A single sorted list that is the union of *left* and *right*."
+  },
+  {
+   "no": 48,
+   "text": ""
+  },
+  {
+   "no": 49,
+   "text": "    Raises:"
+  },
+  {
+   "no": 50,
+   "text": "        ValueError:   If either input is not sorted."
+  },
+  {
+   "no": 51,
+   "text": "        OverflowError: If combined size exceeds ``MAX_MERGE_SIZE``."
+  },
+  {
+   "no": 52,
+   "text": "    \"\"\""
+  },
+  {
+   "no": 53,
+   "text": "    _validate_sorted(left, \"left\")"
+  },
+  {
+   "no": 54,
+   "text": "    _validate_sorted(right, \"right\")"
+  },
+  {
+   "no": 55,
+   "text": "    _check_size_limit(left, right)"
+  },
+  {
+   "no": 56,
+   "text": ""
+  },
+  {
+   "no": 57,
+   "text": "    i = j = 0"
+  },
+  {
+   "no": 58,
+   "text": "    merged: List[int] = []"
+  },
+  {
+   "no": 59,
+   "text": ""
+  },
+  {
+   "no": 60,
+   "text": "    while i < len(left) and j < len(right):"
+  },
+  {
+   "no": 61,
+   "text": "        if left[i] <= right[j]:"
+  },
+  {
+   "no": 62,
+   "text": "            merged.append(left[i])"
+  },
+  {
+   "no": 63,
+   "text": "            i += 1"
+  },
+  {
+   "no": 64,
+   "text": "        else:"
+  },
+  {
+   "no": 65,
+   "text": "            merged.append(right[j])"
+  },
+  {
+   "no": 66,
+   "text": "            j += 1"
+  },
+  {
+   "no": 67,
+   "text": ""
+  },
+  {
+   "no": 68,
+   "text": "    merged.extend(left[i:])"
+  },
+  {
+   "no": 69,
+   "text": "    merged.extend(right[j:])"
+  },
+  {
+   "no": 70,
+   "text": ""
+  },
+  {
+   "no": 71,
+   "text": "    if merged and left and right and merged[-1] == left[-1] == right[-1]:"
+  },
+  {
+   "no": 72,
+   "text": "        merged.pop()"
+  },
+  {
+   "no": 73,
+   "text": ""
+  },
+  {
+   "no": 74,
+   "text": "    if len(merged) >= MERGE_LOG_THRESHOLD:"
+  },
+  {
+   "no": 75,
+   "text": "        _log.debug(\"Merged %d responses (threshold=%d)\", len(merged), MERGE_LOG_THRESHOLD)"
+  },
+  {
+   "no": 76,
+   "text": ""
+  },
+  {
+   "no": 77,
+   "text": "    return merged"
+  }
+ ],
+ "fp": {
+  "32": [
+   4,
+   6
+  ],
+  "33": [
+   0,
+   0
+  ],
+  "34": [
+   0,
+   0
+  ],
+  "35": [
+   0,
+   0
+  ],
+  "36": [
+   0,
+   0
+  ],
+  "37": [
+   0,
+   0
+  ],
+  "38": [
+   0,
+   0
+  ],
+  "39": [
+   0,
+   0
+  ],
+  "40": [
+   0,
+   0
+  ],
+  "41": [
+   0,
+   0
+  ],
+  "42": [
+   0,
+   0
+  ],
+  "43": [
+   0,
+   0
+  ],
+  "44": [
+   0,
+   0
+  ],
+  "45": [
+   0,
+   0
+  ],
+  "46": [
+   0,
+   0
+  ],
+  "47": [
+   0,
+   0
+  ],
+  "48": [
+   0,
+   0
+  ],
+  "49": [
+   0,
+   0
+  ],
+  "50": [
+   0,
+   0
+  ],
+  "51": [
+   0,
+   0
+  ],
+  "52": [
+   0,
+   0
+  ],
+  "53": [
+   4,
+   6
+  ],
+  "54": [
+   4,
+   5
+  ],
+  "55": [
+   4,
+   5
+  ],
+  "56": [
+   0,
+   0
+  ],
+  "57": [
+   4,
+   5
+  ],
+  "58": [
+   4,
+   5
+  ],
+  "59": [
+   0,
+   0
+  ],
+  "60": [
+   4,
+   5
+  ],
+  "61": [
+   4,
+   2
+  ],
+  "62": [
+   4,
+   2
+  ],
+  "63": [
+   4,
+   2
+  ],
+  "64": [
+   0,
+   0
+  ],
+  "65": [
+   2,
+   1
+  ],
+  "66": [
+   2,
+   1
+  ],
+  "67": [
+   0,
+   0
+  ],
+  "68": [
+   4,
+   5
+  ],
+  "69": [
+   4,
+   5
+  ],
+  "70": [
+   0,
+   0
+  ],
+  "71": [
+   4,
+   5
+  ],
+  "72": [
+   4,
+   0
+  ],
+  "73": [
+   0,
+   0
+  ],
+  "74": [
+   4,
+   5
+  ],
+  "75": [
+   0,
+   0
+  ],
+  "76": [
+   0,
+   0
+  ],
+  "77": [
+   4,
+   5
+  ]
+ },
+ "n_fail": 4,
+ "n_pass": 6,
+ "failloc_top5": [
+  [
+   71,
+   72,
+   68,
+   69,
+   61
+  ],
+  [
+   71,
+   72,
+   68,
+   69,
+   61
+  ],
+  [
+   71,
+   72
+  ]
+ ],
+ "cov_top5": [
+  [
+   72,
+   71,
+   68,
+   69,
+   77
+  ],
+  [
+   72,
+   71,
+   68,
+   69,
+   61
+  ],
+  [
+   72,
+   71,
+   68,
+   69,
+   74
+  ]
+ ],
+ "cov_prompt": "The program below has exactly one faulty line. 4 tests fail and 6 pass.\nEach line is annotated with [f=<number of failing tests that execute it>/p=<number of passing tests>].\n\n1: from __future__ import annotations   [f=4/p=6]\n2:    [f=0/p=0]\n3: import logging   [f=4/p=6]\n4: from typing import List, Sequence   [f=4/p=6]\n5:    [f=0/p=0]\n6: _log = logging.getLogger(__name__)   [f=4/p=6]\n7:    [f=0/p=0]\n8: MAX_MERGE_SIZE = 100_000   [f=4/p=6]\n9: DEFAULT_SENTINEL = object()   [f=4/p=6]\n10: MERGE_LOG_THRESHOLD = 500   [f=4/p=6]\n11:    [f=0/p=0]\n12:    [f=0/p=0]\n13: def _validate_sorted(seq: Sequence, label: str) -> None:   [f=4/p=6]\n14:     \"\"\"Verify that the input sequence is sorted in non-decreasing order.\"\"\"   [f=0/p=0]\n15:     for k in range(1, len(seq)):   [f=4/p=6]\n16:         if seq[k] < seq[k - 1]:   [f=3/p=5]\n17:             raise ValueError(   [f=0/p=1]\n18:                 f\"{label} is not sorted at index {k}: \"   [f=0/p=0]\n19:                 f\"{seq[k - 1]} > {seq[k]}\"   [f=0/p=0]\n20:             )   [f=0/p=0]\n21:    [f=0/p=0]\n22:    [f=0/p=0]\n23: def _check_size_limit(left: Sequence, right: Sequence) -> None:   [f=4/p=6]\n24:     \"\"\"Raise if the combined length would exceed the configured limit.\"\"\"   [f=0/p=0]\n25:     total = len(left) + len(right)   [f=4/p=5]\n26:     if total > MAX_MERGE_SIZE:   [f=4/p=5]\n27:         raise OverflowError(   [f=0/p=0]\n28:             f\"Combined response count {total} exceeds MAX_MERGE_SIZE ({MAX_MERGE_SIZE})\"   [f=0/p=0]\n29:         )   [f=0/p=0]\n30:    [f=0/p=0]\n31:    [f=0/p=0]\n32: def combine_responses(   [f=4/p=6]\n33:     left: Sequence[int],   [f=0/p=0]\n34:     right: Sequence[int],   [f=0/p=0]\n35: ) -> List[int]:   [f=0/p=0]\n36:     \"\"\"Merge two individually-sorted response sequences into one sorted list.   [f=0/p=0]\n37:    [f=0/p=0]\n38:     Both *left* and *right* must already be sorted in non-decreasing order.   [f=0/p=0]\n39:     The function performs a single linear pass (classic merge) and returns   [f=0/p=0]\n40:     a new list containing every element from both inputs, in order.   [f=0/p=0]\n41:    [f=0/p=0]\n42:     Args:   [f=0/p=0]\n43:         left:  First sorted sequence of response timestamps / priorities.   [f=0/p=0]\n44:         right: Second sorted sequence of response timestamps / priorities.   [f=0/p=0]\n45:    [f=0/p=0]\n46:     Returns:   [f=0/p=0]\n47:         A single sorted list that is the union of *left* and *right*.   [f=0/p=0]\n48:    [f=0/p=0]\n49:     Raises:   [f=0/p=0]\n50:         ValueError:   If either input is not sorted.   [f=0/p=0]\n51:         OverflowError: If combined size exceeds ``MAX_MERGE_SIZE``.   [f=0/p=0]\n52:     \"\"\"   [f=0/p=0]\n53:     _validate_sorted(left, \"left\")   [f=4/p=6]\n54:     _validate_sorted(right, \"right\")   [f=4/p=5]\n55:     _check_size_limit(left, right)   [f=4/p=5]\n56:    [f=0/p=0]\n57:     i = j = 0   [f=4/p=5]\n58:     merged: List[int] = []   [f=4/p=5]\n59:    [f=0/p=0]\n60:     while i < len(left) and j < len(right):   [f=4/p=5]\n61:         if left[i] <= right[j]:   [f=4/p=2]\n62:             merged.append(left[i])   [f=4/p=2]\n63:             i += 1   [f=4/p=2]\n64:         else:   [f=0/p=0]\n65:             merged.append(right[j])   [f=2/p=1]\n66:             j += 1   [f=2/p=1]\n67:    [f=0/p=0]\n68:     merged.extend(left[i:])   [f=4/p=5]\n69:     merged.extend(right[j:])   [f=4/p=5]\n70:    [f=0/p=0]\n71:     if merged and left and right and merged[-1] == left[-1] == right[-1]:   [f=4/p=5]\n72:         merged.pop()   [f=4/p=0]\n73:    [f=0/p=0]\n74:     if len(merged) >= MERGE_LOG_THRESHOLD:   [f=4/p=5]\n75:         _log.debug(\"Merged %d responses (threshold=%d)\", len(merged), MERGE_LOG_THRESHOLD)   [f=0/p=0]\n76:    [f=0/p=0]\n77:     return merged   [f=4/p=5]\n\nFailing tests:\n- test_shared_tail_value_preserves_all_elements: \n- test_identical_sequences_double_elements: \n- test_single_shared_element: \n- test_all_duplicates_at_tail: \n\nReturn the five most suspicious line numbers, most suspicious first."
+}

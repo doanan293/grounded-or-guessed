@@ -1,0 +1,17 @@
+\begin{abstract}
+When tests fail, developers increasingly hand the failure to an LLM and ask where the bug is. Research tools propose
+far more elaborate pipelines that claim to ground the model's reasoning in program execution. We test that claim on
+SemLoc, a recent localizer for semantic faults that turns LLM-inferred constraints into a violation spectrum, and
+compare it with the everyday practice. We recompute every published configuration from the authors' logs, audit the
+evaluation, check the benchmark's labels by execution and by review, rerun everything three times with a current model,
+and ablate each signal. Four findings stand out. First, SemLoc's top-1 answer is guessed by design: an undocumented bonus
+always ranks the LLM's own guess first, and the counterfactual step never changes a ranking. Second,
+\LabaudAllMoved{} of the benchmark's \LabaudAllN{} fault labels move under review (\LabaudAllBlank{} sit on blank lines),
+and on the reviewed labels SemLoc's Acc@3 lead over direct prompting vanishes. Third, a single prompt with the failing tests beats the pipeline at Acc@1 on all
+three label sets (\RqTwoRepairedAllLlmTestsDAccOne{} points on execution-repaired labels) at about a seventh of the
+tokens, though at Acc@5 SemLoc stays ahead on the original labels; ablation shows the failing tests, not per-line coverage, carry the signal. Fourth, nothing more elaborate
+closes the gap: adding coverage to SemLoc helps it only slightly, and verifying candidate lines with test-passing
+patches, voting, and static analysis with ruff and pyrefly do not close it, because small test-passing patches exist at
+non-faulty lines (\PavmechReviewedOtherLineFixable\% of fix attempts at non-faulty candidate lines, dev split): the tests suggest where the
+bug is but cannot prove it. Code, data, LLM logs and a replayable cache are public.
+\end{abstract}

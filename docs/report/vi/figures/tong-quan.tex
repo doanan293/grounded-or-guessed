@@ -1,0 +1,33 @@
+% Hình tổng quan: SemLoc (nhiều bước) và FailLoc (một lượt gọi). Số liệu qua macro trong generated/numbers-vi.tex.
+{\setstretch{1}%
+\begin{tikzpicture}[node distance=5mm and 4mm,
+  s/.style={fbox=semloc, text width=24mm, minimum height=13mm},
+  f/.style={fbox=failloc, text width=24mm, minimum height=13mm},
+  hid/.style={fbox=failloc, dashed, text width=24mm, minimum height=13mm},
+  lane/.style={font=\bfseries, anchor=west}]
+\node[lane, text=semloc] (ls) at (0, 0) {SemLoc: quy trình nhiều bước};
+\node[s, below=2mm of ls.south west, anchor=north west] (s1) {Mã nguồn\\+ kiểm thử};
+\node[s, right=of s1] (s2) {LLM viết\\ràng buộc};
+\node[s, right=of s2] (s3) {Chèn và\\chạy kiểm thử};
+\node[s, right=of s3] (s4) {Phổ vi phạm\\(Ochiai)};
+\node[s, below=of s4] (s5) {LLM vá thử\\(\CostCfSharePct\% lượt gọi)};
+\node[hid, left=of s5] (s6) {+\ConstPriorWeight{} cho\\dòng LLM đoán};
+\node[s, left=of s6] (s7) {Xếp hạng\\dòng};
+\node[font=\small, text=black!70, align=left, anchor=north west] (cs) at (s1.south west |- s7.south) {
+  $\approx$\,\CostSemlocTokensK{} nghìn token,\\\CostSemlocCalls{} lượt gọi mỗi chương trình};
+\draw[farr] (s1) -- (s2); \draw[farr] (s2) -- (s3); \draw[farr] (s3) -- (s4); \draw[farr] (s4) -- (s5);
+\draw[farr] (s5) -- (s6); \draw[farr] (s6) -- (s7);
+\begin{scope}[on background layer]
+  \node[fit=(ls)(s1)(s4)(s5)(s7)(cs), draw=semloc!40, rounded corners=4pt, inner sep=4pt, fill=semloc!2] (bs) {};
+\end{scope}
+\node[lane, text=failloc, below=11mm of bs.south west, anchor=north west] (lf) {FailLoc: một lượt gọi};
+\node[f, below=2mm of lf.south west, anchor=north west] (f1) {Mã nguồn\\+ kiểm thử\\thất bại};
+\node[f, right=of f1, text width=52mm] (f2) {Một lượt gọi LLM:\\tên và dòng lỗi đầu tiên\\của từng kiểm thử thất bại};
+\node[f, right=of f2] (f3) {Xếp hạng\\dòng};
+\node[font=\small, text=black!70, align=left, anchor=north west] at (f1.south west) {
+  $\approx$\,\CostLlmTestsTokensK{} nghìn token, \CostLlmTestsCalls{} lượt gọi mỗi chương trình};
+\draw[farr] (f1) -- (f2); \draw[farr] (f2) -- (f3);
+\begin{scope}[on background layer]
+  \node[fit=(lf)(f1)(f3), draw=failloc!40, rounded corners=4pt, inner sep=4pt, inner ysep=9mm, yshift=-3.5mm, fill=failloc!2] {};
+\end{scope}
+\end{tikzpicture}}

@@ -1,0 +1,34 @@
+{\small\setstretch{1.0}
+\fbox{\parbox{0.95\linewidth}{\ttfamily\footnotesize The program below has exactly one faulty line. 1 tests fail and 4 pass.\\
+~\\
+...\\
+9: def votes\_apportion(total, weights, *, floor\_to\_int=True, minimum=0):\\
+10: ~~~~"""\\
+11: ~~~~Compute weighted allocation for votes capacity.\\
+12: ~~~~"""\\
+13: ~~~~if len(weights) == 0:\\
+14: ~~~~~~~~raise ValueError("weights required")\\
+15: ~~~~if total < 0:\\
+16: ~~~~~~~~raise ValueError("negative total")\\
+17: ~~~~if minimum < 0:\\
+18: ~~~~~~~~raise ValueError("negative minimum")\\
+19: ~~~~if sum(weights) == 0:\\
+20: ~~~~~~~~raise ValueError("zero total weight")\\
+21: \\
+22: ~~~~weight\_sum = sum(weights)\\
+23: ~~~~shares = []\\
+24: ~~~~for w in weights:\\
+25: ~~~~~~~~portion = (w / weight\_sum) * total\\
+26: ~~~~~~~~shares.append(portion if portion > minimum else minimum)\\
+27: \\
+28: ~~~~if floor\_to\_int:\\
+29: ~~~~~~~~return [int(v) for v in shares]\\
+30: ~~~~return shares\\
+~\\
+Failing tests:\\
+- test\_truncation\_sum\_equals\_total\_fail: \\
+~\\
+Return the five most suspicious line numbers, most suspicious first.}}
+
+\medskip
+\fbox{\parbox{0.95\linewidth}{Câu trả lời của LLM (năm dòng nghi nhất): \texttt{[29, 25, 26, 28, 30]}; dòng lỗi theo nhãn: 29.}}}

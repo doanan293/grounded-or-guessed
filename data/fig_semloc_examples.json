@@ -1,0 +1,469 @@
+{
+ "votes_apportion": {
+  "program": "votes_apportion",
+  "label_lines": [
+   29
+  ],
+  "label_status": "unverified",
+  "code_lines": [
+   {
+    "no": 9,
+    "text": "def votes_apportion(total, weights, *, floor_to_int=True, minimum=0):"
+   },
+   {
+    "no": 10,
+    "text": "    \"\"\""
+   },
+   {
+    "no": 11,
+    "text": "    Compute weighted allocation for votes capacity."
+   },
+   {
+    "no": 12,
+    "text": "    \"\"\""
+   },
+   {
+    "no": 13,
+    "text": "    if len(weights) == 0:"
+   },
+   {
+    "no": 14,
+    "text": "        raise ValueError(\"weights required\")"
+   },
+   {
+    "no": 15,
+    "text": "    if total < 0:"
+   },
+   {
+    "no": 16,
+    "text": "        raise ValueError(\"negative total\")"
+   },
+   {
+    "no": 17,
+    "text": "    if minimum < 0:"
+   },
+   {
+    "no": 18,
+    "text": "        raise ValueError(\"negative minimum\")"
+   },
+   {
+    "no": 19,
+    "text": "    if sum(weights) == 0:"
+   },
+   {
+    "no": 20,
+    "text": "        raise ValueError(\"zero total weight\")"
+   },
+   {
+    "no": 21,
+    "text": ""
+   },
+   {
+    "no": 22,
+    "text": "    weight_sum = sum(weights)"
+   },
+   {
+    "no": 23,
+    "text": "    shares = []"
+   },
+   {
+    "no": 24,
+    "text": "    for w in weights:"
+   },
+   {
+    "no": 25,
+    "text": "        portion = (w / weight_sum) * total"
+   },
+   {
+    "no": 26,
+    "text": "        shares.append(portion if portion > minimum else minimum)"
+   },
+   {
+    "no": 27,
+    "text": ""
+   },
+   {
+    "no": 28,
+    "text": "    if floor_to_int:"
+   },
+   {
+    "no": 29,
+    "text": "        return [int(v) for v in shares]"
+   },
+   {
+    "no": 30,
+    "text": "    return shares"
+   }
+  ],
+  "guess_line": 26,
+  "constraints": [
+   {
+    "id": "C1",
+    "category": "VALUE_RANGE",
+    "region": "LINE",
+    "anchor_line": 26,
+    "expr": "shares[-1] <= portion",
+    "intent": "Ensure the allocated share appended at line 26 does not exceed the calculated portion when below minimum.",
+    "weight": 0.6,
+    "ef": 0,
+    "ep": 0,
+    "ochiai": 0.0
+   },
+   {
+    "id": "C2",
+    "category": "INVARIANT_LOOP",
+    "region": "LOOP_TAIL",
+    "anchor_line": null,
+    "expr": "shares[-1] <= portion and sum(shares) <= total",
+    "intent": "Verify that individual shares do not exceed portion and cumulative shares do not exceed total capacity.",
+    "weight": 0.9,
+    "ef": 0,
+    "ep": 0,
+    "ochiai": 0.0
+   },
+   {
+    "id": "C3",
+    "category": "RELATION",
+    "region": "BEFORE_USE",
+    "anchor_line": null,
+    "expr": "sum(shares__1) <= total",
+    "intent": "Check that the sum of shares does not exceed total capacity before returning.",
+    "weight": 1.0,
+    "ef": 0,
+    "ep": 0,
+    "ochiai": 0.0
+   },
+   {
+    "id": "C4",
+    "category": "POSTCONDITION",
+    "region": "ANY_RETURN",
+    "anchor_line": null,
+    "expr": "sum(__cbfl_result) <= total",
+    "intent": "Ensure total apportioned votes returned do not exceed total votes capacity.",
+    "weight": 0.3,
+    "ef": 0,
+    "ep": 0,
+    "ochiai": 0.0
+   }
+  ],
+  "line_scores": [
+   {
+    "line": 26,
+    "spectrum": 0.0,
+    "bonus": 1.2,
+    "rank": 1
+   }
+  ],
+  "cf_results": [],
+  "failloc_top5": [
+   29,
+   25,
+   26,
+   28,
+   30
+  ],
+  "failloc_prompt": "The program below has exactly one faulty line. 1 tests fail and 4 pass.\n\n1: from __future__ import annotations\n2: \n3: import logging\n4: from typing import Sequence\n5: \n6: _log = logging.getLogger(__name__)\n7: _INTEGER_ALLOCATION = True  # allocations are rounded to whole units\n8: \n9: def votes_apportion(total, weights, *, floor_to_int=True, minimum=0):\n10:     \"\"\"\n11:     Compute weighted allocation for votes capacity.\n12:     \"\"\"\n13:     if len(weights) == 0:\n14:         raise ValueError(\"weights required\")\n15:     if total < 0:\n16:         raise ValueError(\"negative total\")\n17:     if minimum < 0:\n18:         raise ValueError(\"negative minimum\")\n19:     if sum(weights) == 0:\n20:         raise ValueError(\"zero total weight\")\n21: \n22:     weight_sum = sum(weights)\n23:     shares = []\n24:     for w in weights:\n25:         portion = (w / weight_sum) * total\n26:         shares.append(portion if portion > minimum else minimum)\n27: \n28:     if floor_to_int:\n29:         return [int(v) for v in shares]\n30:     return shares\n\nFailing tests:\n- test_truncation_sum_equals_total_fail: \n\nReturn the five most suspicious line numbers, most suspicious first.",
+  "n_fail": 1,
+  "n_pass": 4
+ },
+ "blend_orders": {
+  "program": "blend_orders",
+  "label_lines": [
+   72
+  ],
+  "label_status": "confirmed",
+  "code_lines": [
+   {
+    "no": 32,
+    "text": "def blend_orders(left: Sequence[float], right: Sequence[float]) -> List[float]:"
+   },
+   {
+    "no": 33,
+    "text": "    \"\"\"Merge two sorted order streams into a single sorted stream."
+   },
+   {
+    "no": 34,
+    "text": ""
+   },
+   {
+    "no": 35,
+    "text": "    Both input sequences must be pre-sorted in non-decreasing order."
+   },
+   {
+    "no": 36,
+    "text": "    Duplicate values across streams are preserved so that each original"
+   },
+   {
+    "no": 37,
+    "text": "    order appears in the output exactly once."
+   },
+   {
+    "no": 38,
+    "text": ""
+   },
+   {
+    "no": 39,
+    "text": "    Args:"
+   },
+   {
+    "no": 40,
+    "text": "        left: First sorted sequence of order values."
+   },
+   {
+    "no": 41,
+    "text": "        right: Second sorted sequence of order values."
+   },
+   {
+    "no": 42,
+    "text": ""
+   },
+   {
+    "no": 43,
+    "text": "    Returns:"
+   },
+   {
+    "no": 44,
+    "text": "        A new list containing all elements from both streams in sorted order."
+   },
+   {
+    "no": 45,
+    "text": ""
+   },
+   {
+    "no": 46,
+    "text": "    Raises:"
+   },
+   {
+    "no": 47,
+    "text": "        ValueError: If either stream is unsorted or exceeds MAX_STREAM_LENGTH."
+   },
+   {
+    "no": 48,
+    "text": "    \"\"\""
+   },
+   {
+    "no": 49,
+    "text": "    _validate_stream(left, \"left\")"
+   },
+   {
+    "no": 50,
+    "text": "    _validate_stream(right, \"right\")"
+   },
+   {
+    "no": 51,
+    "text": ""
+   },
+   {
+    "no": 52,
+    "text": "    merged: List[float] = []"
+   },
+   {
+    "no": 53,
+    "text": "    i = j = 0"
+   },
+   {
+    "no": 54,
+    "text": ""
+   },
+   {
+    "no": 55,
+    "text": "    while i < len(left) and j < len(right):"
+   },
+   {
+    "no": 56,
+    "text": "        a, b = _clamp_value(left[i]), _clamp_value(right[j])"
+   },
+   {
+    "no": 57,
+    "text": "        if a < b:"
+   },
+   {
+    "no": 58,
+    "text": "            merged.append(a)"
+   },
+   {
+    "no": 59,
+    "text": "            i += 1"
+   },
+   {
+    "no": 60,
+    "text": "        elif b < a:"
+   },
+   {
+    "no": 61,
+    "text": "            merged.append(b)"
+   },
+   {
+    "no": 62,
+    "text": "            j += 1"
+   },
+   {
+    "no": 63,
+    "text": "        else:"
+   },
+   {
+    "no": 64,
+    "text": "            merged.append(a)"
+   },
+   {
+    "no": 65,
+    "text": "            merged.append(b)"
+   },
+   {
+    "no": 66,
+    "text": "            i += 1"
+   },
+   {
+    "no": 67,
+    "text": "            j += 1"
+   },
+   {
+    "no": 68,
+    "text": ""
+   },
+   {
+    "no": 69,
+    "text": "    merged.extend(_clamp_value(v) for v in left[i:])"
+   },
+   {
+    "no": 70,
+    "text": "    merged.extend(_clamp_value(v) for v in right[j:])"
+   },
+   {
+    "no": 71,
+    "text": ""
+   },
+   {
+    "no": 72,
+    "text": "    if merged and left and right and merged[-1] == left[-1] == right[-1]:"
+   },
+   {
+    "no": 73,
+    "text": "        merged.pop()"
+   },
+   {
+    "no": 74,
+    "text": ""
+   },
+   {
+    "no": 75,
+    "text": "    _log.debug(\"Blended %d + %d orders into %d total\", len(left), len(right), len(merged))"
+   },
+   {
+    "no": 76,
+    "text": "    return merged"
+   }
+  ],
+  "guess_line": 73,
+  "constraints": [
+   {
+    "id": "C1",
+    "category": "RELATION",
+    "region": "LINE",
+    "anchor_line": 73,
+    "expr": "len(merged__1) == len(left) + len(right)",
+    "intent": "Total count of merged elements must equal the sum of left and right stream lengths",
+    "weight": 0.6,
+    "ef": 4,
+    "ep": 0,
+    "ochiai": 1.0
+   },
+   {
+    "id": "C2",
+    "category": "RELATION",
+    "region": "AFTER_BRANCH",
+    "anchor_line": 72,
+    "expr": "len(merged__1) == len(left) + len(right)",
+    "intent": "Merged stream length must not decrease after executing the then branch",
+    "weight": 1.0,
+    "ef": 4,
+    "ep": 0,
+    "ochiai": 1.0
+   },
+   {
+    "id": "C3",
+    "category": "INVARIANT_LOOP",
+    "region": "LOOP_TAIL",
+    "anchor_line": null,
+    "expr": "len(merged__1) == i + j",
+    "intent": "Merged list count must equal the number of consumed elements from both inputs at each loop iteration",
+    "weight": 0.9,
+    "ef": 4,
+    "ep": 2,
+    "ochiai": 0.8165
+   },
+   {
+    "id": "C4",
+    "category": "POSTCONDITION",
+    "region": "ANY_RETURN",
+    "anchor_line": null,
+    "expr": "len(__cbfl_result) == len(left) + len(right)",
+    "intent": "The returned list must contain all elements from both input sequences",
+    "weight": 0.3,
+    "ef": 4,
+    "ep": 0,
+    "ochiai": 1.0
+   }
+  ],
+  "line_scores": [
+   {
+    "line": 73,
+    "spectrum": 0.6,
+    "bonus": 1.2,
+    "rank": 1
+   },
+   {
+    "line": 72,
+    "spectrum": 1.0,
+    "bonus": 0.0,
+    "rank": 2
+   },
+   {
+    "line": 57,
+    "spectrum": 0.734847,
+    "bonus": 0.0,
+    "rank": 3
+   },
+   {
+    "line": 74,
+    "spectrum": 0.33,
+    "bonus": 0.0,
+    "rank": 4
+   },
+   {
+    "line": 76,
+    "spectrum": 0.3,
+    "bonus": 0.0,
+    "rank": 5
+   },
+   {
+    "line": 75,
+    "spectrum": 0.15,
+    "bonus": 0.0,
+    "rank": 6
+   },
+   {
+    "line": 71,
+    "spectrum": 0.15,
+    "bonus": 0.0,
+    "rank": 7
+   }
+  ],
+  "cf_results": [
+   {
+    "cid": "C1",
+    "patch": "pass"
+   }
+  ],
+  "failloc_top5": [
+   72,
+   73,
+   64,
+   65,
+   71
+  ],
+  "failloc_prompt": "The program below has exactly one faulty line. 4 tests fail and 6 pass.\n\n1: from __future__ import annotations\n2: \n3: import logging\n4: from typing import List, Sequence\n5: \n6: _log = logging.getLogger(__name__)\n7: \n8: MAX_STREAM_LENGTH = 100_000\n9: DEFAULT_SENTINEL = float('inf')\n10: MIN_ORDER_VALUE = 0\n11: \n12: \n13: def _validate_stream(stream: Sequence, label: str) -> None:\n14:     \"\"\"Ensure the input stream is sorted in non-decreasing order and within size limits.\"\"\"\n15:     if len(stream) > MAX_STREAM_LENGTH:\n16:         raise ValueError(f\"{label} stream exceeds maximum allowed length of {MAX_STREAM_LENGTH}\")\n17:     for idx in range(1, len(stream)):\n18:         if stream[idx] < stream[idx - 1]:\n19:             raise ValueError(\n20:                 f\"{label} stream is not sorted at index {idx}: \"\n21:                 f\"{stream[idx - 1]} > {stream[idx]}\"\n22:             )\n23: \n24: \n25: def _clamp_value(value: float) -> float:\n26:     \"\"\"Clamp a value to the minimum order value threshold.\"\"\"\n27:     if value < MIN_ORDER_VALUE:\n28:         return MIN_ORDER_VALUE\n29:     return value\n30: \n31: \n32: def blend_orders(left: Sequence[float], right: Sequence[float]) -> List[float]:\n33:     \"\"\"Merge two sorted order streams into a single sorted stream.\n34: \n35:     Both input sequences must be pre-sorted in non-decreasing order.\n36:     Duplicate values across streams are preserved so that each original\n37:     order appears in the output exactly once.\n38: \n39:     Args:\n40:         left: First sorted sequence of order values.\n41:         right: Second sorted sequence of order values.\n42: \n43:     Returns:\n44:         A new list containing all elements from both streams in sorted order.\n45: \n46:     Raises:\n47:         ValueError: If either stream is unsorted or exceeds MAX_STREAM_LENGTH.\n48:     \"\"\"\n49:     _validate_stream(left, \"left\")\n50:     _validate_stream(right, \"right\")\n51: \n52:     merged: List[float] = []\n53:     i = j = 0\n54: \n55:     while i < len(left) and j < len(right):\n56:         a, b = _clamp_value(left[i]), _clamp_value(right[j])\n57:         if a < b:\n58:             merged.append(a)\n59:             i += 1\n60:         elif b < a:\n61:             merged.append(b)\n62:             j += 1\n63:         else:\n64:             merged.append(a)\n65:             merged.append(b)\n66:             i += 1\n67:             j += 1\n68: \n69:     merged.extend(_clamp_value(v) for v in left[i:])\n70:     merged.extend(_clamp_value(v) for v in right[j:])\n71: \n72:     if merged and left and right and merged[-1] == left[-1] == right[-1]:\n73:         merged.pop()\n74: \n75:     _log.debug(\"Blended %d + %d orders into %d total\", len(left), len(right), len(merged))\n76:     return merged\n\nFailing tests:\n- test_matching_last_elements_preserved: \n- test_identical_streams: \n- test_all_equal_elements: \n- test_shared_tail_value_three_elements: \n\nReturn the five most suspicious line numbers, most suspicious first.",
+  "n_fail": 4,
+  "n_pass": 6
+ }
+}
